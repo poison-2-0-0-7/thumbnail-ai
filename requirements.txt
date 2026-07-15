@@ -1,0 +1,18 @@
+# ── Module 1 (CSV Reader) ────────────────────────────────────────────────────
+pandas>=2.0.0
+portalocker>=2.8.0
+
+# ── Module 2 (YouTube Metadata Extractor) ────────────────────────────────────
+yt-dlp>=2024.1.0
+youtube-transcript-api>=0.6.0
+pydantic>=2.0.0
+loguru>=0.7.0
+tenacity>=8.2.0
+
+# ── Module 3 (Thumbnail Downloader) ──────────────────────────────────────────
+requests>=2.31.0
+Pillow>=10.0.0
+
+# ── Testing ───────────────────────────────────────────────────────────────────
+pytest>=7.4.0
+pytest-cov>=4.1.0
