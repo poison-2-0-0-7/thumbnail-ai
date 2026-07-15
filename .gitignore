@@ -1,0 +1,20 @@
+# Virtual environments
+.venv/
+.venv-1/
+
+# Python cache
+__pycache__/
+*.py[cod]
+
+# Pytest
+.pytest_cache/
+
+# VS Code
+.vscode/
+
+# Logs
+logs/
+
+# OS files
+Thumbs.db
+.DS_Store
