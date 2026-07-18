@@ -43,7 +43,7 @@ MODULE1_LOG_PATH: Path = LOG_DIR / "module1.log"
 #: Canonical column order for the creators CSV. This is the single source
 #: of truth for the schema; any CSV that does not match this header is
 #: considered malformed.
-CSV_COLUMNS: tuple[str, ...] = ("id", "email", "video_url")
+CSV_COLUMNS: tuple[str, ...] = ("email", "video_url")
 
 #: Encoding used for all CSV reads/writes.
 CSV_ENCODING: str = "utf-8"

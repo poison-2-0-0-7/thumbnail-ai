@@ -39,10 +39,10 @@ def csv_path(tmp_path: Path) -> Path:
 def populated_csv(csv_path: Path) -> Path:
     """A CSV pre-populated with two valid creators."""
     cr.add_creator(
-        csv_path, cr.Creator(id="001", email="a@example.com", video_url=VALID_URL_1)
+        csv_path, cr.Creator(email="a@example.com", video_url=VALID_URL_1)
     )
     cr.add_creator(
-        csv_path, cr.Creator(id="002", email="b@example.com", video_url=VALID_URL_2)
+        csv_path, cr.Creator(email="b@example.com", video_url=VALID_URL_2)
     )
     return csv_path
 
@@ -68,7 +68,7 @@ def test_created_csv_has_correct_header(csv_path: Path):
 def test_missing_csv_is_created_on_add(csv_path: Path):
     assert not csv_path.exists()
     result = cr.add_creator(
-        csv_path, cr.Creator(id="001", email="a@example.com", video_url=VALID_URL_1)
+        csv_path, cr.Creator(email="a@example.com", video_url=VALID_URL_1)
     )
     assert result is True
     assert csv_path.exists()
@@ -82,24 +82,24 @@ def test_missing_csv_is_created_on_add(csv_path: Path):
 def test_load_all_creators_returns_valid_rows(populated_csv: Path):
     creators = cr.load_all_creators(populated_csv)
     assert len(creators) == 2
-    ids = {c.id for c in creators}
-    assert ids == {"001", "002"}
+    emails = {c.email for c in creators}
+    assert emails == {"a@example.com", "b@example.com"}
     assert all(isinstance(c, cr.Creator) for c in creators)
 
 
 def test_load_preserves_field_values(populated_csv: Path):
     creators = cr.load_all_creators(populated_csv)
-    first = next(c for c in creators if c.id == "001")
+    first = next(c for c in creators if c.email == "a@example.com")
     assert first.email == "a@example.com"
     assert first.video_url == VALID_URL_1
 
 
 def test_load_ignores_blank_rows(csv_path: Path):
     csv_path.write_text(
-        "id,email,video_url\n"
-        "001,a@example.com," + VALID_URL_1 + "\n"
+        "email,video_url\n"
+        "a@example.com," + VALID_URL_1 + "\n"
         "\n"
-        "002,b@example.com," + VALID_URL_2 + "\n",
+        "b@example.com," + VALID_URL_2 + "\n",
         encoding="utf-8",
     )
     creators = cr.load_all_creators(csv_path)
@@ -113,26 +113,26 @@ def test_load_ignores_blank_rows(csv_path: Path):
 
 def test_load_skips_invalid_email(csv_path: Path):
     csv_path.write_text(
-        "id,email,video_url\n"
-        f"001,not-an-email,{VALID_URL_1}\n"
-        f"002,valid@example.com,{VALID_URL_2}\n",
+        "email,video_url\n"
+        f"not-an-email,{VALID_URL_1}\n"
+        f"valid@example.com,{VALID_URL_2}\n",
         encoding="utf-8",
     )
     creators = cr.load_all_creators(csv_path)
     assert len(creators) == 1
-    assert creators[0].id == "002"
+    assert creators[0].email == "valid@example.com"
 
 
 def test_load_skips_invalid_youtube_url(csv_path: Path):
     csv_path.write_text(
-        "id,email,video_url\n"
-        "001,a@example.com,https://vimeo.com/12345\n"
-        f"002,b@example.com,{VALID_URL_2}\n",
+        "email,video_url\n"
+        "a@example.com,https://vimeo.com/12345\n"
+        f"b@example.com,{VALID_URL_2}\n",
         encoding="utf-8",
     )
     creators = cr.load_all_creators(csv_path)
     assert len(creators) == 1
-    assert creators[0].id == "002"
+    assert creators[0].email == "b@example.com"
 
 
 @pytest.mark.parametrize(
@@ -182,19 +182,10 @@ def test_validate_email_rejects_invalid(email: str):
 # ---------------------------------------------------------------------------
 
 
-def test_add_creator_rejects_duplicate_id(populated_csv: Path):
-    result = cr.add_creator(
-        populated_csv,
-        cr.Creator(id="001", email="new@example.com", video_url=VALID_URL_3),
-    )
-    assert result is False
-    assert len(cr.load_all_creators(populated_csv)) == 2
-
-
 def test_add_creator_rejects_duplicate_email(populated_csv: Path):
     result = cr.add_creator(
         populated_csv,
-        cr.Creator(id="999", email="a@example.com", video_url=VALID_URL_3),
+        cr.Creator(email="a@example.com", video_url=VALID_URL_3),
     )
     assert result is False
     assert len(cr.load_all_creators(populated_csv)) == 2
@@ -203,7 +194,7 @@ def test_add_creator_rejects_duplicate_email(populated_csv: Path):
 def test_add_creator_rejects_duplicate_video_url(populated_csv: Path):
     result = cr.add_creator(
         populated_csv,
-        cr.Creator(id="999", email="new@example.com", video_url=VALID_URL_1),
+        cr.Creator(email="new@example.com", video_url=VALID_URL_1),
     )
     assert result is False
     assert len(cr.load_all_creators(populated_csv)) == 2
@@ -216,65 +207,65 @@ def test_add_creator_rejects_duplicate_video_url(populated_csv: Path):
 
 def test_add_creator_success(csv_path: Path):
     result = cr.add_creator(
-        csv_path, cr.Creator(id="001", email="a@example.com", video_url=VALID_URL_1)
+        csv_path, cr.Creator(email="a@example.com", video_url=VALID_URL_1)
     )
     assert result is True
     creators = cr.load_all_creators(csv_path)
     assert len(creators) == 1
-    assert creators[0].id == "001"
+    assert creators[0].email == "a@example.com"
 
 
 def test_add_creator_preserves_existing_data(populated_csv: Path):
     cr.add_creator(
         populated_csv,
-        cr.Creator(id="003", email="c@example.com", video_url=VALID_URL_3),
+        cr.Creator(email="c@example.com", video_url=VALID_URL_3),
     )
     creators = cr.load_all_creators(populated_csv)
-    ids = {c.id for c in creators}
-    assert ids == {"001", "002", "003"}
+    emails = {c.email for c in creators}
+    assert emails == {"a@example.com", "b@example.com", "c@example.com"}
 
 
 def test_add_creator_rejects_invalid_data(csv_path: Path):
     result = cr.add_creator(
-        csv_path, cr.Creator(id="001", email="not-an-email", video_url=VALID_URL_1)
+        csv_path, cr.Creator(email="not-an-email", video_url=VALID_URL_1)
     )
     assert result is False
     assert cr.load_all_creators(csv_path) == []
 
 
 def test_remove_creator_success(populated_csv: Path):
-    result = cr.remove_creator(populated_csv, "001")
+    result = cr.remove_creator(populated_csv, "a@example.com")
     assert result is True
     creators = cr.load_all_creators(populated_csv)
-    ids = {c.id for c in creators}
-    assert ids == {"002"}
+    emails = {c.email for c in creators}
+    assert emails == {"b@example.com"}
 
 
 def test_remove_creator_not_found(populated_csv: Path):
-    result = cr.remove_creator(populated_csv, "does-not-exist")
+    result = cr.remove_creator(populated_csv, "does-not-exist@example.com")
     assert result is False
     assert len(cr.load_all_creators(populated_csv)) == 2
 
 
 def test_remove_creator_on_missing_csv(csv_path: Path):
-    result = cr.remove_creator(csv_path, "001")
+    result = cr.remove_creator(csv_path, "a@example.com")
     assert result is False
 
 
 def test_get_creator_found(populated_csv: Path):
-    creator = cr.get_creator(populated_csv, "001")
+    creator = cr.get_creator(populated_csv, "a@example.com")
     assert creator is not None
-    assert creator.id == "001"
     assert creator.email == "a@example.com"
+    assert creator.video_url == VALID_URL_1
 
 
 def test_get_creator_not_found(populated_csv: Path):
-    creator = cr.get_creator(populated_csv, "does-not-exist")
+    creator = cr.get_creator(populated_csv, "does-not-exist@example.com")
     assert creator is None
 
 
 def test_get_creator_on_missing_csv(csv_path: Path):
-    creator = cr.get_creator(csv_path, "001")
+    creator = cr.get_creator(csv_path, "a@example.com")
     assert creator is None
 
 
@@ -285,7 +276,7 @@ def test_get_creator_on_missing_csv(csv_path: Path):
 
 def test_load_malformed_schema_returns_empty_list(csv_path: Path):
     csv_path.write_text(
-        "id,channel_name,video_url\n001,SomeChannel," + VALID_URL_1 + "\n",
+        "email,channel_name,video_url\na@example.com,SomeChannel," + VALID_URL_1 + "\n",
         encoding="utf-8",
     )
     creators = cr.load_all_creators(csv_path)
@@ -294,7 +285,7 @@ def test_load_malformed_schema_returns_empty_list(csv_path: Path):
 
 def test_load_corrupted_csv_does_not_raise(csv_path: Path):
     csv_path.write_text(
-        'id,email,video_url\n001,"unterminated quote,a@example.com,' + VALID_URL_1,
+        'email,video_url\n"unterminated quote,' + VALID_URL_1,
         encoding="utf-8",
     )
     # Must never raise, regardless of how malformed the content is.
@@ -314,15 +305,14 @@ def test_load_empty_file_returns_empty_list(csv_path: Path):
 
 
 def test_creator_is_frozen():
-    creator = cr.Creator(id="1", email="a@example.com", video_url=VALID_URL_1)
+    creator = cr.Creator(email="a@example.com", video_url=VALID_URL_1)
     with pytest.raises(Exception):
-        creator.id = "2"  # type: ignore[misc]
+        creator.email = "b@example.com"  # type: ignore[misc]
 
 
 def test_validate_row_rejects_missing_fields():
-    assert cr._validate_row({"id": "", "email": "a@example.com", "video_url": VALID_URL_1}) is False
-    assert cr._validate_row({"id": "1", "email": "", "video_url": VALID_URL_1}) is False
-    assert cr._validate_row({"id": "1", "email": "a@example.com", "video_url": ""}) is False
+    assert cr._validate_row({"email": "", "video_url": VALID_URL_1}) is False
+    assert cr._validate_row({"email": "a@example.com", "video_url": ""}) is False
 
 
 # ---------------------------------------------------------------------------
@@ -401,7 +391,7 @@ def test_add_creator_handles_access_error(csv_path: Path, monkeypatch):
 
     monkeypatch.setattr(cr, "_file_lock", lambda path: _RaisingCtx(_raise_access_error))
     result = cr.add_creator(
-        csv_path, cr.Creator(id="1", email="a@example.com", video_url=VALID_URL_1)
+        csv_path, cr.Creator(email="a@example.com", video_url=VALID_URL_1)
     )
     assert result is False
 
@@ -412,12 +402,12 @@ def test_add_creator_handles_unexpected_error(csv_path: Path, monkeypatch):
 
     monkeypatch.setattr(cr, "_file_lock", lambda path: _RaisingCtx(_raise_unexpected))
     result = cr.add_creator(
-        csv_path, cr.Creator(id="1", email="a@example.com", video_url=VALID_URL_1)
+        csv_path, cr.Creator(email="a@example.com", video_url=VALID_URL_1)
     )
     assert result is False
 
 
-def test_remove_creator_rejects_empty_id(populated_csv: Path):
+def test_remove_creator_rejects_empty_email(populated_csv: Path):
     assert cr.remove_creator(populated_csv, "") is False
 
 
@@ -426,10 +416,10 @@ def test_remove_creator_handles_unexpected_error(populated_csv: Path, monkeypatc
         raise RuntimeError("boom")
 
     monkeypatch.setattr(cr, "_file_lock", lambda path: _RaisingCtx(_raise_unexpected))
-    assert cr.remove_creator(populated_csv, "001") is False
+    assert cr.remove_creator(populated_csv, "a@example.com") is False
 
 
-def test_get_creator_rejects_empty_id(populated_csv: Path):
+def test_get_creator_rejects_empty_email(populated_csv: Path):
     assert cr.get_creator(populated_csv, "") is None
 
 
@@ -438,4 +428,4 @@ def test_get_creator_handles_unexpected_error(populated_csv: Path, monkeypatch):
         raise RuntimeError("boom")
 
     monkeypatch.setattr(cr, "_file_lock", lambda path: _RaisingCtx(_raise_unexpected))
-    assert cr.get_creator(populated_csv, "001") is None
+    assert cr.get_creator(populated_csv, "a@example.com") is None

@@ -99,7 +99,7 @@ def _make_ydl_info(**overrides: Any) -> dict:
 
 def _make_creator(url: str = VALID_URL_FULL) -> Creator:
     """Return a minimal Creator for testing."""
-    return Creator(id="001", email="test@example.com", video_url=url)
+    return Creator(email="test@example.com", video_url=url)
 
 
 def _make_valid_metadata(**overrides: Any) -> VideoMetadata:

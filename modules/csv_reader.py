@@ -5,8 +5,8 @@ csv_reader.py
 Module 1 — CSV Reader for the YouTube Thumbnail Outreach Automation system.
 
 This module owns all reading and writing of the ``creators.csv`` lead
-file. The CSV is the single source of truth for three fields only:
-``id``, ``email``, and ``video_url``. Every other attribute of a creator
+file. The CSV is the single source of truth for two fields only:
+``email`` and ``video_url``. Every other attribute of a creator
 (channel name, thumbnail URL, video title, etc.) is intentionally left
 to be discovered by later modules from the YouTube video URL — storing
 that information here would create duplicate sources of truth and
@@ -17,8 +17,8 @@ Public API
 - :class:`Creator` — immutable record representing one lead.
 - :func:`load_all_creators` — read every valid creator from the CSV.
 - :func:`add_creator` — append a new creator, rejecting duplicates.
-- :func:`remove_creator` — delete a creator by id.
-- :func:`get_creator` — fetch a single creator by id.
+- :func:`remove_creator` — delete a creator by email.
+- :func:`get_creator` — fetch a single creator by email.
 
 Design principles
 ------------------
@@ -87,7 +87,7 @@ class InvalidYouTubeURLError(CSVValidationError):
 
 
 class DuplicateCreatorError(CSVReaderError):
-    """Raised when an id, email, or video URL already exists in the CSV."""
+    """Raised when an email or video URL already exists in the CSV."""
 
 
 class CSVAccessError(CSVReaderError):
@@ -109,15 +109,12 @@ class Creator:
     An immutable record representing a single outreach lead.
 
     Attributes:
-        id: Unique identifier for the creator/lead. Free-form but must
-            be non-empty after stripping whitespace.
         email: Contact email address for outreach.
         video_url: A YouTube video URL belonging to the creator's
             channel. This is the single source of truth from which all
             other channel metadata is derived by later modules.
     """
 
-    id: str
     email: str
     video_url: str
 
@@ -258,7 +255,7 @@ def _validate_row(row: dict) -> bool:
 
     Checks, in order: required fields present and non-empty, valid
     email, valid YouTube URL. Each failure is logged at WARNING level
-    with the offending row's id (if available) so that data-quality
+    with the offending row's email (if available) so that data-quality
     issues are visible without halting the load.
 
     Args:
@@ -268,29 +265,24 @@ def _validate_row(row: dict) -> bool:
         True if the row is valid and safe to convert into a
         :class:`Creator`, False otherwise.
     """
-    row_id = str(row.get("id", "")).strip()
     email = str(row.get("email", "")).strip()
     video_url = str(row.get("video_url", "")).strip()
 
-    if not row_id:
-        _logger.warning("Skipping row: missing id (email=%r)", email)
-        return False
-
     if not email:
-        _logger.warning("Skipping row id=%s: missing email", row_id)
+        _logger.warning("Skipping row: missing email (video_url=%r)", video_url)
         return False
 
     if not video_url:
-        _logger.warning("Skipping row id=%s: missing video_url", row_id)
+        _logger.warning("Skipping row email=%s: missing video_url", email)
         return False
 
     if not _validate_email(email):
-        _logger.warning("Skipping row id=%s: invalid email %r", row_id, email)
+        _logger.warning("Skipping row: invalid email %r", email)
         return False
 
     if not _validate_youtube_url(video_url):
         _logger.warning(
-            "Skipping row id=%s: invalid YouTube URL %r", row_id, video_url
+            "Skipping row email=%s: invalid YouTube URL %r", email, video_url
         )
         return False
 
@@ -334,7 +326,6 @@ def _dataframe_to_creator(row: dict) -> Optional[Creator]:
     if not _validate_row(row):
         return None
     return Creator(
-        id=str(row["id"]).strip(),
         email=str(row["email"]).strip(),
         video_url=str(row["video_url"]).strip(),
     )
@@ -385,7 +376,8 @@ def _read_dataframe(csv_path: Path) -> pd.DataFrame:
 
     Returns:
         DataFrame with all values read as strings (no type inference,
-        no NaN coercion), preserving values like leading zeros in ids.
+        no NaN coercion), preserving values exactly as they appear in
+        the file.
 
     Raises:
         CSVCorruptionError: If the file cannot be parsed as CSV, the
@@ -473,20 +465,16 @@ def _write_dataframe(csv_path: Path, df: pd.DataFrame) -> None:
 def _check_duplicates(df: pd.DataFrame, creator: Creator) -> None:
     """
     Verify that ``creator`` does not collide with any existing row in
-    ``df`` on id, email, or video_url.
+    ``df`` on email or video_url.
 
     Args:
         df: Current contents of the CSV.
         creator: The candidate creator to check.
 
     Raises:
-        DuplicateCreatorError: If id, email, or video_url already
+        DuplicateCreatorError: If email or video_url already
             exists in ``df``.
     """
-    if (df["id"] == creator.id).any():
-        _logger.warning("Duplicate id rejected: %s", creator.id)
-        raise DuplicateCreatorError(f"Duplicate id: {creator.id}")
-
     if (df["email"].str.lower() == creator.email.lower()).any():
         _logger.warning("Duplicate email rejected: %s", creator.email)
         raise DuplicateCreatorError(f"Duplicate email: {creator.email}")
@@ -543,10 +531,10 @@ def add_creator(csv_path: PathLike, creator: Creator) -> bool:
     """
     Append ``creator`` to the CSV at ``csv_path``.
 
-    Rejects the creator (returns False) if its id, email, or
-    video_url is already present, or if the creator itself fails
-    field-level validation. Existing data is always preserved; the
-    write is atomic.
+    Rejects the creator (returns False) if its email or video_url is
+    already present, or if the creator itself fails field-level
+    validation. Existing data is always preserved; the write is
+    atomic.
 
     Args:
         csv_path: Path to the creators CSV file.
@@ -559,7 +547,6 @@ def add_creator(csv_path: PathLike, creator: Creator) -> bool:
     path = Path(csv_path)
 
     candidate_row = {
-        "id": creator.id,
         "email": creator.email,
         "video_url": creator.video_url,
     }
@@ -577,37 +564,42 @@ def add_creator(csv_path: PathLike, creator: Creator) -> bool:
             updated_df = pd.concat([df, new_row], ignore_index=True)
             _write_dataframe(path, updated_df)
 
-        _logger.info("Added creator id=%s", creator.id)
+        _logger.info("Added creator email=%s", creator.email)
         return True
 
     except DuplicateCreatorError as exc:
-        _logger.warning("add_creator failed for id=%s: %s", creator.id, exc)
+        _logger.warning("add_creator failed for email=%s: %s", creator.email, exc)
         return False
     except (CSVCorruptionError, CSVAccessError) as exc:
-        _logger.error("add_creator failed for id=%s: %s", creator.id, exc)
+        _logger.error("add_creator failed for email=%s: %s", creator.email, exc)
         return False
     except Exception as exc:  # noqa: BLE001 - last-resort safety net
-        _logger.exception("Unexpected error adding creator id=%s: %s", creator.id, exc)
+        _logger.exception(
+            "Unexpected error adding creator email=%s: %s", creator.email, exc
+        )
         return False
 
 
-def remove_creator(csv_path: PathLike, creator_id: str) -> bool:
+def remove_creator(csv_path: PathLike, email: str) -> bool:
     """
-    Remove the creator with id ``creator_id`` from the CSV.
+    Remove the creator with the given ``email`` from the CSV.
+
+    Matching is case-insensitive, consistent with the email uniqueness
+    check performed in :func:`_check_duplicates`.
 
     Args:
         csv_path: Path to the creators CSV file.
-        creator_id: The id of the creator to remove.
+        email: The email address of the creator to remove.
 
     Returns:
         True if a matching creator was found and removed, False if no
         match was found or any error occurred.
     """
     path = Path(csv_path)
-    target_id = str(creator_id).strip()
+    target_email = str(email).strip()
 
-    if not target_id:
-        _logger.warning("remove_creator rejected empty creator_id")
+    if not target_email:
+        _logger.warning("remove_creator rejected empty email")
         return False
 
     try:
@@ -615,66 +607,72 @@ def remove_creator(csv_path: PathLike, creator_id: str) -> bool:
             _initialize_csv(path)
             df = _read_dataframe(path)
 
-            mask = df["id"] == target_id
+            mask = df["email"].str.lower() == target_email.lower()
             if not mask.any():
-                _logger.info("remove_creator: no match for id=%s", target_id)
+                _logger.info("remove_creator: no match for email=%s", target_email)
                 return False
 
             updated_df = df.loc[~mask].reset_index(drop=True)
             _write_dataframe(path, updated_df)
 
-        _logger.info("Removed creator id=%s", target_id)
+        _logger.info("Removed creator email=%s", target_email)
         return True
 
     except (CSVCorruptionError, CSVAccessError) as exc:
-        _logger.error("remove_creator failed for id=%s: %s", target_id, exc)
+        _logger.error("remove_creator failed for email=%s: %s", target_email, exc)
         return False
     except Exception as exc:  # noqa: BLE001 - last-resort safety net
         _logger.exception(
-            "Unexpected error removing creator id=%s: %s", target_id, exc
+            "Unexpected error removing creator email=%s: %s", target_email, exc
         )
         return False
 
 
-def get_creator(csv_path: PathLike, creator_id: str) -> Optional[Creator]:
+def get_creator(csv_path: PathLike, email: str) -> Optional[Creator]:
     """
-    Fetch a single creator by id.
+    Fetch a single creator by email.
+
+    Matching is case-insensitive, consistent with the email uniqueness
+    check performed in :func:`_check_duplicates`.
 
     Args:
         csv_path: Path to the creators CSV file.
-        creator_id: The id of the creator to fetch.
+        email: The email address of the creator to fetch.
 
     Returns:
         The matching :class:`Creator`, or None if not found or any
         error occurred while reading the CSV.
     """
     path = Path(csv_path)
-    target_id = str(creator_id).strip()
+    target_email = str(email).strip()
 
-    if not target_id:
-        _logger.warning("get_creator rejected empty creator_id")
+    if not target_email:
+        _logger.warning("get_creator rejected empty email")
         return None
 
     try:
         with _file_lock(path):
             _initialize_csv(path)
             df = _read_dataframe(path)
-            matches = df.loc[df["id"] == target_id]
+            matches = df.loc[df["email"].str.lower() == target_email.lower()]
 
         if matches.empty:
-            _logger.info("get_creator: no match for id=%s", target_id)
+            _logger.info("get_creator: no match for email=%s", target_email)
             return None
 
         creator = _dataframe_to_creator(matches.iloc[0].to_dict())
         if creator is None:
             _logger.warning(
-                "get_creator: row for id=%s exists but failed validation", target_id
+                "get_creator: row for email=%s exists but failed validation",
+                target_email,
             )
         return creator
 
     except (CSVCorruptionError, CSVAccessError) as exc:
-        _logger.error("get_creator failed for id=%s: %s", target_id, exc)
+        _logger.error("get_creator failed for email=%s: %s", target_email, exc)
         return None
     except Exception as exc:  # noqa: BLE001 - last-resort safety net
-        _logger.exception("Unexpected error getting creator id=%s: %s", target_id, exc)
+        _logger.exception(
+            "Unexpected error getting creator email=%s: %s", target_email, exc
+        )
         return None

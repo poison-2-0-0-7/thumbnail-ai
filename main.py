@@ -91,8 +91,8 @@ def run_pipeline(
 
     for creator in creators:
         logger.info(
-            "Processing creator_id={id} url={url}",
-            id=creator.id,
+            "Processing creator_email={email} url={url}",
+            email=creator.email,
             url=creator.video_url,
         )
 
@@ -106,16 +106,16 @@ def run_pipeline(
 
         if metadata.status == "error":
             logger.error(
-                "Metadata extraction failed for creator_id={id}: {reason}",
-                id=creator.id,
+                "Metadata extraction failed for creator_email={email}: {reason}",
+                email=creator.email,
                 reason=metadata.error_message,
             )
             skipped += 1
             continue
 
         logger.info(
-            "Metadata OK for creator_id={id}: {title!r}",
-            id=creator.id,
+            "Metadata OK for creator_email={email}: {title!r}",
+            email=creator.email,
             title=metadata.title,
         )
 
@@ -127,9 +127,9 @@ def run_pipeline(
             )
         except ThumbnailDownloaderError as exc:
             logger.error(
-                "Thumbnail download failed for creator_id={id} "
+                "Thumbnail download failed for creator_email={email} "
                 "video_id={vid}: {exc}",
-                id=creator.id,
+                email=creator.email,
                 vid=metadata.video_id,
                 exc=exc,
             )
@@ -137,8 +137,8 @@ def run_pipeline(
             continue
 
         logger.info(
-            "Thumbnail saved for creator_id={id}: {path}",
-            id=creator.id,
+            "Thumbnail saved for creator_email={email}: {path}",
+            email=creator.email,
             path=thumbnail.thumbnail_path,
         )
         succeeded += 1

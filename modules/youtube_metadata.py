@@ -92,7 +92,6 @@ except ImportError:  # Module 1 not present in this layout
     class Creator:  # type: ignore[no-redef]
         """Minimal stand-in used when Module 1 is not importable."""
 
-        id: str
         email: str
         video_url: str
 
@@ -1098,10 +1097,10 @@ def process_video(
         or ``status="error"`` on any failure.
     """
     url: str = creator.video_url
-    creator_id: str = creator.id
+    creator_email: str = creator.email
     logger.info(
-        "Processing creator_id={cid} url={url}",
-        cid=creator_id,
+        "Processing creator_email={cid} url={url}",
+        cid=creator_email,
         url=url,
     )
 
@@ -1110,8 +1109,8 @@ def process_video(
         video_id = extract_video_id(url)
     except InvalidURLError as exc:
         logger.error(
-            "Invalid URL for creator_id={cid}: {exc}",
-            cid=creator_id,
+            "Invalid URL for creator_email={cid}: {exc}",
+            cid=creator_email,
             exc=str(exc),
         )
         return _error_metadata(
@@ -1125,8 +1124,8 @@ def process_video(
         cached = load_cached_metadata(video_id, cache_dir)
         if cached is not None:
             logger.info(
-                "Returning cached metadata for creator_id={cid} video_id={id}",
-                cid=creator_id,
+                "Returning cached metadata for creator_email={cid} video_id={id}",
+                cid=creator_email,
                 id=video_id,
             )
             return cached
@@ -1149,16 +1148,16 @@ def process_video(
         # is attempted — a different metadata source will not make a
         # private video public.
         logger.error(
-            "Video unavailable for creator_id={cid} video_id={id}: {reason}",
-            cid=creator_id,
+            "Video unavailable for creator_email={cid} video_id={id}: {reason}",
+            cid=creator_email,
             id=video_id,
             reason=exc.reason,
         )
         return _error_metadata(video_id=video_id, reason=exc.reason, url=url)
     except AuthenticationError as exc:
         logger.warning(
-            "Authentication required for creator_id={cid} video_id={id}: {exc}",
-            cid=creator_id,
+            "Authentication required for creator_email={cid} video_id={id}: {exc}",
+            cid=creator_email,
             id=video_id,
             exc=str(exc),
         )
@@ -1167,8 +1166,8 @@ def process_video(
             return _error_metadata(video_id=video_id, reason=str(exc), url=url)
     except MetadataExtractionError as exc:
         logger.error(
-            "Metadata extraction failed for creator_id={cid} video_id={id}: {exc}",
-            cid=creator_id,
+            "Metadata extraction failed for creator_email={cid} video_id={id}: {exc}",
+            cid=creator_email,
             id=video_id,
             exc=str(exc),
         )
@@ -1197,8 +1196,8 @@ def process_video(
         )
 
     logger.info(
-        "process_video complete: creator_id={cid} video_id={id} status={s}",
-        cid=creator_id,
+        "process_video complete: creator_email={cid} video_id={id} status={s}",
+        cid=creator_email,
         id=video_id,
         s=metadata.status,
     )
