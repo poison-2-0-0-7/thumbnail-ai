@@ -5,10 +5,11 @@ test_thumbnail_intelligence.py
 Pytest suite for Module 4 (Thumbnail Intelligence Engine).
 
 All heavy ML engines (EasyOCR, InsightFace, Ultralytics YOLO) and the
-Gemini API are mocked with ``unittest.mock.patch`` so the entire suite
-runs fully offline and deterministically, without downloading any model
-weights or making any network call. File-system operations use
-pytest's ``tmp_path`` fixture for complete test isolation.
+local Ollama HTTP API are mocked with ``unittest.mock.patch`` so the
+entire suite runs fully offline and deterministically, without
+downloading any model weights or making any network call. File-system
+operations use pytest's ``tmp_path`` fixture for complete test
+isolation.
 
 Coverage targets:
     - :func:`load_and_validate_image`   missing, corrupted, blank, valid
@@ -49,6 +50,7 @@ from unittest.mock import MagicMock, patch
 
 import numpy as np
 import pytest
+import requests
 import tenacity
 from PIL import Image
 
@@ -64,8 +66,9 @@ from config import (  # noqa: E402
     COLOR_PALETTE_SIZE,
     DEFAULT_ANALYSIS_DIR,
     FACE_MIN_CONFIDENCE,
-    GEMINI_MAX_RETRY_ATTEMPTS,
     OCR_MIN_CONFIDENCE,
+    OLLAMA_MAX_RETRY_ATTEMPTS,
+    OLLAMA_MODEL,
     YOLO_MIN_CONFIDENCE,
 )
 from models import (  # noqa: E402
@@ -85,12 +88,12 @@ from thumbnail_intelligence import (  # noqa: E402
     ColorAnalysisError,
     CompositionAnalysisError,
     FaceEngineError,
-    GeminiReasoningError,
     ImageLoadError,
     IntelligenceCacheError,
     InvalidMetadataError,
     ObjectDetectionEngineError,
     OCREngineError,
+    OllamaReasoningError,
     ThumbnailIntelligenceError,
     analyze_thumbnail,
     generate_reasoning,
@@ -226,9 +229,9 @@ class TestConfigConstants:
         assert isinstance(COLOR_PALETTE_SIZE, int)
         assert COLOR_PALETTE_SIZE > 0
 
-    def test_gemini_max_retry_attempts_is_positive_int(self) -> None:
-        assert isinstance(GEMINI_MAX_RETRY_ATTEMPTS, int)
-        assert GEMINI_MAX_RETRY_ATTEMPTS > 0
+    def test_ollama_max_retry_attempts_is_positive_int(self) -> None:
+        assert isinstance(OLLAMA_MAX_RETRY_ATTEMPTS, int)
+        assert OLLAMA_MAX_RETRY_ATTEMPTS > 0
 
     def test_default_analysis_dir_is_path(self) -> None:
         assert isinstance(DEFAULT_ANALYSIS_DIR, Path)
@@ -250,7 +253,7 @@ class TestExceptionHierarchy:
             ObjectDetectionEngineError,
             ColorAnalysisError,
             CompositionAnalysisError,
-            GeminiReasoningError,
+            OllamaReasoningError,
             IntelligenceCacheError,
         ],
     )
@@ -836,11 +839,11 @@ class TestRunCompositionAnalysis:
 
 
 # ---------------------------------------------------------------------------
-# generate_reasoning / _call_gemini_api
+# generate_reasoning / _call_ollama_api
 # ---------------------------------------------------------------------------
 
 
-_VALID_GEMINI_JSON = json.dumps(
+_VALID_OLLAMA_JSON = json.dumps(
     {
         "ctr_potential_score": 0.72,
         "curiosity_gap_score": 0.65,
@@ -856,10 +859,24 @@ _VALID_GEMINI_JSON = json.dumps(
 )
 
 
+def _fake_ollama_response(body: dict, status_code: int = 200) -> MagicMock:
+    """Build a fake ``requests.Response`` for the Ollama HTTP API."""
+    response = MagicMock()
+    response.status_code = status_code
+    response.json.return_value = body
+    if status_code >= 400:
+        response.raise_for_status.side_effect = requests.exceptions.HTTPError(
+            f"{status_code} error", response=response
+        )
+    else:
+        response.raise_for_status.return_value = None
+    return response
+
+
 class TestGenerateReasoning:
-    @patch("thumbnail_intelligence._call_gemini_api")
+    @patch("thumbnail_intelligence._call_ollama_api")
     def test_parses_valid_json_response(self, mock_call: MagicMock) -> None:
-        mock_call.return_value = _VALID_GEMINI_JSON
+        mock_call.return_value = _VALID_OLLAMA_JSON
 
         result = generate_reasoning({"video": {}, "thumbnail_analysis": {}})
 
@@ -868,93 +885,116 @@ class TestGenerateReasoning:
         assert result.content_mismatch_detected is False
         assert result.strengths == ["Bright color palette"]
 
-    @patch("thumbnail_intelligence._call_gemini_api")
+    @patch("thumbnail_intelligence._call_ollama_api")
     def test_strips_markdown_fences(self, mock_call: MagicMock) -> None:
-        mock_call.return_value = f"```json\n{_VALID_GEMINI_JSON}\n```"
+        mock_call.return_value = f"```json\n{_VALID_OLLAMA_JSON}\n```"
 
         result = generate_reasoning({"video": {}, "thumbnail_analysis": {}})
 
         assert result.ctr_potential_score == pytest.approx(0.72)
 
-    @patch("thumbnail_intelligence._call_gemini_api")
-    def test_invalid_json_raises_gemini_reasoning_error(self, mock_call: MagicMock) -> None:
+    @patch("thumbnail_intelligence._call_ollama_api")
+    def test_invalid_json_raises_ollama_reasoning_error(self, mock_call: MagicMock) -> None:
         mock_call.return_value = "this is not json at all"
-        with pytest.raises(GeminiReasoningError, match="not valid JSON"):
+        with pytest.raises(OllamaReasoningError, match="not valid JSON"):
             generate_reasoning({"video": {}, "thumbnail_analysis": {}})
 
-    @patch("thumbnail_intelligence._call_gemini_api")
-    def test_missing_required_key_raises_gemini_reasoning_error(
+    @patch("thumbnail_intelligence._call_ollama_api")
+    def test_missing_required_key_raises_ollama_reasoning_error(
         self, mock_call: MagicMock
     ) -> None:
         incomplete = json.dumps({"ctr_potential_score": 0.5})
         mock_call.return_value = incomplete
-        with pytest.raises(GeminiReasoningError, match="expected schema"):
+        with pytest.raises(OllamaReasoningError, match="expected schema"):
             generate_reasoning({"video": {}, "thumbnail_analysis": {}})
 
-    @patch("thumbnail_intelligence._call_gemini_api")
-    def test_transient_failure_propagates_as_gemini_reasoning_error(
+    @patch("thumbnail_intelligence._call_ollama_api")
+    def test_transient_failure_propagates_as_ollama_reasoning_error(
         self, mock_call: MagicMock
     ) -> None:
-        mock_call.side_effect = ti._GeminiTransientError("network blip")
-        with pytest.raises(GeminiReasoningError, match="failed after"):
+        mock_call.side_effect = ti._OllamaTransientError("network blip")
+        with pytest.raises(OllamaReasoningError, match="failed after"):
             generate_reasoning({"video": {}, "thumbnail_analysis": {}})
 
 
-class TestCallGeminiApi:
-    def test_missing_api_key_raises_gemini_reasoning_error(
-        self, monkeypatch: pytest.MonkeyPatch
-    ) -> None:
-        monkeypatch.delenv("GEMINI_API_KEY", raising=False)
-        with pytest.raises(GeminiReasoningError, match="No Gemini API key"):
-            ti._call_gemini_api.__wrapped__({"video": {}})
+class TestCallOllamaApi:
+    def test_connection_error_is_transient(self) -> None:
+        with patch("thumbnail_intelligence.requests.post") as mock_post:
+            mock_post.side_effect = requests.exceptions.ConnectionError(
+                "connection refused"
+            )
+            with pytest.raises(ti._OllamaTransientError, match="Could not connect"):
+                ti._call_ollama_api.__wrapped__({"video": {}})
 
-    def test_retries_transient_failure_then_succeeds(
-        self, monkeypatch: pytest.MonkeyPatch
-    ) -> None:
-        monkeypatch.setenv("GEMINI_API_KEY", "fake-key-for-test")
+    def test_timeout_is_transient(self) -> None:
+        with patch("thumbnail_intelligence.requests.post") as mock_post:
+            mock_post.side_effect = requests.exceptions.Timeout("timed out")
+            with pytest.raises(ti._OllamaTransientError, match="timed out"):
+                ti._call_ollama_api.__wrapped__({"video": {}})
 
-        fake_genai = MagicMock()
-        fake_response = MagicMock()
-        fake_response.text = _VALID_GEMINI_JSON
-        fake_model = MagicMock()
-        fake_model.generate_content.side_effect = [
-            RuntimeError("temporary hiccup"),
-            fake_response,
-        ]
-        fake_genai.GenerativeModel.return_value = fake_model
+    def test_model_not_found_is_transient(self) -> None:
+        with patch("thumbnail_intelligence.requests.post") as mock_post:
+            mock_post.return_value = _fake_ollama_response({}, status_code=404)
+            with pytest.raises(ti._OllamaTransientError, match="ollama pull"):
+                ti._call_ollama_api.__wrapped__({"video": {}})
 
-        # Speed up the real tenacity retry loop for this test only.
-        original_wait = ti._call_gemini_api.retry.wait
-        ti._call_gemini_api.retry.wait = tenacity.wait_none()
-        try:
-            with patch.dict(sys.modules, {"google.generativeai": fake_genai}):
-                result_text = ti._call_gemini_api({"video": {}})
-        finally:
-            ti._call_gemini_api.retry.wait = original_wait
+    def test_empty_response_field_is_transient(self) -> None:
+        with patch("thumbnail_intelligence.requests.post") as mock_post:
+            mock_post.return_value = _fake_ollama_response({"response": ""})
+            with pytest.raises(ti._OllamaTransientError, match="no 'response' field"):
+                ti._call_ollama_api.__wrapped__({"video": {}})
 
-        assert result_text == _VALID_GEMINI_JSON
-        assert fake_model.generate_content.call_count == 2
+    def test_successful_call_returns_response_text(self) -> None:
+        with patch("thumbnail_intelligence.requests.post") as mock_post:
+            mock_post.return_value = _fake_ollama_response({"response": _VALID_OLLAMA_JSON})
+            result_text = ti._call_ollama_api.__wrapped__({"video": {}})
 
-    def test_exhausts_retries_and_raises_transient_error(
-        self, monkeypatch: pytest.MonkeyPatch
-    ) -> None:
-        monkeypatch.setenv("GEMINI_API_KEY", "fake-key-for-test")
+        assert result_text == _VALID_OLLAMA_JSON
 
-        fake_genai = MagicMock()
-        fake_model = MagicMock()
-        fake_model.generate_content.side_effect = RuntimeError("always fails")
-        fake_genai.GenerativeModel.return_value = fake_model
+    def test_request_uses_configured_model_and_deterministic_options(self) -> None:
+        with patch("thumbnail_intelligence.requests.post") as mock_post:
+            mock_post.return_value = _fake_ollama_response({"response": _VALID_OLLAMA_JSON})
+            ti._call_ollama_api.__wrapped__({"video": {}})
 
-        original_wait = ti._call_gemini_api.retry.wait
-        ti._call_gemini_api.retry.wait = tenacity.wait_none()
-        try:
-            with patch.dict(sys.modules, {"google.generativeai": fake_genai}):
-                with pytest.raises(ti._GeminiTransientError):
-                    ti._call_gemini_api({"video": {}})
-        finally:
-            ti._call_gemini_api.retry.wait = original_wait
+        _, kwargs = mock_post.call_args
+        payload = kwargs["json"]
+        assert payload["model"] == OLLAMA_MODEL
+        assert payload["stream"] is False
+        assert payload["format"] == "json"
+        assert payload["think"] is False
+        assert payload["options"]["temperature"] == 0.0
 
-        assert fake_model.generate_content.call_count == GEMINI_MAX_RETRY_ATTEMPTS
+    def test_retries_transient_failure_then_succeeds(self) -> None:
+        with patch("thumbnail_intelligence.requests.post") as mock_post:
+            mock_post.side_effect = [
+                requests.exceptions.ConnectionError("temporary hiccup"),
+                _fake_ollama_response({"response": _VALID_OLLAMA_JSON}),
+            ]
+
+            # Speed up the real tenacity retry loop for this test only.
+            original_wait = ti._call_ollama_api.retry.wait
+            ti._call_ollama_api.retry.wait = tenacity.wait_none()
+            try:
+                result_text = ti._call_ollama_api({"video": {}})
+            finally:
+                ti._call_ollama_api.retry.wait = original_wait
+
+        assert result_text == _VALID_OLLAMA_JSON
+        assert mock_post.call_count == 2
+
+    def test_exhausts_retries_and_raises_transient_error(self) -> None:
+        with patch("thumbnail_intelligence.requests.post") as mock_post:
+            mock_post.side_effect = requests.exceptions.ConnectionError("always fails")
+
+            original_wait = ti._call_ollama_api.retry.wait
+            ti._call_ollama_api.retry.wait = tenacity.wait_none()
+            try:
+                with pytest.raises(ti._OllamaTransientError):
+                    ti._call_ollama_api({"video": {}})
+            finally:
+                ti._call_ollama_api.retry.wait = original_wait
+
+        assert mock_post.call_count == OLLAMA_MAX_RETRY_ATTEMPTS
 
 
 # ---------------------------------------------------------------------------
@@ -1131,19 +1171,19 @@ class TestAnalyzeThumbnail:
 
         assert result.status == "partial"
 
-    def test_gemini_failure_degrades_reasoning_to_none(self, tmp_path: Path) -> None:
+    def test_ollama_failure_degrades_reasoning_to_none(self, tmp_path: Path) -> None:
         td = _make_thumbnail_data(tmp_path)
         patches = _patch_all_cv_stages()
 
         def failing_reasoning(context: dict) -> GeminiReasoning:
-            raise GeminiReasoningError("no key configured")
+            raise OllamaReasoningError("could not connect to Ollama")
 
         with patch.multiple("thumbnail_intelligence", **patches):
             result = analyze_thumbnail(td, generate_reasoning_fn=failing_reasoning)
 
         assert result.status == "partial"
         assert result.reasoning is None
-        assert any("gemini_reasoning" in reason for reason in result.partial_failure_reasons)
+        assert any("ollama_reasoning" in reason for reason in result.partial_failure_reasons)
 
     def test_thumbnail_without_face_reports_zero_faces(self, tmp_path: Path) -> None:
         td = _make_thumbnail_data(tmp_path)
@@ -1373,15 +1413,28 @@ class TestLoadCachedIntelligence:
 
 
 # ---------------------------------------------------------------------------
-# Integration tests (real Gemini API) — separated and skipped by default
+# Integration tests (real local Ollama server) — separated and skipped by
+# default
 # ---------------------------------------------------------------------------
 
 
+def _ollama_server_reachable() -> bool:
+    """Best-effort check for a live Ollama server, used only to decide
+    whether to skip the integration test below."""
+    from config import OLLAMA_BASE_URL
+
+    try:
+        response = requests.get(f"{OLLAMA_BASE_URL.rstrip('/')}/api/tags", timeout=2)
+        return response.status_code == 200
+    except requests.exceptions.RequestException:
+        return False
+
+
 @pytest.mark.integration
-class TestGeminiLiveIntegration:
+class TestOllamaLiveIntegration:
     @pytest.mark.skipif(
-        "GEMINI_API_KEY" not in __import__("os").environ,
-        reason="requires a real GEMINI_API_KEY in the environment",
+        not _ollama_server_reachable(),
+        reason="requires a running local Ollama server at OLLAMA_BASE_URL",
     )
     def test_generate_reasoning_against_live_api(self) -> None:
         context = {

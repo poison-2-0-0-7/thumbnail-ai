@@ -22,7 +22,7 @@ Module 4  Thumbnail Intelligence Engine
           Analyzes the downloaded thumbnail together with its video
           metadata (title, description, transcript) via OCR, face
           analysis, object detection, color analysis, composition
-          analysis, and Gemini-based reasoning, saving a structured
+          analysis, and local Ollama-based reasoning, saving a structured
           report to ``data/analysis/{video_id}.json``.
           ↓
 Future modules ...

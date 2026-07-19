@@ -181,25 +181,26 @@ YOLO_MIN_CONFIDENCE: float = 0.4
 #: Maximum number of dominant colors to extract per thumbnail.
 COLOR_PALETTE_SIZE: int = 5
 
-#: Gemini model used for the reasoning stage.
-GEMINI_MODEL_NAME: str = "gemini-2.0-flash"
+#: Base URL of the local Ollama server used for the reasoning stage.
+OLLAMA_BASE_URL: str = "http://localhost:11434"
 
-#: Maximum seconds to wait for a Gemini response before giving up.
-GEMINI_REQUEST_TIMEOUT_SECONDS: float = 60.0
+#: Ollama model used for the reasoning stage.
+OLLAMA_MODEL: str = "qwen3:8b"
 
-#: Maximum retry attempts for transient Gemini failures.
-GEMINI_MAX_RETRY_ATTEMPTS: int = 3
+#: Maximum seconds to wait for an Ollama response before giving up.
+OLLAMA_TIMEOUT_SECONDS: float = 60.0
 
-#: Minimum seconds to wait between Gemini retry attempts.
-GEMINI_RETRY_WAIT_MIN_SECONDS: float = 2.0
+#: Maximum retry attempts for transient Ollama failures.
+OLLAMA_MAX_RETRY_ATTEMPTS: int = 3
 
-#: Maximum seconds to wait between Gemini retry attempts.
-GEMINI_RETRY_WAIT_MAX_SECONDS: float = 20.0
+#: Minimum seconds to wait between Ollama retry attempts.
+OLLAMA_RETRY_WAIT_MIN_SECONDS: float = 2.0
 
-#: Name of the environment variable holding the Gemini API key.
-GEMINI_API_KEY_ENV_VAR: str = "GEMINI_API_KEY"
+#: Maximum seconds to wait between Ollama retry attempts.
+OLLAMA_RETRY_WAIT_MAX_SECONDS: float = 20.0
 
-#: Maximum number of transcript characters forwarded to Gemini. Long
-#: transcripts are truncated (keeping the head, where creators usually
-#: state the video's premise) to keep prompt size and cost bounded.
-GEMINI_TRANSCRIPT_CHAR_LIMIT: int = 6_000
+#: Maximum number of transcript characters forwarded to the reasoning
+#: stage. Long transcripts are truncated (keeping the head, where
+#: creators usually state the video's premise) to keep prompt size and
+#: local-inference latency bounded.
+REASONING_TRANSCRIPT_CHAR_LIMIT: int = 6_000

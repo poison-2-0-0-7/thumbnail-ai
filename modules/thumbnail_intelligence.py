@@ -28,10 +28,10 @@ Analysis pipeline
 7. Context merge    — combine every CV finding with title/description/
                        transcript/metadata into one structured context.
 8. AI reasoning     — send the structured context (not the raw pixels)
-                       to Gemini for CTR/curiosity/mismatch reasoning.
+                       to a local Ollama model for CTR/curiosity/mismatch reasoning.
 
 The thumbnail is never reasoned about in isolation: stage 7 is mandatory
-before the Gemini call, and the transcript is always included when
+before the reasoning call, and the transcript is always included when
 available, because the thumbnail must be evaluated against what the
 video actually contains.
 
@@ -41,7 +41,7 @@ If ``data/analysis/{video_id}.json`` already exists, :func:`analyze_thumbnail`
 does **not** consult it automatically (unlike Module 3's thumbnail cache) —
 callers that want cache-first behaviour should check
 :func:`load_cached_intelligence` themselves. This mirrors the fact that
-re-analysis may legitimately be desired after a Gemini prompt or model
+re-analysis may legitimately be desired after a reasoning prompt or model
 upgrade, whereas a downloaded thumbnail bitmap never changes.
 
 Public API
@@ -69,6 +69,7 @@ from pathlib import Path
 from typing import Optional
 
 import numpy as np
+import requests
 from loguru import logger
 from PIL import Image, UnidentifiedImageError
 from tenacity import (
@@ -94,13 +95,13 @@ from config import (  # noqa: E402
     DEFAULT_DEVICE,
     FACE_MIN_CONFIDENCE,
     FACE_MODEL_NAME,
-    GEMINI_MAX_RETRY_ATTEMPTS,
-    GEMINI_RETRY_WAIT_MAX_SECONDS,
-    GEMINI_RETRY_WAIT_MIN_SECONDS,
     LOG_DIR,
     MODULE4_LOG_PATH,
     OCR_LANGUAGES,
     OCR_MIN_CONFIDENCE,
+    OLLAMA_MAX_RETRY_ATTEMPTS,
+    OLLAMA_RETRY_WAIT_MAX_SECONDS,
+    OLLAMA_RETRY_WAIT_MIN_SECONDS,
     YOLO_MIN_CONFIDENCE,
     YOLO_MODEL_NAME,
 )
@@ -195,10 +196,11 @@ class CompositionAnalysisError(ThumbnailIntelligenceError):
     safe-default :class:`~models.CompositionAnalysis` by the caller."""
 
 
-class GeminiReasoningError(ThumbnailIntelligenceError):
+class OllamaReasoningError(ThumbnailIntelligenceError):
     """
-    Raised when the Gemini reasoning call fails after all retries, or
-    when no API key is configured.
+    Raised when the local Ollama reasoning call fails after all retries
+    (e.g. Ollama is not installed, not running, the configured model is
+    unavailable, or every attempt timed out).
 
     Tenacity retries transient failures internally; this exception
     surfaces only the terminal failure, which the caller degrades to
@@ -1028,7 +1030,7 @@ def run_composition_analysis(
 # ---------------------------------------------------------------------------
 
 
-def _build_gemini_context(
+def _build_reasoning_context(
     metadata: VideoMetadata,
     ocr: OCRResult,
     faces: FaceAnalysis,
@@ -1056,13 +1058,13 @@ def _build_gemini_context(
 
     Returns:
         A JSON-serializable dict combining vision findings and video
-        context, ready to be sent to Gemini.
+        context, ready to be sent to the local reasoning model.
     """
-    from config import GEMINI_TRANSCRIPT_CHAR_LIMIT
+    from config import REASONING_TRANSCRIPT_CHAR_LIMIT
 
     transcript = metadata.transcript or ""
-    if len(transcript) > GEMINI_TRANSCRIPT_CHAR_LIMIT:
-        transcript = transcript[:GEMINI_TRANSCRIPT_CHAR_LIMIT]
+    if len(transcript) > REASONING_TRANSCRIPT_CHAR_LIMIT:
+        transcript = transcript[:REASONING_TRANSCRIPT_CHAR_LIMIT]
 
     return {
         "video": {
@@ -1088,10 +1090,10 @@ def _build_gemini_context(
 
 
 # ---------------------------------------------------------------------------
-# AI reasoning (Gemini)
+# AI reasoning (local Ollama model)
 # ---------------------------------------------------------------------------
 
-_GEMINI_SYSTEM_PROMPT: str = (
+_OLLAMA_SYSTEM_PROMPT: str = (
     "You are a YouTube thumbnail strategy expert. You will be given "
     "STRUCTURED DATA describing a thumbnail (OCR text, detected faces "
     "with emotion/gaze/pose, detected objects, color profile, and "
@@ -1100,8 +1102,8 @@ _GEMINI_SYSTEM_PROMPT: str = (
     "of what the video actually contains — the transcript is the ground "
     "truth for the video's content, and the thumbnail's job is to "
     "represent that content compellingly. Respond ONLY with a single "
-    "JSON object (no markdown fences, no prose outside the object) "
-    "matching exactly this schema:\n"
+    "JSON object (no markdown fences, no prose outside the object, no "
+    "chain-of-thought) matching exactly this schema:\n"
     "{\n"
     '  "ctr_potential_score": float 0-1,\n'
     '  "curiosity_gap_score": float 0-1,\n'
@@ -1117,106 +1119,139 @@ _GEMINI_SYSTEM_PROMPT: str = (
 )
 
 
-def _before_sleep_log_gemini(retry_state: RetryCallState) -> None:
+def _before_sleep_log_ollama(retry_state: RetryCallState) -> None:
     """
     Loguru-compatible Tenacity sleep callback logged at WARNING level
-    for Gemini retry attempts.
+    for Ollama retry attempts.
 
     Args:
         retry_state: Current Tenacity retry state.
     """
     exc = retry_state.outcome.exception() if retry_state.outcome else None
     logger.warning(
-        "Retrying Gemini reasoning call (attempt {n}/{max}): {exc}",
+        "Retrying Ollama reasoning call (attempt {n}/{max}): {exc}",
         n=retry_state.attempt_number,
-        max=GEMINI_MAX_RETRY_ATTEMPTS,
+        max=OLLAMA_MAX_RETRY_ATTEMPTS,
         exc=exc,
     )
 
 
-class _GeminiTransientError(ThumbnailIntelligenceError):
-    """Internal marker for a Gemini failure that tenacity should retry."""
+class _OllamaTransientError(ThumbnailIntelligenceError):
+    """Internal marker for an Ollama failure that tenacity should retry."""
 
 
 @retry(
-    stop=stop_after_attempt(GEMINI_MAX_RETRY_ATTEMPTS),
+    stop=stop_after_attempt(OLLAMA_MAX_RETRY_ATTEMPTS),
     wait=wait_exponential(
         multiplier=1,
-        min=GEMINI_RETRY_WAIT_MIN_SECONDS,
-        max=GEMINI_RETRY_WAIT_MAX_SECONDS,
+        min=OLLAMA_RETRY_WAIT_MIN_SECONDS,
+        max=OLLAMA_RETRY_WAIT_MAX_SECONDS,
     ),
-    retry=retry_if_exception_type(_GeminiTransientError),
-    before_sleep=_before_sleep_log_gemini,
+    retry=retry_if_exception_type(_OllamaTransientError),
+    before_sleep=_before_sleep_log_ollama,
     reraise=True,
 )
-def _call_gemini_api(context: dict) -> str:
+def _call_ollama_api(context: dict) -> str:
     """
-    Perform a single Gemini API call and return the raw response text.
+    Perform a single call to the local Ollama server and return the raw
+    response text.
 
-    This is the only place in Module 4 that makes a network call to
-    Gemini. Error classification happens here so the retry decorator
-    only fires on transient failures:
+    This is the only place in Module 4 that makes a network call for
+    the reasoning stage, and it never leaves the local machine — it
+    talks to :data:`~config.OLLAMA_BASE_URL`. Error classification
+    happens here so the retry decorator only fires on failures that a
+    retry could plausibly fix:
 
-    * Connection errors, timeouts, and 5xx-equivalent SDK errors are
-      wrapped as :class:`_GeminiTransientError` and retried.
-    * A missing API key is a permanent configuration problem and is
-      raised as :class:`GeminiReasoningError` directly (not retried).
+    * Ollama not running, not installed (connection refused), the
+      configured model not being pulled yet, timeouts, and any other
+      request failure are all wrapped as :class:`_OllamaTransientError`
+      and retried, per the module's error-handling contract — there is
+      no local equivalent of a "missing API key" permanent failure
+      since the local server requires no credentials.
+
+    Uses the HTTP ``/api/generate`` endpoint (rather than the official
+    ``ollama`` Python package) so Module 4 needs no additional
+    dependency beyond ``requests``, which is already required by
+    Module 3. ``format="json"`` constrains decoding to valid JSON and
+    ``think=False`` disables qwen3's chain-of-thought output so the
+    response body is exactly the structured object described in
+    :data:`_OLLAMA_SYSTEM_PROMPT`, with ``temperature=0`` for
+    deterministic, reproducible reasoning.
 
     Args:
         context: The Stage 7 merged context dict (vision findings +
             video title/description/transcript/metadata).
 
     Returns:
-        The raw text of Gemini's response, expected to be a JSON object.
+        The raw text of the model's response, expected to be a JSON
+        object.
 
     Raises:
-        GeminiReasoningError: If no API key is configured.
-        _GeminiTransientError: On any transient failure. Tenacity
-            retries this up to :data:`~config.GEMINI_MAX_RETRY_ATTEMPTS`
-            times before it propagates.
+        _OllamaTransientError: On any failure. Tenacity retries this up
+            to :data:`~config.OLLAMA_MAX_RETRY_ATTEMPTS` times before it
+            propagates.
     """
-    import os
+    from config import OLLAMA_BASE_URL, OLLAMA_MODEL, OLLAMA_TIMEOUT_SECONDS
 
-    from config import (
-        GEMINI_API_KEY_ENV_VAR,
-        GEMINI_MODEL_NAME,
-        GEMINI_REQUEST_TIMEOUT_SECONDS,
-    )
-
-    api_key = os.environ.get(GEMINI_API_KEY_ENV_VAR)
-    if not api_key:
-        raise GeminiReasoningError(
-            f"No Gemini API key configured (expected env var "
-            f"{GEMINI_API_KEY_ENV_VAR!r})"
-        )
+    prompt = f"{_OLLAMA_SYSTEM_PROMPT}\n\nSTRUCTURED DATA:\n{json.dumps(context)}"
+    url = f"{OLLAMA_BASE_URL.rstrip('/')}/api/generate"
+    payload = {
+        "model": OLLAMA_MODEL,
+        "prompt": prompt,
+        "stream": False,
+        "format": "json",
+        "think": False,
+        "options": {"temperature": 0.0},
+    }
 
     try:
-        import google.generativeai as genai
+        response = requests.post(url, json=payload, timeout=OLLAMA_TIMEOUT_SECONDS)
+        response.raise_for_status()
+        data = response.json()
+    except requests.exceptions.ConnectionError as exc:
+        raise _OllamaTransientError(
+            f"Could not connect to Ollama at {OLLAMA_BASE_URL} — is it "
+            f"installed and running? ({exc})"
+        ) from exc
+    except requests.exceptions.Timeout as exc:
+        raise _OllamaTransientError(
+            f"Ollama request timed out after {OLLAMA_TIMEOUT_SECONDS}s: {exc}"
+        ) from exc
+    except requests.exceptions.HTTPError as exc:
+        raise _OllamaTransientError(
+            f"Ollama returned an HTTP error (model {OLLAMA_MODEL!r} may not "
+            f"be pulled yet — try 'ollama pull {OLLAMA_MODEL}'): {exc}"
+        ) from exc
+    except requests.exceptions.RequestException as exc:
+        raise _OllamaTransientError(f"Ollama request failed: {exc}") from exc
+    except ValueError as exc:  # response.json() failed to decode
+        raise _OllamaTransientError(
+            f"Ollama returned a non-JSON HTTP response: {exc}"
+        ) from exc
 
-        genai.configure(api_key=api_key)
-        model = genai.GenerativeModel(GEMINI_MODEL_NAME)
-        prompt = f"{_GEMINI_SYSTEM_PROMPT}\n\nSTRUCTURED DATA:\n{json.dumps(context)}"
-        response = model.generate_content(
-            prompt,
-            request_options={"timeout": GEMINI_REQUEST_TIMEOUT_SECONDS},
+    text = data.get("response")
+    if not text:
+        raise _OllamaTransientError(
+            "Ollama response contained no 'response' field"
         )
-        return response.text
-    except GeminiReasoningError:
-        raise
-    except Exception as exc:  # noqa: BLE001 - any SDK failure is transient
-        raise _GeminiTransientError(f"Gemini API call failed: {exc}") from exc
+    return text
 
 
 def generate_reasoning(context: dict) -> GeminiReasoning:
     """
-    Send the Stage 7 merged context to Gemini and parse its response
-    into a structured :class:`GeminiReasoning`.
+    Send the Stage 7 merged context to the local Ollama model and parse
+    its response into a structured :class:`GeminiReasoning`.
 
-    Gemini reasons over the STRUCTURED vision findings (OCR, faces,
+    The model reasons over the STRUCTURED vision findings (OCR, faces,
     objects, colors, composition) plus title/description/transcript —
     never over the raw thumbnail pixels — per the requirement that the
     thumbnail always be evaluated in the context of the video's actual
     content.
+
+    Note: the return type remains :class:`~models.GeminiReasoning` —
+    Module 4's Pydantic schema and downstream JSON output are
+    unchanged by this reasoning-engine swap; only the class name is a
+    historical holdover.
 
     Args:
         context: The Stage 7 merged context dict.
@@ -1225,15 +1260,15 @@ def generate_reasoning(context: dict) -> GeminiReasoning:
         A populated :class:`GeminiReasoning`.
 
     Raises:
-        GeminiReasoningError: If no API key is configured, if every
-            retry attempt fails, or if Gemini's response cannot be
-            parsed as the expected JSON schema.
+        OllamaReasoningError: If every retry attempt fails, or if the
+            model's response cannot be parsed as the expected JSON
+            schema.
     """
     try:
-        raw_text = _call_gemini_api(context)
-    except _GeminiTransientError as exc:
-        raise GeminiReasoningError(
-            f"Gemini reasoning failed after {GEMINI_MAX_RETRY_ATTEMPTS} attempts: {exc}"
+        raw_text = _call_ollama_api(context)
+    except _OllamaTransientError as exc:
+        raise OllamaReasoningError(
+            f"Ollama reasoning failed after {OLLAMA_MAX_RETRY_ATTEMPTS} attempts: {exc}"
         ) from exc
 
     cleaned = raw_text.strip()
@@ -1246,8 +1281,8 @@ def generate_reasoning(context: dict) -> GeminiReasoning:
     try:
         parsed = json.loads(cleaned)
     except json.JSONDecodeError as exc:
-        raise GeminiReasoningError(
-            f"Gemini response was not valid JSON: {exc}"
+        raise OllamaReasoningError(
+            f"Ollama response was not valid JSON: {exc}"
         ) from exc
 
     try:
@@ -1264,8 +1299,8 @@ def generate_reasoning(context: dict) -> GeminiReasoning:
             elements_to_preserve=list(parsed.get("elements_to_preserve", [])),
         )
     except (KeyError, TypeError, ValueError) as exc:
-        raise GeminiReasoningError(
-            f"Gemini response did not match the expected schema: {exc}"
+        raise OllamaReasoningError(
+            f"Ollama response did not match the expected schema: {exc}"
         ) from exc
 
 
@@ -1334,14 +1369,15 @@ def analyze_thumbnail(
     3. Run composition analysis, which depends on the outputs of 2.
     4. Merge every finding with title/description/transcript/metadata
        (Stage 7).
-    5. Send the merged context to Gemini for CTR/curiosity/mismatch
-       reasoning. Degrades to ``reasoning=None`` on failure.
+    5. Send the merged context to the local Ollama model for
+       CTR/curiosity/mismatch reasoning. Degrades to ``reasoning=None``
+       on failure.
     6. Assemble and return the final :class:`ThumbnailIntelligence`.
 
     Args:
         thumbnail_data: Output of Module 3 — the downloaded thumbnail
             path plus its :class:`VideoMetadata`.
-        generate_reasoning_fn: Optional override for the Gemini call,
+        generate_reasoning_fn: Optional override for the Ollama call,
             used by tests to inject a mock. Defaults to
             :func:`generate_reasoning` when ``None``.
 
@@ -1356,7 +1392,8 @@ def analyze_thumbnail(
     Raises:
         InvalidMetadataError: If ``thumbnail_data`` has neither a title
             nor a transcript to reason about — there is nothing
-            meaningful for Gemini to evaluate the thumbnail against.
+            meaningful for the reasoning model to evaluate the thumbnail
+            against.
     """
     metadata = thumbnail_data.metadata
     video_id = metadata.video_id
@@ -1441,7 +1478,7 @@ def analyze_thumbnail(
         failure_reasons.append(f"composition_analysis: {composition_failure}")
 
     # --- Stage 7: context merge ---
-    context = _build_gemini_context(metadata, ocr, faces, objects, colors, composition)
+    context = _build_reasoning_context(metadata, ocr, faces, objects, colors, composition)
 
     # --- AI reasoning ---
     if generate_reasoning_fn is None:
@@ -1455,11 +1492,11 @@ def analyze_thumbnail(
         reasoning = reasoning.model_copy(update={"duration_seconds": reasoning_duration})
     except ThumbnailIntelligenceError as exc:
         logger.warning(
-            "Gemini reasoning degraded to None for video_id={id}: {exc}",
+            "Ollama reasoning degraded to None for video_id={id}: {exc}",
             id=video_id,
             exc=exc,
         )
-        failure_reasons.append(f"gemini_reasoning: {exc}")
+        failure_reasons.append(f"ollama_reasoning: {exc}")
 
     total_duration = time.monotonic() - pipeline_start
     status = "success" if not failure_reasons else "partial"
