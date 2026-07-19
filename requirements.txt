@@ -34,7 +34,11 @@ easyocr>=1.7.1
 onnxruntime-gpu>=1.17.0
 insightface>=0.7.3
 ultralytics>=8.3.0
-google-generativeai>=0.5.0
+# Reasoning stage runs against a local Ollama server (http://localhost:11434)
+# over its HTTP API using the `requests` dependency already declared under
+# Module 3 above — no additional package is required. Install Ollama itself
+# separately (https://ollama.com) and pull the model with:
+#   ollama pull qwen3:8b
 
 # ── Testing ───────────────────────────────────────────────────────────────────
 pytest>=7.4.0
