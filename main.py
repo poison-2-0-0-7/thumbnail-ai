@@ -18,6 +18,13 @@ Module 3  Thumbnail Downloader
           Downloads and validates the video thumbnail, caching it to
           ``data/thumbnails/{video_id}.jpg``.
           ↓
+Module 4  Thumbnail Intelligence Engine
+          Analyzes the downloaded thumbnail together with its video
+          metadata (title, description, transcript) via OCR, face
+          analysis, object detection, color analysis, composition
+          analysis, and Gemini-based reasoning, saving a structured
+          report to ``data/analysis/{video_id}.json``.
+          ↓
 Future modules ...
 
 Running
@@ -46,12 +53,18 @@ if str(_MODULES_DIR) not in sys.path:
 
 from loguru import logger  # noqa: E402
 
-from config import DEFAULT_CSV_PATH, DEFAULT_THUMBNAIL_DIR  # noqa: E402
+from config import DEFAULT_ANALYSIS_DIR, DEFAULT_CSV_PATH, DEFAULT_THUMBNAIL_DIR  # noqa: E402
 from csv_reader import load_all_creators  # noqa: E402
 from models import ThumbnailData, VideoMetadata  # noqa: E402
 from thumbnail_downloader import (  # noqa: E402
     ThumbnailDownloaderError,
     process_thumbnail,
+)
+from thumbnail_intelligence import (  # noqa: E402
+    IntelligenceCacheError,
+    InvalidMetadataError,
+    analyze_thumbnail,
+    save_intelligence,
 )
 from youtube_metadata import process_video  # noqa: E402
 
@@ -63,9 +76,10 @@ from youtube_metadata import process_video  # noqa: E402
 def run_pipeline(
     csv_path: Path = DEFAULT_CSV_PATH,
     thumbnail_dir: Path = DEFAULT_THUMBNAIL_DIR,
+    analysis_dir: Path = DEFAULT_ANALYSIS_DIR,
 ) -> None:
     """
-    Execute the full three-module pipeline for every creator in ``csv_path``.
+    Execute the full four-module pipeline for every creator in ``csv_path``.
 
     Processing is best-effort: a failure on one creator is logged and
     counted, but never prevents the remaining creators from being
@@ -74,6 +88,8 @@ def run_pipeline(
     Args:
         csv_path:      Path to the creators CSV file.
         thumbnail_dir: Directory where thumbnails are saved.
+        analysis_dir:  Directory where thumbnail intelligence reports
+                       are saved as JSON.
     """
     logger.info("Pipeline starting — CSV: {csv}", csv=csv_path)
 
@@ -140,6 +156,61 @@ def run_pipeline(
             "Thumbnail saved for creator_email={email}: {path}",
             email=creator.email,
             path=thumbnail.thumbnail_path,
+        )
+
+        # ── Module 4: analyze thumbnail intelligence ─────────────────────
+        try:
+            intelligence = analyze_thumbnail(thumbnail)
+        except InvalidMetadataError as exc:
+            logger.error(
+                "Thumbnail intelligence skipped for creator_email={email} "
+                "video_id={vid}: {exc}",
+                email=creator.email,
+                vid=metadata.video_id,
+                exc=exc,
+            )
+            skipped += 1
+            continue
+
+        try:
+            save_intelligence(intelligence, analysis_dir=analysis_dir)
+        except IntelligenceCacheError as exc:
+            logger.error(
+                "Failed to save thumbnail intelligence for creator_email={email} "
+                "video_id={vid}: {exc}",
+                email=creator.email,
+                vid=metadata.video_id,
+                exc=exc,
+            )
+            skipped += 1
+            continue
+
+        if intelligence.status == "error":
+            logger.error(
+                "Thumbnail intelligence failed for creator_email={email} "
+                "video_id={vid}: {reason}",
+                email=creator.email,
+                vid=metadata.video_id,
+                reason=intelligence.error_message,
+            )
+            skipped += 1
+            continue
+
+        if intelligence.status == "partial":
+            logger.warning(
+                "Thumbnail intelligence partially degraded for creator_email={email} "
+                "video_id={vid}: {reasons}",
+                email=creator.email,
+                vid=metadata.video_id,
+                reasons=intelligence.partial_failure_reasons,
+            )
+
+        logger.info(
+            "Thumbnail intelligence saved for creator_email={email} "
+            "video_id={vid}: status={status}",
+            email=creator.email,
+            vid=metadata.video_id,
+            status=intelligence.status,
         )
         succeeded += 1
 

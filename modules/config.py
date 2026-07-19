@@ -135,3 +135,71 @@ THUMBNAIL_ACCEPTED_IMAGE_FORMATS: frozenset[str] = frozenset(
 #: HTTP status codes that indicate a permanent failure and should NOT be
 #: retried.  All other non-2xx codes are considered transient.
 THUMBNAIL_PERMANENT_HTTP_ERRORS: frozenset[int] = frozenset({403, 404, 410})
+
+# ---------------------------------------------------------------------------
+# Module 4 — Thumbnail Intelligence Engine
+# ---------------------------------------------------------------------------
+
+#: Log file used by Module 4.
+MODULE4_LOG_PATH: Path = LOG_DIR / "module4.log"
+
+#: Directory where structured intelligence reports are stored as JSON.
+DEFAULT_ANALYSIS_DIR: Path = PROJECT_ROOT / "data" / "analysis"
+
+#: Filename template for a saved intelligence report; formatted with
+#: ``video_id``.
+ANALYSIS_FILENAME_TEMPLATE: str = "{video_id}.json"
+
+#: Device string passed to CV/ML models. Resolved once per process by
+#: ``thumbnail_intelligence`` via ``torch.cuda.is_available()`` — this
+#: constant is the fallback used when that resolution is unavailable.
+DEFAULT_DEVICE: str = "cpu"
+
+#: EasyOCR language list. English is sufficient for the current
+#: creator base; additional languages can be appended without any
+#: other code changes.
+OCR_LANGUAGES: list[str] = ["en"]
+
+#: Minimum per-detection confidence for an OCR text region to be kept.
+#: Regions below this threshold are dropped as noise but still counted
+#: toward ``average_confidence`` bookkeeping in the raw engine output.
+OCR_MIN_CONFIDENCE: float = 0.35
+
+#: InsightFace model pack name.
+FACE_MODEL_NAME: str = "buffalo_l"
+
+#: Minimum detector confidence for a face to be kept.
+FACE_MIN_CONFIDENCE: float = 0.5
+
+#: YOLO model checkpoint. Ultralytics resolves this name to a cached
+#: weights file (downloading it once on first use).
+YOLO_MODEL_NAME: str = "yolo11n.pt"
+
+#: Minimum per-detection confidence for a YOLO object to be kept.
+YOLO_MIN_CONFIDENCE: float = 0.4
+
+#: Maximum number of dominant colors to extract per thumbnail.
+COLOR_PALETTE_SIZE: int = 5
+
+#: Gemini model used for the reasoning stage.
+GEMINI_MODEL_NAME: str = "gemini-2.0-flash"
+
+#: Maximum seconds to wait for a Gemini response before giving up.
+GEMINI_REQUEST_TIMEOUT_SECONDS: float = 60.0
+
+#: Maximum retry attempts for transient Gemini failures.
+GEMINI_MAX_RETRY_ATTEMPTS: int = 3
+
+#: Minimum seconds to wait between Gemini retry attempts.
+GEMINI_RETRY_WAIT_MIN_SECONDS: float = 2.0
+
+#: Maximum seconds to wait between Gemini retry attempts.
+GEMINI_RETRY_WAIT_MAX_SECONDS: float = 20.0
+
+#: Name of the environment variable holding the Gemini API key.
+GEMINI_API_KEY_ENV_VAR: str = "GEMINI_API_KEY"
+
+#: Maximum number of transcript characters forwarded to Gemini. Long
+#: transcripts are truncated (keeping the head, where creators usually
+#: state the video's premise) to keep prompt size and cost bounded.
+GEMINI_TRANSCRIPT_CHAR_LIMIT: int = 6_000

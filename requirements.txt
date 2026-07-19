@@ -13,6 +13,29 @@ tenacity>=8.2.0
 requests>=2.31.0
 Pillow>=10.0.0
 
+# ── Module 4 (Thumbnail Intelligence Engine) ─────────────────────────────────
+# NOTE ON GPU ACCELERATION:
+#   torch/torchvision below install the CPU-only build by default from PyPI.
+#   For CUDA acceleration (recommended — this module was tuned assuming a
+#   CUDA-capable GPU is available, e.g. an RTX 4060), install the matching
+#   CUDA build *before* installing the rest of this file, e.g. for CUDA 12.1:
+#     pip install torch torchvision --index-url https://download.pytorch.org/whl/cu121
+#   Then `pip install -r requirements.txt` will detect torch is already
+#   satisfied and skip reinstalling the CPU build.
+numpy>=1.24.0
+opencv-python-headless>=4.9.0
+torch>=2.1.0
+torchvision>=0.16.0
+easyocr>=1.7.1
+# onnxruntime-gpu requires a CUDA-capable GPU + matching CUDA/cuDNN runtime.
+# Falls back automatically to CPUExecutionProvider (via _resolve_device()) if
+# no GPU is detected at runtime; swap to plain `onnxruntime` if you need a
+# CPU-only environment (e.g. CI) instead.
+onnxruntime-gpu>=1.17.0
+insightface>=0.7.3
+ultralytics>=8.3.0
+google-generativeai>=0.5.0
+
 # ── Testing ───────────────────────────────────────────────────────────────────
 pytest>=7.4.0
 pytest-cov>=4.1.0
