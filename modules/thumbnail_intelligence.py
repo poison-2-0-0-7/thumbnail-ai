@@ -1101,21 +1101,39 @@ _OLLAMA_SYSTEM_PROMPT: str = (
     "and transcript. Reason about the thumbnail strictly in the context "
     "of what the video actually contains — the transcript is the ground "
     "truth for the video's content, and the thumbnail's job is to "
-    "represent that content compellingly. Respond ONLY with a single "
-    "JSON object (no markdown fences, no prose outside the object, no "
-    "chain-of-thought) matching exactly this schema:\n"
+    "represent that content compellingly.\n\n"
+    "OUTPUT FORMAT — READ CAREFULLY:\n"
+    "Respond with ONLY RAW JSON. Your entire response must be a single "
+    "JSON object and nothing else.\n"
+    "- Do NOT use markdown.\n"
+    "- Do NOT use code fences (no ``` of any kind).\n"
+    "- Do NOT include any explanations, preambles, or closing remarks.\n"
+    "- Do NOT include any conversational text before or after the JSON.\n"
+    "- Do NOT include any extra characters before the opening '{' or "
+    "after the closing '}'.\n"
+    "- The first character you output must be '{' and the last "
+    "character must be '}'.\n\n"
+    "REQUIRED JSON SCHEMA — every field below is MANDATORY and must be "
+    "present in your response, with the exact key names and types shown:\n"
     "{\n"
-    '  "ctr_potential_score": float 0-1,\n'
-    '  "curiosity_gap_score": float 0-1,\n'
-    '  "emotional_impact": string,\n'
-    '  "visual_storytelling_notes": string,\n'
-    '  "content_mismatch_detected": boolean,\n'
-    '  "mismatch_explanation": string or null,\n'
-    '  "strengths": [string],\n'
-    '  "weaknesses": [string],\n'
-    '  "redesign_recommendations": [string],\n'
-    '  "elements_to_preserve": [string]\n'
-    "}"
+    '  "ctr_potential_score": <float, 0.0-1.0, REQUIRED>,\n'
+    '  "curiosity_gap_score": <float, 0.0-1.0, REQUIRED>,\n'
+    '  "emotional_impact": <string, REQUIRED>,\n'
+    '  "visual_storytelling_notes": <string, REQUIRED>,\n'
+    '  "content_mismatch_detected": <boolean, REQUIRED>,\n'
+    '  "mismatch_explanation": <string, REQUIRED — use null if '
+    "content_mismatch_detected is false>,\n"
+    '  "strengths": <array of strings, REQUIRED — use [] if none>,\n'
+    '  "weaknesses": <array of strings, REQUIRED — use [] if none>,\n'
+    '  "redesign_recommendations": <array of strings, REQUIRED — use '
+    "[] if none>,\n"
+    '  "elements_to_preserve": <array of strings, REQUIRED — use [] '
+    "if none>\n"
+    "}\n\n"
+    "Every one of these 10 keys MUST appear in the JSON object you "
+    "return, even when a value is an empty string, empty array, or "
+    "null — omitting a required key is not acceptable. Do not add any "
+    "keys beyond the ones listed above."
 )
 
 
@@ -1169,14 +1187,17 @@ def _call_ollama_api(context: dict) -> str:
       no local equivalent of a "missing API key" permanent failure
       since the local server requires no credentials.
 
-    Uses the HTTP ``/api/generate`` endpoint (rather than the official
+    Uses the HTTP ``/api/chat`` endpoint (rather than the official
     ``ollama`` Python package) so Module 4 needs no additional
     dependency beyond ``requests``, which is already required by
-    Module 3. ``format="json"`` constrains decoding to valid JSON and
-    ``think=False`` disables qwen3's chain-of-thought output so the
-    response body is exactly the structured object described in
-    :data:`_OLLAMA_SYSTEM_PROMPT`, with ``temperature=0`` for
-    deterministic, reproducible reasoning.
+    Module 3. The schema instructions (:data:`_OLLAMA_SYSTEM_PROMPT`)
+    are sent as a ``system`` message and the structured data as a
+    ``user`` message — proper chat-role separation, which Ollama
+    templates distinctly so instructions aren't drowned out by the
+    (often much larger) data block. ``format="json"`` constrains
+    decoding to valid JSON, ``think=False`` disables qwen3's
+    chain-of-thought output, and ``temperature=0`` gives deterministic,
+    reproducible reasoning.
 
     Args:
         context: The Stage 7 merged context dict (vision findings +
@@ -1193,11 +1214,40 @@ def _call_ollama_api(context: dict) -> str:
     """
     from config import OLLAMA_BASE_URL, OLLAMA_MODEL, OLLAMA_TIMEOUT_SECONDS
 
-    prompt = f"{_OLLAMA_SYSTEM_PROMPT}\n\nSTRUCTURED DATA:\n{json.dumps(context)}"
-    url = f"{OLLAMA_BASE_URL.rstrip('/')}/api/generate"
+    # Schema instructions and structured data are sent as separate chat
+    # messages (system vs. user) rather than one flattened prompt
+    # string, matching the official Ollama /api/chat contract and
+    # keeping role separation explicit.
+    user_message = (
+        "STRUCTURED DATA:\n"
+        f"{json.dumps(context)}\n\n"
+        "Analyze the structured data above and respond with the JSON "
+        "object described in the system instructions. Return only "
+        "that JSON object.\n\n"
+        "REMINDER — READ THIS AFTER THE DATA ABOVE:\n"
+        "The JSON above is INPUT CONTEXT ONLY.\n"
+        "Do NOT reuse or mirror ANY key from it.\n"
+        "Treat it only as information.\n\n"
+        "Your output MUST contain ONLY these exact keys:\n"
+        "- ctr_potential_score\n"
+        "- curiosity_gap_score\n"
+        "- emotional_impact\n"
+        "- visual_storytelling_notes\n"
+        "- content_mismatch_detected\n"
+        "- mismatch_explanation\n"
+        "- strengths\n"
+        "- weaknesses\n"
+        "- redesign_recommendations\n"
+        "- elements_to_preserve\n\n"
+        "Return exactly one JSON object containing ONLY those keys."
+    )
+    url = f"{OLLAMA_BASE_URL.rstrip('/')}/api/chat"
     payload = {
         "model": OLLAMA_MODEL,
-        "prompt": prompt,
+        "messages": [
+            {"role": "system", "content": _OLLAMA_SYSTEM_PROMPT},
+            {"role": "user", "content": user_message},
+        ],
         "stream": False,
         "format": "json",
         "think": False,
@@ -1229,61 +1279,146 @@ def _call_ollama_api(context: dict) -> str:
             f"Ollama returned a non-JSON HTTP response: {exc}"
         ) from exc
 
-    text = data.get("response")
+    text = (data.get("message") or {}).get("content")
     if not text:
         raise _OllamaTransientError(
-            "Ollama response contained no 'response' field"
+            "Ollama response contained no 'message.content' field"
         )
     return text
 
 
-def generate_reasoning(context: dict) -> GeminiReasoning:
+_REQUIRED_REASONING_FIELDS: tuple[str, ...] = (
+    "ctr_potential_score",
+    "curiosity_gap_score",
+    "emotional_impact",
+    "visual_storytelling_notes",
+    "content_mismatch_detected",
+)
+
+
+def _strip_markdown_fences(text: str) -> str:
     """
-    Send the Stage 7 merged context to the local Ollama model and parse
-    its response into a structured :class:`GeminiReasoning`.
-
-    The model reasons over the STRUCTURED vision findings (OCR, faces,
-    objects, colors, composition) plus title/description/transcript —
-    never over the raw thumbnail pixels — per the requirement that the
-    thumbnail always be evaluated in the context of the video's actual
-    content.
-
-    Note: the return type remains :class:`~models.GeminiReasoning` —
-    Module 4's Pydantic schema and downstream JSON output are
-    unchanged by this reasoning-engine swap; only the class name is a
-    historical holdover.
+    Strip a single leading/trailing markdown code fence (optionally
+    tagged ```json) from ``text``, if present.
 
     Args:
-        context: The Stage 7 merged context dict.
+        text: Raw model output, possibly fenced.
+
+    Returns:
+        ``text`` with any surrounding code fence removed.
+    """
+    cleaned = text.strip()
+    if cleaned.startswith("```"):
+        cleaned = cleaned.strip("`")
+        if cleaned.lstrip().lower().startswith("json"):
+            cleaned = cleaned.lstrip()[4:]
+    return cleaned.strip()
+
+
+def _extract_json_object(raw_text: str) -> str:
+    """
+    Reliably isolate a single JSON object from ``raw_text``, tolerating
+    markdown code fences and any stray conversational text the model
+    may have wrapped around the object despite being instructed to
+    return only raw JSON.
+
+    Strategy, in order:
+      1. Strip markdown code fences.
+      2. If the result already parses as JSON, use it as-is (the
+         common case with ``format="json"``).
+      3. Otherwise, locate the first ``{`` and walk forward tracking
+         brace depth (respecting quoted strings and escapes) to find
+         its matching ``}``, and extract that balanced substring —
+         this recovers the JSON object even if the model prefixed or
+         suffixed it with commentary.
+
+    Args:
+        raw_text: The raw text returned by the Ollama API.
+
+    Returns:
+        A best-effort candidate JSON object string. Not guaranteed to
+        be valid JSON — the caller must still attempt to parse it and
+        handle ``json.JSONDecodeError``.
+    """
+    cleaned = _strip_markdown_fences(raw_text)
+
+    try:
+        json.loads(cleaned)
+        return cleaned
+    except json.JSONDecodeError:
+        pass
+
+    start = cleaned.find("{")
+    if start == -1:
+        return cleaned
+
+    depth = 0
+    in_string = False
+    escape = False
+    for idx in range(start, len(cleaned)):
+        char = cleaned[idx]
+        if in_string:
+            if escape:
+                escape = False
+            elif char == "\\":
+                escape = True
+            elif char == '"':
+                in_string = False
+            continue
+        if char == '"':
+            in_string = True
+        elif char == "{":
+            depth += 1
+        elif char == "}":
+            depth -= 1
+            if depth == 0:
+                return cleaned[start : idx + 1]
+
+    # No balanced closing brace found — return the best-effort slice
+    # from the first '{' onward and let json.loads raise a precise,
+    # helpful decode error below.
+    return cleaned[start:]
+
+
+def _parse_reasoning_response(raw_text: str) -> GeminiReasoning:
+    """
+    Parse and validate a single Ollama response into a
+    :class:`GeminiReasoning`.
+
+    Args:
+        raw_text: Raw text returned by the Ollama API for one attempt.
 
     Returns:
         A populated :class:`GeminiReasoning`.
 
     Raises:
-        OllamaReasoningError: If every retry attempt fails, or if the
-            model's response cannot be parsed as the expected JSON
-            schema.
+        OllamaReasoningError: If the text is not valid JSON after
+            extraction, or the parsed JSON is missing required fields
+            or has fields of the wrong type. The message always names
+            the specific problem (decode error, missing field names,
+            or the offending value) to make failures diagnosable.
     """
-    try:
-        raw_text = _call_ollama_api(context)
-    except _OllamaTransientError as exc:
-        raise OllamaReasoningError(
-            f"Ollama reasoning failed after {OLLAMA_MAX_RETRY_ATTEMPTS} attempts: {exc}"
-        ) from exc
-
-    cleaned = raw_text.strip()
-    if cleaned.startswith("```"):
-        cleaned = cleaned.strip("`")
-        if cleaned.lstrip().lower().startswith("json"):
-            cleaned = cleaned.lstrip()[4:]
-    cleaned = cleaned.strip()
+    candidate = _extract_json_object(raw_text)
 
     try:
-        parsed = json.loads(cleaned)
+        parsed = json.loads(candidate)
     except json.JSONDecodeError as exc:
         raise OllamaReasoningError(
             f"Ollama response was not valid JSON: {exc}"
         ) from exc
+
+    if not isinstance(parsed, dict):
+        raise OllamaReasoningError(
+            "Ollama response did not match the expected schema: "
+            f"expected a JSON object, got {type(parsed).__name__}"
+        )
+
+    missing = [key for key in _REQUIRED_REASONING_FIELDS if key not in parsed]
+    if missing:
+        raise OllamaReasoningError(
+            "Ollama response did not match the expected schema: "
+            f"missing required field(s) {missing!r}"
+        )
 
     try:
         return GeminiReasoning(
@@ -1302,6 +1437,134 @@ def generate_reasoning(context: dict) -> GeminiReasoning:
         raise OllamaReasoningError(
             f"Ollama response did not match the expected schema: {exc}"
         ) from exc
+
+
+# ---------------------------------------------------------------------------
+# TEMPORARY DEBUG INSTRUMENTATION
+#
+# The block below (constant + helper) exists solely to capture the exact,
+# complete, unmodified text Ollama returns so the
+# "did not match the expected schema" failure can be diagnosed. It does
+# not change prompting, parsing, or validation behavior in any way and
+# should be removed once the root cause is confirmed and fixed.
+# ---------------------------------------------------------------------------
+
+_OLLAMA_DEBUG_DUMP_BASENAME: str = "ollama_response"
+
+
+def _dump_raw_ollama_response(raw_text: str) -> None:
+    """
+    Log and persist the complete, unmodified raw text returned by
+    Ollama, before any cleaning, extraction, or parsing is attempted.
+
+    Writes to ``logs/ollama_response.json`` if ``raw_text`` is itself
+    valid JSON as-is, otherwise to ``logs/ollama_response.txt``. The
+    text is written exactly as received — no truncation, no
+    pretty-printing, no other modification. The write is atomic (temp
+    file + :meth:`Path.replace`, matching the pattern used elsewhere in
+    this module) and best-effort: any failure to write is caught and
+    logged as a warning rather than interrupting the reasoning
+    pipeline, since this is diagnostic-only instrumentation.
+
+    Args:
+        raw_text: The exact, complete text returned by
+            :func:`_call_ollama_api`, unmodified.
+    """
+    logger.debug("RAW Ollama response (unmodified):\n{raw}", raw=raw_text)
+
+    try:
+        json.loads(raw_text)
+        target = LOG_DIR / f"{_OLLAMA_DEBUG_DUMP_BASENAME}.json"
+    except json.JSONDecodeError:
+        target = LOG_DIR / f"{_OLLAMA_DEBUG_DUMP_BASENAME}.txt"
+
+    tmp = target.with_suffix(".tmp")
+
+    try:
+        LOG_DIR.mkdir(parents=True, exist_ok=True)
+        tmp.write_text(raw_text, encoding="utf-8")
+        tmp.replace(target)
+        logger.debug("Saved raw Ollama response -> {path}", path=target)
+    except OSError as exc:
+        try:
+            tmp.unlink(missing_ok=True)
+        except OSError:
+            pass
+        logger.warning(
+            "Failed to persist raw Ollama response to {path}: {exc}",
+            path=target,
+            exc=exc,
+        )
+
+
+def generate_reasoning(context: dict) -> GeminiReasoning:
+    """
+    Send the Stage 7 merged context to the local Ollama model and parse
+    its response into a structured :class:`GeminiReasoning`.
+
+    The model reasons over the STRUCTURED vision findings (OCR, faces,
+    objects, colors, composition) plus title/description/transcript —
+    never over the raw thumbnail pixels — per the requirement that the
+    thumbnail always be evaluated in the context of the video's actual
+    content.
+
+    Network-level failures (Ollama unreachable, timed out, model not
+    pulled, etc.) are already retried inside :func:`_call_ollama_api`
+    by its Tenacity decorator; a failure surfacing from there has
+    already exhausted those retries and is raised immediately.
+
+    Separately, if the model *does* respond but the response is not
+    valid JSON or doesn't match the required schema, this function
+    retries the whole call (fresh prompt round-trip) up to
+    :data:`~config.OLLAMA_MAX_RETRY_ATTEMPTS` times before giving up —
+    an occasional malformed generation shouldn't need a full pipeline
+    re-run to recover from.
+
+    Note: the return type remains :class:`~models.GeminiReasoning` —
+    Module 4's Pydantic schema and downstream JSON output are
+    unchanged by this reasoning-engine swap; only the class name is a
+    historical holdover.
+
+    Args:
+        context: The Stage 7 merged context dict.
+
+    Returns:
+        A populated :class:`GeminiReasoning`.
+
+    Raises:
+        OllamaReasoningError: If every retry attempt fails, or if the
+            model's response cannot be parsed as the expected JSON
+            schema after all attempts.
+    """
+    last_error: Optional[OllamaReasoningError] = None
+
+    for attempt in range(1, OLLAMA_MAX_RETRY_ATTEMPTS + 1):
+        try:
+            raw_text = _call_ollama_api(context)
+        except _OllamaTransientError as exc:
+            raise OllamaReasoningError(
+                f"Ollama reasoning failed after {OLLAMA_MAX_RETRY_ATTEMPTS} attempts: {exc}"
+            ) from exc
+
+        # TEMPORARY DEBUG INSTRUMENTATION — capture the exact, complete
+        # raw response before any parsing/validation is attempted. See
+        # _dump_raw_ollama_response docstring.
+        _dump_raw_ollama_response(raw_text)
+
+        try:
+            return _parse_reasoning_response(raw_text)
+        except OllamaReasoningError as exc:
+            last_error = exc
+            logger.warning(
+                "Ollama reasoning response failed validation on attempt "
+                "{attempt}/{max}: {exc}",
+                attempt=attempt,
+                max=OLLAMA_MAX_RETRY_ATTEMPTS,
+                exc=exc,
+            )
+
+    assert last_error is not None  # loop runs >= 1 time (OLLAMA_MAX_RETRY_ATTEMPTS > 0)
+    raise last_error
 
 
 # ---------------------------------------------------------------------------

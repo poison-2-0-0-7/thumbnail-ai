@@ -940,20 +940,24 @@ class TestCallOllamaApi:
 
     def test_empty_response_field_is_transient(self) -> None:
         with patch("thumbnail_intelligence.requests.post") as mock_post:
-            mock_post.return_value = _fake_ollama_response({"response": ""})
-            with pytest.raises(ti._OllamaTransientError, match="no 'response' field"):
+            mock_post.return_value = _fake_ollama_response({"message": {"content": ""}})
+            with pytest.raises(ti._OllamaTransientError, match="no 'message.content' field"):
                 ti._call_ollama_api.__wrapped__({"video": {}})
 
     def test_successful_call_returns_response_text(self) -> None:
         with patch("thumbnail_intelligence.requests.post") as mock_post:
-            mock_post.return_value = _fake_ollama_response({"response": _VALID_OLLAMA_JSON})
+            mock_post.return_value = _fake_ollama_response(
+                {"message": {"content": _VALID_OLLAMA_JSON}}
+            )
             result_text = ti._call_ollama_api.__wrapped__({"video": {}})
 
         assert result_text == _VALID_OLLAMA_JSON
 
     def test_request_uses_configured_model_and_deterministic_options(self) -> None:
         with patch("thumbnail_intelligence.requests.post") as mock_post:
-            mock_post.return_value = _fake_ollama_response({"response": _VALID_OLLAMA_JSON})
+            mock_post.return_value = _fake_ollama_response(
+                {"message": {"content": _VALID_OLLAMA_JSON}}
+            )
             ti._call_ollama_api.__wrapped__({"video": {}})
 
         _, kwargs = mock_post.call_args
@@ -963,12 +967,15 @@ class TestCallOllamaApi:
         assert payload["format"] == "json"
         assert payload["think"] is False
         assert payload["options"]["temperature"] == 0.0
+        assert payload["messages"][0]["role"] == "system"
+        assert payload["messages"][0]["content"] == ti._OLLAMA_SYSTEM_PROMPT
+        assert payload["messages"][1]["role"] == "user"
 
     def test_retries_transient_failure_then_succeeds(self) -> None:
         with patch("thumbnail_intelligence.requests.post") as mock_post:
             mock_post.side_effect = [
                 requests.exceptions.ConnectionError("temporary hiccup"),
-                _fake_ollama_response({"response": _VALID_OLLAMA_JSON}),
+                _fake_ollama_response({"message": {"content": _VALID_OLLAMA_JSON}}),
             ]
 
             # Speed up the real tenacity retry loop for this test only.
