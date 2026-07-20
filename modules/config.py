@@ -204,3 +204,38 @@ OLLAMA_RETRY_WAIT_MAX_SECONDS: float = 20.0
 #: creators usually state the video's premise) to keep prompt size and
 #: local-inference latency bounded.
 REASONING_TRANSCRIPT_CHAR_LIMIT: int = 6_000
+
+# ---------------------------------------------------------------------------
+# Module 5 — Redesign Specification Engine (fully deterministic — no
+# network calls or AI/LLM dependency of any kind)
+# ---------------------------------------------------------------------------
+
+#: Log file used by Module 5.
+MODULE5_LOG_PATH: Path = LOG_DIR / "module5.log"
+
+#: Directory where structured redesign specifications are stored as JSON.
+DEFAULT_REDESIGN_SPEC_DIR: Path = PROJECT_ROOT / "data" / "redesign_specs"
+
+#: Filename template for a saved redesign specification; formatted with
+#: ``video_id``.
+REDESIGN_SPEC_FILENAME_TEMPLATE: str = "{video_id}.json"
+
+# --- Composition thresholds ---
+
+CLUTTER_HIGH_THRESHOLD: float = 0.6
+CLUTTER_REDUCTION_FACTOR: float = 0.7
+MIN_NEGATIVE_SPACE_RATIO: float = 0.25
+RULE_OF_THIRDS_LOW_THRESHOLD: float = 0.4
+MIN_SUBJECT_AREA_RATIO: float = 0.15
+
+# --- Color thresholds ---
+
+BRIGHTNESS_TARGET_RANGE: tuple[float, float] = (0.35, 0.75)
+CONTRAST_TARGET_RANGE: tuple[float, float] = (0.4, 0.8)
+SATURATION_TARGET_RANGE: tuple[float, float] = (0.3, 0.7)
+
+# --- Weakness-keyword matching (rule-based, not generative) ---
+
+COLOR_TEMPERATURE_FLIP_KEYWORDS: frozenset[str] = frozenset(
+    {"too warm", "too cool", "color temperature", "washed out"}
+)
