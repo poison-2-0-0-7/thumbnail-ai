@@ -480,3 +480,95 @@ class ThumbnailIntelligence(BaseModel):
         if not v or not v.strip():
             raise ValueError("video_id must not be empty")
         return v.strip()
+
+
+# ---------------------------------------------------------------------------
+# Module 5 — Redesign Specification Engine
+# ---------------------------------------------------------------------------
+
+
+class ColorDirection(BaseModel):
+    """Deterministic target color adjustment for a redesigned thumbnail."""
+
+    model_config = ConfigDict(frozen=True)
+
+    target_brightness: float = 0.5
+    target_contrast: float = 0.5
+    target_saturation: float = 0.5
+    warm_or_cool: Literal["warm", "cool", "neutral"] = "neutral"
+    rationale: str = ""
+
+
+class SubjectTreatment(BaseModel):
+    """Deterministic placement and crop guidance for the primary subject."""
+
+    model_config = ConfigDict(frozen=True)
+
+    has_subject: bool = False
+    target_bbox: Optional[BoundingBox] = None
+    target_position_label: str = "center"
+    crop_tighter: bool = False
+    rationale: str = ""
+
+
+class TextOverlaySpec(BaseModel):
+    """Placement-only text guidance; this model never contains new copy."""
+
+    model_config = ConfigDict(frozen=True)
+
+    include_text: bool = False
+    placement_zone: Optional[BoundingBox] = None
+    avoid_zones: list[BoundingBox] = []
+    rationale: str = ""
+
+
+class ObjectDirective(BaseModel):
+    """Deterministic action for one detected object."""
+
+    model_config = ConfigDict(frozen=True)
+
+    label: str
+    action: Literal["include", "remove", "preserve"]
+    rationale: str = ""
+
+
+class LayoutDirection(BaseModel):
+    """Deterministic composition targets for a redesigned thumbnail."""
+
+    model_config = ConfigDict(frozen=True)
+
+    target_negative_space_ratio: float = 0.0
+    target_clutter_score: float = 0.0
+    focal_zone: Optional[BoundingBox] = None
+    rationale: str = ""
+
+
+class RedesignSpecification(BaseModel):
+    """Fully structured deterministic redesign guidance derived from Module 4."""
+
+    model_config = ConfigDict(frozen=True)
+
+    video_id: str
+    source_thumbnail_path: str
+    color_direction: ColorDirection
+    subject_treatment: SubjectTreatment
+    text_overlay: TextOverlaySpec
+    layout_direction: LayoutDirection
+    object_directives: list[ObjectDirective] = []
+    elements_to_preserve: list[str] = []
+    overall_rationale: str = ""
+    source_ctr_potential_score: float
+    source_curiosity_gap_score: float
+    source_content_mismatch_detected: bool
+    status: Literal["success", "error"] = "success"
+    error_message: Optional[str] = None
+    duration_seconds: float = 0.0
+    generated_at: str
+
+    @field_validator("video_id")
+    @classmethod
+    def video_id_must_not_be_empty(cls, v: str) -> str:
+        """Reject blank video IDs."""
+        if not v or not v.strip():
+            raise ValueError("video_id must not be empty")
+        return v.strip()
