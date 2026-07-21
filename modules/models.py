@@ -16,7 +16,7 @@ safely by any other module in the system.
 from __future__ import annotations
 
 from enum import Enum
-from typing import Literal, Optional
+from typing import Any, Literal, Optional
 
 from pydantic import BaseModel, ConfigDict, field_validator
 
@@ -649,3 +649,162 @@ class PromptPackage(BaseModel):
         if not v or not v.strip():
             raise ValueError("video_id must not be empty")
         return v.strip()
+
+
+# ---------------------------------------------------------------------------
+# Module 7 — Local Image Generation Engine
+# ---------------------------------------------------------------------------
+
+
+class GenerationProfile(BaseModel):
+    """Complete, named hardware and quality contract for one generation run."""
+
+    model_config = ConfigDict(frozen=True)
+
+    name: str
+    checkpoint: str
+    checkpoint_family: Literal["sdxl", "flux"]
+    sampler: str
+    scheduler: str
+    steps: int
+    cfg: float
+    controlnet_enabled: bool
+    ipadapter_enabled: bool
+    restoration: Literal["codeformer", "gfpgan", "both", "none"]
+    restoration_fidelity: float
+    upscaler: Literal["real_esrgan_x4", "lanczos_only"]
+    expected_vram_gb: float
+    expected_generation_seconds: float
+
+
+class WorkflowTemplateRef(BaseModel):
+    """Resolved, versioned workflow-template reference for a niche/profile pair."""
+
+    model_config = ConfigDict(frozen=True)
+
+    niche: str
+    profile_name: str
+    template_path: str
+    workflow_version: str
+    template_name: str
+
+
+class ComfyUIWorkflowRef(BaseModel):
+    """Resolved concrete ComfyUI graph provenance retained for compatibility."""
+
+    model_config = ConfigDict(frozen=True)
+
+    template_name: str
+    workflow_version: str
+    workflow_hash: str
+
+
+class GeneratedAsset(BaseModel):
+    """Metadata for one generated image asset; image bytes are never embedded."""
+
+    model_config = ConfigDict(frozen=True)
+
+    path: str
+    width: int
+    height: int
+    sha256: str
+    candidate_index: int = 0
+
+
+class FaceMatchResult(BaseModel):
+    """Outcome of a deterministic identity-similarity comparison."""
+
+    model_config = ConfigDict(frozen=True)
+
+    similarity: float = 0.0
+    threshold: float
+    passed: bool
+    face_detected: bool = False
+    skipped: bool = False
+
+
+class QualityAssuranceReport(BaseModel):
+    """Per-candidate quality gates and weighted, auditable quality signals."""
+
+    model_config = ConfigDict(frozen=True)
+
+    resolution_passed: bool
+    file_integrity_passed: bool
+    safety_passed: bool
+    identity_score: float = 0.0
+    face_quality_score: float = 0.0
+    composition_score: float = 0.0
+    text_safe_zone_score: float = 0.0
+    object_preservation_score: float = 0.0
+    color_compliance_score: float = 0.0
+    overall_score: float = 0.0
+    hard_gate_passed: bool
+
+
+class CandidateScore(BaseModel):
+    """Audit record for a candidate, including its deterministic rank when eligible."""
+
+    model_config = ConfigDict(frozen=True)
+
+    candidate_index: int
+    overall_score: float
+    identity_similarity: float = 0.0
+    hard_gate_passed: bool
+    rank: Optional[int] = None
+    selected: bool = False
+
+
+class ImageGenerationResult(BaseModel):
+    """Versioned Module 7 manifest written beside a generated thumbnail."""
+
+    model_config = ConfigDict(frozen=True)
+
+    video_id: str
+    status: Literal["success", "error"] = "success"
+    error_message: Optional[str] = None
+    generated_asset: Optional[GeneratedAsset] = None
+    workflow_version: str
+    workflow_hash: Optional[str] = None
+    prompt_package_hash: str
+    generation_hash: Optional[str] = None
+    profile_name: Optional[str] = None
+    checkpoint_hash: Optional[str] = None
+    lora_hashes: list[str] = []
+    controlnet_hashes: list[str] = []
+    ipadapter_hash: Optional[str] = None
+    restoration_model_hashes: list[str] = []
+    upscaler_hash: Optional[str] = None
+    seed: Optional[int] = None
+    candidate_scores: list[CandidateScore] = []
+    selected_candidate_index: Optional[int] = None
+    retry_count: int = 0
+    stage_durations_seconds: dict[str, float] = {}
+    duration_seconds: float = 0.0
+    generated_at: str
+
+
+class GenerationMetrics(BaseModel):
+    """One append-only, local monitoring record for a Module 7 attempt."""
+
+    model_config = ConfigDict(frozen=True)
+
+    video_id: str
+    niche: str
+    profile_name: Optional[str] = None
+    workflow_version: str
+    workflow_hash: Optional[str] = None
+    generation_hash: Optional[str] = None
+    num_candidates_requested: int = 1
+    queue_time_seconds: float = 0.0
+    generation_time_seconds: list[float] = []
+    total_duration_seconds: float = 0.0
+    identity_retry_count: int = 0
+    generation_retry_count: int = 0
+    failure_reason: Optional[str] = None
+    identity_failures_count: int = 0
+    qa_failures_count: int = 0
+    winning_overall_score: Optional[float] = None
+    winning_signal_scores: dict[str, float] = {}
+    peak_vram_mb: Optional[float] = None
+    gpu_utilization_percent: Optional[float] = None
+    recorded_at: str
