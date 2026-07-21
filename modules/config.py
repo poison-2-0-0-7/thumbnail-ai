@@ -19,6 +19,8 @@ from __future__ import annotations
 
 from pathlib import Path
 
+from models import GenerationProfile
+
 # ---------------------------------------------------------------------------
 # Filesystem layout
 # ---------------------------------------------------------------------------
@@ -309,3 +311,50 @@ SAFETY_CONSTRAINTS: tuple[str, ...] = (
     "Do not include graphic violence, gore, or sexual content.",
     "Do not include misleading medical, financial, or safety claims in any rendered text.",
 )
+
+# ---------------------------------------------------------------------------
+# Module 7 — Local Image Generation Engine (Phase 1 foundation only)
+# ---------------------------------------------------------------------------
+
+COMFYUI_HOST: str = "127.0.0.1"
+COMFYUI_PORT: int = 8188
+COMFYUI_STARTUP_TIMEOUT_SECONDS: float = 60.0
+COMFYUI_REQUEST_TIMEOUT_SECONDS: float = 120.0
+
+MODULE7_PROFILE: str = "auto"
+MODULE7_VRAM_HEADROOM_GB: float = 0.5
+MODULE7_WORKFLOW_LIBRARY_DIR: Path = PROJECT_ROOT / "workflows"
+MODULE7_WORKFLOW_VERSION: str = "workflow_v1"
+MODULE7_NICHE_WORKFLOW_MAP: dict[str, str] = {
+    "gaming": "gaming.json", "finance": "finance.json", "education": "education.json",
+    "podcast": "podcast.json", "tech": "tech.json", "lifestyle": "lifestyle.json",
+    "vlog": "vlog.json", "fitness": "fitness.json", "reaction": "reaction.json",
+    "documentary": "documentary.json",
+}
+
+MODULE7_GENERATION_PROFILES: dict[str, GenerationProfile] = {
+    "PROFILE_STANDARD": GenerationProfile(name="PROFILE_STANDARD", checkpoint="juggernautXL.safetensors", checkpoint_family="sdxl", sampler="dpmpp_2m", scheduler="karras", steps=30, cfg=6.5, controlnet_enabled=True, ipadapter_enabled=True, restoration="codeformer", restoration_fidelity=0.35, upscaler="real_esrgan_x4", expected_vram_gb=7.5, expected_generation_seconds=25.0),
+    "PROFILE_FAST": GenerationProfile(name="PROFILE_FAST", checkpoint="juggernautXL.safetensors", checkpoint_family="sdxl", sampler="dpmpp_2m", scheduler="karras", steps=16, cfg=6.0, controlnet_enabled=True, ipadapter_enabled=True, restoration="codeformer", restoration_fidelity=0.35, upscaler="lanczos_only", expected_vram_gb=7.0, expected_generation_seconds=9.0),
+    "PROFILE_PREMIUM": GenerationProfile(name="PROFILE_PREMIUM", checkpoint="flux1-schnell-q5_k_m.gguf", checkpoint_family="flux", sampler="euler", scheduler="simple", steps=20, cfg=1.0, controlnet_enabled=False, ipadapter_enabled=True, restoration="both", restoration_fidelity=0.35, upscaler="real_esrgan_x4", expected_vram_gb=7.8, expected_generation_seconds=55.0),
+    "PROFILE_LOW_VRAM": GenerationProfile(name="PROFILE_LOW_VRAM", checkpoint="juggernautXL.safetensors", checkpoint_family="sdxl", sampler="dpmpp_2m", scheduler="karras", steps=20, cfg=6.0, controlnet_enabled=False, ipadapter_enabled=True, restoration="codeformer", restoration_fidelity=0.4, upscaler="lanczos_only", expected_vram_gb=5.0, expected_generation_seconds=32.0),
+}
+MODULE7_PROFILE_PREFERENCE: tuple[str, ...] = (
+    "PROFILE_PREMIUM", "PROFILE_STANDARD", "PROFILE_FAST", "PROFILE_LOW_VRAM",
+)
+MODULE7_QA_WEIGHTS: dict[str, float] = {
+    "identity_score": 0.30, "face_quality_score": 0.15,
+    "composition_score": 0.15, "text_safe_zone_score": 0.15,
+    "object_preservation_score": 0.15, "color_compliance_score": 0.10,
+}
+MODULE7_IDENTITY_SIMILARITY_THRESHOLD: float = 0.5
+MODULE7_CODEFORMER_FIDELITY: float = 0.35
+MAX_IDENTITY_RETRIES: int = 2
+MAX_GENERATION_RETRIES: int = 3
+MODULE7_SAVE_CANDIDATES: bool = False
+MODULE7_LOG_PATH: Path = LOG_DIR / "module7.log"
+MODULE7_METRICS_PATH: Path = LOG_DIR / "module7_metrics.jsonl"
+MODULE7_OUTPUT_DIR: Path = PROJECT_ROOT / "data" / "generated_thumbnails"
+MODULE7_NSFW_THRESHOLD: float = 0.15
+MODULE7_MAX_CONCURRENT_GENERATIONS: int = 1
+MODULE7_DRAFT_STEPS: int = 12
+MODULE7_DRAFT_UPSCALE_SKIP: bool = True
