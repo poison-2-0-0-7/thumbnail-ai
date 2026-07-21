@@ -239,3 +239,73 @@ SATURATION_TARGET_RANGE: tuple[float, float] = (0.3, 0.7)
 COLOR_TEMPERATURE_FLIP_KEYWORDS: frozenset[str] = frozenset(
     {"too warm", "too cool", "color temperature", "washed out"}
 )
+
+# ---------------------------------------------------------------------------
+# Module 6 — Prompt Compiler (fully deterministic — no AI/LLM dependency,
+# no image generation, and no network calls)
+# ---------------------------------------------------------------------------
+
+#: Log file used by Module 6.
+MODULE6_LOG_PATH: Path = LOG_DIR / "module6.log"
+
+#: Directory where compiled prompt packages are stored as JSON.
+DEFAULT_PROMPT_PACKAGE_DIR: Path = PROJECT_ROOT / "data" / "prompt_packages"
+
+#: Filename template for a saved prompt package; formatted with ``video_id``.
+PROMPT_PACKAGE_FILENAME_TEMPLATE: str = "{video_id}.json"
+
+# --- Zone-label thresholds ---
+
+#: Fraction of frame width/height below which a bounding-box centre is in
+#: the left/top third. Above ``1 - ZONE_THIRD_THRESHOLD`` is right/bottom.
+ZONE_THIRD_THRESHOLD: float = 1 / 3
+
+# --- Generation parameters (fixed defaults; seed is a stable video-ID hash) ---
+
+DEFAULT_GENERATION_WIDTH: int = 1280
+DEFAULT_GENERATION_HEIGHT: int = 720
+DEFAULT_ASPECT_RATIO: str = "16:9"
+DEFAULT_GUIDANCE_SCALE: float = 7.5
+DEFAULT_INFERENCE_STEPS: int = 30
+DEFAULT_SAMPLER: str = "deterministic"
+SEED_HASH_MODULUS: int = 2**32
+
+# --- Quality parameters ---
+
+BASE_QUALITY_TAGS: tuple[str, ...] = (
+    "sharp focus",
+    "high detail",
+    "professional thumbnail quality",
+)
+DEFAULT_MIN_RESOLUTION_PX: int = 1280
+
+# --- Backend-neutral model settings ---
+
+#: A stable placeholder for Module 7 to map to its selected generator.
+DEFAULT_MODEL_NAME: str = "thumbnail-diffusion-v1"
+DEFAULT_STYLE_PRESET: str = "photographic"
+DEFAULT_NEGATIVE_PROMPT_WEIGHT: float = 1.0
+
+# --- Fixed rendering and safety constraints ---
+
+BASE_NEGATIVE_PROMPT_TERMS: tuple[str, ...] = (
+    "blurry",
+    "low resolution",
+    "watermark",
+    "distorted anatomy",
+    "extra limbs",
+    "text artifacts",
+    "jpeg compression artifacts",
+)
+
+BASE_RENDERING_CONSTRAINTS: tuple[str, ...] = (
+    "Render at the exact target resolution; do not crop after generation.",
+    "Do not add any watermark, logo, or signature.",
+)
+
+SAFETY_CONSTRAINTS: tuple[str, ...] = (
+    "Do not depict real, identifiable people; use a generic or anonymized figure.",
+    "Do not reproduce copyrighted characters, logos, or branded imagery.",
+    "Do not include graphic violence, gore, or sexual content.",
+    "Do not include misleading medical, financial, or safety claims in any rendered text.",
+)
