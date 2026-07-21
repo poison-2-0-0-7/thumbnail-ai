@@ -572,3 +572,80 @@ class RedesignSpecification(BaseModel):
         if not v or not v.strip():
             raise ValueError("video_id must not be empty")
         return v.strip()
+
+
+# ---------------------------------------------------------------------------
+# Module 6 — Prompt Compiler
+# ---------------------------------------------------------------------------
+
+
+class GenerationParameters(BaseModel):
+    """Deterministic image-generation parameters for one prompt package."""
+
+    model_config = ConfigDict(frozen=True)
+
+    width: int = 1280
+    height: int = 720
+    aspect_ratio: str = "16:9"
+    seed: int = 0
+    guidance_scale: float = 7.5
+    inference_steps: int = 30
+    sampler: str = "deterministic"
+
+
+class QualityParameters(BaseModel):
+    """Deterministic output-quality targets for one prompt package."""
+
+    model_config = ConfigDict(frozen=True)
+
+    quality_tags: list[str] = []
+    min_resolution_px: int = 1280
+    upscale_requested: bool = False
+
+
+class ModelSettings(BaseModel):
+    """Deterministic model/style configuration for one prompt package."""
+
+    model_config = ConfigDict(frozen=True)
+
+    model_name: str = "thumbnail-diffusion-v1"
+    style_preset: str = "photographic"
+    negative_prompt_weight: float = 1.0
+
+
+class PromptPackage(BaseModel):
+    """Structured, deterministic Module 7 input compiled from Module 5.
+
+    Every prompt field is assembled from fixed templates and Module 5 values;
+    it never contains newly reasoned or invented creative content.
+    """
+
+    model_config = ConfigDict(frozen=True)
+
+    video_id: str
+    positive_prompt: str
+    negative_prompt: str
+    subject_instructions: str
+    background_instructions: str
+    typography_instructions: str
+    composition_instructions: str
+    lighting_instructions: str
+    color_instructions: str
+    object_placement: list[str] = []
+    rendering_constraints: list[str] = []
+    safety_constraints: list[str] = []
+    generation_parameters: GenerationParameters
+    quality_parameters: QualityParameters
+    model_settings: ModelSettings
+    status: Literal["success", "error"] = "success"
+    error_message: Optional[str] = None
+    duration_seconds: float = 0.0
+    generated_at: str
+
+    @field_validator("video_id")
+    @classmethod
+    def video_id_must_not_be_empty(cls, v: str) -> str:
+        """Reject blank video IDs."""
+        if not v or not v.strip():
+            raise ValueError("video_id must not be empty")
+        return v.strip()

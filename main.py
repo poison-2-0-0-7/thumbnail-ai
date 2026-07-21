@@ -53,7 +53,13 @@ if str(_MODULES_DIR) not in sys.path:
 
 from loguru import logger  # noqa: E402
 
-from config import DEFAULT_ANALYSIS_DIR, DEFAULT_CSV_PATH, DEFAULT_THUMBNAIL_DIR  # noqa: E402
+from config import (  # noqa: E402
+    DEFAULT_ANALYSIS_DIR,
+    DEFAULT_CSV_PATH,
+    DEFAULT_PROMPT_PACKAGE_DIR,
+    DEFAULT_REDESIGN_SPEC_DIR,
+    DEFAULT_THUMBNAIL_DIR,
+)
 from csv_reader import load_all_creators  # noqa: E402
 from models import ThumbnailData, VideoMetadata  # noqa: E402
 from thumbnail_downloader import (  # noqa: E402
@@ -66,6 +72,18 @@ from thumbnail_intelligence import (  # noqa: E402
     analyze_thumbnail,
     save_intelligence,
 )
+from redesign_spec_engine import (  # noqa: E402
+    InvalidIntelligenceError,
+    RedesignSpecCacheError,
+    build_redesign_specification,
+    save_redesign_spec,
+)
+from prompt_compiler import (  # noqa: E402
+    InvalidRedesignSpecError,
+    PromptPackageCacheError,
+    compile_prompt_package,
+    save_prompt_package,
+)
 from youtube_metadata import process_video  # noqa: E402
 
 # ---------------------------------------------------------------------------
@@ -77,6 +95,8 @@ def run_pipeline(
     csv_path: Path = DEFAULT_CSV_PATH,
     thumbnail_dir: Path = DEFAULT_THUMBNAIL_DIR,
     analysis_dir: Path = DEFAULT_ANALYSIS_DIR,
+    redesign_spec_dir: Path = DEFAULT_REDESIGN_SPEC_DIR,
+    prompt_package_dir: Path = DEFAULT_PROMPT_PACKAGE_DIR,
 ) -> None:
     """
     Execute the full four-module pipeline for every creator in ``csv_path``.
@@ -90,6 +110,10 @@ def run_pipeline(
         thumbnail_dir: Directory where thumbnails are saved.
         analysis_dir:  Directory where thumbnail intelligence reports
                        are saved as JSON.
+        redesign_spec_dir: Directory where deterministic Module 5
+                           redesign specifications are saved.
+        prompt_package_dir: Directory where deterministic Module 6
+                            prompt packages are saved.
     """
     logger.info("Pipeline starting — CSV: {csv}", csv=csv_path)
 
@@ -211,6 +235,42 @@ def run_pipeline(
             email=creator.email,
             vid=metadata.video_id,
             status=intelligence.status,
+        )
+
+        # â”€â”€ Module 5: derive deterministic redesign specification â”€â”€
+        try:
+            redesign_spec = build_redesign_specification(intelligence)
+            save_redesign_spec(redesign_spec, spec_dir=redesign_spec_dir)
+        except (InvalidIntelligenceError, RedesignSpecCacheError) as exc:
+            logger.error(
+                "Redesign specification failed for creator_email={email} "
+                "video_id={vid}: {exc}",
+                email=creator.email,
+                vid=metadata.video_id,
+                exc=exc,
+            )
+            skipped += 1
+            continue
+
+        # â”€â”€ Module 6: compile deterministic image-generation package â”€â”€
+        try:
+            prompt_package = compile_prompt_package(redesign_spec)
+            save_prompt_package(prompt_package, package_dir=prompt_package_dir)
+        except (InvalidRedesignSpecError, PromptPackageCacheError) as exc:
+            logger.error(
+                "Prompt compilation failed for creator_email={email} "
+                "video_id={vid}: {exc}",
+                email=creator.email,
+                vid=metadata.video_id,
+                exc=exc,
+            )
+            skipped += 1
+            continue
+
+        logger.info(
+            "Prompt package saved for creator_email={email} video_id={vid}",
+            email=creator.email,
+            vid=metadata.video_id,
         )
         succeeded += 1
 
