@@ -18,9 +18,11 @@ if str(_MODULES_DIR) not in sys.path:
 from comfyui_client import (  # noqa: E402
     ComfyUIEvent,
     SystemStats,
+    _CompletionOutcome,
     _ComfyUIHTTPError,
     _ComfyUIHTTPTransport,
     _ComfyUIWebSocketTransport,
+    _QueueTracker,
 )
 from module7_exceptions import ComfyUIConnectionError  # noqa: E402
 
@@ -611,3 +613,450 @@ class TestWebSocketTransport:
     ) -> None:
         with pytest.raises(ValueError):
             _ComfyUIWebSocketTransport(ws_url, client_id, timeout_seconds)
+
+
+class _FakeClock:
+    def __init__(self) -> None:
+        self.now = 0.0
+        self.sleeps: list[float] = []
+
+    def monotonic(self) -> float:
+        return self.now
+
+    def sleep(self, seconds: float) -> None:
+        self.sleeps.append(seconds)
+        self.now += seconds
+
+    def advance(self, seconds: float) -> None:
+        self.now += seconds
+
+
+class _FakeQueueWebSocket:
+    def __init__(
+        self,
+        events: list[object] | None = None,
+        clock: _FakeClock | None = None,
+        advance_seconds: float = 1.0,
+        reconnect_results: list[object] | None = None,
+    ) -> None:
+        self.events = list(events or [])
+        self.clock = clock
+        self.advance_seconds = advance_seconds
+        self.reconnect_results = list(reconnect_results or [])
+        self.next_event_timeouts: list[float] = []
+        self.ensure_connected_calls = 0
+
+    def next_event(self, timeout_seconds: float) -> ComfyUIEvent | None:
+        self.next_event_timeouts.append(timeout_seconds)
+        if self.clock is not None:
+            self.clock.advance(self.advance_seconds)
+        if not self.events:
+            return None
+        item = self.events.pop(0)
+        if isinstance(item, BaseException):
+            raise item
+        return item  # type: ignore[return-value]
+
+    def ensure_connected(self) -> None:
+        self.ensure_connected_calls += 1
+        if not self.reconnect_results:
+            return
+        result = self.reconnect_results.pop(0)
+        if isinstance(result, BaseException):
+            raise result
+
+
+class _FakeQueueHTTP:
+    def __init__(self, histories: list[object] | None = None) -> None:
+        self.histories = list(histories or [])
+        self.prompt_ids: list[str] = []
+
+    def history(self, prompt_id: str) -> dict[str, object] | None:
+        self.prompt_ids.append(prompt_id)
+        if not self.histories:
+            return None
+        item = self.histories.pop(0)
+        if isinstance(item, BaseException):
+            raise item
+        return item  # type: ignore[return-value]
+
+
+class _FakeLogger:
+    def __init__(self) -> None:
+        self.entries: list[tuple[str, str]] = []
+
+    def debug(self, message: str, **_kwargs: object) -> None:
+        self.entries.append(("DEBUG", message))
+
+    def info(self, message: str, **_kwargs: object) -> None:
+        self.entries.append(("INFO", message))
+
+    def warning(self, message: str, **_kwargs: object) -> None:
+        self.entries.append(("WARNING", message))
+
+    def error(self, message: str, **_kwargs: object) -> None:
+        self.entries.append(("ERROR", message))
+
+
+def _status_event(queue_remaining: int) -> ComfyUIEvent:
+    return ComfyUIEvent("status", None, None, None, None, queue_remaining, None)
+
+
+def _executing_event(prompt_id: str, node: str | None) -> ComfyUIEvent:
+    return ComfyUIEvent("executing", prompt_id, node, None, None, None, None)
+
+
+def _progress_event(prompt_id: str, value: int, maximum: int, node: str = "4") -> ComfyUIEvent:
+    return ComfyUIEvent("progress", prompt_id, node, value, maximum, None, None)
+
+
+def _error_event(prompt_id: str, payload: dict[str, object]) -> ComfyUIEvent:
+    return ComfyUIEvent("execution_error", prompt_id, None, None, None, None, payload)
+
+
+def _cached_event(prompt_id: str) -> ComfyUIEvent:
+    return ComfyUIEvent("execution_cached", prompt_id, None, None, None, None, None)
+
+
+def _history(status_str: str = "success", completed: bool = True) -> dict[str, object]:
+    return {"status": {"completed": completed, "status_str": status_str}, "outputs": {"9": {"images": []}}}
+
+
+def _error_history(payload: dict[str, object] | None = None) -> dict[str, object]:
+    error_payload = payload or {"prompt_id": "prompt-123", "exception_message": "failed"}
+    return {
+        "status": {
+            "completed": True,
+            "status_str": "error",
+            "messages": [["execution_error", error_payload]],
+        }
+    }
+
+
+def _tracker(
+    monkeypatch: pytest.MonkeyPatch,
+    clock: _FakeClock,
+    http: _FakeQueueHTTP,
+    ws: _FakeQueueWebSocket,
+    *,
+    poll_interval_seconds: float = 3.0,
+    execution_timeout_seconds: float = 30.0,
+) -> _QueueTracker:
+    monkeypatch.setattr("comfyui_client.time.monotonic", clock.monotonic)
+    monkeypatch.setattr("comfyui_client.time.sleep", clock.sleep)
+    return _QueueTracker(
+        http,  # type: ignore[arg-type]
+        ws,  # type: ignore[arg-type]
+        poll_interval_seconds=poll_interval_seconds,
+        execution_timeout_seconds=execution_timeout_seconds,
+    )
+
+
+class TestQueueTracker:
+    def test_successful_execution_confirms_history_and_measures_timing(
+        self, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        clock = _FakeClock()
+        http = _FakeQueueHTTP([_history()])
+        ws = _FakeQueueWebSocket(
+            [
+                _status_event(2),
+                _status_event(0),
+                _executing_event("prompt-123", "4"),
+                _progress_event("prompt-123", 5, 10),
+                _executing_event("prompt-123", None),
+            ],
+            clock,
+        )
+        tracker = _tracker(monkeypatch, clock, http, ws)
+
+        result = tracker.await_completion("prompt-123", "client-abc")
+
+        assert result.outcome is _CompletionOutcome.COMPLETED
+        assert result.history_payload == _history()
+        assert result.error_payload is None
+        assert result.queue_wait_seconds == 3.0
+        assert result.generation_seconds == 2.0
+        assert result.used_http_fallback is False
+        assert http.prompt_ids == ["prompt-123"]
+
+    def test_direct_cached_completion_has_zero_generation_time(
+        self, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        clock = _FakeClock()
+        http = _FakeQueueHTTP([_history()])
+        ws = _FakeQueueWebSocket([_status_event(0), _executing_event("prompt-123", None)], clock)
+        tracker = _tracker(monkeypatch, clock, http, ws)
+
+        result = tracker.await_completion("prompt-123", "client-abc")
+
+        assert result.outcome is _CompletionOutcome.COMPLETED
+        assert result.queue_wait_seconds == 2.0
+        assert result.generation_seconds == 0.0
+
+    def test_foreign_prompt_events_do_not_affect_our_state(
+        self, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        clock = _FakeClock()
+        http = _FakeQueueHTTP([_history()])
+        ws = _FakeQueueWebSocket(
+            [
+                _executing_event("foreign", "1"),
+                _progress_event("foreign", 10, 10),
+                _executing_event("prompt-123", "4"),
+                _executing_event("prompt-123", None),
+            ],
+            clock,
+        )
+        tracker = _tracker(monkeypatch, clock, http, ws)
+
+        result = tracker.await_completion("prompt-123", "client-abc")
+
+        assert result.outcome is _CompletionOutcome.COMPLETED
+        assert result.queue_wait_seconds == 3.0
+        assert result.generation_seconds == 1.0
+
+    def test_execution_cached_is_informational_only(self, monkeypatch: pytest.MonkeyPatch) -> None:
+        clock = _FakeClock()
+        http = _FakeQueueHTTP([_history()])
+        ws = _FakeQueueWebSocket(
+            [
+                _cached_event("prompt-123"),
+                _executing_event("prompt-123", "4"),
+                _executing_event("prompt-123", None),
+            ],
+            clock,
+        )
+        tracker = _tracker(monkeypatch, clock, http, ws)
+
+        result = tracker.await_completion("prompt-123", "client-abc")
+
+        assert result.outcome is _CompletionOutcome.COMPLETED
+        assert result.queue_wait_seconds == 2.0
+        assert result.generation_seconds == 1.0
+
+    def test_execution_error_event_returns_error_without_history(
+        self, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        clock = _FakeClock()
+        payload = {"prompt_id": "prompt-123", "exception_message": "node failed"}
+        http = _FakeQueueHTTP([_history()])
+        ws = _FakeQueueWebSocket([_executing_event("prompt-123", "4"), _error_event("prompt-123", payload)], clock)
+        tracker = _tracker(monkeypatch, clock, http, ws)
+
+        result = tracker.await_completion("prompt-123", "client-abc")
+
+        assert result.outcome is _CompletionOutcome.EXECUTION_ERROR
+        assert result.error_payload == payload
+        assert result.history_payload is None
+        assert http.prompt_ids == []
+        assert result.queue_wait_seconds == 1.0
+        assert result.generation_seconds == 1.0
+
+    def test_completion_history_error_becomes_execution_error(
+        self, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        clock = _FakeClock()
+        payload = {"prompt_id": "prompt-123", "exception_type": "RuntimeError"}
+        http = _FakeQueueHTTP([_error_history(payload)])
+        ws = _FakeQueueWebSocket([_executing_event("prompt-123", "4"), _executing_event("prompt-123", None)], clock)
+        tracker = _tracker(monkeypatch, clock, http, ws)
+
+        result = tracker.await_completion("prompt-123", "client-abc")
+
+        assert result.outcome is _CompletionOutcome.EXECUTION_ERROR
+        assert result.error_payload == payload
+        assert result.history_payload is None
+
+    def test_confirmation_retries_until_history_is_terminal(
+        self, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        clock = _FakeClock()
+        http = _FakeQueueHTTP([None, {"outputs": {}}, _history()])
+        ws = _FakeQueueWebSocket([_executing_event("prompt-123", "4"), _executing_event("prompt-123", None)], clock)
+        tracker = _tracker(monkeypatch, clock, http, ws)
+
+        result = tracker.await_completion("prompt-123", "client-abc")
+
+        assert result.outcome is _CompletionOutcome.COMPLETED
+        assert len(http.prompt_ids) == 3
+        assert clock.sleeps == [0.5, 0.5]
+
+    def test_confirmation_exhaustion_falls_back_to_polling(
+        self, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        clock = _FakeClock()
+        http = _FakeQueueHTTP([None, None, None, None, _history()])
+        ws = _FakeQueueWebSocket([_executing_event("prompt-123", None)], clock)
+        tracker = _tracker(monkeypatch, clock, http, ws)
+
+        result = tracker.await_completion("prompt-123", "client-abc")
+
+        assert result.outcome is _CompletionOutcome.COMPLETED
+        assert result.used_http_fallback is True
+        assert len(http.prompt_ids) == 5
+
+    def test_websocket_disconnect_uses_http_fallback_until_success(
+        self, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        clock = _FakeClock()
+        http = _FakeQueueHTTP([None, {"status": {"completed": False, "status_str": "running"}}, _history()])
+        ws = _FakeQueueWebSocket([ComfyUIConnectionError("closed")], clock)
+        tracker = _tracker(monkeypatch, clock, http, ws)
+
+        result = tracker.await_completion("prompt-123", "client-abc")
+
+        assert result.outcome is _CompletionOutcome.COMPLETED
+        assert result.used_http_fallback is True
+        assert len(http.prompt_ids) == 3
+        assert clock.sleeps == [3.0, 3.0]
+
+    def test_http_poll_error_does_not_abort_fallback(self, monkeypatch: pytest.MonkeyPatch) -> None:
+        clock = _FakeClock()
+        http = _FakeQueueHTTP([_ComfyUIHTTPError("temporary"), _history()])
+        ws = _FakeQueueWebSocket([ComfyUIConnectionError("closed")], clock)
+        tracker = _tracker(monkeypatch, clock, http, ws)
+
+        result = tracker.await_completion("prompt-123", "client-abc")
+
+        assert result.outcome is _CompletionOutcome.COMPLETED
+        assert result.used_http_fallback is True
+        assert len(http.prompt_ids) == 2
+
+    def test_polling_reconnect_checks_history_before_resuming_websocket(
+        self, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        clock = _FakeClock()
+        http = _FakeQueueHTTP([None, None, None, _history()])
+        ws = _FakeQueueWebSocket([ComfyUIConnectionError("closed")], clock, reconnect_results=[None])
+        tracker = _tracker(monkeypatch, clock, http, ws, execution_timeout_seconds=60.0)
+
+        result = tracker.await_completion("prompt-123", "client-abc")
+
+        assert result.outcome is _CompletionOutcome.COMPLETED
+        assert ws.ensure_connected_calls == 1
+        assert len(http.prompt_ids) == 4
+
+    def test_polling_reconnect_can_resume_websocket_phase(self, monkeypatch: pytest.MonkeyPatch) -> None:
+        clock = _FakeClock()
+        http = _FakeQueueHTTP([None, None, None, {"status": {"completed": False, "status_str": "running"}}, _history()])
+        ws = _FakeQueueWebSocket(
+            [
+                ComfyUIConnectionError("closed"),
+                _executing_event("prompt-123", "4"),
+                _executing_event("prompt-123", None),
+            ],
+            clock,
+            reconnect_results=[None],
+        )
+        tracker = _tracker(monkeypatch, clock, http, ws, execution_timeout_seconds=60.0)
+
+        result = tracker.await_completion("prompt-123", "client-abc")
+
+        assert result.outcome is _CompletionOutcome.COMPLETED
+        assert result.used_http_fallback is True
+        assert ws.ensure_connected_calls == 1
+        assert len(ws.next_event_timeouts) == 3
+
+    def test_reconnect_skipped_when_budget_is_nearly_exhausted(self, monkeypatch: pytest.MonkeyPatch) -> None:
+        clock = _FakeClock()
+        http = _FakeQueueHTTP([None, None, None, None])
+        ws = _FakeQueueWebSocket([ComfyUIConnectionError("closed")], clock)
+        tracker = _tracker(
+            monkeypatch,
+            clock,
+            http,
+            ws,
+            poll_interval_seconds=3.0,
+            execution_timeout_seconds=12.0,
+        )
+
+        result = tracker.await_completion("prompt-123", "client-abc")
+
+        assert result.outcome is _CompletionOutcome.TIMEOUT
+        assert ws.ensure_connected_calls == 0
+
+    def test_timeout_before_execution(self, monkeypatch: pytest.MonkeyPatch) -> None:
+        clock = _FakeClock()
+        http = _FakeQueueHTTP()
+        ws = _FakeQueueWebSocket([None, None, None], clock, advance_seconds=2.0)
+        tracker = _tracker(monkeypatch, clock, http, ws, execution_timeout_seconds=5.0)
+
+        result = tracker.await_completion("prompt-123", "client-abc")
+
+        assert result.outcome is _CompletionOutcome.TIMEOUT
+        assert result.history_payload is None
+        assert result.error_payload is None
+        assert result.generation_seconds == 0.0
+
+    def test_timeout_after_execution_reports_partial_generation_time(
+        self, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        clock = _FakeClock()
+        http = _FakeQueueHTTP()
+        ws = _FakeQueueWebSocket([_executing_event("prompt-123", "4"), None, None], clock, advance_seconds=2.0)
+        tracker = _tracker(monkeypatch, clock, http, ws, execution_timeout_seconds=5.0)
+
+        result = tracker.await_completion("prompt-123", "client-abc")
+
+        assert result.outcome is _CompletionOutcome.TIMEOUT
+        assert result.queue_wait_seconds == 2.0
+        assert result.generation_seconds == 4.0
+
+    def test_still_queued_warning_is_logged_once(self, monkeypatch: pytest.MonkeyPatch) -> None:
+        clock = _FakeClock()
+        logger_spy = _FakeLogger()
+        monkeypatch.setattr("comfyui_client.logger", logger_spy)
+        http = _FakeQueueHTTP()
+        ws = _FakeQueueWebSocket([_status_event(3), _status_event(3), None], clock, advance_seconds=15.0)
+        tracker = _tracker(monkeypatch, clock, http, ws, execution_timeout_seconds=40.0)
+
+        result = tracker.await_completion("prompt-123", "client-abc")
+
+        assert result.outcome is _CompletionOutcome.TIMEOUT
+        warnings = [entry for entry in logger_spy.entries if entry[0] == "WARNING" and "still queued" in entry[1]]
+        assert len(warnings) == 1
+
+    def test_progress_milestones_are_logged_at_info_granularity(
+        self, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        clock = _FakeClock()
+        logger_spy = _FakeLogger()
+        monkeypatch.setattr("comfyui_client.logger", logger_spy)
+        http = _FakeQueueHTTP([_history()])
+        ws = _FakeQueueWebSocket(
+            [
+                _executing_event("prompt-123", "4"),
+                _progress_event("prompt-123", 10, 100),
+                _progress_event("prompt-123", 25, 100),
+                _progress_event("prompt-123", 55, 100),
+                _progress_event("prompt-123", 100, 100),
+                _executing_event("prompt-123", None),
+            ],
+            clock,
+        )
+        tracker = _tracker(monkeypatch, clock, http, ws)
+
+        result = tracker.await_completion("prompt-123", "client-abc")
+
+        assert result.outcome is _CompletionOutcome.COMPLETED
+        milestone_logs = [
+            entry for entry in logger_spy.entries
+            if entry[0] == "INFO" and "progress milestone" in entry[1]
+        ]
+        assert len(milestone_logs) == 3
+
+    @pytest.mark.parametrize(
+        "poll_interval_seconds, execution_timeout_seconds",
+        [(0.0, 30.0), (-1.0, 30.0), (3.0, 0.0), (30.0, 30.0), (31.0, 30.0)],
+    )
+    def test_invalid_tracker_configuration_is_rejected(
+        self, poll_interval_seconds: float, execution_timeout_seconds: float
+    ) -> None:
+        with pytest.raises(ValueError):
+            _QueueTracker(
+                _FakeQueueHTTP(),  # type: ignore[arg-type]
+                _FakeQueueWebSocket(),  # type: ignore[arg-type]
+                poll_interval_seconds=poll_interval_seconds,
+                execution_timeout_seconds=execution_timeout_seconds,
+            )
