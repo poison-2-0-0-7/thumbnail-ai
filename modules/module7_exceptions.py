@@ -17,6 +17,10 @@ class ComfyUIQueueError(Module7Error):
     """Reserved for Phase 2 ComfyUI execution failures."""
 
 
+class ComfyUITimeoutError(Module7Error):
+    """Raised when a ComfyUI generation exceeds its execution deadline."""
+
+
 class OutputRetrievalError(Module7Error):
     """Base class for completed ComfyUI output retrieval failures."""
 
