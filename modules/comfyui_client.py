@@ -8,6 +8,7 @@ in later sprints.
 from __future__ import annotations
 
 from dataclasses import dataclass
+from enum import Enum
 import json
 import socket
 import time
@@ -18,7 +19,19 @@ import requests
 import websocket
 from loguru import logger
 
-from config import LOG_DIR, MODULE7_LOG_PATH
+from config import (
+    COMFYUI_HISTORY_CONFIRMATION_RETRY_ATTEMPTS,
+    COMFYUI_HISTORY_CONFIRMATION_RETRY_DELAY_SECONDS,
+    COMFYUI_EXECUTION_TIMEOUT_SECONDS,
+    COMFYUI_POLL_INTERVAL_SECONDS,
+    COMFYUI_WEBSOCKET_TIMEOUT_SECONDS,
+    COMFYUI_WS_RECONNECT_MIN_BUDGET_SECONDS,
+    COMFYUI_WS_RECONNECT_POLL_CYCLES,
+    LOG_DIR,
+    MODULE7_LOG_PATH,
+    MODULE7_PROGRESS_LOG_GRANULARITY_PERCENT,
+    MODULE7_STILL_QUEUED_WARNING_SECONDS,
+)
 from module7_exceptions import ComfyUIConnectionError
 
 _LOG_FORMAT = "{time:YYYY-MM-DD HH:mm:ss} | {level:<8} | {name} | {message}"
@@ -61,6 +74,37 @@ class ComfyUIEvent:
     progress_max: int | None
     queue_remaining: int | None
     error_payload: dict[str, Any] | None
+
+
+class _CompletionOutcome(Enum):
+    COMPLETED = "completed"
+    EXECUTION_ERROR = "execution_error"
+    TIMEOUT = "timeout"
+
+
+@dataclass(frozen=True)
+class _CompletionResult:
+    outcome: _CompletionOutcome
+    history_payload: dict[str, Any] | None
+    error_payload: dict[str, Any] | None
+    queue_wait_seconds: float
+    generation_seconds: float
+    used_http_fallback: bool
+
+
+class _PhaseOutcome(Enum):
+    COMPLETED = "completed"
+    EXECUTION_ERROR = "execution_error"
+    TIMEOUT = "timeout"
+    FALLBACK = "fallback"
+    RESUME_WEBSOCKET = "resume_websocket"
+
+
+@dataclass(frozen=True)
+class _PhaseResult:
+    outcome: _PhaseOutcome
+    history_payload: dict[str, Any] | None = None
+    error_payload: dict[str, Any] | None = None
 
 
 class _ComfyUIHTTPError(RuntimeError):
@@ -390,6 +434,438 @@ class _ComfyUIWebSocketTransport:
         if len(value) <= limit:
             return value
         return f"{value[:limit]}..."
+
+
+class _QueueTracker:
+    """Track one submitted ComfyUI prompt through terminal completion."""
+
+    _STATE_QUEUED = "Queued"
+    _STATE_EXECUTING = "Executing"
+
+    def __init__(
+        self,
+        http: "_ComfyUIHTTPTransport",
+        ws: "_ComfyUIWebSocketTransport",
+        poll_interval_seconds: float = COMFYUI_POLL_INTERVAL_SECONDS,
+        execution_timeout_seconds: float = COMFYUI_EXECUTION_TIMEOUT_SECONDS,
+    ) -> None:
+        if poll_interval_seconds <= 0:
+            raise ValueError("poll_interval_seconds must be greater than zero")
+        if execution_timeout_seconds <= 0:
+            raise ValueError("execution_timeout_seconds must be greater than zero")
+        if poll_interval_seconds >= execution_timeout_seconds:
+            raise ValueError("poll_interval_seconds must be less than execution_timeout_seconds")
+
+        self._http = http
+        self._ws = ws
+        self._poll_interval_seconds = poll_interval_seconds
+        self._execution_timeout_seconds = execution_timeout_seconds
+
+        self._call_started_at = 0.0
+        self._execution_started_at: float | None = None
+        self._last_terminal_at = 0.0
+        self._state = self._STATE_QUEUED
+        self._used_http_fallback = False
+        self._queued_warning_logged = False
+        self._last_progress_milestone = 0
+
+    def await_completion(self, prompt_id: str, client_id: str) -> _CompletionResult:
+        """Block until the prompt completes, errors, or exceeds its execution deadline."""
+        if not isinstance(prompt_id, str) or not prompt_id.strip():
+            return self._timeout_result(0.0)
+        if not isinstance(client_id, str) or not client_id.strip():
+            logger.debug("Queue tracker received empty client_id for prompt_id={prompt_id}", prompt_id=prompt_id)
+
+        self._reset_call_state()
+        deadline = self._call_started_at + self._execution_timeout_seconds
+
+        phase = self._run_websocket_phase(prompt_id.strip(), deadline)
+        while phase.outcome is _PhaseOutcome.FALLBACK:
+            self._used_http_fallback = True
+            phase = self._run_polling_phase(prompt_id.strip(), deadline)
+            if phase.outcome is _PhaseOutcome.RESUME_WEBSOCKET:
+                phase = self._run_websocket_phase(prompt_id.strip(), deadline)
+
+        return self._completion_result(phase)
+
+    def _reset_call_state(self) -> None:
+        self._call_started_at = time.monotonic()
+        self._execution_started_at = None
+        self._last_terminal_at = self._call_started_at
+        self._state = self._STATE_QUEUED
+        self._used_http_fallback = False
+        self._queued_warning_logged = False
+        self._last_progress_milestone = 0
+
+    def _run_websocket_phase(self, prompt_id: str, deadline: float) -> _PhaseResult:
+        while True:
+            if self._deadline_reached(deadline):
+                return self._phase_timeout()
+
+            timeout_seconds = min(COMFYUI_WEBSOCKET_TIMEOUT_SECONDS, self._remaining(deadline))
+            if timeout_seconds <= 0:
+                return self._phase_timeout()
+
+            try:
+                event = self._ws.next_event(timeout_seconds)
+            except ComfyUIConnectionError as exc:
+                self._used_http_fallback = True
+                logger.warning(
+                    "ComfyUI WebSocket disconnected while tracking prompt_id={prompt_id}; "
+                    "falling back to HTTP polling ({error})",
+                    prompt_id=prompt_id,
+                    error=str(exc),
+                )
+                return _PhaseResult(_PhaseOutcome.FALLBACK)
+
+            if event is None:
+                self._log_still_queued_if_needed(prompt_id)
+                continue
+
+            result = self._handle_websocket_event(prompt_id, event, deadline)
+            if result is not None:
+                return result
+
+    def _run_polling_phase(self, prompt_id: str, deadline: float) -> _PhaseResult:
+        poll_count = 0
+        while True:
+            if self._deadline_reached(deadline):
+                return self._phase_timeout()
+
+            phase_result = self._poll_history_once(prompt_id)
+            if phase_result is not None:
+                return phase_result
+
+            poll_count += 1
+            if self._should_attempt_reconnect(poll_count, deadline):
+                reconnect_result = self._attempt_websocket_reconnect(prompt_id)
+                if reconnect_result is not None:
+                    return reconnect_result
+
+            if not self._sleep_until_next_poll(deadline):
+                return self._phase_timeout()
+
+    def _handle_websocket_event(
+        self,
+        prompt_id: str,
+        event: ComfyUIEvent,
+        deadline: float,
+    ) -> _PhaseResult | None:
+        if event.event_type == "status":
+            self._log_still_queued_if_needed(prompt_id)
+            logger.debug(
+                "ComfyUI queue status observed while tracking prompt_id={prompt_id}: "
+                "queue_remaining={queue_remaining}",
+                prompt_id=prompt_id,
+                queue_remaining=event.queue_remaining,
+            )
+            return None
+
+        if event.prompt_id != prompt_id:
+            logger.debug(
+                "Ignored ComfyUI event for foreign prompt_id={foreign_prompt_id} while tracking prompt_id={prompt_id}",
+                foreign_prompt_id=event.prompt_id,
+                prompt_id=prompt_id,
+            )
+            return None
+
+        if event.event_type == "executing":
+            if event.node is None:
+                terminal_at = time.monotonic()
+                self._mark_direct_terminal_if_queued(terminal_at)
+                history_payload = self._confirm_completion(prompt_id, deadline)
+                if history_payload is None:
+                    logger.warning(
+                        "ComfyUI history confirmation missing for prompt_id={prompt_id}; "
+                        "falling back to HTTP polling",
+                        prompt_id=prompt_id,
+                    )
+                    self._used_http_fallback = True
+                    return _PhaseResult(_PhaseOutcome.FALLBACK)
+                outcome = self._classify_history_status(history_payload)
+                if outcome is _CompletionOutcome.EXECUTION_ERROR:
+                    logger.warning(
+                        "ComfyUI completion signal resolved to execution error in history: prompt_id={prompt_id}",
+                        prompt_id=prompt_id,
+                    )
+                    return self._phase_execution_error(self._history_error_payload(history_payload), terminal_at)
+                if outcome is _CompletionOutcome.COMPLETED:
+                    return self._phase_completed(history_payload, terminal_at)
+                self._used_http_fallback = True
+                return _PhaseResult(_PhaseOutcome.FALLBACK)
+
+            self._mark_executing(prompt_id)
+            logger.debug(
+                "ComfyUI executing node observed: prompt_id={prompt_id} node={node}",
+                prompt_id=prompt_id,
+                node=event.node,
+            )
+            return None
+
+        if event.event_type == "progress":
+            self._mark_executing(prompt_id)
+            self._log_progress(prompt_id, event)
+            return None
+
+        if event.event_type == "execution_error":
+            terminal_at = time.monotonic()
+            self._mark_direct_terminal_if_queued(terminal_at)
+            return self._phase_execution_error(event.error_payload or {}, terminal_at)
+
+        if event.event_type == "execution_cached":
+            logger.debug("ComfyUI execution cache event observed: prompt_id={prompt_id}", prompt_id=prompt_id)
+            return None
+
+        return None
+
+    def _poll_history_once(self, prompt_id: str) -> _PhaseResult | None:
+        try:
+            history_payload = self._http.history(prompt_id)
+        except _ComfyUIHTTPError as exc:
+            logger.warning(
+                "ComfyUI history poll failed for prompt_id={prompt_id}: {error}",
+                prompt_id=prompt_id,
+                error=str(exc),
+            )
+            return None
+
+        if history_payload is None:
+            logger.debug("ComfyUI history poll missing for prompt_id={prompt_id}", prompt_id=prompt_id)
+            self._log_still_queued_if_needed(prompt_id)
+            return None
+
+        outcome = self._classify_history_status(history_payload)
+        if outcome is _CompletionOutcome.COMPLETED:
+            return self._phase_completed(history_payload, time.monotonic())
+        if outcome is _CompletionOutcome.EXECUTION_ERROR:
+            return self._phase_execution_error(self._history_error_payload(history_payload), time.monotonic())
+
+        if self._history_indicates_running(history_payload):
+            self._mark_executing(prompt_id)
+        logger.debug("ComfyUI history poll non-terminal for prompt_id={prompt_id}", prompt_id=prompt_id)
+        return None
+
+    def _confirm_completion(self, prompt_id: str, deadline: float) -> dict[str, Any] | None:
+        attempts = max(1, COMFYUI_HISTORY_CONFIRMATION_RETRY_ATTEMPTS)
+        for attempt in range(1, attempts + 1):
+            if self._deadline_reached(deadline):
+                return None
+            try:
+                history_payload = self._http.history(prompt_id)
+            except _ComfyUIHTTPError as exc:
+                logger.warning(
+                    "ComfyUI history confirmation attempt {attempt} failed for prompt_id={prompt_id}: {error}",
+                    attempt=attempt,
+                    prompt_id=prompt_id,
+                    error=str(exc),
+                )
+                history_payload = None
+
+            if history_payload is not None and self._classify_history_status(history_payload) is not None:
+                return history_payload
+
+            if attempt < attempts:
+                delay = min(COMFYUI_HISTORY_CONFIRMATION_RETRY_DELAY_SECONDS, self._remaining(deadline))
+                if delay <= 0:
+                    return None
+                time.sleep(delay)
+
+        return None
+
+    def _classify_history_status(self, history_entry: dict[str, Any]) -> _CompletionOutcome | None:
+        status = history_entry.get("status")
+        if not isinstance(status, dict):
+            return None
+        completed = status.get("completed")
+        status_str = status.get("status_str")
+        if completed is True and status_str == "success":
+            return _CompletionOutcome.COMPLETED
+        if completed is True and status_str == "error":
+            return _CompletionOutcome.EXECUTION_ERROR
+        return None
+
+    def _history_indicates_running(self, history_entry: dict[str, Any]) -> bool:
+        status = history_entry.get("status")
+        if not isinstance(status, dict):
+            return False
+        return status.get("completed") is False and isinstance(status.get("status_str"), str)
+
+    def _history_error_payload(self, history_entry: dict[str, Any]) -> dict[str, Any]:
+        status = history_entry.get("status")
+        if not isinstance(status, dict):
+            return {}
+        messages = status.get("messages")
+        if isinstance(messages, list):
+            for message in messages:
+                if (
+                    isinstance(message, (list, tuple))
+                    and len(message) >= 2
+                    and message[0] == "execution_error"
+                    and isinstance(message[1], dict)
+                ):
+                    return message[1]
+        return {"status": status}
+
+    def _should_attempt_reconnect(self, poll_count: int, deadline: float) -> bool:
+        if COMFYUI_WS_RECONNECT_POLL_CYCLES <= 0:
+            return False
+        if poll_count % COMFYUI_WS_RECONNECT_POLL_CYCLES != 0:
+            return False
+        if self._remaining(deadline) <= COMFYUI_WS_RECONNECT_MIN_BUDGET_SECONDS:
+            logger.debug("Skipping ComfyUI WebSocket reconnect attempt because execution budget is nearly exhausted")
+            return False
+        return True
+
+    def _attempt_websocket_reconnect(self, prompt_id: str) -> _PhaseResult | None:
+        logger.debug("Attempting ComfyUI WebSocket reconnect while polling prompt_id={prompt_id}", prompt_id=prompt_id)
+        try:
+            self._ws.ensure_connected()
+        except ComfyUIConnectionError as exc:
+            logger.debug(
+                "ComfyUI WebSocket reconnect attempt failed while polling prompt_id={prompt_id}: {error}",
+                prompt_id=prompt_id,
+                error=str(exc),
+            )
+            return None
+
+        logger.debug("ComfyUI WebSocket reconnected while polling prompt_id={prompt_id}", prompt_id=prompt_id)
+        immediate_result = self._poll_history_once(prompt_id)
+        if immediate_result is not None:
+            return immediate_result
+        logger.debug("Resuming ComfyUI WebSocket tracking for prompt_id={prompt_id}", prompt_id=prompt_id)
+        return _PhaseResult(_PhaseOutcome.RESUME_WEBSOCKET)
+
+    def _mark_executing(self, prompt_id: str) -> None:
+        if self._state == self._STATE_EXECUTING:
+            return
+        now = time.monotonic()
+        self._execution_started_at = now
+        self._state = self._STATE_EXECUTING
+        logger.info(
+            "ComfyUI prompt transitioned to executing: prompt_id={prompt_id} queue_wait_seconds={seconds:.2f}",
+            prompt_id=prompt_id,
+            seconds=now - self._call_started_at,
+        )
+
+    def _mark_direct_terminal_if_queued(self, terminal_at: float) -> None:
+        if self._state == self._STATE_QUEUED:
+            self._last_terminal_at = terminal_at
+        elif self._execution_started_at is not None:
+            self._last_terminal_at = terminal_at
+
+    def _phase_completed(self, history_payload: dict[str, Any], terminal_at: float) -> _PhaseResult:
+        self._last_terminal_at = terminal_at
+        logger.info(
+            "ComfyUI prompt completed in {seconds:.2f}s; used_http_fallback={fallback}",
+            seconds=self._generation_seconds(terminal_at),
+            fallback=self._used_http_fallback,
+        )
+        return _PhaseResult(_PhaseOutcome.COMPLETED, history_payload=history_payload)
+
+    def _phase_execution_error(self, error_payload: dict[str, Any], terminal_at: float) -> _PhaseResult:
+        self._last_terminal_at = terminal_at
+        logger.info(
+            "ComfyUI prompt reached execution error in {seconds:.2f}s; used_http_fallback={fallback}",
+            seconds=self._generation_seconds(terminal_at),
+            fallback=self._used_http_fallback,
+        )
+        return _PhaseResult(_PhaseOutcome.EXECUTION_ERROR, error_payload=error_payload)
+
+    def _phase_timeout(self) -> _PhaseResult:
+        self._last_terminal_at = time.monotonic()
+        logger.warning(
+            "ComfyUI prompt tracking timed out after {seconds:.2f}s; used_http_fallback={fallback}",
+            seconds=self._last_terminal_at - self._call_started_at,
+            fallback=self._used_http_fallback,
+        )
+        return _PhaseResult(_PhaseOutcome.TIMEOUT)
+
+    def _completion_result(self, phase: _PhaseResult) -> _CompletionResult:
+        if phase.outcome is _PhaseOutcome.COMPLETED:
+            outcome = _CompletionOutcome.COMPLETED
+        elif phase.outcome is _PhaseOutcome.EXECUTION_ERROR:
+            outcome = _CompletionOutcome.EXECUTION_ERROR
+        else:
+            outcome = _CompletionOutcome.TIMEOUT
+
+        return _CompletionResult(
+            outcome=outcome,
+            history_payload=phase.history_payload if outcome is _CompletionOutcome.COMPLETED else None,
+            error_payload=phase.error_payload if outcome is _CompletionOutcome.EXECUTION_ERROR else None,
+            queue_wait_seconds=self._queue_wait_seconds(self._last_terminal_at),
+            generation_seconds=self._generation_seconds(self._last_terminal_at),
+            used_http_fallback=self._used_http_fallback,
+        )
+
+    def _timeout_result(self, started_at: float) -> _CompletionResult:
+        return _CompletionResult(
+            outcome=_CompletionOutcome.TIMEOUT,
+            history_payload=None,
+            error_payload=None,
+            queue_wait_seconds=0.0,
+            generation_seconds=0.0,
+            used_http_fallback=False,
+        )
+
+    def _queue_wait_seconds(self, reference_time: float) -> float:
+        if self._execution_started_at is None:
+            return max(0.0, reference_time - self._call_started_at)
+        return max(0.0, self._execution_started_at - self._call_started_at)
+
+    def _generation_seconds(self, reference_time: float) -> float:
+        if self._execution_started_at is None:
+            return 0.0
+        return max(0.0, reference_time - self._execution_started_at)
+
+    def _log_still_queued_if_needed(self, prompt_id: str) -> None:
+        if self._state != self._STATE_QUEUED or self._queued_warning_logged:
+            return
+        elapsed = time.monotonic() - self._call_started_at
+        if elapsed >= MODULE7_STILL_QUEUED_WARNING_SECONDS:
+            self._queued_warning_logged = True
+            logger.warning(
+                "ComfyUI prompt still queued after {seconds:.2f}s: prompt_id={prompt_id}",
+                seconds=elapsed,
+                prompt_id=prompt_id,
+            )
+
+    def _log_progress(self, prompt_id: str, event: ComfyUIEvent) -> None:
+        if event.progress_value is None or event.progress_max is None or event.progress_max <= 0:
+            logger.debug("ComfyUI progress event observed: prompt_id={prompt_id}", prompt_id=prompt_id)
+            return
+
+        percent = int((event.progress_value / event.progress_max) * 100)
+        granularity = max(1, MODULE7_PROGRESS_LOG_GRANULARITY_PERCENT)
+        milestone = (percent // granularity) * granularity
+        if milestone > self._last_progress_milestone:
+            self._last_progress_milestone = milestone
+            logger.info(
+                "ComfyUI progress milestone reached: prompt_id={prompt_id} progress={percent}%",
+                prompt_id=prompt_id,
+                percent=min(100, milestone),
+            )
+            return
+        logger.debug(
+            "ComfyUI progress event observed: prompt_id={prompt_id} progress={value}/{maximum}",
+            prompt_id=prompt_id,
+            value=event.progress_value,
+            maximum=event.progress_max,
+        )
+
+    def _sleep_until_next_poll(self, deadline: float) -> bool:
+        remaining = self._remaining(deadline)
+        if remaining <= 0:
+            return False
+        time.sleep(min(self._poll_interval_seconds, remaining))
+        return not self._deadline_reached(deadline)
+
+    @staticmethod
+    def _remaining(deadline: float) -> float:
+        return deadline - time.monotonic()
+
+    @staticmethod
+    def _deadline_reached(deadline: float) -> bool:
+        return time.monotonic() >= deadline
 
 
 class _ComfyUIHTTPTransport:
