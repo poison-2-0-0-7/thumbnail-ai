@@ -13,6 +13,7 @@ from enum import Enum
 import json
 import socket
 import time
+from uuid import uuid4
 from typing import Any, ClassVar, Literal, Sequence
 from urllib.parse import urlencode
 
@@ -22,6 +23,7 @@ import websocket
 from loguru import logger
 
 from config import (
+    COMFYUI_HOST,
     COMFYUI_HISTORY_CONFIRMATION_RETRY_ATTEMPTS,
     COMFYUI_HISTORY_CONFIRMATION_RETRY_DELAY_SECONDS,
     COMFYUI_EXECUTION_TIMEOUT_SECONDS,
@@ -31,18 +33,24 @@ from config import (
     COMFYUI_OUTPUT_PREFERRED_NODES,
     COMFYUI_OUTPUT_SUPPORTED_IMAGE_FORMATS,
     COMFYUI_POLL_INTERVAL_SECONDS,
+    COMFYUI_PORT,
+    COMFYUI_REQUEST_TIMEOUT_SECONDS,
+    COMFYUI_STARTUP_TIMEOUT_SECONDS,
     COMFYUI_WEBSOCKET_TIMEOUT_SECONDS,
+    COMFYUI_WS_PATH,
     COMFYUI_WS_RECONNECT_MIN_BUDGET_SECONDS,
     COMFYUI_WS_RECONNECT_POLL_CYCLES,
     LOG_DIR,
     MODULE7_LOG_PATH,
+    MODULE7_METRICS_PATH,
     MODULE7_PROGRESS_LOG_GRANULARITY_PERCENT,
     MODULE7_STILL_QUEUED_WARNING_SECONDS,
 )
-from image_generator import MetricsCollector, utc_now
+from image_generator import BuiltWorkflow, MetricsCollector, utc_now
 from module7_exceptions import (
     ComfyUIConnectionError,
     ComfyUIQueueError,
+    ComfyUITimeoutError,
     CorruptImageError,
     MissingOutputFileError,
     NoOutputImageError,
@@ -1614,4 +1622,172 @@ class _ComfyUIHTTPTransport:
         return value
 
 
-__all__ = ["SystemStats"]
+class ComfyUIClient:
+    """Thin synchronous facade around the completed ComfyUI collaborators."""
+
+    _OOM_SIGNATURES: ClassVar[tuple[str, ...]] = (
+        "outofmemoryerror",
+        "cuda out of memory",
+        "out of memory",
+    )
+
+    def __init__(
+        self,
+        *,
+        host: str = COMFYUI_HOST,
+        port: int = COMFYUI_PORT,
+        client_id: str | None = None,
+        session: requests.Session | None = None,
+        metrics_collector: MetricsCollector | None = None,
+    ) -> None:
+        clean_host = str(host).strip()
+        if not clean_host:
+            raise ValueError("host must not be empty")
+        if port <= 0:
+            raise ValueError("port must be greater than zero")
+
+        self._client_id = (client_id or str(uuid4())).strip()
+        if not self._client_id:
+            raise ValueError("client_id must not be empty")
+
+        base_url = f"http://{clean_host}:{port}"
+        ws_url = f"ws://{clean_host}:{port}{COMFYUI_WS_PATH}"
+        self._session = session or requests.Session()
+        self._http = _ComfyUIHTTPTransport(
+            base_url,
+            self._session,
+            COMFYUI_REQUEST_TIMEOUT_SECONDS,
+        )
+        self._ws = _ComfyUIWebSocketTransport(
+            ws_url,
+            self._client_id,
+            COMFYUI_STARTUP_TIMEOUT_SECONDS,
+        )
+        self._queue_tracker = _QueueTracker(self._http, self._ws)
+        self._output_retriever = _OutputRetriever(self._http)
+        self._metrics_recorder = _ComfyUIMetricsRecorder(
+            metrics_collector or MetricsCollector(MODULE7_METRICS_PATH)
+        )
+
+    def generate(
+        self,
+        built_workflow: BuiltWorkflow,
+        *,
+        video_id: str,
+        num_candidates_requested: int = 1,
+        identity_retry_count: int = 0,
+        peak_vram_mb: float | None = None,
+        gpu_utilization_percent: float | None = None,
+    ) -> _OutputResult:
+        """Submit, await, retrieve, and record one ComfyUI generation attempt."""
+        clean_video_id = self._required_video_id(video_id)
+        attempt_started_at = time.monotonic()
+        completion: _CompletionResult | None = None
+        output: _OutputResult | None = None
+        exception: BaseException | None = None
+
+        logger.info("Starting ComfyUI generation for video_id={video_id}", video_id=clean_video_id)
+        try:
+            self._ws.ensure_connected()
+            try:
+                prompt_id = self._http.submit_prompt(built_workflow.graph, self._client_id)
+            except _ComfyUIHTTPError as exc:
+                raise ComfyUIConnectionError(f"ComfyUI prompt submission failed: {exc}") from exc
+
+            completion = self._queue_tracker.await_completion(prompt_id, self._client_id)
+            if completion.outcome is _CompletionOutcome.TIMEOUT:
+                self._best_effort_cancel(prompt_id)
+                raise ComfyUITimeoutError(
+                    f"ComfyUI generation timed out for prompt_id={prompt_id}"
+                )
+
+            if completion.outcome is _CompletionOutcome.EXECUTION_ERROR:
+                message = self._error_message(completion.error_payload)
+                logger.error(
+                    "ComfyUI generation failed for prompt_id={prompt_id}: {error}",
+                    prompt_id=prompt_id,
+                    error=message,
+                )
+                if self._is_oom(completion.error_payload):
+                    raise VRAMExhaustedError(message)
+                raise ComfyUIQueueError(message)
+
+            output = self._output_retriever.retrieve(completion, prompt_id=prompt_id)
+            logger.info(
+                "ComfyUI generation completed for prompt_id={prompt_id}: "
+                "queue_wait={queue_wait:.2f}s generation={generation:.2f}s "
+                "http_fallback={http_fallback}",
+                prompt_id=prompt_id,
+                queue_wait=completion.queue_wait_seconds,
+                generation=completion.generation_seconds,
+                http_fallback=completion.used_http_fallback,
+            )
+            return output
+        except BaseException as exc:
+            exception = exc
+            raise
+        finally:
+            self._metrics_recorder.record_attempt(
+                video_id=clean_video_id,
+                niche=built_workflow.workflow_ref.niche,
+                workflow_version=built_workflow.workflow_ref.workflow_version,
+                profile_name=built_workflow.workflow_ref.profile_name,
+                workflow_hash=built_workflow.workflow_hash,
+                completions=(completion if completion is not None else self._synthetic_completion(),),
+                output=output,
+                exception=exception,
+                num_candidates_requested=num_candidates_requested,
+                identity_retry_count=identity_retry_count,
+                peak_vram_mb=peak_vram_mb,
+                gpu_utilization_percent=gpu_utilization_percent,
+                attempt_started_at=attempt_started_at,
+            )
+
+    def _best_effort_cancel(self, prompt_id: str) -> None:
+        for action in (self._http.interrupt, lambda: self._http.delete_from_queue(prompt_id)):
+            try:
+                action()
+            except _ComfyUIHTTPError as exc:
+                logger.warning(
+                    "ComfyUI best-effort cancellation failed for prompt_id={prompt_id}: {error}",
+                    prompt_id=prompt_id,
+                    error=str(exc),
+                )
+
+    def _is_oom(self, error_payload: dict[str, Any] | None) -> bool:
+        if not error_payload:
+            return False
+        haystack = " ".join(
+            str(error_payload.get(field, ""))
+            for field in ("exception_type", "exception_message")
+        ).lower()
+        return any(signature in haystack for signature in self._OOM_SIGNATURES)
+
+    @staticmethod
+    def _error_message(error_payload: dict[str, Any] | None) -> str:
+        if not isinstance(error_payload, dict):
+            return "ComfyUI execution error"
+        message = error_payload.get("exception_message")
+        if not isinstance(message, str) or not message.strip():
+            return "ComfyUI execution error"
+        return message.strip()
+
+    @staticmethod
+    def _required_video_id(video_id: str) -> str:
+        if not isinstance(video_id, str) or not video_id.strip():
+            raise ValueError("video_id must not be empty")
+        return video_id.strip()
+
+    @staticmethod
+    def _synthetic_completion() -> _CompletionResult:
+        return _CompletionResult(
+            outcome=_CompletionOutcome.EXECUTION_ERROR,
+            history_payload=None,
+            error_payload=None,
+            queue_wait_seconds=0.0,
+            generation_seconds=0.0,
+            used_http_fallback=False,
+        )
+
+
+__all__ = ["SystemStats", "ComfyUIClient"]

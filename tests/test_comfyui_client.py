@@ -18,6 +18,7 @@ if str(_MODULES_DIR) not in sys.path:
     sys.path.insert(0, str(_MODULES_DIR))
 
 from comfyui_client import (  # noqa: E402
+    ComfyUIClient,
     ComfyUIEvent,
     SystemStats,
     _CompletionResult,
@@ -31,9 +32,11 @@ from comfyui_client import (  # noqa: E402
     _OutputResult,
     _QueueTracker,
 )
+from image_generator import BuiltWorkflow  # noqa: E402
 from module7_exceptions import (  # noqa: E402
     ComfyUIConnectionError,
     ComfyUIQueueError,
+    ComfyUITimeoutError,
     CorruptImageError,
     MetricsWriteError,
     MissingOutputFileError,
@@ -43,6 +46,7 @@ from module7_exceptions import (  # noqa: E402
     UnsupportedImageFormatError,
     VRAMExhaustedError,
 )
+from models import WorkflowTemplateRef  # noqa: E402
 
 
 BASE_URL = "http://127.0.0.1:8188"
@@ -1816,3 +1820,297 @@ class TestMetricsRecorder:
 
         assert collector.records[0].generation_time_seconds == [1.0, 2.0, 3.0, 4.0]
         assert collector.records[0].generation_retry_count == 3
+
+
+def _workflow(graph: dict[str, object] | None = None) -> BuiltWorkflow:
+    return BuiltWorkflow(
+        graph={} if graph is None else graph,
+        workflow_ref=WorkflowTemplateRef(
+            niche="gaming",
+            profile_name="PROFILE_LOW_VRAM",
+            template_path="workflows/gaming.json",
+            workflow_version="workflow_v1",
+            template_name="gaming",
+        ),
+        workflow_hash="workflow-hash",
+    )
+
+
+def _generate_client(
+    *,
+    completion: _CompletionResult | None = None,
+    output: _OutputResult | None = None,
+    prompt_id: str = "prompt-123",
+) -> ComfyUIClient:
+    client = ComfyUIClient.__new__(ComfyUIClient)
+    client._client_id = CLIENT_ID
+    client._ws = Mock()
+    client._http = Mock()
+    client._http.submit_prompt.return_value = prompt_id
+    client._queue_tracker = Mock()
+    client._queue_tracker.await_completion.return_value = completion or _completion()
+    client._output_retriever = Mock()
+    client._output_retriever.retrieve.return_value = output or _output_result()
+    client._metrics_recorder = Mock()
+    return client
+
+
+class TestGenerate:
+    def test_success_path_returns_output_and_records_exact_metrics(self, monkeypatch: pytest.MonkeyPatch) -> None:
+        completion = _completion(queue_wait_seconds=1.25, generation_seconds=2.5, used_http_fallback=True)
+        output = _output_result()
+        client = _generate_client(completion=completion, output=output)
+        monotonic = Mock(return_value=100.0)
+        monkeypatch.setattr("comfyui_client.time.monotonic", monotonic)
+
+        result = client.generate(
+            _workflow({"1": {"class_type": "KSampler"}}),
+            video_id=" video-123 ",
+            num_candidates_requested=4,
+            identity_retry_count=2,
+            peak_vram_mb=123.4,
+            gpu_utilization_percent=56.7,
+        )
+
+        assert result is output
+        client._ws.ensure_connected.assert_called_once_with()
+        client._http.submit_prompt.assert_called_once_with({"1": {"class_type": "KSampler"}}, CLIENT_ID)
+        client._queue_tracker.await_completion.assert_called_once_with("prompt-123", CLIENT_ID)
+        client._output_retriever.retrieve.assert_called_once_with(completion, prompt_id="prompt-123")
+        client._metrics_recorder.record_attempt.assert_called_once()
+        kwargs = client._metrics_recorder.record_attempt.call_args.kwargs
+        assert kwargs == {
+            "video_id": "video-123",
+            "niche": "gaming",
+            "workflow_version": "workflow_v1",
+            "profile_name": "PROFILE_LOW_VRAM",
+            "workflow_hash": "workflow-hash",
+            "completions": (completion,),
+            "output": output,
+            "exception": None,
+            "num_candidates_requested": 4,
+            "identity_retry_count": 2,
+            "peak_vram_mb": 123.4,
+            "gpu_utilization_percent": 56.7,
+            "attempt_started_at": 100.0,
+        }
+
+    def test_connection_failure_propagates_and_records_synthetic_completion(self) -> None:
+        client = _generate_client()
+        error = ComfyUIConnectionError("cannot connect")
+        client._ws.ensure_connected.side_effect = error
+
+        with pytest.raises(ComfyUIConnectionError) as raised:
+            client.generate(_workflow(), video_id="video-123")
+
+        assert raised.value is error
+        client._http.submit_prompt.assert_not_called()
+        client._queue_tracker.await_completion.assert_not_called()
+        client._output_retriever.retrieve.assert_not_called()
+        kwargs = client._metrics_recorder.record_attempt.call_args.kwargs
+        assert kwargs["exception"] is error
+        assert kwargs["output"] is None
+        assert len(kwargs["completions"]) == 1
+        synthetic = kwargs["completions"][0]
+        assert synthetic.outcome is _CompletionOutcome.EXECUTION_ERROR
+        assert synthetic.queue_wait_seconds == 0.0
+        assert synthetic.generation_seconds == 0.0
+
+    def test_submission_failure_is_translated_and_chained(self) -> None:
+        client = _generate_client()
+        transport_error = _ComfyUIHTTPError("submit failed")
+        client._http.submit_prompt.side_effect = transport_error
+
+        with pytest.raises(ComfyUIConnectionError) as raised:
+            client.generate(_workflow(), video_id="video-123")
+
+        assert raised.value.__cause__ is transport_error
+        client._queue_tracker.await_completion.assert_not_called()
+        client._output_retriever.retrieve.assert_not_called()
+        assert client._metrics_recorder.record_attempt.call_args.kwargs["exception"] is raised.value
+
+    @pytest.mark.parametrize(
+        "payload",
+        [
+            {"exception_type": "OutOfMemoryError", "exception_message": "failed"},
+            {"exception_type": "RuntimeError", "exception_message": "CUDA out of memory"},
+            {"exception_type": "RuntimeError", "exception_message": "Tried to allocate: out of memory"},
+        ],
+    )
+    def test_execution_error_oom_classification_raises_vram_exhausted_without_retry(
+        self,
+        payload: dict[str, str],
+    ) -> None:
+        completion = _completion(_CompletionOutcome.EXECUTION_ERROR)
+        completion = _CompletionResult(
+            outcome=completion.outcome,
+            history_payload=None,
+            error_payload=payload,
+            queue_wait_seconds=completion.queue_wait_seconds,
+            generation_seconds=completion.generation_seconds,
+            used_http_fallback=completion.used_http_fallback,
+        )
+        client = _generate_client(completion=completion)
+
+        with pytest.raises(VRAMExhaustedError) as raised:
+            client.generate(_workflow(), video_id="video-123")
+
+        assert str(raised.value) == payload["exception_message"]
+        client._queue_tracker.await_completion.assert_called_once_with("prompt-123", CLIENT_ID)
+        client._output_retriever.retrieve.assert_not_called()
+        assert client._metrics_recorder.record_attempt.call_args.kwargs["exception"] is raised.value
+
+    @pytest.mark.parametrize(
+        "payload, expected_message",
+        [
+            ({"exception_message": "KeyError: 'checkpoint'"}, "KeyError: 'checkpoint'"),
+            (None, "ComfyUI execution error"),
+            ({}, "ComfyUI execution error"),
+        ],
+    )
+    def test_execution_error_non_oom_raises_queue_error(
+        self,
+        payload: dict[str, str] | None,
+        expected_message: str,
+    ) -> None:
+        completion = _CompletionResult(
+            outcome=_CompletionOutcome.EXECUTION_ERROR,
+            history_payload=None,
+            error_payload=payload,
+            queue_wait_seconds=1.0,
+            generation_seconds=2.0,
+            used_http_fallback=False,
+        )
+        client = _generate_client(completion=completion)
+
+        with pytest.raises(ComfyUIQueueError, match=expected_message) as raised:
+            client.generate(_workflow(), video_id="video-123")
+
+        client._output_retriever.retrieve.assert_not_called()
+        assert client._metrics_recorder.record_attempt.call_args.kwargs["exception"] is raised.value
+
+    def test_timeout_cancels_prompt_and_raises_timeout(self) -> None:
+        completion = _completion(_CompletionOutcome.TIMEOUT)
+        client = _generate_client(completion=completion)
+
+        with pytest.raises(ComfyUITimeoutError) as raised:
+            client.generate(_workflow(), video_id="video-123")
+
+        client._http.interrupt.assert_called_once_with()
+        client._http.delete_from_queue.assert_called_once_with("prompt-123")
+        client._output_retriever.retrieve.assert_not_called()
+        assert client._metrics_recorder.record_attempt.call_args.kwargs["exception"] is raised.value
+
+    def test_timeout_cancellation_failures_are_swallowed(self) -> None:
+        completion = _completion(_CompletionOutcome.TIMEOUT)
+        client = _generate_client(completion=completion)
+        client._http.interrupt.side_effect = _ComfyUIHTTPError("interrupt failed")
+        client._http.delete_from_queue.side_effect = _ComfyUIHTTPError("delete failed")
+
+        with pytest.raises(ComfyUITimeoutError):
+            client.generate(_workflow(), video_id="video-123")
+
+        client._http.interrupt.assert_called_once_with()
+        client._http.delete_from_queue.assert_called_once_with("prompt-123")
+        client._metrics_recorder.record_attempt.assert_called_once()
+
+    @pytest.mark.parametrize(
+        "error",
+        [
+            OutputHistoryError("history"),
+            NoOutputImageError("none"),
+            OutputDownloadError("download"),
+            MissingOutputFileError("missing"),
+            CorruptImageError("corrupt"),
+            UnsupportedImageFormatError("unsupported"),
+        ],
+    )
+    def test_retrieval_failures_propagate_unmodified_and_record_metrics(
+        self,
+        error: BaseException,
+    ) -> None:
+        completion = _completion()
+        client = _generate_client(completion=completion)
+        client._output_retriever.retrieve.side_effect = error
+
+        with pytest.raises(type(error)) as raised:
+            client.generate(_workflow(), video_id="video-123")
+
+        assert raised.value is error
+        client._output_retriever.retrieve.assert_called_once_with(completion, prompt_id="prompt-123")
+        kwargs = client._metrics_recorder.record_attempt.call_args.kwargs
+        assert kwargs["completions"] == (completion,)
+        assert kwargs["output"] is None
+        assert kwargs["exception"] is error
+
+    @pytest.mark.parametrize("video_id", ["", "   "])
+    def test_blank_video_id_fails_before_network_and_metrics(self, video_id: str) -> None:
+        client = _generate_client()
+
+        with pytest.raises(ValueError, match="video_id"):
+            client.generate(_workflow(), video_id=video_id)
+
+        client._ws.ensure_connected.assert_not_called()
+        client._http.submit_prompt.assert_not_called()
+        client._metrics_recorder.record_attempt.assert_not_called()
+
+    def test_default_metrics_arguments_and_empty_graph_passthrough(self) -> None:
+        client = _generate_client()
+
+        client.generate(_workflow({}), video_id="video-123")
+
+        client._http.submit_prompt.assert_called_once_with({}, CLIENT_ID)
+        kwargs = client._metrics_recorder.record_attempt.call_args.kwargs
+        assert kwargs["num_candidates_requested"] == 1
+        assert kwargs["identity_retry_count"] == 0
+        assert kwargs["peak_vram_mb"] is None
+        assert kwargs["gpu_utilization_percent"] is None
+
+    def test_two_sequential_calls_reconnect_and_use_fresh_timing(
+        self,
+        monkeypatch: pytest.MonkeyPatch,
+    ) -> None:
+        first = _completion()
+        second = _completion(queue_wait_seconds=3.0)
+        client = _generate_client(completion=first)
+        client._http.submit_prompt.side_effect = ["prompt-1", "prompt-2"]
+        client._queue_tracker.await_completion.side_effect = [first, second]
+        monkeypatch.setattr("comfyui_client.time.monotonic", Mock(side_effect=[10.0, 20.0]))
+
+        client.generate(_workflow(), video_id="video-123")
+        client.generate(_workflow(), video_id="video-123")
+
+        assert client._ws.ensure_connected.call_count == 2
+        starts = [
+            call.kwargs["attempt_started_at"]
+            for call in client._metrics_recorder.record_attempt.call_args_list
+        ]
+        assert starts == [10.0, 20.0]
+
+    def test_generate_logs_start_success_and_execution_error(
+        self,
+        monkeypatch: pytest.MonkeyPatch,
+    ) -> None:
+        logger_spy = _FakeLogger()
+        monkeypatch.setattr("comfyui_client.logger", logger_spy)
+        client = _generate_client()
+
+        client.generate(_workflow(), video_id="video-123")
+
+        assert any(level == "INFO" and "Starting ComfyUI generation" in message for level, message in logger_spy.entries)
+        assert any(level == "INFO" and "generation completed" in message for level, message in logger_spy.entries)
+
+        logger_spy.entries.clear()
+        error_completion = _CompletionResult(
+            outcome=_CompletionOutcome.EXECUTION_ERROR,
+            history_payload=None,
+            error_payload={"exception_message": "bad node"},
+            queue_wait_seconds=0.0,
+            generation_seconds=0.0,
+            used_http_fallback=False,
+        )
+        error_client = _generate_client(completion=error_completion)
+        with pytest.raises(ComfyUIQueueError):
+            error_client.generate(_workflow(), video_id="video-123")
+
+        assert any(level == "ERROR" and "generation failed" in message for level, message in logger_spy.entries)
