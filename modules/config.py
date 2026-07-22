@@ -313,13 +313,18 @@ SAFETY_CONSTRAINTS: tuple[str, ...] = (
 )
 
 # ---------------------------------------------------------------------------
-# Module 7 — Local Image Generation Engine (Phase 1 foundation only)
+# Module 7 — Local Image Generation Engine
 # ---------------------------------------------------------------------------
 
 COMFYUI_HOST: str = "127.0.0.1"
 COMFYUI_PORT: int = 8188
 COMFYUI_STARTUP_TIMEOUT_SECONDS: float = 60.0
 COMFYUI_REQUEST_TIMEOUT_SECONDS: float = 120.0
+COMFYUI_WS_PATH: str = "/ws"
+COMFYUI_CONNECT_RETRY_ATTEMPTS: int = 3
+COMFYUI_CONNECT_RETRY_WAIT_MIN_SECONDS: float = 2.0
+COMFYUI_CONNECT_RETRY_WAIT_MAX_SECONDS: float = 10.0
+COMFYUI_WEBSOCKET_TIMEOUT_SECONDS: float = 5.0
 
 MODULE7_PROFILE: str = "auto"
 MODULE7_VRAM_HEADROOM_GB: float = 0.5

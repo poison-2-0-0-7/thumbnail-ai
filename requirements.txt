@@ -13,6 +13,10 @@ tenacity>=8.2.0
 requests>=2.31.0
 Pillow>=10.0.0
 
+# ── Module 7 Phase 2 (ComfyUI Integration) ───────────────────────────────────
+# Pure-Python WebSocket client; no separate native install required.
+websocket-client>=1.7.0
+
 # ── Module 4 (Thumbnail Intelligence Engine) ─────────────────────────────────
 # NOTE ON GPU ACCELERATION:
 #   torch/torchvision below install the CPU-only build by default from PyPI.
