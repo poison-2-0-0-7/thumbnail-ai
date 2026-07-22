@@ -7,14 +7,16 @@ in later sprints.
 
 from __future__ import annotations
 
+from io import BytesIO
 from dataclasses import dataclass
 from enum import Enum
 import json
 import socket
 import time
-from typing import Any, Literal
+from typing import Any, Literal, Sequence
 from urllib.parse import urlencode
 
+from PIL import Image, UnidentifiedImageError
 import requests
 import websocket
 from loguru import logger
@@ -23,6 +25,11 @@ from config import (
     COMFYUI_HISTORY_CONFIRMATION_RETRY_ATTEMPTS,
     COMFYUI_HISTORY_CONFIRMATION_RETRY_DELAY_SECONDS,
     COMFYUI_EXECUTION_TIMEOUT_SECONDS,
+    COMFYUI_OUTPUT_DOWNLOAD_MAX_RETRIES,
+    COMFYUI_OUTPUT_DOWNLOAD_RETRY_BACKOFF_SECONDS,
+    COMFYUI_OUTPUT_DOWNLOAD_TIMEOUT_SECONDS,
+    COMFYUI_OUTPUT_PREFERRED_NODES,
+    COMFYUI_OUTPUT_SUPPORTED_IMAGE_FORMATS,
     COMFYUI_POLL_INTERVAL_SECONDS,
     COMFYUI_WEBSOCKET_TIMEOUT_SECONDS,
     COMFYUI_WS_RECONNECT_MIN_BUDGET_SECONDS,
@@ -32,7 +39,15 @@ from config import (
     MODULE7_PROGRESS_LOG_GRANULARITY_PERCENT,
     MODULE7_STILL_QUEUED_WARNING_SECONDS,
 )
-from module7_exceptions import ComfyUIConnectionError
+from module7_exceptions import (
+    ComfyUIConnectionError,
+    CorruptImageError,
+    MissingOutputFileError,
+    NoOutputImageError,
+    OutputDownloadError,
+    OutputHistoryError,
+    UnsupportedImageFormatError,
+)
 
 _LOG_FORMAT = "{time:YYYY-MM-DD HH:mm:ss} | {level:<8} | {name} | {message}"
 
@@ -90,6 +105,28 @@ class _CompletionResult:
     queue_wait_seconds: float
     generation_seconds: float
     used_http_fallback: bool
+
+
+@dataclass(frozen=True)
+class _ImageCandidate:
+    output_node_id: str
+    filename: str
+    subfolder: str
+    image_type: str
+    format: str
+
+
+@dataclass(frozen=True)
+class _OutputResult:
+    prompt_id: str
+    output_node_id: str
+    filename: str
+    subfolder: str
+    image_type: str
+    format: str
+    content: bytes
+    width: int | None
+    height: int | None
 
 
 class _PhaseOutcome(Enum):
@@ -866,6 +903,417 @@ class _QueueTracker:
     @staticmethod
     def _deadline_reached(deadline: float) -> bool:
         return time.monotonic() >= deadline
+
+
+class _OutputRetriever:
+    """Parse completed ComfyUI history and retrieve one validated output image."""
+
+    _PIL_FORMAT_EXTENSIONS = {
+        "JPEG": {"jpg", "jpeg"},
+        "PNG": {"png"},
+        "WEBP": {"webp"},
+        "GIF": {"gif"},
+    }
+
+    def __init__(
+        self,
+        transport: "_ComfyUIHTTPTransport",
+        *,
+        preferred_output_nodes: Sequence[str] | None = None,
+        allowed_image_formats: Sequence[str] | None = None,
+        download_timeout: float | None = None,
+        download_retries: int | None = None,
+        download_retry_backoff: float | None = None,
+    ) -> None:
+        if transport is None:
+            raise ValueError("transport must not be None")
+        if download_timeout is not None and download_timeout < 0:
+            raise ValueError("download_timeout must not be negative")
+        if download_retries is not None and download_retries < 0:
+            raise ValueError("download_retries must not be negative")
+        if download_retry_backoff is not None and download_retry_backoff < 0:
+            raise ValueError("download_retry_backoff must not be negative")
+
+        self._transport = transport
+        self._preferred_output_nodes = tuple(str(node) for node in (
+            preferred_output_nodes if preferred_output_nodes is not None else COMFYUI_OUTPUT_PREFERRED_NODES
+        ))
+        raw_formats = (
+            allowed_image_formats
+            if allowed_image_formats is not None
+            else COMFYUI_OUTPUT_SUPPORTED_IMAGE_FORMATS
+        )
+        self._allowed_image_formats = frozenset(self._normalize_format(value) for value in raw_formats)
+        self._download_timeout = (
+            COMFYUI_OUTPUT_DOWNLOAD_TIMEOUT_SECONDS if download_timeout is None else download_timeout
+        )
+        self._download_retries = (
+            COMFYUI_OUTPUT_DOWNLOAD_MAX_RETRIES if download_retries is None else download_retries
+        )
+        self._download_retry_backoff = (
+            COMFYUI_OUTPUT_DOWNLOAD_RETRY_BACKOFF_SECONDS
+            if download_retry_backoff is None
+            else download_retry_backoff
+        )
+
+    def retrieve(
+        self,
+        completion: _CompletionResult,
+        *,
+        prompt_id: str | None = None,
+    ) -> _OutputResult:
+        """Return one downloaded and validated image from a successful completion."""
+        resolved_prompt_id = self._resolve_prompt_id(completion, prompt_id)
+        logger.info("Starting ComfyUI output retrieval: prompt_id={prompt_id}", prompt_id=resolved_prompt_id)
+
+        history_payload = self._extract_history_payload(completion, resolved_prompt_id)
+        candidates = self._collect_candidate_images(history_payload, resolved_prompt_id)
+        selected = self._select_image(candidates, resolved_prompt_id)
+        content = self._download_image(selected, resolved_prompt_id)
+        width, height = self._validate_image_bytes(content, selected, resolved_prompt_id)
+
+        logger.info(
+            "ComfyUI output retrieval complete: prompt_id={prompt_id} node={node} "
+            "filename={filename} width={width} height={height}",
+            prompt_id=resolved_prompt_id,
+            node=selected.output_node_id,
+            filename=selected.filename,
+            width=width,
+            height=height,
+        )
+        return _OutputResult(
+            prompt_id=resolved_prompt_id,
+            output_node_id=selected.output_node_id,
+            filename=selected.filename,
+            subfolder=selected.subfolder,
+            image_type=selected.image_type,
+            format=selected.format,
+            content=content,
+            width=width,
+            height=height,
+        )
+
+    def _resolve_prompt_id(self, completion: _CompletionResult, prompt_id: str | None) -> str:
+        if completion is None:
+            raise ValueError("completion must not be None")
+        if completion.outcome is not _CompletionOutcome.COMPLETED:
+            raise ValueError("completion must be successful before retrieving output")
+
+        candidate = prompt_id
+        if candidate is None:
+            candidate = getattr(completion, "prompt_id", None)
+        if not isinstance(candidate, str) or not candidate.strip():
+            raise ValueError("prompt_id must be provided for output retrieval")
+        return candidate.strip()
+
+    def _extract_history_payload(
+        self,
+        completion: _CompletionResult,
+        prompt_id: str,
+    ) -> dict[str, Any]:
+        history_payload = completion.history_payload
+        source = "embedded"
+        if history_payload is None:
+            source = "fetched"
+            try:
+                history_payload = self._transport.history(prompt_id)
+            except _ComfyUIHTTPError as exc:
+                raise OutputHistoryError(
+                    f"Could not fetch ComfyUI history for prompt_id {prompt_id}",
+                    prompt_id=prompt_id,
+                ) from exc
+
+        logger.debug("ComfyUI output history payload source: {source}", source=source)
+        if not isinstance(history_payload, dict):
+            raise OutputHistoryError("ComfyUI history payload is malformed", prompt_id=prompt_id)
+        if prompt_id in history_payload:
+            entry = history_payload[prompt_id]
+            if not isinstance(entry, dict):
+                raise OutputHistoryError(
+                    "ComfyUI history entry is malformed",
+                    prompt_id=prompt_id,
+                )
+            return entry
+        if "outputs" in history_payload:
+            return history_payload
+        raise OutputHistoryError(
+            f"ComfyUI history payload does not contain prompt_id {prompt_id}",
+            prompt_id=prompt_id,
+        )
+
+    def _collect_candidate_images(
+        self,
+        history_payload: dict[str, Any],
+        prompt_id: str,
+    ) -> list[_ImageCandidate]:
+        outputs = history_payload.get("outputs")
+        if not isinstance(outputs, dict):
+            raise OutputHistoryError("ComfyUI history payload missing outputs", prompt_id=prompt_id)
+        if not outputs:
+            raise NoOutputImageError("ComfyUI history contains no output nodes", prompt_id=prompt_id)
+
+        candidates: list[_ImageCandidate] = []
+        for raw_node_id, node_payload in outputs.items():
+            output_node_id = str(raw_node_id)
+            if not isinstance(node_payload, dict):
+                logger.debug(
+                    "Skipping malformed ComfyUI output node: prompt_id={prompt_id} node={node}",
+                    prompt_id=prompt_id,
+                    node=output_node_id,
+                )
+                continue
+
+            images = node_payload.get("images")
+            if images is None:
+                logger.debug(
+                    "Skipping ComfyUI output node with no images: prompt_id={prompt_id} node={node}",
+                    prompt_id=prompt_id,
+                    node=output_node_id,
+                )
+                continue
+            if not isinstance(images, list):
+                logger.warning(
+                    "Skipping ComfyUI output node with invalid images list: prompt_id={prompt_id} node={node}",
+                    prompt_id=prompt_id,
+                    node=output_node_id,
+                )
+                continue
+
+            for image in images:
+                candidate = self._candidate_from_image(output_node_id, image, prompt_id)
+                if candidate is not None:
+                    candidates.append(candidate)
+
+        if not candidates:
+            raise NoOutputImageError("ComfyUI history contains no output images", prompt_id=prompt_id)
+        logger.debug(
+            "Collected ComfyUI output candidates: prompt_id={prompt_id} count={count}",
+            prompt_id=prompt_id,
+            count=len(candidates),
+        )
+        return candidates
+
+    def _select_image(self, candidates: list[_ImageCandidate], prompt_id: str | None = None) -> _ImageCandidate:
+        filtered = [candidate for candidate in candidates if candidate.format in self._allowed_image_formats]
+        if not filtered:
+            raise NoOutputImageError("ComfyUI output images have no supported formats", prompt_id=prompt_id)
+
+        for preferred_node in self._preferred_output_nodes:
+            for candidate in filtered:
+                if candidate.output_node_id == preferred_node:
+                    self._log_selected(candidate, prompt_id, "preferred")
+                    return candidate
+
+        selected = filtered[0]
+        self._log_selected(selected, prompt_id, "fallback")
+        return selected
+
+    def _download_image(self, candidate: _ImageCandidate, prompt_id: str) -> bytes:
+        max_attempts = self._download_retries + 1
+        last_error: BaseException | None = None
+        for attempt in range(1, max_attempts + 1):
+            logger.debug(
+                "Downloading ComfyUI output image: prompt_id={prompt_id} node={node} "
+                "filename={filename} attempt={attempt}/{max_attempts}",
+                prompt_id=prompt_id,
+                node=candidate.output_node_id,
+                filename=candidate.filename,
+                attempt=attempt,
+                max_attempts=max_attempts,
+            )
+            try:
+                content = self._transport.view_image(
+                    candidate.filename,
+                    candidate.subfolder,
+                    candidate.image_type,
+                )
+            except _ComfyUIHTTPError as exc:
+                if self._is_missing_file_error(exc):
+                    logger.error(
+                        "ComfyUI output file missing on server: prompt_id={prompt_id} "
+                        "node={node} filename={filename}",
+                        prompt_id=prompt_id,
+                        node=candidate.output_node_id,
+                        filename=candidate.filename,
+                    )
+                    raise MissingOutputFileError(
+                        "ComfyUI output file missing on server",
+                        prompt_id=prompt_id,
+                        output_node_id=candidate.output_node_id,
+                        filename=candidate.filename,
+                    ) from exc
+                last_error = exc
+            else:
+                if isinstance(content, bytes) and content:
+                    logger.info(
+                        "ComfyUI output image downloaded: prompt_id={prompt_id} "
+                        "filename={filename} bytes={size}",
+                        prompt_id=prompt_id,
+                        filename=candidate.filename,
+                        size=len(content),
+                    )
+                    return content
+                last_error = OutputDownloadError(
+                    "ComfyUI /view returned empty image bytes",
+                    prompt_id=prompt_id,
+                    output_node_id=candidate.output_node_id,
+                    filename=candidate.filename,
+                )
+
+            if attempt < max_attempts:
+                logger.warning(
+                    "ComfyUI output download attempt failed; retrying: prompt_id={prompt_id} "
+                    "filename={filename} attempt={attempt} error={error}",
+                    prompt_id=prompt_id,
+                    filename=candidate.filename,
+                    attempt=attempt,
+                    error=str(last_error),
+                )
+                time.sleep(self._download_retry_backoff * (2 ** (attempt - 1)))
+
+        logger.error(
+            "ComfyUI output download failed after {attempts} attempts: prompt_id={prompt_id} filename={filename}",
+            attempts=max_attempts,
+            prompt_id=prompt_id,
+            filename=candidate.filename,
+        )
+        raise OutputDownloadError(
+            "ComfyUI output download failed after retries",
+            prompt_id=prompt_id,
+            output_node_id=candidate.output_node_id,
+            filename=candidate.filename,
+        ) from last_error
+
+    def _validate_image_bytes(
+        self,
+        content: bytes,
+        candidate: _ImageCandidate,
+        prompt_id: str | None = None,
+    ) -> tuple[int | None, int | None]:
+        if not isinstance(content, bytes) or not content:
+            logger.error(
+                "ComfyUI output image validation failed: prompt_id={prompt_id} filename={filename} reason=empty",
+                prompt_id=prompt_id,
+                filename=candidate.filename,
+            )
+            raise CorruptImageError(
+                "ComfyUI output image payload is empty",
+                prompt_id=prompt_id,
+                output_node_id=candidate.output_node_id,
+                filename=candidate.filename,
+            )
+
+        try:
+            with Image.open(BytesIO(content)) as image:
+                image.load()
+                image_format = image.format
+                width, height = image.size
+        except (UnidentifiedImageError, OSError, SyntaxError, ValueError) as exc:
+            logger.error(
+                "ComfyUI output image validation failed: prompt_id={prompt_id} filename={filename} reason=decode",
+                prompt_id=prompt_id,
+                filename=candidate.filename,
+            )
+            raise CorruptImageError(
+                "ComfyUI output image failed to decode",
+                prompt_id=prompt_id,
+                output_node_id=candidate.output_node_id,
+                filename=candidate.filename,
+            ) from exc
+
+        decoded_formats = self._PIL_FORMAT_EXTENSIONS.get(str(image_format).upper(), set())
+        if candidate.format not in decoded_formats or candidate.format not in self._allowed_image_formats:
+            logger.error(
+                "ComfyUI output image validation failed: prompt_id={prompt_id} "
+                "filename={filename} reason=unsupported_format format={format}",
+                prompt_id=prompt_id,
+                filename=candidate.filename,
+                format=image_format,
+            )
+            raise UnsupportedImageFormatError(
+                "ComfyUI output image format is unsupported",
+                prompt_id=prompt_id,
+                output_node_id=candidate.output_node_id,
+                filename=candidate.filename,
+            )
+
+        return int(width), int(height)
+
+    def _candidate_from_image(
+        self,
+        output_node_id: str,
+        image: object,
+        prompt_id: str,
+    ) -> _ImageCandidate | None:
+        if not isinstance(image, dict):
+            logger.debug(
+                "Skipping malformed ComfyUI image entry: prompt_id={prompt_id} node={node}",
+                prompt_id=prompt_id,
+                node=output_node_id,
+            )
+            return None
+
+        filename = image.get("filename")
+        if not isinstance(filename, str) or not filename.strip():
+            logger.debug(
+                "Skipping ComfyUI image entry with missing filename: prompt_id={prompt_id} node={node}",
+                prompt_id=prompt_id,
+                node=output_node_id,
+            )
+            return None
+
+        subfolder = image.get("subfolder", "")
+        image_type = image.get("type", "output")
+        if not isinstance(subfolder, str):
+            subfolder = ""
+        if not isinstance(image_type, str) or not image_type.strip():
+            image_type = "output"
+        image_format = self._filename_format(filename)
+        if image_format is None:
+            logger.debug(
+                "Skipping ComfyUI image with no extension: prompt_id={prompt_id} node={node} filename={filename}",
+                prompt_id=prompt_id,
+                node=output_node_id,
+                filename=filename,
+            )
+            return None
+
+        return _ImageCandidate(
+            output_node_id=output_node_id,
+            filename=filename.strip(),
+            subfolder=subfolder,
+            image_type=image_type.strip(),
+            format=image_format,
+        )
+
+    def _log_selected(self, candidate: _ImageCandidate, prompt_id: str | None, via: str) -> None:
+        logger.info(
+            "Selected ComfyUI output image: prompt_id={prompt_id} node={node} "
+            "filename={filename} format={format} via={via}",
+            prompt_id=prompt_id,
+            node=candidate.output_node_id,
+            filename=candidate.filename,
+            format=candidate.format,
+            via=via,
+        )
+
+    def _is_missing_file_error(self, exc: _ComfyUIHTTPError) -> bool:
+        cause = exc.__cause__
+        response = getattr(cause, "response", None)
+        status_code = getattr(response, "status_code", None)
+        if status_code == 404:
+            return True
+        return "404" in str(exc)
+
+    @classmethod
+    def _filename_format(cls, filename: str) -> str | None:
+        if "." not in filename:
+            return None
+        return cls._normalize_format(filename.rsplit(".", 1)[-1])
+
+    @staticmethod
+    def _normalize_format(value: object) -> str:
+        return str(value).strip().lower().lstrip(".")
 
 
 class _ComfyUIHTTPTransport:

@@ -1,12 +1,14 @@
 from __future__ import annotations
 
 import json
+from io import BytesIO
 from pathlib import Path
 import sys
 import threading
 import time
 from unittest.mock import Mock
 
+from PIL import Image
 import pytest
 import requests
 import websocket
@@ -18,13 +20,25 @@ if str(_MODULES_DIR) not in sys.path:
 from comfyui_client import (  # noqa: E402
     ComfyUIEvent,
     SystemStats,
+    _CompletionResult,
     _CompletionOutcome,
     _ComfyUIHTTPError,
     _ComfyUIHTTPTransport,
     _ComfyUIWebSocketTransport,
+    _ImageCandidate,
+    _OutputRetriever,
+    _OutputResult,
     _QueueTracker,
 )
-from module7_exceptions import ComfyUIConnectionError  # noqa: E402
+from module7_exceptions import (  # noqa: E402
+    ComfyUIConnectionError,
+    CorruptImageError,
+    MissingOutputFileError,
+    NoOutputImageError,
+    OutputDownloadError,
+    OutputHistoryError,
+    UnsupportedImageFormatError,
+)
 
 
 BASE_URL = "http://127.0.0.1:8188"
@@ -1059,4 +1073,431 @@ class TestQueueTracker:
                 _FakeQueueWebSocket(),  # type: ignore[arg-type]
                 poll_interval_seconds=poll_interval_seconds,
                 execution_timeout_seconds=execution_timeout_seconds,
+            )
+
+
+def _image_bytes(image_format: str = "PNG", size: tuple[int, int] = (3, 2)) -> bytes:
+    stream = BytesIO()
+    Image.new("RGB", size, color=(20, 40, 60)).save(stream, format=image_format)
+    return stream.getvalue()
+
+
+def _completed(history_payload: dict[str, object] | None = None) -> _CompletionResult:
+    return _CompletionResult(
+        outcome=_CompletionOutcome.COMPLETED,
+        history_payload=history_payload,
+        error_payload=None,
+        queue_wait_seconds=1.0,
+        generation_seconds=2.0,
+        used_http_fallback=False,
+    )
+
+
+def _failed_completion() -> _CompletionResult:
+    return _CompletionResult(
+        outcome=_CompletionOutcome.EXECUTION_ERROR,
+        history_payload=None,
+        error_payload={"exception_message": "failed"},
+        queue_wait_seconds=1.0,
+        generation_seconds=2.0,
+        used_http_fallback=False,
+    )
+
+
+def _output_history(outputs: dict[str, object]) -> dict[str, object]:
+    return {"status": {"completed": True, "status_str": "success"}, "outputs": outputs}
+
+
+def _top_level_history(prompt_id: str, outputs: dict[str, object]) -> dict[str, object]:
+    return {prompt_id: _output_history(outputs)}
+
+
+def _image_entry(filename: str, subfolder: str = "", image_type: str = "output") -> dict[str, str]:
+    return {"filename": filename, "subfolder": subfolder, "type": image_type}
+
+
+class _FakeOutputHTTP:
+    def __init__(
+        self,
+        *,
+        histories: list[object] | None = None,
+        images: list[object] | None = None,
+    ) -> None:
+        self.histories = list(histories or [])
+        self.images = list(images or [_image_bytes()])
+        self.history_prompt_ids: list[str] = []
+        self.view_calls: list[tuple[str, str, str]] = []
+
+    def history(self, prompt_id: str) -> dict[str, object] | None:
+        self.history_prompt_ids.append(prompt_id)
+        if not self.histories:
+            return None
+        item = self.histories.pop(0)
+        if isinstance(item, BaseException):
+            raise item
+        return item  # type: ignore[return-value]
+
+    def view_image(self, filename: str, subfolder: str, image_type: str) -> bytes:
+        self.view_calls.append((filename, subfolder, image_type))
+        if not self.images:
+            return _image_bytes()
+        item = self.images.pop(0)
+        if isinstance(item, BaseException):
+            raise item
+        return item  # type: ignore[return-value]
+
+
+class TestOutputRetriever:
+    def test_single_output_node_single_image_returns_validated_result(self) -> None:
+        history_payload = _output_history({"9": {"images": [_image_entry("result.png", "finals")]}})
+        http = _FakeOutputHTTP(images=[_image_bytes("PNG", (5, 4))])
+        retriever = _OutputRetriever(http)  # type: ignore[arg-type]
+
+        result = retriever.retrieve(_completed(history_payload), prompt_id="prompt-123")
+
+        assert result == _OutputResult(
+            prompt_id="prompt-123",
+            output_node_id="9",
+            filename="result.png",
+            subfolder="finals",
+            image_type="output",
+            format="png",
+            content=result.content,
+            width=5,
+            height=4,
+        )
+        assert result.content
+        assert http.history_prompt_ids == []
+        assert http.view_calls == [("result.png", "finals", "output")]
+
+    def test_top_level_embedded_history_is_supported(self) -> None:
+        history_payload = _top_level_history("prompt-123", {"9": {"images": [_image_entry("result.png")]}})
+        http = _FakeOutputHTTP(images=[_image_bytes()])
+
+        result = _OutputRetriever(http).retrieve(_completed(history_payload), prompt_id="prompt-123")  # type: ignore[arg-type]
+
+        assert result.output_node_id == "9"
+        assert http.history_prompt_ids == []
+
+    def test_missing_embedded_history_is_fetched_from_transport(self) -> None:
+        http = _FakeOutputHTTP(
+            histories=[_output_history({"9": {"images": [_image_entry("result.png")]}})],
+            images=[_image_bytes()],
+        )
+
+        result = _OutputRetriever(http).retrieve(_completed(None), prompt_id="prompt-123")  # type: ignore[arg-type]
+
+        assert result.filename == "result.png"
+        assert http.history_prompt_ids == ["prompt-123"]
+
+    def test_single_output_node_is_selected(self) -> None:
+        history_payload = _output_history({"22": {"images": [_image_entry("only.png")]}})
+        http = _FakeOutputHTTP(images=[_image_bytes()])
+
+        result = _OutputRetriever(http).retrieve(_completed(history_payload), prompt_id="prompt-123")  # type: ignore[arg-type]
+
+        assert result.output_node_id == "22"
+        assert result.filename == "only.png"
+
+    def test_multiple_output_nodes_fall_back_to_collection_order(self) -> None:
+        history_payload = _output_history({
+            "4": {"images": [_image_entry("first.png")]},
+            "9": {"images": [_image_entry("second.png")]},
+        })
+        http = _FakeOutputHTTP(images=[_image_bytes()])
+
+        result = _OutputRetriever(http).retrieve(_completed(history_payload), prompt_id="prompt-123")  # type: ignore[arg-type]
+
+        assert result.output_node_id == "4"
+        assert result.filename == "first.png"
+
+    def test_preferred_output_node_wins_over_collection_order(self) -> None:
+        history_payload = _output_history({
+            "4": {"images": [_image_entry("first.png")]},
+            "9": {"images": [_image_entry("preferred.png")]},
+        })
+        http = _FakeOutputHTTP(images=[_image_bytes()])
+        retriever = _OutputRetriever(http, preferred_output_nodes=("9",))  # type: ignore[arg-type]
+
+        result = retriever.retrieve(_completed(history_payload), prompt_id="prompt-123")
+
+        assert result.output_node_id == "9"
+        assert result.filename == "preferred.png"
+
+    def test_unmatched_preferred_node_falls_back_to_first_candidate(self) -> None:
+        history_payload = _output_history({
+            "4": {"images": [_image_entry("first.png")]},
+            "9": {"images": [_image_entry("second.png")]},
+        })
+        http = _FakeOutputHTTP(images=[_image_bytes()])
+        retriever = _OutputRetriever(http, preferred_output_nodes=("99",))  # type: ignore[arg-type]
+
+        result = retriever.retrieve(_completed(history_payload), prompt_id="prompt-123")
+
+        assert result.output_node_id == "4"
+        assert result.filename == "first.png"
+
+    def test_multiple_images_on_same_node_selects_first_image(self) -> None:
+        history_payload = _output_history({
+            "9": {"images": [_image_entry("first.png"), _image_entry("second.png")]},
+        })
+        http = _FakeOutputHTTP(images=[_image_bytes()])
+
+        result = _OutputRetriever(http).retrieve(_completed(history_payload), prompt_id="prompt-123")  # type: ignore[arg-type]
+
+        assert result.filename == "first.png"
+
+    def test_unsupported_extension_is_filtered_before_selection(self) -> None:
+        history_payload = _output_history({
+            "4": {"images": [_image_entry("first.bmp")]},
+            "9": {"images": [_image_entry("second.png")]},
+        })
+        http = _FakeOutputHTTP(images=[_image_bytes()])
+
+        result = _OutputRetriever(http).retrieve(_completed(history_payload), prompt_id="prompt-123")  # type: ignore[arg-type]
+
+        assert result.output_node_id == "9"
+        assert result.filename == "second.png"
+
+    def test_select_image_is_deterministic(self) -> None:
+        retriever = _OutputRetriever(_FakeOutputHTTP(), preferred_output_nodes=("9",))  # type: ignore[arg-type]
+        candidates = [
+            _ImageCandidate("4", "first.png", "", "output", "png"),
+            _ImageCandidate("9", "preferred.png", "", "output", "png"),
+            _ImageCandidate("9", "second.png", "", "output", "png"),
+        ]
+
+        assert retriever._select_image(candidates) == retriever._select_image(candidates)
+        assert retriever._select_image(candidates).filename == "preferred.png"
+
+    @pytest.mark.parametrize("payload", [None, "garbage", []])
+    def test_malformed_history_payload_raises_history_error(self, payload: object) -> None:
+        http = _FakeOutputHTTP()
+        completion = _completed(payload)  # type: ignore[arg-type]
+
+        with pytest.raises(OutputHistoryError):
+            _OutputRetriever(http).retrieve(completion, prompt_id="prompt-123")  # type: ignore[arg-type]
+
+    def test_history_fetch_error_raises_history_error(self) -> None:
+        http = _FakeOutputHTTP(histories=[_ComfyUIHTTPError("history failed")])
+
+        with pytest.raises(OutputHistoryError):
+            _OutputRetriever(http).retrieve(_completed(None), prompt_id="prompt-123")  # type: ignore[arg-type]
+
+    def test_missing_prompt_key_raises_history_error(self) -> None:
+        payload = {"other-prompt": _output_history({"9": {"images": [_image_entry("result.png")]}})}
+        http = _FakeOutputHTTP()
+
+        with pytest.raises(OutputHistoryError):
+            _OutputRetriever(http).retrieve(_completed(payload), prompt_id="prompt-123")  # type: ignore[arg-type]
+
+    @pytest.mark.parametrize(
+        "history_payload",
+        [
+            {"status": {"completed": True}},
+            {"outputs": []},
+        ],
+    )
+    def test_missing_or_malformed_outputs_raises_history_error(self, history_payload: dict[str, object]) -> None:
+        http = _FakeOutputHTTP()
+
+        with pytest.raises(OutputHistoryError):
+            _OutputRetriever(http).retrieve(_completed(history_payload), prompt_id="prompt-123")  # type: ignore[arg-type]
+
+    def test_empty_outputs_raises_no_output_image_error(self) -> None:
+        http = _FakeOutputHTTP()
+
+        with pytest.raises(NoOutputImageError):
+            _OutputRetriever(http).retrieve(_completed(_output_history({})), prompt_id="prompt-123")  # type: ignore[arg-type]
+
+    def test_node_and_image_level_malformed_entries_are_skipped(self) -> None:
+        history_payload = _output_history({
+            "bad-node": [],
+            "no-images": {"gifs": [_image_entry("ignored.gif")]},
+            "bad-images": {"images": "not-a-list"},
+            "bad-entry": {"images": [{"subfolder": ""}, _image_entry("")]},
+            "good": {"images": [_image_entry("result.png")]},
+        })
+        http = _FakeOutputHTTP(images=[_image_bytes()])
+
+        result = _OutputRetriever(http).retrieve(_completed(history_payload), prompt_id="prompt-123")  # type: ignore[arg-type]
+
+        assert result.output_node_id == "good"
+        assert result.filename == "result.png"
+
+    def test_all_candidates_filtered_out_raises_no_output_image_error(self) -> None:
+        history_payload = _output_history({"9": {"images": [_image_entry("result.bmp")]}})
+        http = _FakeOutputHTTP()
+
+        with pytest.raises(NoOutputImageError):
+            _OutputRetriever(http).retrieve(_completed(history_payload), prompt_id="prompt-123")  # type: ignore[arg-type]
+
+    def test_successful_download_on_first_attempt_does_not_retry(self) -> None:
+        history_payload = _output_history({"9": {"images": [_image_entry("result.png")]}})
+        http = _FakeOutputHTTP(images=[_image_bytes()])
+
+        _OutputRetriever(http, download_retries=3).retrieve(_completed(history_payload), prompt_id="prompt-123")  # type: ignore[arg-type]
+
+        assert len(http.view_calls) == 1
+
+    def test_transient_download_failure_then_success_retries(
+        self, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        sleeps: list[float] = []
+        monkeypatch.setattr("comfyui_client.time.sleep", lambda seconds: sleeps.append(seconds))
+        history_payload = _output_history({"9": {"images": [_image_entry("result.png")]}})
+        http = _FakeOutputHTTP(images=[_ComfyUIHTTPError("temporary"), _image_bytes()])
+
+        result = _OutputRetriever(http, download_retries=2, download_retry_backoff=0.25).retrieve(
+            _completed(history_payload),
+            prompt_id="prompt-123",
+        )
+
+        assert result.filename == "result.png"
+        assert len(http.view_calls) == 2
+        assert sleeps == [0.25]
+
+    def test_transient_download_failure_exhaustion_raises_download_error(
+        self, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        monkeypatch.setattr("comfyui_client.time.sleep", lambda _seconds: None)
+        history_payload = _output_history({"9": {"images": [_image_entry("result.png")]}})
+        http = _FakeOutputHTTP(images=[_ComfyUIHTTPError("one"), _ComfyUIHTTPError("two"), _ComfyUIHTTPError("three")])
+
+        with pytest.raises(OutputDownloadError):
+            _OutputRetriever(http, download_retries=2).retrieve(
+                _completed(history_payload),
+                prompt_id="prompt-123",
+            )
+
+        assert len(http.view_calls) == 3
+
+    def test_404_download_raises_missing_file_without_retry(self) -> None:
+        response = Mock()
+        response.status_code = 404
+        cause = requests.HTTPError("404 Client Error")
+        cause.response = response
+        error = _ComfyUIHTTPError("ComfyUI HTTP request failed for GET /view: 404 Client Error")
+        error.__cause__ = cause
+        history_payload = _output_history({"9": {"images": [_image_entry("missing.png")]}})
+        http = _FakeOutputHTTP(images=[error, _image_bytes()])
+
+        with pytest.raises(MissingOutputFileError):
+            _OutputRetriever(http, download_retries=2).retrieve(
+                _completed(history_payload),
+                prompt_id="prompt-123",
+            )
+
+        assert len(http.view_calls) == 1
+
+    def test_empty_download_is_retryable_then_exhausts(
+        self, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        monkeypatch.setattr("comfyui_client.time.sleep", lambda _seconds: None)
+        history_payload = _output_history({"9": {"images": [_image_entry("result.png")]}})
+        http = _FakeOutputHTTP(images=[b"", b""])
+
+        with pytest.raises(OutputDownloadError):
+            _OutputRetriever(http, download_retries=1).retrieve(
+                _completed(history_payload),
+                prompt_id="prompt-123",
+            )
+
+        assert len(http.view_calls) == 2
+
+    def test_valid_jpeg_and_webp_bytes_are_supported(self) -> None:
+        for filename, image_format in [("result.jpg", "JPEG"), ("result.webp", "WEBP")]:
+            history_payload = _output_history({"9": {"images": [_image_entry(filename)]}})
+            http = _FakeOutputHTTP(images=[_image_bytes(image_format, (7, 6))])
+
+            result = _OutputRetriever(http).retrieve(_completed(history_payload), prompt_id="prompt-123")  # type: ignore[arg-type]
+
+            assert result.width == 7
+            assert result.height == 6
+
+    def test_empty_bytes_reaching_validation_raise_corrupt_image_error(self) -> None:
+        retriever = _OutputRetriever(_FakeOutputHTTP())  # type: ignore[arg-type]
+        candidate = _ImageCandidate("9", "result.png", "", "output", "png")
+
+        with pytest.raises(CorruptImageError):
+            retriever._validate_image_bytes(b"", candidate, "prompt-123")
+
+    def test_garbage_bytes_raise_corrupt_image_error(self) -> None:
+        history_payload = _output_history({"9": {"images": [_image_entry("result.png")]}})
+        http = _FakeOutputHTTP(images=[b"not an image"])
+
+        with pytest.raises(CorruptImageError):
+            _OutputRetriever(http).retrieve(_completed(history_payload), prompt_id="prompt-123")  # type: ignore[arg-type]
+
+    def test_decoded_format_mismatch_raises_unsupported_image_format_error(self) -> None:
+        history_payload = _output_history({"9": {"images": [_image_entry("result.png")]}})
+        http = _FakeOutputHTTP(images=[_image_bytes("JPEG")])
+
+        with pytest.raises(UnsupportedImageFormatError):
+            _OutputRetriever(http).retrieve(_completed(history_payload), prompt_id="prompt-123")  # type: ignore[arg-type]
+
+    def test_repeated_calls_are_deterministic(self) -> None:
+        history_payload = _output_history({"9": {"images": [_image_entry("result.png")]}})
+        first = _OutputRetriever(_FakeOutputHTTP(images=[_image_bytes()])).retrieve(  # type: ignore[arg-type]
+            _completed(history_payload),
+            prompt_id="prompt-123",
+        )
+        second = _OutputRetriever(_FakeOutputHTTP(images=[_image_bytes()])).retrieve(  # type: ignore[arg-type]
+            _completed(history_payload),
+            prompt_id="prompt-123",
+        )
+
+        assert first == second
+
+    def test_logging_behavior_for_success_retry_and_validation_failure(
+        self, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        logger_spy = _FakeLogger()
+        monkeypatch.setattr("comfyui_client.logger", logger_spy)
+        monkeypatch.setattr("comfyui_client.time.sleep", lambda _seconds: None)
+        history_payload = _output_history({"9": {"images": [_image_entry("result.png")]}})
+        http = _FakeOutputHTTP(images=[_ComfyUIHTTPError("temporary"), _image_bytes()])
+
+        _OutputRetriever(http, download_retries=1).retrieve(_completed(history_payload), prompt_id="prompt-123")  # type: ignore[arg-type]
+
+        levels = [level for level, _message in logger_spy.entries]
+        assert "INFO" in levels
+        assert "WARNING" in levels
+        assert not any("PNG" in message and "IHDR" in message for _level, message in logger_spy.entries)
+
+        logger_spy.entries.clear()
+        bad_http = _FakeOutputHTTP(images=[b"not an image"])
+        with pytest.raises(CorruptImageError):
+            _OutputRetriever(bad_http).retrieve(_completed(history_payload), prompt_id="prompt-123")  # type: ignore[arg-type]
+
+        assert any(level == "ERROR" and "validation failed" in message for level, message in logger_spy.entries)
+
+    def test_programmer_error_guards(self) -> None:
+        retriever = _OutputRetriever(_FakeOutputHTTP())  # type: ignore[arg-type]
+
+        with pytest.raises(ValueError):
+            retriever.retrieve(None, prompt_id="prompt-123")  # type: ignore[arg-type]
+        with pytest.raises(ValueError):
+            retriever.retrieve(_failed_completion(), prompt_id="prompt-123")
+        with pytest.raises(ValueError):
+            retriever.retrieve(_completed(_output_history({"9": {"images": [_image_entry("result.png")]}})))
+        with pytest.raises(ValueError):
+            _OutputRetriever(None)  # type: ignore[arg-type]
+
+    @pytest.mark.parametrize(
+        "download_timeout, download_retries, download_retry_backoff",
+        [(-0.1, None, None), (None, -1, None), (None, None, -0.1)],
+    )
+    def test_invalid_retriever_configuration_is_rejected(
+        self,
+        download_timeout: float | None,
+        download_retries: int | None,
+        download_retry_backoff: float | None,
+    ) -> None:
+        with pytest.raises(ValueError):
+            _OutputRetriever(
+                _FakeOutputHTTP(),  # type: ignore[arg-type]
+                download_timeout=download_timeout,
+                download_retries=download_retries,
+                download_retry_backoff=download_retry_backoff,
             )
