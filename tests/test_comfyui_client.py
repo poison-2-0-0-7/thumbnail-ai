@@ -24,6 +24,7 @@ from comfyui_client import (  # noqa: E402
     _CompletionOutcome,
     _ComfyUIHTTPError,
     _ComfyUIHTTPTransport,
+    _ComfyUIMetricsRecorder,
     _ComfyUIWebSocketTransport,
     _ImageCandidate,
     _OutputRetriever,
@@ -32,12 +33,15 @@ from comfyui_client import (  # noqa: E402
 )
 from module7_exceptions import (  # noqa: E402
     ComfyUIConnectionError,
+    ComfyUIQueueError,
     CorruptImageError,
+    MetricsWriteError,
     MissingOutputFileError,
     NoOutputImageError,
     OutputDownloadError,
     OutputHistoryError,
     UnsupportedImageFormatError,
+    VRAMExhaustedError,
 )
 
 
@@ -698,18 +702,23 @@ class _FakeQueueHTTP:
 class _FakeLogger:
     def __init__(self) -> None:
         self.entries: list[tuple[str, str]] = []
+        self.kwargs: list[dict[str, object]] = []
 
-    def debug(self, message: str, **_kwargs: object) -> None:
+    def debug(self, message: str, **kwargs: object) -> None:
         self.entries.append(("DEBUG", message))
+        self.kwargs.append(kwargs)
 
-    def info(self, message: str, **_kwargs: object) -> None:
+    def info(self, message: str, **kwargs: object) -> None:
         self.entries.append(("INFO", message))
+        self.kwargs.append(kwargs)
 
-    def warning(self, message: str, **_kwargs: object) -> None:
+    def warning(self, message: str, **kwargs: object) -> None:
         self.entries.append(("WARNING", message))
+        self.kwargs.append(kwargs)
 
-    def error(self, message: str, **_kwargs: object) -> None:
+    def error(self, message: str, **kwargs: object) -> None:
         self.entries.append(("ERROR", message))
+        self.kwargs.append(kwargs)
 
 
 def _status_event(queue_remaining: int) -> ComfyUIEvent:
@@ -1147,6 +1156,17 @@ class _FakeOutputHTTP:
         return item  # type: ignore[return-value]
 
 
+class _FakeMetricsCollector:
+    def __init__(self, error: BaseException | None = None) -> None:
+        self.error = error
+        self.records: list[object] = []
+
+    def append(self, metrics: object) -> None:
+        if self.error is not None:
+            raise self.error
+        self.records.append(metrics)
+
+
 class TestOutputRetriever:
     def test_single_output_node_single_image_returns_validated_result(self) -> None:
         history_payload = _output_history({"9": {"images": [_image_entry("result.png", "finals")]}})
@@ -1501,3 +1521,298 @@ class TestOutputRetriever:
                 download_retries=download_retries,
                 download_retry_backoff=download_retry_backoff,
             )
+
+
+def _completion(
+    outcome: _CompletionOutcome = _CompletionOutcome.COMPLETED,
+    *,
+    queue_wait_seconds: float = 1.0,
+    generation_seconds: float = 2.0,
+    used_http_fallback: bool = False,
+) -> _CompletionResult:
+    return _CompletionResult(
+        outcome=outcome,
+        history_payload=_output_history({"9": {"images": [_image_entry("result.png")]}})
+        if outcome is _CompletionOutcome.COMPLETED
+        else None,
+        error_payload={"exception_message": "failed"}
+        if outcome is _CompletionOutcome.EXECUTION_ERROR
+        else None,
+        queue_wait_seconds=queue_wait_seconds,
+        generation_seconds=generation_seconds,
+        used_http_fallback=used_http_fallback,
+    )
+
+
+def _output_result() -> _OutputResult:
+    return _OutputResult(
+        prompt_id="prompt-123",
+        output_node_id="9",
+        filename="result.png",
+        subfolder="",
+        image_type="output",
+        format="png",
+        content=b"png",
+        width=1280,
+        height=720,
+    )
+
+
+class TestMetricsRecorder:
+    def test_successful_completion_builds_generation_metrics(self) -> None:
+        collector = _FakeMetricsCollector()
+        completion = _completion()
+
+        _ComfyUIMetricsRecorder(collector).record_attempt(
+            video_id="video-123",
+            niche="gaming",
+            workflow_version="wf-v1",
+            profile_name="low_vram",
+            workflow_hash="hash-abc",
+            completions=[completion],
+            output=_output_result(),
+            num_candidates_requested=1,
+            peak_vram_mb=512.0,
+            gpu_utilization_percent=42.0,
+        )
+
+        assert len(collector.records) == 1
+        metrics = collector.records[0]
+        assert metrics.video_id == "video-123"
+        assert metrics.niche == "gaming"
+        assert metrics.profile_name == "low_vram"
+        assert metrics.workflow_version == "wf-v1"
+        assert metrics.workflow_hash == "hash-abc"
+        assert metrics.queue_time_seconds == 1.0
+        assert metrics.generation_time_seconds == [2.0]
+        assert metrics.total_duration_seconds == 3.0
+        assert metrics.generation_retry_count == 0
+        assert metrics.identity_retry_count == 0
+        assert metrics.failure_reason is None
+        assert metrics.peak_vram_mb == 512.0
+        assert metrics.gpu_utilization_percent == 42.0
+
+    def test_successful_append_logs_debug_without_metrics_payload(
+        self,
+        monkeypatch: pytest.MonkeyPatch,
+    ) -> None:
+        logger_spy = _FakeLogger()
+        monkeypatch.setattr("comfyui_client.logger", logger_spy)
+
+        _ComfyUIMetricsRecorder(_FakeMetricsCollector()).record_attempt(
+            video_id="video-123",
+            niche="gaming",
+            workflow_version="wf-v1",
+            completions=[_completion()],
+            output=_output_result(),
+        )
+
+        debug_entries = [entry for entry in logger_spy.entries if entry[0] == "DEBUG"]
+        assert len(debug_entries) == 1
+        assert "metrics recorded" in debug_entries[0][1]
+        assert logger_spy.kwargs[0] == {
+            "video_id": "video-123",
+            "failure_reason": None,
+        }
+        assert "generation_time_seconds" not in debug_entries[0][1]
+
+    def test_attempt_started_at_uses_monotonic_elapsed_time(self, monkeypatch: pytest.MonkeyPatch) -> None:
+        collector = _FakeMetricsCollector()
+        monkeypatch.setattr("comfyui_client.time.monotonic", lambda: 15.5)
+
+        _ComfyUIMetricsRecorder(collector).record_attempt(
+            video_id="video-123",
+            niche="gaming",
+            workflow_version="wf-v1",
+            completions=[_completion()],
+            output=_output_result(),
+            attempt_started_at=10.0,
+        )
+
+        assert collector.records[0].total_duration_seconds == 5.5
+
+    def test_retry_aggregation_preserves_completion_order(self) -> None:
+        collector = _FakeMetricsCollector()
+        completions = [
+            _completion(_CompletionOutcome.EXECUTION_ERROR, queue_wait_seconds=0.5, generation_seconds=1.0),
+            _completion(_CompletionOutcome.EXECUTION_ERROR, queue_wait_seconds=0.25, generation_seconds=1.5),
+            _completion(_CompletionOutcome.COMPLETED, queue_wait_seconds=0.75, generation_seconds=2.5),
+        ]
+
+        _ComfyUIMetricsRecorder(collector).record_attempt(
+            video_id="video-123",
+            niche="gaming",
+            workflow_version="wf-v1",
+            completions=completions,
+            output=_output_result(),
+        )
+
+        metrics = collector.records[0]
+        assert metrics.queue_time_seconds == 1.5
+        assert metrics.generation_time_seconds == [1.0, 1.5, 2.5]
+        assert metrics.generation_retry_count == 2
+        assert metrics.failure_reason is None
+
+    @pytest.mark.parametrize(
+        "exception, expected",
+        [
+            (MissingOutputFileError("missing"), "missing_output_file"),
+            (CorruptImageError("corrupt"), "corrupt_image"),
+            (UnsupportedImageFormatError("unsupported"), "unsupported_image_format"),
+            (NoOutputImageError("none"), "no_output_image"),
+            (OutputHistoryError("history"), "output_history_error"),
+            (OutputDownloadError("download"), "output_download_error"),
+            (VRAMExhaustedError("oom"), "vram_exhausted"),
+            (ComfyUIQueueError("queue"), "queue_error"),
+            (ComfyUIConnectionError("connection"), "connection_error"),
+        ],
+    )
+    def test_exception_types_map_to_stable_failure_reasons(
+        self,
+        exception: BaseException,
+        expected: str,
+    ) -> None:
+        collector = _FakeMetricsCollector()
+
+        _ComfyUIMetricsRecorder(collector).record_attempt(
+            video_id="video-123",
+            niche="gaming",
+            workflow_version="wf-v1",
+            completions=[_completion(_CompletionOutcome.EXECUTION_ERROR)],
+            exception=exception,
+        )
+
+        assert collector.records[0].failure_reason == expected
+
+    @pytest.mark.parametrize(
+        "completion, output, expected",
+        [
+            (_completion(_CompletionOutcome.EXECUTION_ERROR), None, "execution_error"),
+            (_completion(_CompletionOutcome.TIMEOUT), None, "timeout"),
+            (_completion(_CompletionOutcome.COMPLETED), None, "output_missing_uncaptured"),
+        ],
+    )
+    def test_completion_state_classifies_failures_when_exception_is_absent(
+        self,
+        completion: _CompletionResult,
+        output: _OutputResult | None,
+        expected: str,
+    ) -> None:
+        collector = _FakeMetricsCollector()
+
+        _ComfyUIMetricsRecorder(collector).record_attempt(
+            video_id="video-123",
+            niche="gaming",
+            workflow_version="wf-v1",
+            completions=[completion],
+            output=output,
+        )
+
+        assert collector.records[0].failure_reason == expected
+
+    def test_unclassified_exception_logs_type_without_message(self, monkeypatch: pytest.MonkeyPatch) -> None:
+        collector = _FakeMetricsCollector()
+        logger_spy = _FakeLogger()
+        monkeypatch.setattr("comfyui_client.logger", logger_spy)
+
+        _ComfyUIMetricsRecorder(collector).record_attempt(
+            video_id="video-123",
+            niche="gaming",
+            workflow_version="wf-v1",
+            completions=[_completion(_CompletionOutcome.EXECUTION_ERROR)],
+            exception=RuntimeError("sensitive details"),
+        )
+
+        assert collector.records[0].failure_reason == "unclassified_error"
+        warnings = [entry for entry in logger_spy.entries if entry[0] == "WARNING"]
+        assert len(warnings) == 1
+        assert "sensitive details" not in warnings[0][1]
+        assert logger_spy.kwargs[0]["exception_type"] == "RuntimeError"
+
+    @pytest.mark.parametrize(
+        "kwargs, match",
+        [
+            ({"video_id": ""}, "video_id"),
+            ({"niche": ""}, "niche"),
+            ({"workflow_version": ""}, "workflow_version"),
+            ({"completions": []}, "completions"),
+            ({"num_candidates_requested": 0}, "num_candidates_requested"),
+            ({"identity_retry_count": -1}, "identity_retry_count"),
+        ],
+    )
+    def test_validation_failures_raise_value_error(self, kwargs: dict[str, object], match: str) -> None:
+        collector = _FakeMetricsCollector()
+        params: dict[str, object] = {
+            "video_id": "video-123",
+            "niche": "gaming",
+            "workflow_version": "wf-v1",
+            "completions": [_completion()],
+            "output": _output_result(),
+        }
+        params.update(kwargs)
+
+        with pytest.raises(ValueError, match=match):
+            _ComfyUIMetricsRecorder(collector).record_attempt(**params)  # type: ignore[arg-type]
+
+    @pytest.mark.parametrize(
+        "completion",
+        [
+            _completion(queue_wait_seconds=-0.1),
+            _completion(generation_seconds=-0.1),
+        ],
+    )
+    def test_negative_timing_values_are_rejected(self, completion: _CompletionResult) -> None:
+        with pytest.raises(ValueError, match="seconds"):
+            _ComfyUIMetricsRecorder(_FakeMetricsCollector()).record_attempt(
+                video_id="video-123",
+                niche="gaming",
+                workflow_version="wf-v1",
+                completions=[completion],
+                output=_output_result(),
+            )
+
+    def test_constructor_rejects_missing_collector(self) -> None:
+        with pytest.raises(ValueError, match="collector"):
+            _ComfyUIMetricsRecorder(None)  # type: ignore[arg-type]
+
+    @pytest.mark.parametrize("error", [MetricsWriteError("disk full"), OSError("permission denied")])
+    def test_metrics_write_failures_are_logged_and_swallowed(
+        self,
+        monkeypatch: pytest.MonkeyPatch,
+        error: BaseException,
+    ) -> None:
+        logger_spy = _FakeLogger()
+        monkeypatch.setattr("comfyui_client.logger", logger_spy)
+
+        _ComfyUIMetricsRecorder(_FakeMetricsCollector(error)).record_attempt(
+            video_id="video-123",
+            niche="gaming",
+            workflow_version="wf-v1",
+            completions=[_completion()],
+            output=_output_result(),
+        )
+
+        errors = [entry for entry in logger_spy.entries if entry[0] == "ERROR"]
+        assert len(errors) == 1
+        assert logger_spy.kwargs[0]["video_id"] == "video-123"
+        assert isinstance(logger_spy.kwargs[0]["error"], str)
+
+    def test_max_realistic_retry_count_is_not_truncated(self) -> None:
+        collector = _FakeMetricsCollector()
+        completions = [
+            _completion(_CompletionOutcome.EXECUTION_ERROR, generation_seconds=1.0),
+            _completion(_CompletionOutcome.EXECUTION_ERROR, generation_seconds=2.0),
+            _completion(_CompletionOutcome.EXECUTION_ERROR, generation_seconds=3.0),
+            _completion(_CompletionOutcome.COMPLETED, generation_seconds=4.0),
+        ]
+
+        _ComfyUIMetricsRecorder(collector).record_attempt(
+            video_id="video-123",
+            niche="gaming",
+            workflow_version="wf-v1",
+            completions=completions,
+            output=_output_result(),
+        )
+
+        assert collector.records[0].generation_time_seconds == [1.0, 2.0, 3.0, 4.0]
+        assert collector.records[0].generation_retry_count == 3

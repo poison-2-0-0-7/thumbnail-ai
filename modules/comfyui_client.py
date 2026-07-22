@@ -13,7 +13,7 @@ from enum import Enum
 import json
 import socket
 import time
-from typing import Any, Literal, Sequence
+from typing import Any, ClassVar, Literal, Sequence
 from urllib.parse import urlencode
 
 from PIL import Image, UnidentifiedImageError
@@ -39,15 +39,19 @@ from config import (
     MODULE7_PROGRESS_LOG_GRANULARITY_PERCENT,
     MODULE7_STILL_QUEUED_WARNING_SECONDS,
 )
+from image_generator import MetricsCollector, utc_now
 from module7_exceptions import (
     ComfyUIConnectionError,
+    ComfyUIQueueError,
     CorruptImageError,
     MissingOutputFileError,
     NoOutputImageError,
     OutputDownloadError,
     OutputHistoryError,
     UnsupportedImageFormatError,
+    VRAMExhaustedError,
 )
+from models import GenerationMetrics
 
 _LOG_FORMAT = "{time:YYYY-MM-DD HH:mm:ss} | {level:<8} | {name} | {message}"
 
@@ -1314,6 +1318,148 @@ class _OutputRetriever:
     @staticmethod
     def _normalize_format(value: object) -> str:
         return str(value).strip().lower().lstrip(".")
+
+
+class _ComfyUIMetricsRecorder:
+    """Translate one ComfyUI attempt outcome into the existing metrics sink."""
+
+    _FAILURE_REASON_BY_EXCEPTION_TYPE: ClassVar[tuple[tuple[type[BaseException], str], ...]] = (
+        (MissingOutputFileError, "missing_output_file"),
+        (CorruptImageError, "corrupt_image"),
+        (UnsupportedImageFormatError, "unsupported_image_format"),
+        (NoOutputImageError, "no_output_image"),
+        (OutputHistoryError, "output_history_error"),
+        (OutputDownloadError, "output_download_error"),
+        (VRAMExhaustedError, "vram_exhausted"),
+        (ComfyUIQueueError, "queue_error"),
+        (ComfyUIConnectionError, "connection_error"),
+    )
+
+    def __init__(self, collector: MetricsCollector) -> None:
+        if collector is None:
+            raise ValueError("collector must not be None")
+        self._collector = collector
+
+    def record_attempt(
+        self,
+        *,
+        video_id: str,
+        niche: str,
+        workflow_version: str,
+        profile_name: str | None = None,
+        workflow_hash: str | None = None,
+        completions: Sequence[_CompletionResult],
+        output: _OutputResult | None = None,
+        exception: BaseException | None = None,
+        num_candidates_requested: int = 1,
+        identity_retry_count: int = 0,
+        peak_vram_mb: float | None = None,
+        gpu_utilization_percent: float | None = None,
+        attempt_started_at: float | None = None,
+    ) -> None:
+        """Append one GenerationMetrics record without masking generation outcome."""
+        clean_video_id = self._required_text(video_id, "video_id")
+        clean_niche = self._required_text(niche, "niche")
+        clean_workflow_version = self._required_text(workflow_version, "workflow_version")
+        if num_candidates_requested < 1:
+            raise ValueError("num_candidates_requested must be at least 1")
+        if identity_retry_count < 0:
+            raise ValueError("identity_retry_count must not be negative")
+        completion_list = self._validated_completions(completions)
+
+        queue_time_seconds = sum(completion.queue_wait_seconds for completion in completion_list)
+        generation_time_seconds = [completion.generation_seconds for completion in completion_list]
+        total_duration_seconds = self._total_duration_seconds(completion_list, attempt_started_at)
+        failure_reason = self._classify_failure(completion_list[-1], output, exception)
+
+        try:
+            metrics = GenerationMetrics(
+                video_id=clean_video_id,
+                niche=clean_niche,
+                profile_name=profile_name,
+                workflow_version=clean_workflow_version,
+                workflow_hash=workflow_hash,
+                num_candidates_requested=num_candidates_requested,
+                queue_time_seconds=queue_time_seconds,
+                generation_time_seconds=generation_time_seconds,
+                total_duration_seconds=total_duration_seconds,
+                identity_retry_count=identity_retry_count,
+                generation_retry_count=len(completion_list) - 1,
+                failure_reason=failure_reason,
+                peak_vram_mb=peak_vram_mb,
+                gpu_utilization_percent=gpu_utilization_percent,
+                recorded_at=utc_now(),
+            )
+            self._collector.append(metrics)
+            logger.debug(
+                "ComfyUI metrics recorded for video_id={video_id} failure_reason={failure_reason}",
+                video_id=clean_video_id,
+                failure_reason=failure_reason,
+            )
+        except Exception as exc:
+            logger.error(
+                "ComfyUI metrics recording failed for video_id={video_id}: {error}",
+                video_id=clean_video_id,
+                error=str(exc),
+            )
+
+    def _classify_failure(
+        self,
+        completion: _CompletionResult,
+        output: _OutputResult | None,
+        exception: BaseException | None,
+    ) -> str | None:
+        if exception is not None:
+            for exception_type, reason in self._FAILURE_REASON_BY_EXCEPTION_TYPE:
+                if isinstance(exception, exception_type):
+                    return reason
+            logger.warning(
+                "ComfyUI metrics saw unclassified exception type: {exception_type}",
+                exception_type=type(exception).__name__,
+            )
+            return "unclassified_error"
+
+        if completion.outcome is _CompletionOutcome.EXECUTION_ERROR:
+            return "execution_error"
+        if completion.outcome is _CompletionOutcome.TIMEOUT:
+            return "timeout"
+        if completion.outcome is _CompletionOutcome.COMPLETED and output is None:
+            return "output_missing_uncaptured"
+        return None
+
+    @staticmethod
+    def _required_text(value: str, field_name: str) -> str:
+        if not isinstance(value, str) or not value.strip():
+            raise ValueError(f"{field_name} must not be empty")
+        return value.strip()
+
+    @staticmethod
+    def _validated_completions(completions: Sequence[_CompletionResult]) -> tuple[_CompletionResult, ...]:
+        if completions is None:
+            raise ValueError("completions must not be empty")
+        completion_list = tuple(completions)
+        if not completion_list:
+            raise ValueError("completions must not be empty")
+        for completion in completion_list:
+            if not isinstance(completion, _CompletionResult):
+                raise ValueError("completions must contain _CompletionResult values")
+            if completion.queue_wait_seconds < 0:
+                raise ValueError("queue_wait_seconds must not be negative")
+            if completion.generation_seconds < 0:
+                raise ValueError("generation_seconds must not be negative")
+        return completion_list
+
+    @staticmethod
+    def _total_duration_seconds(
+        completions: Sequence[_CompletionResult],
+        attempt_started_at: float | None,
+    ) -> float:
+        if attempt_started_at is None:
+            return sum(
+                completion.queue_wait_seconds + completion.generation_seconds
+                for completion in completions
+            )
+        return max(0.0, time.monotonic() - attempt_started_at)
 
 
 class _ComfyUIHTTPTransport:
