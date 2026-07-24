@@ -17,6 +17,7 @@ _MODULES_DIR = Path(__file__).resolve().parent.parent / "modules"
 if str(_MODULES_DIR) not in sys.path:
     sys.path.insert(0, str(_MODULES_DIR))
 
+import comfyui_client as comfyui_client_module  # noqa: E402
 from comfyui_client import (  # noqa: E402
     ComfyUIClient,
     ComfyUIEvent,
@@ -62,9 +63,15 @@ def _response(
     json_error: Exception | None = None,
     request_error: requests.RequestException | None = None,
     content: bytes = b"image-bytes",
+    status_code: int = 200,
+    reason: str = "OK",
+    text: str = "",
 ) -> Mock:
     response = Mock()
     response.content = content
+    response.status_code = status_code
+    response.reason = reason
+    response.text = text
     if request_error is None:
         response.raise_for_status.return_value = None
     else:
@@ -268,6 +275,44 @@ def test_http_status_failure_is_translated_with_original_cause(
     with pytest.raises(_ComfyUIHTTPError) as raised:
         transport.queue_status()
     assert raised.value.__cause__ is http_error
+
+
+def test_http_status_failure_includes_and_logs_response_details(
+    session: Mock, transport: _ComfyUIHTTPTransport
+) -> None:
+    log_messages: list[str] = []
+    sink_id = comfyui_client_module.logger.add(
+        lambda message: log_messages.append(str(message)),
+        level="ERROR",
+        format="{message}",
+    )
+    http_error = requests.HTTPError("400 Client Error")
+    error_payload = {"error": {"message": "Prompt outputs failed validation"}}
+    session.request.return_value = _response(
+        payload=error_payload,
+        request_error=http_error,
+        status_code=400,
+        reason="Bad Request",
+        text='{"error":{"message":"Prompt outputs failed validation"}}',
+    )
+
+    try:
+        with pytest.raises(_ComfyUIHTTPError) as raised:
+            transport.submit_prompt({}, "client")
+    finally:
+        comfyui_client_module.logger.remove(sink_id)
+
+    error_message = str(raised.value)
+    assert raised.value.__cause__ is http_error
+    assert "status_code" in error_message
+    assert "400" in error_message
+    assert "Bad Request" in error_message
+    assert "Prompt outputs failed validation" in error_message
+    assert len(log_messages) == 1
+    assert "status_code" in log_messages[0]
+    assert "400" in log_messages[0]
+    assert "Bad Request" in log_messages[0]
+    assert "Prompt outputs failed validation" in log_messages[0]
 
 
 def test_transport_does_not_retry_failed_requests(session: Mock, transport: _ComfyUIHTTPTransport) -> None:

@@ -213,8 +213,17 @@ class WorkflowBuilder:
             "controlnet_enabled": profile.controlnet_enabled, "ipadapter_enabled": profile.ipadapter_enabled,
             "restoration": profile.restoration, "restoration_fidelity": profile.restoration_fidelity,
             "upscaler": profile.upscaler,
+            "output_filename_prefix": WorkflowBuilder._output_filename_prefix(package),
             "source_thumbnail_path": str(references.source_thumbnail_path) if references else "",
         }
+
+    @staticmethod
+    def _output_filename_prefix(package: PromptPackage) -> str:
+        safe_video_id = "".join(
+            character if character.isalnum() or character in {"-", "_"} else "_"
+            for character in package.video_id.strip()
+        ).strip("_")
+        return f"module7_{safe_video_id or 'output'}"
 
     @classmethod
     def _substitute(cls, value: Any, slots: Mapping[str, Any]) -> Any:

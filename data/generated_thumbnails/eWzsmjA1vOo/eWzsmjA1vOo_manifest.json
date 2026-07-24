@@ -1,0 +1,30 @@
+{
+  "video_id": "eWzsmjA1vOo",
+  "status": "success",
+  "error_message": null,
+  "generated_asset": {
+    "path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\generated_thumbnails\\eWzsmjA1vOo\\eWzsmjA1vOo.png",
+    "width": 1280,
+    "height": 720,
+    "sha256": "4d24f0ff22c5528e7dd9f071487d19586ddd1039e805e18117aa46566b89ea69",
+    "candidate_index": 0
+  },
+  "workflow_version": "workflow_v1",
+  "workflow_hash": "0f58afa9e803b8746320e65bcd084e4048c7d5caad08ca828fb0e774e291130b",
+  "prompt_package_hash": "ddc0a5292d524d4b26b21d5fab8277d9342be73cc71223325388f3e9a336aa83",
+  "generation_hash": "8be1af51bcdd9979afbb676f618768877d8bdf03930e826fb8f3324eda720e15",
+  "profile_name": "PROFILE_LOW_VRAM",
+  "checkpoint_hash": null,
+  "lora_hashes": [],
+  "controlnet_hashes": [],
+  "ipadapter_hash": null,
+  "restoration_model_hashes": [],
+  "upscaler_hash": null,
+  "seed": 255403169,
+  "candidate_scores": [],
+  "selected_candidate_index": 0,
+  "retry_count": 0,
+  "stage_durations_seconds": {},
+  "duration_seconds": 0.0,
+  "generated_at": "2026-07-23T13:30:19.277056+00:00"
+}

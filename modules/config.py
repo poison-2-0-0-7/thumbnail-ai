@@ -376,3 +376,17 @@ MODULE7_NSFW_THRESHOLD: float = 0.15
 MODULE7_MAX_CONCURRENT_GENERATIONS: int = 1
 MODULE7_DRAFT_STEPS: int = 12
 MODULE7_DRAFT_UPSCALE_SKIP: bool = True
+
+# ---------------------------------------------------------------------------
+# Module 6.5 - Visual Reference Engine
+# ---------------------------------------------------------------------------
+
+VRE_STORAGE_ROOT: Path = PROJECT_ROOT / "data" / "visual_references"
+VRE_MANIFEST_FILENAME: str = "reference_manifest.json"
+VRE_ENGINE_VERSION: str = "1.0.0"
+VRE_CACHE_ENABLED: bool = True
+VRE_MIN_IMAGE_DIMENSION_PX: int = 256
+VRE_CANNY_LOW_THRESHOLD: int = 100
+VRE_CANNY_HIGH_THRESHOLD: int = 200
+VRE_FACE_DETECTION_CONFIDENCE: float = 0.85
+MODULE65_LOG_PATH: Path = LOG_DIR / "module6_5.log"

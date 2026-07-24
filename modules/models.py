@@ -652,6 +652,103 @@ class PromptPackage(BaseModel):
 
 
 # ---------------------------------------------------------------------------
+# Module 6.5 - Visual Reference Engine
+# ---------------------------------------------------------------------------
+
+
+class VisualBoundingBox(BaseModel):
+    """Absolute pixel bounding box used by VRE crop and mask processors."""
+
+    model_config = ConfigDict(frozen=True)
+
+    x: int
+    y: int
+    width: int
+    height: int
+
+    @field_validator("x", "y")
+    @classmethod
+    def coordinate_must_not_be_negative(cls, v: int) -> int:
+        if v < 0:
+            raise ValueError("bounding-box coordinates must be non-negative")
+        return v
+
+    @field_validator("width", "height")
+    @classmethod
+    def span_must_be_positive(cls, v: int) -> int:
+        if v <= 0:
+            raise ValueError("bounding-box width and height must be positive")
+        return v
+
+
+class AssetMetadata(BaseModel):
+    """Traceable metadata for one VRE-generated conditioning asset."""
+
+    model_config = ConfigDict(frozen=True)
+
+    asset_type: str
+    file_path: str
+    checksum: str
+    resolution: tuple[int, int]
+    confidence_score: Optional[float] = None
+
+    @field_validator("asset_type", "file_path", "checksum")
+    @classmethod
+    def text_fields_must_not_be_empty(cls, v: str) -> str:
+        if not v or not v.strip():
+            raise ValueError("asset metadata text fields must not be empty")
+        return v.strip()
+
+    @field_validator("checksum")
+    @classmethod
+    def checksum_must_be_sha256(cls, v: str) -> str:
+        if len(v) != 64 or any(char not in "0123456789abcdef" for char in v.lower()):
+            raise ValueError("checksum must be a SHA-256 hex digest")
+        return v.lower()
+
+    @field_validator("resolution")
+    @classmethod
+    def resolution_must_be_positive(cls, v: tuple[int, int]) -> tuple[int, int]:
+        if len(v) != 2 or v[0] <= 0 or v[1] <= 0:
+            raise ValueError("resolution must be a positive (width, height) tuple")
+        return v
+
+    @field_validator("confidence_score")
+    @classmethod
+    def confidence_must_be_unit_interval(cls, v: Optional[float]) -> Optional[float]:
+        if v is not None and not 0.0 <= v <= 1.0:
+            raise ValueError("confidence_score must be in [0.0, 1.0]")
+        return v
+
+
+class VisualReferenceManifest(BaseModel):
+    """Immutable VRE contract consumed by downstream ComfyUI workflow builders."""
+
+    model_config = ConfigDict(frozen=True)
+
+    video_id: str
+    source_image_path: str
+    source_hash: str
+    created_at: str
+    assets: dict[str, Optional[AssetMetadata]]
+    processing_metadata: dict[str, Any] = {}
+
+    @field_validator("video_id", "source_image_path", "created_at")
+    @classmethod
+    def manifest_text_fields_must_not_be_empty(cls, v: str) -> str:
+        if not v or not v.strip():
+            raise ValueError("manifest text fields must not be empty")
+        return v.strip()
+
+    @field_validator("source_hash")
+    @classmethod
+    def source_hash_must_be_sha256(cls, v: str) -> str:
+        if len(v) != 64 or any(char not in "0123456789abcdef" for char in v.lower()):
+            raise ValueError("source_hash must be a SHA-256 hex digest")
+        return v.lower()
+
+
+# ---------------------------------------------------------------------------
 # Module 7 — Local Image Generation Engine
 # ---------------------------------------------------------------------------
 
