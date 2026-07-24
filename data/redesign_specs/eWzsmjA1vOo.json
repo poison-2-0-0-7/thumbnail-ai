@@ -1,0 +1,102 @@
+{
+  "video_id": "eWzsmjA1vOo",
+  "source_thumbnail_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\thumbnails\\eWzsmjA1vOo.jpg",
+  "color_direction": {
+    "target_brightness": 0.37234267592430115,
+    "target_contrast": 0.6578394770622253,
+    "target_saturation": 0.3608553111553192,
+    "warm_or_cool": "warm",
+    "rationale": "Color targets clamp source brightness, contrast, and saturation to their configured acceptable ranges."
+  },
+  "subject_treatment": {
+    "has_subject": true,
+    "target_bbox": {
+      "x_min": 0.23107120990753174,
+      "y_min": 0.45920448303222655,
+      "x_max": 0.281550669670105,
+      "y_max": 0.5294717470804851
+    },
+    "target_position_label": "left-third",
+    "crop_tighter": true,
+    "rationale": "Largest detected face selected; crop tighter because subject area is below the minimum."
+  },
+  "text_overlay": {
+    "include_text": true,
+    "placement_zone": {
+      "x_min": 0.04720491502812526,
+      "y_min": 0.16680839662674848,
+      "x_max": 0.8124464890962726,
+      "y_max": 0.3396774382968933
+    },
+    "avoid_zones": [
+      {
+        "x_min": 0.23107120990753174,
+        "y_min": 0.45920448303222655,
+        "x_max": 0.281550669670105,
+        "y_max": 0.5294717470804851
+      }
+    ],
+    "rationale": "Existing OCR text is preserved as placement-only guidance."
+  },
+  "layout_direction": {
+    "target_negative_space_ratio": 0.589932849335793,
+    "target_clutter_score": 0.7,
+    "focal_zone": {
+      "x_min": 0.23107120990753174,
+      "y_min": 0.45920448303222655,
+      "x_max": 0.281550669670105,
+      "y_max": 0.5294717470804851
+    },
+    "rationale": "Layout targets preserve source values except clutter is reduced."
+  },
+  "object_directives": [
+    {
+      "label": "person",
+      "action": "remove",
+      "rationale": "High clutter requires simplifying detected objects."
+    },
+    {
+      "label": "person",
+      "action": "remove",
+      "rationale": "High clutter requires simplifying detected objects."
+    },
+    {
+      "label": "person",
+      "action": "remove",
+      "rationale": "High clutter requires simplifying detected objects."
+    },
+    {
+      "label": "person",
+      "action": "remove",
+      "rationale": "High clutter requires simplifying detected objects."
+    },
+    {
+      "label": "refrigerator",
+      "action": "remove",
+      "rationale": "High clutter requires simplifying detected objects."
+    },
+    {
+      "label": "bowl",
+      "action": "remove",
+      "rationale": "High clutter requires simplifying detected objects."
+    },
+    {
+      "label": "bowl",
+      "action": "remove",
+      "rationale": "High clutter requires simplifying detected objects."
+    }
+  ],
+  "elements_to_preserve": [
+    "Happy expressions of the people",
+    "Warm color palette",
+    "Balanced composition"
+  ],
+  "overall_rationale": "ctr_potential_score=0.75; curiosity_gap_score=0.68; content_mismatch_detected=False; rules applied: clutter_reduction, crop_tighter.",
+  "source_ctr_potential_score": 0.75,
+  "source_curiosity_gap_score": 0.68,
+  "source_content_mismatch_detected": false,
+  "status": "success",
+  "error_message": null,
+  "duration_seconds": 0.00013590000162366778,
+  "generated_at": "2026-07-23T13:29:37.000953+00:00"
+}

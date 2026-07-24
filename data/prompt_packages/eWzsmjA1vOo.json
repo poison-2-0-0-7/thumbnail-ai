@@ -1,0 +1,58 @@
+{
+  "video_id": "eWzsmjA1vOo",
+  "positive_prompt": "Place the primary subject in the left of the frame, matching the source position label 'left-third'. Crop tighter around the subject so it occupies a larger share of the frame. Maintain approximately 59% negative space in the background. Background detail is acceptable within the configured clutter target. Anchor the composition's focal point in the left of the frame, targeting a clutter score of 0.70 and a negative-space ratio of 0.59. Use moody, low-key lighting with a high-contrast look (target brightness=0.37, target contrast=0.66). Render muted, desaturated colors with a warm color temperature (target saturation=0.36). Preserve existing text placement; do not invent new copy or wording. Reserve the top region of the frame for text. Avoid placing text over the following region(s): left. Preserve: Happy expressions of the people, Warm color palette, Balanced composition.",
+  "negative_prompt": "blurry, low resolution, watermark, distorted anatomy, extra limbs, text artifacts, jpeg compression artifacts, no person, no person, no person, no person, no refrigerator, no bowl, no bowl",
+  "subject_instructions": "Place the primary subject in the left of the frame, matching the source position label 'left-third'. Crop tighter around the subject so it occupies a larger share of the frame.",
+  "background_instructions": "Maintain approximately 59% negative space in the background. Background detail is acceptable within the configured clutter target.",
+  "typography_instructions": "Preserve existing text placement; do not invent new copy or wording. Reserve the top region of the frame for text. Avoid placing text over the following region(s): left.",
+  "composition_instructions": "Anchor the composition's focal point in the left of the frame, targeting a clutter score of 0.70 and a negative-space ratio of 0.59.",
+  "lighting_instructions": "Use moody, low-key lighting with a high-contrast look (target brightness=0.37, target contrast=0.66).",
+  "color_instructions": "Render muted, desaturated colors with a warm color temperature (target saturation=0.36).",
+  "object_placement": [
+    "person: remove",
+    "person: remove",
+    "person: remove",
+    "person: remove",
+    "refrigerator: remove",
+    "bowl: remove",
+    "bowl: remove"
+  ],
+  "rendering_constraints": [
+    "Render at the exact target resolution; do not crop after generation.",
+    "Do not add any watermark, logo, or signature.",
+    "Preserve the following elements exactly: Happy expressions of the people, Warm color palette, Balanced composition."
+  ],
+  "safety_constraints": [
+    "Do not depict real, identifiable people; use a generic or anonymized figure.",
+    "Do not reproduce copyrighted characters, logos, or branded imagery.",
+    "Do not include graphic violence, gore, or sexual content.",
+    "Do not include misleading medical, financial, or safety claims in any rendered text."
+  ],
+  "generation_parameters": {
+    "width": 1280,
+    "height": 720,
+    "aspect_ratio": "16:9",
+    "seed": 255403169,
+    "guidance_scale": 7.5,
+    "inference_steps": 30,
+    "sampler": "deterministic"
+  },
+  "quality_parameters": {
+    "quality_tags": [
+      "sharp focus",
+      "high detail",
+      "professional thumbnail quality"
+    ],
+    "min_resolution_px": 1280,
+    "upscale_requested": true
+  },
+  "model_settings": {
+    "model_name": "thumbnail-diffusion-v1",
+    "style_preset": "warm-photographic",
+    "negative_prompt_weight": 1.0
+  },
+  "status": "success",
+  "error_message": null,
+  "duration_seconds": 0.00008610000077169389,
+  "generated_at": "2026-07-23T13:29:37.004341+00:00"
+}

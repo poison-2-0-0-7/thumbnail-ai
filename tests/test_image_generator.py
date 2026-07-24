@@ -78,6 +78,25 @@ def test_workflow_builder_is_pure_and_hashes_resolved_graph() -> None:
     assert first.graph["1"]["inputs"]["ckpt_name"] == profile.checkpoint
 
 
+def test_general_workflow_uses_comfyui_safe_output_prefix() -> None:
+    package = _package()
+    profile = MODULE7_GENERATION_PROFILES["PROFILE_STANDARD"]
+    library = WorkflowLibrary()
+    ref = library.resolve("unknown-niche", profile)
+
+    workflow = WorkflowBuilder().build(package, profile, ref, library=library)
+
+    assert workflow.graph["7"]["inputs"]["filename_prefix"] == f"module7_{VIDEO_ID}"
+    assert "/" not in workflow.graph["7"]["inputs"]["filename_prefix"]
+    assert "\\" not in workflow.graph["7"]["inputs"]["filename_prefix"]
+
+
+def test_output_filename_prefix_sanitizes_path_characters() -> None:
+    package = _package().model_copy(update={"video_id": "../bad\\id"})
+
+    assert WorkflowBuilder._output_filename_prefix(package) == "module7_bad_id"
+
+
 def test_hashes_are_stable_and_manifest_and_metrics_are_persisted(tmp_path: Path) -> None:
     package = _package()
     package_digest = prompt_package_hash(package)

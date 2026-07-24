@@ -1,0 +1,77 @@
+{
+  "video_id": "I-bnBd5lCew",
+  "source_thumbnail_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\thumbnails\\I-bnBd5lCew.jpg",
+  "color_direction": {
+    "target_brightness": 0.5697399973869324,
+    "target_contrast": 0.7714354395866394,
+    "target_saturation": 0.3,
+    "warm_or_cool": "warm",
+    "rationale": "Color targets clamp source brightness, contrast, and saturation to their configured acceptable ranges."
+  },
+  "subject_treatment": {
+    "has_subject": true,
+    "target_bbox": {
+      "x_min": 0.7030036449432373,
+      "y_min": 0.16663836373223198,
+      "x_max": 0.808597183227539,
+      "y_max": 0.423225106133355
+    },
+    "target_position_label": "right-third",
+    "crop_tighter": true,
+    "rationale": "Largest detected face selected; crop tighter because subject area is below the minimum."
+  },
+  "text_overlay": {
+    "include_text": true,
+    "placement_zone": {
+      "x_min": 0.296875,
+      "y_min": 0.09166666666666666,
+      "x_max": 0.6453125,
+      "y_max": 0.35
+    },
+    "avoid_zones": [
+      {
+        "x_min": 0.7030036449432373,
+        "y_min": 0.16663836373223198,
+        "x_max": 0.808597183227539,
+        "y_max": 0.423225106133355
+      }
+    ],
+    "rationale": "Existing OCR text is preserved as placement-only guidance."
+  },
+  "layout_direction": {
+    "target_negative_space_ratio": 0.25,
+    "target_clutter_score": 0.6,
+    "focal_zone": {
+      "x_min": 0.7030036449432373,
+      "y_min": 0.16663836373223198,
+      "x_max": 0.808597183227539,
+      "y_max": 0.423225106133355
+    },
+    "rationale": "Layout targets preserve source values. Negative space is raised to the configured minimum."
+  },
+  "object_directives": [
+    {
+      "label": "person",
+      "action": "preserve",
+      "rationale": "Clutter is within the acceptable range; preserve detected objects."
+    },
+    {
+      "label": "person",
+      "action": "preserve",
+      "rationale": "Clutter is within the acceptable range; preserve detected objects."
+    }
+  ],
+  "elements_to_preserve": [
+    "Facial expressions and emotion",
+    "Composition and balance",
+    "Text placement for clarity"
+  ],
+  "overall_rationale": "ctr_potential_score=8.20; curiosity_gap_score=7.50; content_mismatch_detected=False; rules applied: minimum_negative_space, crop_tighter.",
+  "source_ctr_potential_score": 8.2,
+  "source_curiosity_gap_score": 7.5,
+  "source_content_mismatch_detected": false,
+  "status": "success",
+  "error_message": null,
+  "duration_seconds": 0.00018260000069858506,
+  "generated_at": "2026-07-23T13:30:38.640857+00:00"
+}

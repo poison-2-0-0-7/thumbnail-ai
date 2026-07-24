@@ -1596,6 +1596,7 @@ class _ComfyUIHTTPTransport:
     ) -> requests.Response:
         url = f"{self._base_url}{path}"
         logger.debug("ComfyUI HTTP request: {method} {url}", method=method, url=url)
+        response: requests.Response | None = None
         try:
             response = self._session.request(
                 method=method,
@@ -1606,8 +1607,38 @@ class _ComfyUIHTTPTransport:
             )
             response.raise_for_status()
         except requests.RequestException as exc:
+            if response is None:
+                response = getattr(exc, "response", None)
+            response_details = self._format_error_response(response)
+            if response_details:
+                logger.error(
+                    "ComfyUI HTTP error response for {method} {path}: {response_details}",
+                    method=method,
+                    path=path,
+                    response_details=response_details,
+                )
+                raise _ComfyUIHTTPError(
+                    f"ComfyUI HTTP request failed for {method} {path}: {exc}; "
+                    f"response={response_details}"
+                ) from exc
             raise _ComfyUIHTTPError(f"ComfyUI HTTP request failed for {method} {path}: {exc}") from exc
         return response
+
+    @staticmethod
+    def _format_error_response(response: requests.Response | None) -> dict[str, Any]:
+        if response is None:
+            return {}
+
+        details: dict[str, Any] = {
+            "status_code": getattr(response, "status_code", None),
+            "reason": getattr(response, "reason", None),
+            "text": getattr(response, "text", None),
+        }
+        try:
+            details["json"] = response.json()
+        except ValueError:
+            pass
+        return details
 
     @staticmethod
     def _number(value: object, field: str) -> float:
