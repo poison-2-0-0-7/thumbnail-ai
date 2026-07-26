@@ -13,3 +13,19 @@ class VisionStackConfigError(VisionStackError):
 
 class VisionStackRegistryError(VisionStackError):
     """Raised when registry state is invalid."""
+
+
+class VisionStackLoaderError(VisionStackError):
+    """Raised when boot-time model metadata cannot be resolved."""
+
+
+class VisionStackCheckpointError(VisionStackLoaderError):
+    """Raised when a configured checkpoint or required sidecar file is missing."""
+
+
+class VisionStackRuntimeError(VisionStackError):
+    """Raised when runtime lifecycle coordination fails."""
+
+
+class VisionStackResourceError(VisionStackRuntimeError):
+    """Raised when GPU resource ownership or sequential execution is invalid."""
