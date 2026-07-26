@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from enum import Enum
+from pathlib import Path
 from typing import Any
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator
@@ -129,3 +130,43 @@ class RegisteredVisionModel(BaseModel):
         if not value or not value.strip():
             raise ValueError("registered model name must not be empty")
         return value.strip()
+
+
+class ModelLoadingMetadata(BaseModel):
+    """Boot-time checkpoint metadata for one model.
+
+    This intentionally records paths and policy only. It does not represent
+    loaded weights or an instantiated model wrapper.
+    """
+
+    model_config = ConfigDict(frozen=True, arbitrary_types_allowed=True)
+
+    model_name: str
+    checkpoint_identifier: str
+    checkpoint_path: Path
+    required_paths: tuple[Path, ...]
+    missing_paths: tuple[Path, ...] = ()
+    precision: VisionModelPrecision
+    device: str
+    backend: VisionModelBackend
+    fallback: VisionModelFallback
+    cache_enabled: bool
+    cpu_fallback_available: bool
+    weights_loaded: bool = False
+
+    @property
+    def is_valid(self) -> bool:
+        """Return whether every required checkpoint artifact exists."""
+        return not self.missing_paths
+
+
+class RuntimeBootstrapMetadata(BaseModel):
+    """Structured metadata emitted by the runtime bootstrap layer."""
+
+    model_config = ConfigDict(frozen=True, arbitrary_types_allowed=True)
+
+    checkpoint_root: Path
+    models: tuple[ModelLoadingMetadata, ...]
+    sequential_execution: bool = True
+    gpu_lock_enforced: bool = True
+    weights_loaded: bool = False
