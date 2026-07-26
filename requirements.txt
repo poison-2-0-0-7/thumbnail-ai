@@ -8,6 +8,7 @@ youtube-transcript-api>=0.6.0
 pydantic>=2.0.0
 loguru>=0.7.0
 tenacity>=8.2.0
+PyYAML>=6.0.0
 
 # ── Module 3 (Thumbnail Downloader) ──────────────────────────────────────────
 requests>=2.31.0

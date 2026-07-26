@@ -1,0 +1,100 @@
+vision_stack:
+  grounding_dino:
+    checkpoint: "groundingdino_swint_ogc.pth"
+    precision: "fp16"
+    device: "cuda:0"
+    backend: "pytorch"
+    batch_size: 1
+    cache_enabled: true
+    timeout: 5000
+    fallback: "skip_stage"
+
+  sam2:
+    checkpoint: "sam2.1_hiera_large.pt"
+    precision: "fp16"
+    device: "cuda:0"
+    backend: "pytorch"
+    batch_size: 1
+    cache_enabled: true
+    timeout: 8000
+    fallback: "cpu_tiled_processing"
+
+  florence2:
+    checkpoint: "Florence-2-large"
+    precision: "fp16"
+    device: "cuda:0"
+    backend: "transformers"
+    batch_size: 1
+    cache_enabled: true
+    timeout: 6000
+    fallback: "skip_stage"
+
+  openclip:
+    checkpoint: "ViT-B-32/laion2b_s34b_b79k"
+    precision: "fp16"
+    device: "cuda:0"
+    backend: "open_clip"
+    batch_size: 1
+    cache_enabled: true
+    timeout: 3000
+    fallback: "skip_stage"
+
+  insightface:
+    checkpoint: "buffalo_l"
+    precision: "fp16"
+    device: "cuda:0"
+    backend: "onnxruntime"
+    batch_size: 1
+    cache_enabled: true
+    timeout: 3000
+    fallback: "skip_stage"
+
+  birefnet:
+    checkpoint: "BiRefNet-general-epoch_244.pth"
+    precision: "fp16"
+    device: "cuda:0"
+    backend: "pytorch"
+    batch_size: 1
+    cache_enabled: true
+    timeout: 5000
+    fallback: "skip_stage"
+
+  bisenet:
+    checkpoint: "79999_iter.pth"
+    precision: "fp16"
+    device: "cuda:0"
+    backend: "pytorch"
+    batch_size: 1
+    cache_enabled: true
+    timeout: 3000
+    fallback: "skip_stage"
+
+  paddleocr:
+    checkpoint: "PP-OCRv5_server_det+PP-OCRv5_server_rec"
+    precision: "fp16"
+    device: "cuda:0"
+    backend: "paddle"
+    batch_size: 1
+    cache_enabled: true
+    timeout: 4000
+    fallback: "cpu_fallback"
+
+  depth_anything:
+    checkpoint: "depth_anything_v2_vitb.pth"
+    precision: "fp16"
+    device: "cuda:0"
+    backend: "pytorch"
+    batch_size: 1
+    cache_enabled: true
+    timeout: 3000
+    fallback: "skip_stage"
+
+  teed:
+    checkpoint: "7_model.pth"
+    precision: "fp16"
+    device: "cuda:0"
+    backend: "pytorch"
+    batch_size: 1
+    cache_enabled: true
+    timeout: 3000
+    fallback: "skip_stage"
