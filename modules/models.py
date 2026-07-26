@@ -749,6 +749,21 @@ class VisualReferenceManifest(BaseModel):
 
 
 # ---------------------------------------------------------------------------
+# AI Vision Stack V2.1 - Configuration and Model Lifecycle
+# ---------------------------------------------------------------------------
+
+from vision_stack.models import (  # noqa: E402
+    RegisteredVisionModel,
+    VisionModelBackend,
+    VisionModelConfig,
+    VisionModelFallback,
+    VisionModelLifecycleState,
+    VisionModelPrecision,
+    VisionStackConfig,
+)
+
+
+# ---------------------------------------------------------------------------
 # Module 7 — Local Image Generation Engine
 # ---------------------------------------------------------------------------
 

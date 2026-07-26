@@ -20,6 +20,14 @@ from __future__ import annotations
 from pathlib import Path
 
 from models import GenerationProfile
+from vision_stack.config import (
+    VISION_STACK_CONFIG_ENV,
+    VISION_STACK_CONFIG_PATH,
+    VISION_STACK_MODEL_ORDER,
+    VISION_STACK_STAGE_LATENCY_KEYS,
+    VISION_STACK_VERSION,
+    load_vision_stack_config,
+)
 
 # ---------------------------------------------------------------------------
 # Filesystem layout
@@ -390,3 +398,7 @@ VRE_CANNY_LOW_THRESHOLD: int = 100
 VRE_CANNY_HIGH_THRESHOLD: int = 200
 VRE_FACE_DETECTION_CONFIDENCE: float = 0.85
 MODULE65_LOG_PATH: Path = LOG_DIR / "module6_5.log"
+
+# ---------------------------------------------------------------------------
+# AI Vision Stack V2.1 - Configuration Architecture
+# ---------------------------------------------------------------------------

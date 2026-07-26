@@ -3,6 +3,7 @@
 from .asset_writer import AssetWriter
 from .face_processor import FaceProcessor
 from .manifest_builder import ManifestBuilder
+from .model_registry import ModelRegistry
 from .segmentation_processor import SegmentationProcessor
 from .topology_processor import TopologyProcessor
 
@@ -10,6 +11,7 @@ __all__ = [
     "AssetWriter",
     "FaceProcessor",
     "ManifestBuilder",
+    "ModelRegistry",
     "SegmentationProcessor",
     "TopologyProcessor",
 ]
