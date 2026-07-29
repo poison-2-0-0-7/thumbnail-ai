@@ -36,7 +36,9 @@ from comfyui_client import (  # noqa: E402
 from image_generator import BuiltWorkflow  # noqa: E402
 from module7_exceptions import (  # noqa: E402
     ComfyUIConnectionError,
+    ComfyUIOutputMissingError,
     ComfyUIQueueError,
+    ComfyUIResponseError,
     ComfyUITimeoutError,
     CorruptImageError,
     MetricsWriteError,
@@ -47,6 +49,7 @@ from module7_exceptions import (  # noqa: E402
     UnsupportedImageFormatError,
     VRAMExhaustedError,
 )
+
 from models import WorkflowTemplateRef  # noqa: E402
 
 

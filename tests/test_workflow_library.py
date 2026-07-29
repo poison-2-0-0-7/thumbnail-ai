@@ -41,3 +41,16 @@ def test_template_path_cannot_escape_library(tmp_path: Path) -> None:
     outside.write_text("{}", encoding="utf-8")
     with pytest.raises(WorkflowTemplateError):
         WorkflowLibrary(tmp_path).load(outside)
+
+
+def test_all_templates_contain_save_image_node() -> None:
+    library = WorkflowLibrary()
+    for path in library.discover():
+        template = library.load(path)
+        graph = template["graph"]
+        has_save_node = any(
+            isinstance(node, dict) and node.get("class_type") == "SaveImage"
+            for node in graph.values()
+        )
+        assert has_save_node, f"Template {path.name} must contain a SaveImage node"
+

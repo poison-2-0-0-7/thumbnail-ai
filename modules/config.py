@@ -402,3 +402,22 @@ MODULE65_LOG_PATH: Path = LOG_DIR / "module6_5.log"
 # ---------------------------------------------------------------------------
 # AI Vision Stack V2.1 - Configuration Architecture
 # ---------------------------------------------------------------------------
+
+# ---------------------------------------------------------------------------
+# AI Vision Stack V2.1 - GroundingDINO Wrapper
+# ---------------------------------------------------------------------------
+
+#: Minimum detection confidence to keep a box, per the architecture document's
+#: documented confidence floor for GroundingDINO.
+GROUNDING_DINO_BOX_THRESHOLD: float = 0.35
+
+#: Minimum per-token text-grounding confidence (GroundingDINO's own internal
+#: text-matching threshold, distinct from the output box_threshold above).
+GROUNDING_DINO_TEXT_THRESHOLD: float = 0.25
+
+#: Default open-vocabulary prompt when a caller does not supply one.
+GROUNDING_DINO_DEFAULT_PROMPT: str = "person . face . logo . text . arrow"
+
+#: Log file for this wrapper, following the one-log-file-per-component
+#: convention already used by every other module.
+VISION_STACK_GROUNDING_DINO_LOG_PATH: Path = LOG_DIR / "vision_stack_grounding_dino.log"

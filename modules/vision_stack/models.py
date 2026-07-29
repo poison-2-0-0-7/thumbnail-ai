@@ -4,9 +4,9 @@ from __future__ import annotations
 
 from enum import Enum
 from pathlib import Path
-from typing import Any
+from typing import Any, Literal
 
-from pydantic import BaseModel, ConfigDict, Field, field_validator
+from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
 
 
 class VisionModelPrecision(str, Enum):
@@ -130,6 +130,51 @@ class RegisteredVisionModel(BaseModel):
         if not value or not value.strip():
             raise ValueError("registered model name must not be empty")
         return value.strip()
+
+
+class PixelBoundingBox(BaseModel):
+    """Absolute pixel-space bounding box for Vision Stack detections."""
+
+    model_config = ConfigDict(frozen=True)
+
+    x0: float
+    y0: float
+    x1: float
+    y1: float
+
+    @model_validator(mode="after")
+    def coordinates_must_be_ordered(self) -> "PixelBoundingBox":
+        """Validate that the box has positive width and height."""
+        if self.x0 < 0 or self.y0 < 0:
+            raise ValueError("pixel bounding box coordinates must be non-negative")
+        if self.x0 >= self.x1 or self.y0 >= self.y1:
+            raise ValueError("pixel bounding box must satisfy x0 < x1 and y0 < y1")
+        return self
+
+
+class GroundingDINODetection(BaseModel):
+    """Normalized Stage 1 localization result produced by GroundingDINO."""
+
+    model_config = ConfigDict(frozen=True)
+
+    label: str
+    confidence: float
+    bounding_box: PixelBoundingBox
+    source: Literal["grounding_dino"] = "grounding_dino"
+
+    @field_validator("label")
+    @classmethod
+    def label_must_not_be_empty(cls, value: str) -> str:
+        if not value or not value.strip():
+            raise ValueError("grounding dino detection label must not be empty")
+        return value.strip().lower()
+
+    @field_validator("confidence")
+    @classmethod
+    def confidence_must_be_probability(cls, value: float) -> float:
+        if value < 0.0 or value > 1.0:
+            raise ValueError("grounding dino detection confidence must be in [0.0, 1.0]")
+        return value
 
 
 class ModelLoadingMetadata(BaseModel):

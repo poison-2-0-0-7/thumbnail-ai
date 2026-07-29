@@ -63,15 +63,23 @@ class UnsupportedImageFormatError(OutputRetrievalError):
 
 
 class VRAMExhaustedError(Module7Error):
-    """Reserved for Phase 2 GPU out-of-memory failures."""
+    """Raised for ComfyUI GPU out-of-memory failures."""
+
+
+class ComfyUIOutputMissingError(Module7Error):
+    """Raised when a completed ComfyUI execution reports no retrievable output image."""
+
+
+class ComfyUIResponseError(Module7Error):
+    """Raised when ComfyUI returns a structurally invalid response to a known-good request."""
 
 
 class IdentityPreservationError(Module7Error):
-    """Reserved for Phase 2 identity-gate failures."""
+    """Reserved for Phase 3 identity-gate failures."""
 
 
 class QualityAssuranceError(Module7Error):
-    """Reserved for Phase 2 quality-assurance failures."""
+    """Reserved for Phase 4 quality-assurance failures."""
 
 
 class PromptPackageInvalidError(Module7Error):
@@ -99,4 +107,5 @@ class MetricsWriteError(Module7Error):
 
 
 class NoEligibleCandidateError(Module7Error):
-    """Reserved for Phase 2 candidate-ranking failures."""
+    """Reserved for Phase 4 candidate-ranking failures."""
+
