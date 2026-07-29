@@ -5,6 +5,7 @@ from pathlib import Path
 import sys
 
 import pytest
+from PIL import Image, ImageDraw
 
 _MODULES_DIR = Path(__file__).resolve().parent.parent / "modules"
 if str(_MODULES_DIR) not in sys.path:
@@ -12,11 +13,18 @@ if str(_MODULES_DIR) not in sys.path:
 
 from config import MODULE7_GENERATION_PROFILES  # noqa: E402
 from image_generator import (  # noqa: E402
-    ArtifactWriter, MetricsCollector, ProfileSelector, PromptPackageInvalidError,
-    PromptPackageLoader, ReferenceAssetResolver, WorkflowBuilder, generation_hash,
-    prompt_package_hash,
+    ArtifactWriter, BackgroundCompositor, CandidateRanker,
+    FaceRestorationStage, IdentityPreservationStage, ImageGeneratorPipeline,
+    MetricsCollector, ProfileSelector, PromptPackageInvalidError,
+    PromptPackageLoader, QualityAssuranceStage, ReferenceAssetResolver,
+    ReferenceAssets, UpscaleStage, WorkflowBuilder, cosine_similarity,
+    generation_hash, prompt_package_hash, run_image_generation_pipeline,
 )
-from models import GenerationMetrics, ImageGenerationResult, PromptPackage  # noqa: E402
+from models import (  # noqa: E402
+    CandidateScore, FaceMatchResult, GeneratedAsset, GenerationMetrics,
+    ImageGenerationResult, PromptPackage, QualityAssuranceReport,
+)
+from module7_exceptions import NoEligibleCandidateError  # noqa: E402
 from workflow_library import WorkflowLibrary  # noqa: E402
 
 
@@ -32,6 +40,15 @@ def _package() -> PromptPackage:
         generation_parameters={"seed": 123}, quality_parameters={}, model_settings={},
         generated_at="2026-01-01T00:00:00+00:00",
     )
+
+
+def _create_test_image(path: Path, width: int = 1280, height: int = 720, color: str = "blue") -> Path:
+    img = Image.new("RGB", (width, height), color=color)
+    draw = ImageDraw.Draw(img)
+    draw.rectangle([10, 10, 50, 50], fill="red")
+    draw.ellipse([100, 100, 200, 200], fill="yellow")
+    img.save(path)
+    return path
 
 
 def test_prompt_package_loader_validates_status_and_identity(tmp_path: Path) -> None:
@@ -112,3 +129,156 @@ def test_hashes_are_stable_and_manifest_and_metrics_are_persisted(tmp_path: Path
                                 recorded_at="2026-01-01T00:00:00+00:00")
     MetricsCollector(metrics_path).append(metrics)
     assert json.loads(metrics_path.read_text(encoding="utf-8"))["video_id"] == VIDEO_ID
+
+
+def test_cosine_similarity_basic() -> None:
+    assert cosine_similarity([1.0, 0.0], [1.0, 0.0]) == 1.0
+    assert cosine_similarity([1.0, 0.0], [0.0, 1.0]) == 0.0
+    assert cosine_similarity([0.0, 0.0], [1.0, 1.0]) == 0.0
+
+
+def test_identity_preservation_stage_skipped_when_no_reference_face(tmp_path: Path) -> None:
+    ref_img = _create_test_image(tmp_path / "ref.jpg")
+    gen_img = _create_test_image(tmp_path / "gen.png")
+    analysis_path = tmp_path / "analysis.json"
+    analysis_path.write_text(json.dumps({"face_analysis": {"has_face": False, "face_count": 0}}), encoding="utf-8")
+    ref_assets = ReferenceAssets(source_thumbnail_path=ref_img, analysis_path=analysis_path)
+
+    stage = IdentityPreservationStage(threshold=0.5)
+    result = stage.verify(gen_img, ref_assets)
+
+    assert result.skipped is True
+    assert result.passed is True
+
+
+def test_identity_preservation_stage_calculates_similarity(tmp_path: Path) -> None:
+    ref_img = _create_test_image(tmp_path / "ref.jpg")
+    gen_img = _create_test_image(tmp_path / "gen.png")
+    ref_assets = ReferenceAssets(source_thumbnail_path=ref_img)
+
+    stage = IdentityPreservationStage(threshold=0.5)
+    result = stage.verify(gen_img, ref_assets)
+
+    assert result.face_detected is True
+    assert result.skipped is False
+    assert result.similarity >= 0.0
+
+
+def test_face_restoration_stage_applies_enhancement(tmp_path: Path) -> None:
+    gen_img = _create_test_image(tmp_path / "gen.png")
+    out_img = tmp_path / "restored.png"
+    profile = MODULE7_GENERATION_PROFILES["PROFILE_STANDARD"]
+
+    stage = FaceRestorationStage()
+    result = stage.restore(gen_img, profile, output_path=out_img)
+
+    assert result.is_file()
+    assert result.stat().st_size > 0
+
+
+def test_upscale_stage_resizes_to_exact_target(tmp_path: Path) -> None:
+    small_img = _create_test_image(tmp_path / "small.png", width=640, height=360)
+    out_img = tmp_path / "upscaled.png"
+    profile = MODULE7_GENERATION_PROFILES["PROFILE_FAST"]
+
+    stage = UpscaleStage()
+    result = stage.upscale(small_img, profile, target_width=1280, target_height=720, output_path=out_img)
+
+    with Image.open(result) as img:
+        assert img.size == (1280, 720)
+
+
+def test_quality_assurance_stage_evaluates_scores_and_hard_gates(tmp_path: Path) -> None:
+    gen_img = _create_test_image(tmp_path / "gen.png", width=1280, height=720)
+    package = _package()
+    face_match = FaceMatchResult(similarity=0.85, threshold=0.5, passed=True, face_detected=True)
+
+    stage = QualityAssuranceStage()
+    report = stage.evaluate(gen_img, package, face_match)
+
+    assert report.resolution_passed is True
+    assert report.file_integrity_passed is True
+    assert report.safety_passed is True
+    assert report.hard_gate_passed is True
+    assert report.overall_score > 0.0
+
+
+def test_candidate_ranker_orders_by_overall_score_and_tie_breaks(tmp_path: Path) -> None:
+    p1 = tmp_path / "c1.png"
+    p2 = tmp_path / "c2.png"
+
+    qa1 = QualityAssuranceReport(
+        resolution_passed=True, file_integrity_passed=True, safety_passed=True,
+        overall_score=0.80, hard_gate_passed=True
+    )
+    qa2 = QualityAssuranceReport(
+        resolution_passed=True, file_integrity_passed=True, safety_passed=True,
+        overall_score=0.92, hard_gate_passed=True
+    )
+
+    fm1 = FaceMatchResult(similarity=0.70, threshold=0.5, passed=True)
+    fm2 = FaceMatchResult(similarity=0.88, threshold=0.5, passed=True)
+
+    candidates = [(0, p1, qa1, fm1), (1, p2, qa2, fm2)]
+
+    ranker = CandidateRanker()
+    winner, scores = ranker.rank(candidates)
+
+    assert winner[0] == 1
+    assert len(scores) == 2
+    assert scores[1].selected is True
+    assert scores[0].selected is False
+
+
+def test_candidate_ranker_raises_no_eligible_candidate_error_when_all_fail(tmp_path: Path) -> None:
+    p1 = tmp_path / "c1.png"
+    qa1 = QualityAssuranceReport(
+        resolution_passed=False, file_integrity_passed=True, safety_passed=True,
+        overall_score=0.50, hard_gate_passed=False
+    )
+    fm1 = FaceMatchResult(similarity=0.30, threshold=0.5, passed=False)
+
+    candidates = [(0, p1, qa1, fm1)]
+
+    ranker = CandidateRanker()
+    with pytest.raises(NoEligibleCandidateError):
+        ranker.rank(candidates)
+
+
+def test_image_generator_pipeline_runs_end_to_end_with_mock_client(tmp_path: Path) -> None:
+    pkg_dir = tmp_path / "prompt_packages"
+    thumb_dir = tmp_path / "thumbnails"
+    analysis_dir = tmp_path / "analysis"
+    out_dir = tmp_path / "generated_thumbnails"
+    pkg_dir.mkdir()
+    thumb_dir.mkdir()
+    analysis_dir.mkdir()
+
+    pkg = _package()
+    (pkg_dir / f"{VIDEO_ID}.json").write_text(pkg.model_dump_json(), encoding="utf-8")
+    ref_img = _create_test_image(thumb_dir / f"{VIDEO_ID}.jpg")
+
+    mock_png_bytes = ref_img.read_bytes()
+
+    class MockClient:
+        def generate(self, built_wf, video_id, num_candidates_requested=1, **kwargs):
+            from comfyui_client import _OutputResult
+            return _OutputResult(
+                prompt_id="mock-prompt-id", output_node_id="7", filename="output.png",
+                subfolder="", image_type="output", format="png", content=mock_png_bytes,
+                width=1280, height=720,
+            )
+
+    pipeline = ImageGeneratorPipeline(
+        client=MockClient(),
+        package_loader=PromptPackageLoader(pkg_dir),
+        asset_resolver=ReferenceAssetResolver(thumb_dir, analysis_dir),
+        artifact_writer=ArtifactWriter(out_dir),
+    )
+
+    result = pipeline.run(VIDEO_ID, niche="gaming", prompt_package=pkg)
+
+    assert result.status == "success"
+    assert result.generated_asset is not None
+    assert Path(result.generated_asset.path).is_file()
+    assert (out_dir / VIDEO_ID / f"{VIDEO_ID}_manifest.json").is_file()
