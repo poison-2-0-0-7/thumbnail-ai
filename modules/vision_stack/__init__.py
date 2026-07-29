@@ -17,9 +17,19 @@ from .exceptions import (
     VisionStackResourceError,
     VisionStackRuntimeError,
 )
+from .grounding_dino import GroundingDINOWrapper
+from .grounding_dino_exceptions import (
+    GroundingDINOError,
+    GroundingDINOInferenceError,
+    GroundingDINOLoadError,
+    GroundingDINOOutOfMemoryError,
+    GroundingDINOParseError,
+)
 from .loader import DEFAULT_CHECKPOINT_ROOT, ModelLoader, build_registry, load_config, load_runtime_metadata
 from .models import (
+    GroundingDINODetection,
     ModelLoadingMetadata,
+    PixelBoundingBox,
     RegisteredVisionModel,
     RuntimeBootstrapMetadata,
     VisionModelBackend,
@@ -36,9 +46,17 @@ from .runtime import RuntimeManager, VisionStackRuntime
 __all__ = [
     "DEFAULT_CHECKPOINT_ROOT",
     "GPUResourceManager",
+    "GroundingDINODetection",
+    "GroundingDINOError",
+    "GroundingDINOInferenceError",
+    "GroundingDINOLoadError",
+    "GroundingDINOOutOfMemoryError",
+    "GroundingDINOParseError",
+    "GroundingDINOWrapper",
     "ModelLoader",
     "ModelLoadingMetadata",
     "ModelRegistry",
+    "PixelBoundingBox",
     "RegisteredVisionModel",
     "RuntimeBootstrapMetadata",
     "RuntimeManager",

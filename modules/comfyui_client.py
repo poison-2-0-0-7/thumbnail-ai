@@ -49,7 +49,9 @@ from config import (
 from image_generator import BuiltWorkflow, MetricsCollector, utc_now
 from module7_exceptions import (
     ComfyUIConnectionError,
+    ComfyUIOutputMissingError,
     ComfyUIQueueError,
+    ComfyUIResponseError,
     ComfyUITimeoutError,
     CorruptImageError,
     MissingOutputFileError,
@@ -59,6 +61,7 @@ from module7_exceptions import (
     UnsupportedImageFormatError,
     VRAMExhaustedError,
 )
+
 from models import GenerationMetrics
 
 _LOG_FORMAT = "{time:YYYY-MM-DD HH:mm:ss} | {level:<8} | {name} | {message}"
