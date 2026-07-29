@@ -69,11 +69,13 @@ from comfyui_client import ComfyUIClient  # noqa: E402
 from image_generator import (  # noqa: E402
     ArtifactWriteError,
     ArtifactWriter,
+    ImageGeneratorPipeline,
     ProfileSelector,
     ReferenceAssetResolver,
     WorkflowBuilder,
     generation_hash,
     prompt_package_hash,
+    run_image_generation_pipeline,
     utc_now,
 )
 from models import (  # noqa: E402
@@ -346,23 +348,18 @@ def _run_module7_generation(
 ) -> Path:
     """Build the existing Module 7 inputs, generate one image, and persist it."""
     profile = _select_module7_profile()
-    library = WorkflowLibrary()
     niche = _module7_niche(metadata)
-    workflow_ref = library.resolve(niche, profile)
-    references = ReferenceAssetResolver(thumbnail_dir, analysis_dir).resolve(prompt_package)
-    built_workflow = WorkflowBuilder().build(
-        prompt_package,
-        profile,
-        workflow_ref,
-        reference_assets=references,
-        library=library,
-    )
-    output = ComfyUIClient().generate(
-        built_workflow,
+    client = ComfyUIClient()
+    return run_image_generation_pipeline(
         video_id=prompt_package.video_id,
-        num_candidates_requested=getattr(prompt_package.generation_parameters, "num_candidates", 1),
+        niche=niche,
+        available_vram_gb=profile.expected_vram_gb,
+        prompt_package=prompt_package,
+        client=client,
+        thumbnail_dir=thumbnail_dir,
+        analysis_dir=analysis_dir,
+        output_dir=MODULE7_OUTPUT_DIR,
     )
-    return _persist_generated_thumbnail(prompt_package, profile, built_workflow, output)
 
 
 def _select_module7_profile():

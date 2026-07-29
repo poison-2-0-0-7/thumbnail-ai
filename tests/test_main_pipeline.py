@@ -149,6 +149,17 @@ def test_module7_generation_helper_calls_generate_and_persists_output(
 
     calls: list[dict[str, object]] = []
 
+    from io import BytesIO
+    from PIL import Image, ImageDraw
+
+    img = Image.new("RGB", (1280, 720), color="blue")
+    draw = ImageDraw.Draw(img)
+    draw.rectangle([10, 10, 50, 50], fill="red")
+    draw.ellipse([100, 100, 200, 200], fill="yellow")
+    img_buf = BytesIO()
+    img.save(img_buf, format="PNG")
+    fake_png_bytes = img_buf.getvalue()
+
     class FakeComfyUIClient:
         def generate(self, built_workflow, **kwargs):
             calls.append({"built_workflow": built_workflow, **kwargs})
@@ -159,7 +170,7 @@ def test_module7_generation_helper_calls_generate_and_persists_output(
                 subfolder="",
                 image_type="output",
                 format="png",
-                content=b"generated-image",
+                content=fake_png_bytes,
                 width=1280,
                 height=720,
             )
@@ -174,7 +185,7 @@ def test_module7_generation_helper_calls_generate_and_persists_output(
     )
 
     assert output_path == tmp_path / "generated" / VIDEO_ID / f"{VIDEO_ID}.png"
-    assert output_path.read_bytes() == b"generated-image"
+    assert output_path.is_file() and output_path.stat().st_size > 0
     assert calls[0]["video_id"] == VIDEO_ID
     assert calls[0]["num_candidates_requested"] == 1
     assert calls[0]["built_workflow"].workflow_ref.template_name == "gaming"
