@@ -2,8 +2,15 @@
   "_meta": {
     "name": "general",
     "niche": "general",
-    "workflow_version": "workflow_v1"
+    "workflow_version": "workflow_v1",
+    "attachment_points": {
+      "model": ["5", "model"],
+      "positive_conditioning": ["5", "positive"],
+      "negative_conditioning": ["5", "negative"],
+      "latent": ["5", "latent_image"]
+    }
   },
+
   "graph": {
     "1": {
       "class_type": "CheckpointLoaderSimple",

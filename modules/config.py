@@ -384,6 +384,16 @@ MODULE7_NSFW_THRESHOLD: float = 0.15
 MODULE7_MAX_CONCURRENT_GENERATIONS: int = 1
 MODULE7_DRAFT_STEPS: int = 12
 MODULE7_DRAFT_UPSCALE_SKIP: bool = True
+MODULE7_FRAGMENT_LIBRARY_DIR: Path = PROJECT_ROOT / "workflows" / "fragments"
+MODULE7_CONTROLNET_STRENGTH_DEFAULTS: dict[str, float] = {
+    "depth": 0.55,
+    "canny": 0.45,
+    "segmentation": 0.5,
+}
+MODULE7_IPADAPTER_WEIGHT_DEFAULT: float = 0.6
+MODULE7_CAPABILITY_PROBE_ENABLED: bool = True
+MODULE7_CAPABILITY_PROBE_CACHE_SECONDS: float = 300.0
+
 
 # ---------------------------------------------------------------------------
 # Module 6.5 - Visual Reference Engine
@@ -508,5 +518,7 @@ COMPOSITION_CACHE_ENABLED: bool = True
 COMPOSITION_SAFE_MARGIN_PX: int = 24
 COMPOSITION_TEXT_FEATHER_PX: int = 6
 COMPOSITION_MANIFEST_FILENAME: str = "workspace_manifest.json"
+MODULE7_COMPOSITION_WORKSPACE_ROOT: Path = COMPOSITION_WORKSPACE_ROOT
+
 
 

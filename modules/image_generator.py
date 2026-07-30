@@ -33,8 +33,23 @@ from config import (
 from models import (
     CandidateScore, FaceMatchResult, GeneratedAsset, GenerationMetrics,
     GenerationProfile, ImageGenerationResult, PromptPackage, QualityAssuranceReport,
-    WorkflowTemplateRef,
+    WorkflowTemplateRef, CompositionWorkspace, GenerationBundle,
 )
+from generation_components import (
+    ConditioningAssetResolver,
+    CompositionWorkspaceLoader,
+    GenerationBundleLoader,
+    GenerationConditioningContext,
+    ICapabilityProbe,
+    IConditioningAssetResolver,
+    ICompositionWorkspaceLoader,
+    IGenerationBundleLoader,
+    INodeFragmentLibrary,
+    IWorkflowGraphAssembler,
+    NodeFragmentLibrary,
+    WorkflowGraphAssembler,
+)
+
 from module7_exceptions import (
     ArtifactWriteError, ComfyUIConnectionError, ComfyUIQueueError,
     IdentityPreservationError, MetricsWriteError, Module7Error,
@@ -189,30 +204,100 @@ class ProfileSelector:
 class WorkflowBuilder:
     """Pure deterministic materializer for ComfyUI graph templates; never submits them."""
 
-    def build(self, package: PromptPackage, profile: GenerationProfile,
-              workflow_ref: WorkflowTemplateRef, reference_assets: ReferenceAssets | None = None,
-              library: WorkflowLibrary | None = None) -> BuiltWorkflow:
+    def __init__(
+        self,
+        fragment_library: INodeFragmentLibrary | None = None,
+        graph_assembler: IWorkflowGraphAssembler | None = None,
+        capability_probe: ICapabilityProbe | None = None,
+    ) -> None:
+        self.fragment_library = fragment_library or NodeFragmentLibrary()
+        self.graph_assembler = graph_assembler or WorkflowGraphAssembler()
+        self.capability_probe = capability_probe
+
+    def build(
+        self,
+        package: PromptPackage,
+        profile: GenerationProfile,
+        workflow_ref: WorkflowTemplateRef,
+        reference_assets: ReferenceAssets | None = None,
+        library: WorkflowLibrary | None = None,
+        conditioning: GenerationConditioningContext | None = None,
+    ) -> BuiltWorkflow:
         """Fill named template slots and return the exact graph plus its hash."""
         source = library or WorkflowLibrary(Path(workflow_ref.template_path).parent)
         template = source.load(Path(workflow_ref.template_path))
-        slots = self._slots(package, profile, reference_assets)
+        slots = self._slots(package, profile, reference_assets, conditioning)
         try:
-            graph = self._substitute(template["graph"], slots)
+            base_graph = self._substitute(template["graph"], slots)
         except KeyError as exc:
             raise WorkflowBuildError(f"Template {workflow_ref.template_name} uses unknown placeholder {exc.args[0]}") from exc
-        if not isinstance(graph, dict):
+        if not isinstance(base_graph, dict):
             raise WorkflowBuildError("Resolved workflow graph must be an object")
-        workflow_hash = canonical_json_hash(graph)
+
+        if conditioning is not None:
+            fragment_ids = self._select_fragments(profile, conditioning)
+            fragment_dicts = []
+            for fid in fragment_ids:
+                frag_data = self.fragment_library.load(fid)
+                if self.capability_probe and not self.capability_probe.is_fragment_supported(frag_data):
+                    logger.warning(
+                        "Fragment '{fragment_id}' dropped: required node types not available in ComfyUI",
+                        fragment_id=fid,
+                    )
+                    continue
+                fragment_dicts.append(frag_data)
+
+            final_graph = self.graph_assembler.assemble(
+                {"_meta": template.get("_meta", {}), "graph": base_graph},
+                fragment_dicts,
+                conditioning,
+                profile,
+            ).get("graph", base_graph)
+        else:
+            final_graph = base_graph
+
+        workflow_hash = canonical_json_hash(final_graph)
         logger.info("Built workflow template={template}, version={version}, workflow_hash={hash}", template=workflow_ref.template_name, version=workflow_ref.workflow_version, hash=workflow_hash)
-        return BuiltWorkflow(graph=graph, workflow_ref=workflow_ref, workflow_hash=workflow_hash)
+        return BuiltWorkflow(graph=final_graph, workflow_ref=workflow_ref, workflow_hash=workflow_hash)
+
+    def _select_fragments(
+        self, profile: GenerationProfile, conditioning: GenerationConditioningContext | None
+    ) -> list[str]:
+        if conditioning is None:
+            return []
+        fragments: list[str] = []
+        if profile.controlnet_enabled and conditioning.depth_path is not None:
+            fragments.append("controlnet_depth")
+        if profile.controlnet_enabled and conditioning.canny_path is not None:
+            fragments.append("controlnet_canny")
+        if profile.controlnet_enabled and conditioning.segmentation_path is not None:
+            fragments.append("controlnet_segmentation")
+        if profile.ipadapter_enabled and conditioning.ip_adapter_reference_paths:
+            fragments.append("ipadapter_reference")
+        if conditioning.text_exclusion_mask_path is not None:
+            fragments.append("text_exclusion_mask")
+        if conditioning.per_layer and any(layer.mask_path is not None for layer in conditioning.per_layer.values()):
+            fragments.append("regional_mask_conditioning")
+        return fragments
 
     @staticmethod
-    def _slots(package: PromptPackage, profile: GenerationProfile,
-               references: ReferenceAssets | None) -> dict[str, Any]:
+    def _slots(
+        package: PromptPackage,
+        profile: GenerationProfile,
+        references: ReferenceAssets | None,
+        conditioning: GenerationConditioningContext | None = None,
+    ) -> dict[str, Any]:
         positive = " ".join((package.positive_prompt, package.subject_instructions,
                              package.lighting_instructions, package.color_instructions))
         negative = ", ".join((package.negative_prompt, *package.rendering_constraints,
                               *package.safety_constraints))
+
+        thumb_path = ""
+        if conditioning and conditioning.source_thumbnail_path:
+            thumb_path = str(conditioning.source_thumbnail_path)
+        elif references and references.source_thumbnail_path:
+            thumb_path = str(references.source_thumbnail_path)
+
         return {
             "checkpoint": profile.checkpoint, "positive_prompt": positive,
             "negative_prompt": negative, "background_prompt": package.background_instructions,
@@ -223,8 +308,21 @@ class WorkflowBuilder:
             "restoration": profile.restoration, "restoration_fidelity": profile.restoration_fidelity,
             "upscaler": profile.upscaler,
             "output_filename_prefix": WorkflowBuilder._output_filename_prefix(package),
-            "source_thumbnail_path": str(references.source_thumbnail_path) if references else "",
+            "source_thumbnail_path": thumb_path,
+            "foreground_image_path": str(conditioning.role_image_paths.get("foreground", "")) if conditioning else "",
+            "background_image_path": str(conditioning.role_image_paths.get("background", "")) if conditioning else "",
+            "person_mask_path": str(conditioning.role_mask_paths.get("person", "")) if conditioning else "",
+            "object_mask_path": str(conditioning.role_mask_paths.get("object", "")) if conditioning else "",
+            "depth_map_path": str(conditioning.depth_path) if conditioning and conditioning.depth_path else "",
+            "canny_map_path": str(conditioning.canny_path) if conditioning and conditioning.canny_path else "",
+            "segmentation_map_path": str(conditioning.segmentation_path) if conditioning and conditioning.segmentation_path else "",
+            "text_exclusion_mask_path": str(conditioning.text_exclusion_mask_path) if conditioning and conditioning.text_exclusion_mask_path else "",
+            "controlnet_depth_strength": 0.55,
+            "controlnet_canny_strength": 0.45,
+            "controlnet_segmentation_strength": 0.5,
+            "ipadapter_weight": 0.6,
         }
+
 
     @staticmethod
     def _output_filename_prefix(package: PromptPackage) -> str:
@@ -684,6 +782,9 @@ class ImageGeneratorPipeline:
         ranker: CandidateRanker | None = None,
         artifact_writer: ArtifactWriter | None = None,
         metrics_collector: MetricsCollector | None = None,
+        bundle_loader: IGenerationBundleLoader | None = None,
+        workspace_loader: ICompositionWorkspaceLoader | None = None,
+        conditioning_resolver: IConditioningAssetResolver | None = None,
     ) -> None:
         self.client = client
         self.package_loader = package_loader or PromptPackageLoader()
@@ -699,6 +800,9 @@ class ImageGeneratorPipeline:
         self.ranker = ranker or CandidateRanker()
         self.artifact_writer = artifact_writer or ArtifactWriter()
         self.metrics_collector = metrics_collector or MetricsCollector()
+        self.bundle_loader = bundle_loader or GenerationBundleLoader()
+        self.workspace_loader = workspace_loader or CompositionWorkspaceLoader()
+        self.conditioning_resolver = conditioning_resolver or ConditioningAssetResolver()
 
     def run(
         self,
@@ -706,12 +810,21 @@ class ImageGeneratorPipeline:
         niche: str = "general",
         available_vram_gb: float = float("inf"),
         prompt_package: PromptPackage | None = None,
+        generation_bundle: GenerationBundle | None = None,
+        composition_workspace: CompositionWorkspace | None = None,
     ) -> ImageGenerationResult:
         start_time = time.monotonic()
         package = prompt_package or self.package_loader.load(video_id)
         pkg_hash = prompt_package_hash(package)
         references = self.asset_resolver.resolve(package)
         profile = self.profile_selector.select(available_vram_gb, MODULE7_PROFILE)
+
+        conditioning_ctx = self.conditioning_resolver.resolve(
+            bundle=generation_bundle,
+            workspace=composition_workspace,
+            reference_assets=references,
+            profile=profile,
+        )
 
         num_candidates = getattr(package.generation_parameters, "num_candidates", 1)
         base_seed = package.generation_parameters.seed
@@ -734,7 +847,7 @@ class ImageGeneratorPipeline:
             )
             workflow_ref = self.workflow_library.resolve(niche, profile)
             built_wf = self.workflow_builder.build(
-                cand_package, profile, workflow_ref, reference_assets=references, library=self.workflow_library
+                cand_package, profile, workflow_ref, reference_assets=references, library=self.workflow_library, conditioning=conditioning_ctx
             )
 
             # Step A: ComfyUI generate with VRAM fallback ladder
@@ -749,7 +862,7 @@ class ImageGeneratorPipeline:
                 logger.warning("VRAMExhaustedError encountered during generation for video_id={vid}; attempting profile fallback", vid=video_id)
                 fallback_profile = self.profile_selector.select(profile.expected_vram_gb - 1.0, MODULE7_PROFILE)
                 workflow_ref = self.workflow_library.resolve(niche, fallback_profile)
-                built_wf = self.workflow_builder.build(cand_package, fallback_profile, workflow_ref, reference_assets=references, library=self.workflow_library)
+                built_wf = self.workflow_builder.build(cand_package, fallback_profile, workflow_ref, reference_assets=references, library=self.workflow_library, conditioning=conditioning_ctx)
                 raw_output = client_obj.generate(
                     built_wf,
                     video_id=video_id,
@@ -778,7 +891,7 @@ class ImageGeneratorPipeline:
                 retry_pkg = cand_package.model_copy(
                     update={"generation_parameters": cand_package.generation_parameters.model_copy(update={"seed": retry_seed})}
                 )
-                retry_wf = self.workflow_builder.build(retry_pkg, profile, workflow_ref, reference_assets=references, library=self.workflow_library)
+                retry_wf = self.workflow_builder.build(retry_pkg, profile, workflow_ref, reference_assets=references, library=self.workflow_library, conditioning=conditioning_ctx)
                 retry_output = client_obj.generate(retry_wf, video_id=video_id, num_candidates_requested=num_candidates)
                 curr_path = cand_work_dir / f"cand_{cand_idx}_retry_{identity_retries}.png"
                 curr_path.write_bytes(retry_output.content)
@@ -904,6 +1017,8 @@ def run_image_generation_pipeline(
     niche: str = "general",
     available_vram_gb: float = float("inf"),
     prompt_package: PromptPackage | None = None,
+    generation_bundle: GenerationBundle | None = None,
+    composition_workspace: CompositionWorkspace | None = None,
     client: Any | None = None,
     thumbnail_dir: Path = DEFAULT_THUMBNAIL_DIR,
     analysis_dir: Path = DEFAULT_ANALYSIS_DIR,
@@ -920,6 +1035,8 @@ def run_image_generation_pipeline(
         niche=niche,
         available_vram_gb=available_vram_gb,
         prompt_package=prompt_package,
+        generation_bundle=generation_bundle,
+        composition_workspace=composition_workspace,
     )
     if result.generated_asset is None:
         raise ArtifactWriteError(f"No asset produced for {video_id}")
@@ -937,3 +1054,4 @@ __all__ = [
     "BackgroundCompositor", "UpscaleStage", "QualityAssuranceStage", "CandidateRanker",
     "ImageGeneratorPipeline", "run_image_generation_pipeline", "cosine_similarity",
 ]
+
