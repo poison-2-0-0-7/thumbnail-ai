@@ -1544,4 +1544,115 @@ class GenerationBundle(BaseModel):
         return v.lower()
 
 
+# ---------------------------------------------------------------------------
+# Evaluation Framework (PVQEF) Models
+# ---------------------------------------------------------------------------
+
+
+class ModuleValidationResult(BaseModel):
+    """Schema & invariant validation result for one pipeline stage artifact."""
+
+    model_config = ConfigDict(frozen=True)
+
+    video_id: str
+    module_name: str
+    artifact_path: Optional[str] = None
+    schema_valid: bool
+    invariants_checked: list[str] = Field(default_factory=list)
+    invariants_failed: list[str] = Field(default_factory=list)
+    status: Literal["success", "partial", "error", "skipped"] = "success"
+    error_message: Optional[str] = None
+    duration_seconds: float = 0.0
+    validated_at: str
+
+
+class DimensionScore(BaseModel):
+    """Score evaluation result for one quality evaluation dimension."""
+
+    model_config = ConfigDict(frozen=True)
+
+    dimension: str
+    score: float
+    passed: bool
+    threshold: float
+    detail: dict[str, Any] = Field(default_factory=dict)
+    scorer_version: str
+    duration_seconds: float = 0.0
+    status: Literal["success", "partial", "error", "skipped"] = "success"
+    error_message: Optional[str] = None
+
+
+class QualityEvaluationReport(BaseModel):
+    """Aggregated fourteen-dimension quality evaluation report for one thumbnail."""
+
+    model_config = ConfigDict(frozen=True)
+
+    video_id: str
+    generated_asset_sha256: str
+    dimension_scores: list[DimensionScore] = Field(default_factory=list)
+    inline_scores: dict[str, float] = Field(default_factory=dict)
+    weighted_overall_score: float = 0.0
+    hard_gate_passed: bool
+    status: Literal["success", "partial", "error"] = "success"
+    partial_failure_reasons: list[str] = Field(default_factory=list)
+    error_message: Optional[str] = None
+    total_duration_seconds: float = 0.0
+    evaluated_at: str
+
+
+class RegressionFinding(BaseModel):
+    """Audit record for a detected statistical or threshold regression."""
+
+    model_config = ConfigDict(frozen=True)
+
+    rule_name: str
+    severity: Literal["info", "warning", "critical"]
+    dimension_or_stage: Optional[str] = None
+    current_value: float
+    baseline_value: float
+    delta: float
+    message: str
+
+
+class PipelineRunReport(BaseModel):
+    """Canonical run manifest for a PVQEF validation and evaluation run."""
+
+    model_config = ConfigDict(frozen=True)
+
+    run_id: str
+    csv_path: str
+    golden_only: bool = False
+    total_creators: int
+    succeeded: int
+    skipped: int
+    module_results: dict[str, list[ModuleValidationResult]] = Field(default_factory=dict)
+    quality_reports: dict[str, QualityEvaluationReport] = Field(default_factory=dict)
+    regressions: list[RegressionFinding] = Field(default_factory=list)
+    stage_failure_counts: dict[str, int] = Field(default_factory=dict)
+    aggregate_performance: dict[str, float] = Field(default_factory=dict)
+    status: Literal["success", "partial", "error"] = "success"
+    started_at: str
+    completed_at: str
+    total_duration_seconds: float = 0.0
+
+
+class BenchmarkRecord(BaseModel):
+    """Append-only benchmark history record summarizing one pipeline run."""
+
+    model_config = ConfigDict(frozen=True)
+
+    run_id: str
+    recorded_at: str
+    total_creators: int
+    succeeded: int
+    skipped: int
+    mean_weighted_overall_score: float
+    per_dimension_mean_scores: dict[str, float] = Field(default_factory=dict)
+    mean_stage_durations_seconds: dict[str, float] = Field(default_factory=dict)
+    peak_vram_mb: Optional[float] = None
+    profile_name: Optional[str] = None
+    workflow_version: Optional[str] = None
+
+
+
 
