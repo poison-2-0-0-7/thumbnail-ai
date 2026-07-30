@@ -80,11 +80,13 @@ from image_generator import (  # noqa: E402
 )
 from models import (  # noqa: E402
     GeneratedAsset,
+    GenerationBundle,
     ImageGenerationResult,
     PromptPackage,
     ThumbnailData,
     VideoMetadata,
 )
+
 from module7_exceptions import Module7Error  # noqa: E402
 from thumbnail_downloader import (  # noqa: E402
     ThumbnailDownloaderError,
@@ -108,8 +110,11 @@ from prompt_compiler import (  # noqa: E402
     compile_prompt_package,
     save_prompt_package,
 )
+from composition_engine import AssetComposer  # noqa: E402
+from composition_exceptions import CompositionBaseError  # noqa: E402
 from workflow_library import WorkflowLibrary  # noqa: E402
 from youtube_metadata import process_video  # noqa: E402
+
 
 # ---------------------------------------------------------------------------
 # Pipeline
@@ -298,14 +303,38 @@ def run_pipeline(
             vid=metadata.video_id,
         )
 
-        # -- Module 7: generate final thumbnail -----------------------------
+        # ── Module 10: prepare composition workspace ─────────────────────
+        try:
+            generation_bundle = AssetComposer().prepare_generation_workspace(
+                prompt_package.video_id
+            )
+        except CompositionBaseError as exc:
+            logger.error(
+                "Composition workspace preparation failed for creator_email={email} "
+                "video_id={vid}: {exc}",
+                email=creator.email,
+                vid=metadata.video_id,
+                exc=exc,
+            )
+            skipped += 1
+            continue
+
+        logger.info(
+            "Composition workspace prepared for creator_email={email} video_id={vid}",
+            email=creator.email,
+            vid=metadata.video_id,
+        )
+
+        # ── Module 7: generate final thumbnail ─────────────────────────────
         try:
             generated_path = _run_module7_generation(
                 prompt_package,
                 metadata=metadata,
                 thumbnail_dir=thumbnail_dir,
                 analysis_dir=analysis_dir,
+                generation_bundle=generation_bundle,
             )
+
         except Module7Error as exc:
             logger.error(
                 "Image generation failed for creator_email={email} "
@@ -345,7 +374,9 @@ def _run_module7_generation(
     metadata: VideoMetadata,
     thumbnail_dir: Path,
     analysis_dir: Path,
+    generation_bundle: GenerationBundle | None = None,
 ) -> Path:
+
     """Build the existing Module 7 inputs, generate one image, and persist it."""
     profile = _select_module7_profile()
     niche = _module7_niche(metadata)
