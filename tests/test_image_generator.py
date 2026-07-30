@@ -282,3 +282,23 @@ def test_image_generator_pipeline_runs_end_to_end_with_mock_client(tmp_path: Pat
     assert result.generated_asset is not None
     assert Path(result.generated_asset.path).is_file()
     assert (out_dir / VIDEO_ID / f"{VIDEO_ID}_manifest.json").is_file()
+
+
+def test_golden_regression_workflow_hash_unchanged_when_conditioning_none(tmp_path: Path):
+    """Verify building workflows with conditioning=None produces deterministic hashes for all shipped templates."""
+    builder = WorkflowBuilder()
+    library = WorkflowLibrary()
+    pkg = _package()
+    profile = MODULE7_GENERATION_PROFILES["PROFILE_STANDARD"]
+    ref_img = _create_test_image(tmp_path / "thumb.jpg")
+    ref_assets = ReferenceAssets(source_thumbnail_path=ref_img)
+
+    for niche in ("general", "gaming", "finance", "education", "podcast", "tech", "lifestyle", "vlog", "fitness", "reaction", "documentary"):
+        wf_ref = library.resolve(niche, profile)
+        built_wf_1 = builder.build(pkg, profile, wf_ref, reference_assets=ref_assets, library=library, conditioning=None)
+        built_wf_2 = builder.build(pkg, profile, wf_ref, reference_assets=ref_assets, library=library)
+
+        assert built_wf_1.workflow_hash == built_wf_2.workflow_hash
+        assert isinstance(built_wf_1.graph, dict)
+        assert len(built_wf_1.graph) > 0
+

@@ -386,11 +386,13 @@ def _run_module7_generation(
         niche=niche,
         available_vram_gb=profile.expected_vram_gb,
         prompt_package=prompt_package,
+        generation_bundle=generation_bundle,
         client=client,
         thumbnail_dir=thumbnail_dir,
         analysis_dir=analysis_dir,
         output_dir=MODULE7_OUTPUT_DIR,
     )
+
 
 
 def _select_module7_profile():

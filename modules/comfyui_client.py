@@ -1516,6 +1516,14 @@ class _ComfyUIHTTPTransport:
             comfyui_version=version,
         )
 
+    def object_info(self) -> dict[str, Any]:
+        """Return the dictionary of available node class_types installed on ComfyUI."""
+        payload = self._request_json("GET", "/object_info")
+        if not isinstance(payload, dict):
+            raise _ComfyUIHTTPError("ComfyUI /object_info response must be a JSON object")
+        return payload
+
+
     def submit_prompt(self, graph: dict[str, Any], client_id: str) -> str:
         """Submit one already-materialized workflow and return its prompt ID."""
         payload = self._request_json(
@@ -1702,6 +1710,14 @@ class ComfyUIClient:
         self._metrics_recorder = _ComfyUIMetricsRecorder(
             metrics_collector or MetricsCollector(MODULE7_METRICS_PATH)
         )
+
+    def object_info(self) -> dict[str, Any]:
+        """Return the dictionary of node class_types installed on the ComfyUI server."""
+        try:
+            return self._http.object_info()
+        except _ComfyUIHTTPError as exc:
+            raise ComfyUIConnectionError(f"Failed to fetch ComfyUI /object_info: {exc}") from exc
+
 
     def generate(
         self,

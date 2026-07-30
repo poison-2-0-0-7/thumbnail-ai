@@ -109,3 +109,24 @@ class MetricsWriteError(Module7Error):
 class NoEligibleCandidateError(Module7Error):
     """Reserved for Phase 4 candidate-ranking failures."""
 
+
+class ConditioningResolutionError(Module7Error):
+    """Raised when a bundle or workspace references invalid/missing local asset paths."""
+
+
+class WorkspaceNotFoundError(Module7Error):
+    """Raised when a requested CompositionWorkspace JSON file cannot be found on disk."""
+
+
+class GenerationBundleInvalidError(Module7Error):
+    """Raised when a supplied GenerationBundle fails validation or indicates a failed status."""
+
+
+class FragmentAttachmentError(WorkflowBuildError):
+    """Raised when a workflow fragment references an unknown or incompatible attachment point."""
+
+
+class UnsupportedNodeTypeWarning(Warning):
+    """Signaled when a workflow fragment is dropped due to missing custom nodes on ComfyUI server."""
+
+
