@@ -43,6 +43,15 @@ from .registry import ModelRegistry
 from .resources import GPUResourceManager
 from .runtime import RuntimeManager, VisionStackRuntime
 
+from .openclip import OpenCLIPWrapper
+from .openclip_exceptions import (
+    OpenCLIPError,
+    OpenCLIPInferenceError,
+    OpenCLIPLoadError,
+    OpenCLIPOutOfMemoryError,
+    OpenCLIPParseError,
+)
+
 __all__ = [
     "DEFAULT_CHECKPOINT_ROOT",
     "GPUResourceManager",
@@ -56,6 +65,12 @@ __all__ = [
     "ModelLoader",
     "ModelLoadingMetadata",
     "ModelRegistry",
+    "OpenCLIPError",
+    "OpenCLIPInferenceError",
+    "OpenCLIPLoadError",
+    "OpenCLIPOutOfMemoryError",
+    "OpenCLIPParseError",
+    "OpenCLIPWrapper",
     "PixelBoundingBox",
     "RegisteredVisionModel",
     "RuntimeBootstrapMetadata",
@@ -84,3 +99,4 @@ __all__ = [
     "load_runtime_metadata",
     "load_vision_stack_config",
 ]
+

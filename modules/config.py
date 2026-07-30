@@ -520,5 +520,12 @@ COMPOSITION_TEXT_FEATHER_PX: int = 6
 COMPOSITION_MANIFEST_FILENAME: str = "workspace_manifest.json"
 MODULE7_COMPOSITION_WORKSPACE_ROOT: Path = COMPOSITION_WORKSPACE_ROOT
 
+# ---------------------------------------------------------------------------
 
+# Evaluation Framework (PVQEF)
+# ---------------------------------------------------------------------------
 
+EVAL_LOG_PATH: Path = LOG_DIR / "evaluation.log"
+EVAL_RUNS_DIR: Path = PROJECT_ROOT / "data" / "evaluation" / "runs"
+EVAL_GOLDEN_DIR: Path = PROJECT_ROOT / "data" / "evaluation" / "golden"
+EVAL_HISTORY_PATH: Path = PROJECT_ROOT / "data" / "evaluation" / "history" / "benchmark_history.jsonl"
