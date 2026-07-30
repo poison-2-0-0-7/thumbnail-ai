@@ -73,21 +73,29 @@ def test_run_pipeline_invokes_module7_after_prompt_package(monkeypatch: pytest.M
     def save_prompt_package(prompt_package: PromptPackage, package_dir: Path) -> None:
         order.append("module6_saved")
 
+    class FakeAssetComposer:
+        def prepare_generation_workspace(self, video_id: str, options: dict | None = None):
+            order.append("module10_prepared")
+            return SimpleNamespace(video_id=video_id)
+
     def run_module7_generation(
         prompt_package: PromptPackage,
         *,
         metadata: VideoMetadata,
         thumbnail_dir: Path,
         analysis_dir: Path,
+        generation_bundle: object = None,
     ) -> Path:
         order.append("module7_generated")
         assert prompt_package.video_id == VIDEO_ID
         assert metadata.video_id == VIDEO_ID
         assert thumbnail_dir == tmp_path / "thumbnails"
         assert analysis_dir == tmp_path / "analysis"
+        assert generation_bundle is not None
         return tmp_path / "generated" / f"{VIDEO_ID}.png"
 
     monkeypatch.setattr(main, "save_prompt_package", save_prompt_package)
+    monkeypatch.setattr(main, "AssetComposer", FakeAssetComposer)
     monkeypatch.setattr(main, "_run_module7_generation", run_module7_generation)
 
     main.run_pipeline(
@@ -98,7 +106,7 @@ def test_run_pipeline_invokes_module7_after_prompt_package(monkeypatch: pytest.M
         prompt_package_dir=tmp_path / "packages",
     )
 
-    assert order == ["module6_saved", "module7_generated"]
+    assert order == ["module6_saved", "module10_prepared", "module7_generated"]
 
 
 def test_run_pipeline_treats_module7_error_as_per_creator_failure(
@@ -121,11 +129,17 @@ def test_run_pipeline_treats_module7_error_as_per_creator_failure(
     monkeypatch.setattr(main, "save_prompt_package", lambda prompt_package, package_dir: None)
     monkeypatch.setattr(
         main,
-        "_run_module7_generation",
-        lambda prompt_package, *, metadata, thumbnail_dir, analysis_dir: (_ for _ in ()).throw(
-            Module7Error("generation failed")
-        ),
+        "AssetComposer",
+        lambda: SimpleNamespace(prepare_generation_workspace=lambda vid: SimpleNamespace()),
     )
+    monkeypatch.setattr(
+        main,
+        "_run_module7_generation",
+        lambda prompt_package, *, metadata, thumbnail_dir, analysis_dir, generation_bundle=None: (
+            _ for _ in ()
+        ).throw(Module7Error("generation failed")),
+    )
+
 
     main.run_pipeline(
         csv_path=tmp_path / "creators.csv",

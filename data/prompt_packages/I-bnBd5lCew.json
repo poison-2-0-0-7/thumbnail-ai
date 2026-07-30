@@ -1,6 +1,6 @@
 {
   "video_id": "I-bnBd5lCew",
-  "positive_prompt": "Place the primary subject in the top-right of the frame, matching the source position label 'right-third'. Crop tighter around the subject so it occupies a larger share of the frame. Maintain approximately 25% negative space in the background. Keep the background moderately simple with limited competing elements. Anchor the composition's focal point in the top-right of the frame, targeting a clutter score of 0.60 and a negative-space ratio of 0.25. Use balanced lighting with a high-contrast look (target brightness=0.57, target contrast=0.77). Render muted, desaturated colors with a warm color temperature (target saturation=0.30). Preserve existing text placement; do not invent new copy or wording. Reserve the top region of the frame for text. Avoid placing text over the following region(s): top-right. Preserve: Facial expressions and emotion, Composition and balance, Text placement for clarity.",
+  "positive_prompt": "Place the primary subject in the top-right of the frame, matching the source position label 'right-third'. Crop tighter around the subject so it occupies a larger share of the frame. Maintain approximately 25% negative space in the background. Keep the background moderately simple with limited competing elements. Anchor the composition's focal point in the top-right of the frame, targeting a clutter score of 0.60 and a negative-space ratio of 0.25. Use balanced lighting with a high-contrast look (target brightness=0.57, target contrast=0.77). Render muted, desaturated colors with a warm color temperature (target saturation=0.30). Preserve existing text placement; do not invent new copy or wording. Reserve the top region of the frame for text. Avoid placing text over the following region(s): top-right. Preserve: Transformation journey text, Emotional impact through visuals, Clear and readable text.",
   "negative_prompt": "blurry, low resolution, watermark, distorted anatomy, extra limbs, text artifacts, jpeg compression artifacts",
   "subject_instructions": "Place the primary subject in the top-right of the frame, matching the source position label 'right-third'. Crop tighter around the subject so it occupies a larger share of the frame.",
   "background_instructions": "Maintain approximately 25% negative space in the background. Keep the background moderately simple with limited competing elements.",
@@ -15,7 +15,7 @@
   "rendering_constraints": [
     "Render at the exact target resolution; do not crop after generation.",
     "Do not add any watermark, logo, or signature.",
-    "Preserve the following elements exactly: Facial expressions and emotion, Composition and balance, Text placement for clarity."
+    "Preserve the following elements exactly: Transformation journey text, Emotional impact through visuals, Clear and readable text."
   ],
   "safety_constraints": [
     "Do not depict real, identifiable people; use a generic or anonymized figure.",
@@ -48,6 +48,6 @@
   },
   "status": "success",
   "error_message": null,
-  "duration_seconds": 0.00014419999934034422,
-  "generated_at": "2026-07-23T13:30:38.644673+00:00"
+  "duration_seconds": 0.0007363000186160207,
+  "generated_at": "2026-07-29T18:33:45.758206+00:00"
 }

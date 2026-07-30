@@ -421,3 +421,92 @@ GROUNDING_DINO_DEFAULT_PROMPT: str = "person . face . logo . text . arrow"
 #: Log file for this wrapper, following the one-log-file-per-component
 #: convention already used by every other module.
 VISION_STACK_GROUNDING_DINO_LOG_PATH: Path = LOG_DIR / "vision_stack_grounding_dino.log"
+
+
+# ---------------------------------------------------------------------------
+# Module 8 — Asset Extraction Engine
+# ---------------------------------------------------------------------------
+
+MODULE8_LOG_PATH: Path = LOG_DIR / "module8.log"
+
+DEFAULT_ASSET_EXTRACTION_DIR: Path = PROJECT_ROOT / "data" / "asset_extraction"
+ASSET_MANIFEST_FILENAME: str = "asset_manifest.json"
+ASSET_EXTRACTION_ENGINE_VERSION: str = "1.0.0"
+ASSET_EXTRACTION_CACHE_ENABLED: bool = True
+
+# --- Family execution order (fixed, deterministic; drives sequential GPU use) ---
+ASSET_EXTRACTION_FAMILY_ORDER: tuple[str, ...] = (
+    "typography",        # cheapest, no model — run first for fast partial results
+    "visual_properties",  # cheapest, no model
+    "composition",        # cheapest, no model
+    "objects",            # SAM2
+    "people",             # InsightFace + BiSeNet
+    "scene",              # BiRefNet + DepthAnything + SAM2 + GroundingDINO
+    "effects",            # cheapest, no model — run last, lowest priority
+)
+
+# --- Per-family thresholds ---
+ASSET_MIN_FACE_CROP_CONFIDENCE: float = 0.5          # reuse Module 4's FACE_MIN_CONFIDENCE value
+ASSET_MIN_OBJECT_MASK_CONFIDENCE: float = 0.35        # SAM2 box-prompted mask acceptance floor
+ASSET_OBJECT_HIERARCHY_CONTAINMENT_RATIO: float = 0.9  # child-bbox-inside-parent threshold
+ASSET_SKY_GROUND_PROMPT: str = "sky . ground . horizon"  # GroundingDINO open-vocab query
+ASSET_EXTENDED_PALETTE_K: int = 8                       # vs Module 4's k=5 in ColorProfile
+ASSET_BLUR_LAPLACIAN_SHARP_THRESHOLD: float = 100.0
+ASSET_BLUR_LAPLACIAN_SOFT_THRESHOLD: float = 30.0
+ASSET_EFFECTS_MIN_CONFIDENCE_TO_FLAG: float = 0.4
+
+# --- Resource budget (RTX 4060 laptop, 8GB VRAM / 16GB system RAM) ---
+ASSET_EXTRACTION_MAX_IMAGE_DIMENSION_PX: int = 2048     # downscale ceiling before any model call
+ASSET_EXTRACTION_SAM2_TILE_SIZE_PX: int = 1024           # cpu_tiled_processing tile size
+ASSET_EXTRACTION_MODEL_TIMEOUT_SECONDS: float = 30.0
+ASSET_EXTRACTION_MAX_RETRY_ATTEMPTS: int = 2
+
+
+# ---------------------------------------------------------------------------
+# Module 9 — AI Decision Engine
+# ---------------------------------------------------------------------------
+
+MODULE9_LOG_PATH: Path = LOG_DIR / "module9.log"
+MODULE9_METRICS_PATH: Path = LOG_DIR / "module9_metrics.jsonl"
+
+DEFAULT_DECISION_DIR: Path = PROJECT_ROOT / "data" / "decisions"
+DECISION_MANIFEST_FILENAME: str = "decision_manifest.json"
+DECISION_ENGINE_VERSION: str = "1.0.0"
+DECISION_CACHE_ENABLED: bool = True
+
+#: Ambiguity confidence threshold for LLM routing.
+AMBIGUITY_CONFIDENCE_THRESHOLD: float = 0.65
+
+#: Recalibration ceiling for self-reported LLM confidence.
+LLM_CONFIDENCE_CEILING: float = 0.9
+
+#: Priority hierarchy for resolving conflicts among candidate decisions.
+DECISION_PRIORITY_ORDER: tuple[str, ...] = (
+    "keep",
+    "remove",
+    "replace",
+    "enhance",
+    "add",
+)
+
+#: Bounding box IoU deduplication threshold for ADD recommendations.
+ADD_DEDUP_IOU_THRESHOLD: float = 0.7
+
+#: Dedicated or default Ollama model used for Module 9 adjudication.
+MODULE9_OLLAMA_MODEL: str = "qwen3:8b"
+MODULE9_OLLAMA_TIMEOUT_SECONDS: float = 60.0
+MODULE9_OLLAMA_MAX_RETRY_ATTEMPTS: int = 3
+
+# ---------------------------------------------------------------------------
+# Module 10 — Asset Composer
+# ---------------------------------------------------------------------------
+
+MODULE10_LOG_PATH: Path = LOG_DIR / "module10.log"
+COMPOSITION_WORKSPACE_ROOT: Path = PROJECT_ROOT / "data" / "composition_workspaces"
+COMPOSITION_ENGINE_VERSION: str = "1.0.0"
+COMPOSITION_CACHE_ENABLED: bool = True
+COMPOSITION_SAFE_MARGIN_PX: int = 24
+COMPOSITION_TEXT_FEATHER_PX: int = 6
+COMPOSITION_MANIFEST_FILENAME: str = "workspace_manifest.json"
+
+

@@ -6,13 +6,13 @@
     "path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\generated_thumbnails\\eWzsmjA1vOo\\eWzsmjA1vOo.png",
     "width": 1280,
     "height": 720,
-    "sha256": "4d24f0ff22c5528e7dd9f071487d19586ddd1039e805e18117aa46566b89ea69",
+    "sha256": "1e2b70e1a4bfc4bbf61ab7b448179c1afda3fcd5dcc996f307558525c5c03ec6",
     "candidate_index": 0
   },
   "workflow_version": "workflow_v1",
-  "workflow_hash": "0f58afa9e803b8746320e65bcd084e4048c7d5caad08ca828fb0e774e291130b",
-  "prompt_package_hash": "ddc0a5292d524d4b26b21d5fab8277d9342be73cc71223325388f3e9a336aa83",
-  "generation_hash": "8be1af51bcdd9979afbb676f618768877d8bdf03930e826fb8f3324eda720e15",
+  "workflow_hash": "34aa9145fd390e6d3f4f533782ad0b8197392aec43d5ab65f9864d233ff9069e",
+  "prompt_package_hash": "6182e75cc6f116ecccaf810769f8b272bc0ac784256cbafcb4a2b1513d2f48ff",
+  "generation_hash": "1ec9cd131bce60b9c11bd83308c1cd5ac1171a8ac4cb0c3922fc2bd01621aa46",
   "profile_name": "PROFILE_LOW_VRAM",
   "checkpoint_hash": null,
   "lora_hashes": [],
@@ -21,10 +21,26 @@
   "restoration_model_hashes": [],
   "upscaler_hash": null,
   "seed": 255403169,
-  "candidate_scores": [],
+  "candidate_scores": [
+    {
+      "candidate_index": 0,
+      "overall_score": 0.9804467863954538,
+      "identity_similarity": 1.0,
+      "hard_gate_passed": true,
+      "rank": 1,
+      "selected": true
+    }
+  ],
   "selected_candidate_index": 0,
   "retry_count": 0,
-  "stage_durations_seconds": {},
-  "duration_seconds": 0.0,
-  "generated_at": "2026-07-23T13:30:19.277056+00:00"
+  "stage_durations_seconds": {
+    "comfyui_generate": 53.475653400004376,
+    "identity_preservation": 0.015221800014842302,
+    "face_restoration": 0.1307041000109166,
+    "background_composition": 0.10333579999860376,
+    "upscale": 0.10853789999964647,
+    "quality_assurance": 0.059149400010937825
+  },
+  "duration_seconds": 53.9175627999939,
+  "generated_at": "2026-07-29T18:33:24.752213+00:00"
 }

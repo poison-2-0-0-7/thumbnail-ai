@@ -18,7 +18,7 @@ from __future__ import annotations
 from enum import Enum
 from typing import Any, Literal, Optional
 
-from pydantic import BaseModel, ConfigDict, field_validator
+from pydantic import BaseModel, ConfigDict, Field, field_validator
 
 
 # ---------------------------------------------------------------------------
@@ -920,3 +920,628 @@ class GenerationMetrics(BaseModel):
     peak_vram_mb: Optional[float] = None
     gpu_utilization_percent: Optional[float] = None
     recorded_at: str
+
+
+# ---------------------------------------------------------------------------
+# Module 8 — Asset Extraction Engine
+# ---------------------------------------------------------------------------
+
+
+class AssetFileRef(BaseModel):
+    """Refers to a persisted pixel or JSON asset on disk with checksum integrity."""
+
+    model_config = ConfigDict(frozen=True)
+
+    asset_type: str
+    file_path: str
+    checksum: str
+    resolution: tuple[int, int]
+    confidence_score: Optional[float] = None
+    source: Literal["module4_reuse", "extracted", "derived"]
+
+    @field_validator("asset_type", "file_path", "checksum")
+    @classmethod
+    def text_fields_must_not_be_empty(cls, v: str) -> str:
+        if not v or not v.strip():
+            raise ValueError("asset reference text fields must not be empty")
+        return v.strip()
+
+    @field_validator("checksum")
+    @classmethod
+    def checksum_must_be_sha256(cls, v: str) -> str:
+        if len(v) != 64 or any(char not in "0123456789abcdef" for char in v.lower()):
+            raise ValueError("checksum must be a SHA-256 hex digest")
+        return v.lower()
+
+    @field_validator("resolution")
+    @classmethod
+    def resolution_must_be_positive(cls, v: tuple[int, int]) -> tuple[int, int]:
+        if len(v) != 2 or v[0] <= 0 or v[1] <= 0:
+            raise ValueError("resolution must be a positive (width, height) tuple")
+        return v
+
+    @field_validator("confidence_score")
+    @classmethod
+    def confidence_must_be_unit_interval(cls, v: Optional[float]) -> Optional[float]:
+        if v is not None and not 0.0 <= v <= 1.0:
+            raise ValueError("confidence_score must be in [0.0, 1.0]")
+        return v
+
+
+class PersonAsset(BaseModel):
+    """Extracted person-specific visual elements, masks, embeddings, and landmarks."""
+
+    model_config = ConfigDict(frozen=True)
+
+    person_index: int
+    face: Optional[AssetFileRef] = None
+    face_mask: Optional[AssetFileRef] = None
+    face_embedding: Optional[list[float]] = None
+    facial_landmarks: Optional[list[tuple[float, float]]] = None
+    body_mask: Optional[AssetFileRef] = None
+    pose_keypoints: Optional[list[tuple[float, float, float]]] = None
+    clothing_mask: Optional[AssetFileRef] = None
+    hair_mask: Optional[AssetFileRef] = None
+    accessories_masks: list[AssetFileRef] = Field(default_factory=list)
+    source_face_detail_index: int
+    extraction_status: Literal["success", "partial", "skipped"]
+    extraction_notes: list[str] = Field(default_factory=list)
+
+
+class SceneAsset(BaseModel):
+    """Extracted scene structure including depth, segmentation, background, and foreground."""
+
+    model_config = ConfigDict(frozen=True)
+
+    background: Optional[AssetFileRef] = None
+    foreground: Optional[AssetFileRef] = None
+    depth_map: Optional[AssetFileRef] = None
+    segmentation_map: Optional[AssetFileRef] = None
+    sky_mask: Optional[AssetFileRef] = None
+    ground_mask: Optional[AssetFileRef] = None
+    extraction_status: Literal["success", "partial", "skipped"]
+    extraction_notes: list[str] = Field(default_factory=list)
+
+
+class ObjectAsset(BaseModel):
+    """Extracted discrete foreground or subject object with mask and hierarchy."""
+
+    model_config = ConfigDict(frozen=True)
+
+    object_index: int
+    label: str
+    crop: Optional[AssetFileRef] = None
+    mask: Optional[AssetFileRef] = None
+    bbox: BoundingBox
+    confidence: float
+    parent_object_index: Optional[int] = None
+    child_object_indices: list[int] = Field(default_factory=list)
+    source_detected_object_index: int
+
+    @field_validator("label")
+    @classmethod
+    def label_must_not_be_empty(cls, v: str) -> str:
+        if not v or not v.strip():
+            raise ValueError("object label must not be empty")
+        return v.strip()
+
+    @field_validator("confidence")
+    @classmethod
+    def confidence_must_be_unit_interval(cls, v: float) -> float:
+        if not 0.0 <= v <= 1.0:
+            raise ValueError("confidence must be in [0.0, 1.0]")
+        return v
+
+
+class TypographyAsset(BaseModel):
+    """Extracted text region crop and classical-CV typography property estimates."""
+
+    model_config = ConfigDict(frozen=True)
+
+    text_region_index: int
+    crop: Optional[AssetFileRef] = None
+    text: str
+    bbox: BoundingBox
+    estimated_font_family_guess: Optional[str] = None
+    estimated_font_size_px: Optional[float] = None
+    alignment: Literal["left", "center", "right", "unknown"] = "unknown"
+    dominant_text_color: Optional[str] = None
+    has_stroke_or_outline: bool = False
+    source_text_region_index: int
+
+
+class VisualPropertiesAsset(BaseModel):
+    """Analytical lighting, extended palette, gradient, blur, and focus properties."""
+
+    model_config = ConfigDict(frozen=True)
+
+    dominant_colors: list[str]
+    palette_extended: list[str]
+    gradients_detected: list[str] = Field(default_factory=list)
+    lighting_direction: Optional[str] = None
+    shadow_regions: list[BoundingBox] = Field(default_factory=list)
+    highlight_regions: list[BoundingBox] = Field(default_factory=list)
+    blur_map_summary: Literal["sharp", "mixed", "soft"]
+    focus_bbox: Optional[BoundingBox] = None
+
+
+class CompositionAsset(BaseModel):
+    """Rendered composition visual overlays derived from Module 4 scoring."""
+
+    model_config = ConfigDict(frozen=True)
+
+    eye_flow_map: Optional[AssetFileRef] = None
+    negative_space_mask: Optional[AssetFileRef] = None
+    visual_hierarchy_overlay: Optional[AssetFileRef] = None
+    source_composition_analysis: CompositionAnalysis
+
+
+class EffectsAsset(BaseModel):
+    """Classical-CV heuristic flags for visual effects (glow, outline, shadow, etc.)."""
+
+    model_config = ConfigDict(frozen=True)
+
+    glow_detected: bool = False
+    outline_detected: bool = False
+    drop_shadow_detected: bool = False
+    motion_blur_detected: bool = False
+    particles_detected: bool = False
+    confidence: float = 0.0
+    notes: list[str] = Field(default_factory=list)
+
+    @field_validator("confidence")
+    @classmethod
+    def confidence_must_be_unit_interval(cls, v: float) -> float:
+        if not 0.0 <= v <= 1.0:
+            raise ValueError("confidence must be in [0.0, 1.0]")
+        return v
+
+
+class AssetExtractionStatus(str, Enum):
+    """Overall outcome of an asset extraction engine run."""
+
+    SUCCESS = "success"
+    PARTIAL = "partial"
+    ERROR = "error"
+
+
+class AssetExtractionManifest(BaseModel):
+    """Immutable, disk-persisted contract for all extracted thumbnail assets."""
+
+    model_config = ConfigDict(frozen=True)
+
+    video_id: str
+    source_thumbnail_path: str
+    source_hash: str
+    intelligence_hash: str
+    engine_version: str
+    people: list[PersonAsset] = Field(default_factory=list)
+    scene: Optional[SceneAsset] = None
+    objects: list[ObjectAsset] = Field(default_factory=list)
+    typography: list[TypographyAsset] = Field(default_factory=list)
+    visual_properties: Optional[VisualPropertiesAsset] = None
+    composition: Optional[CompositionAsset] = None
+    effects: Optional[EffectsAsset] = None
+    status: AssetExtractionStatus = AssetExtractionStatus.SUCCESS
+    partial_failure_reasons: list[str] = Field(default_factory=list)
+    completed_families: list[str] = Field(default_factory=list)
+    total_duration_seconds: float = 0.0
+    extracted_at: str
+
+    @field_validator("video_id", "source_thumbnail_path", "engine_version", "extracted_at")
+    @classmethod
+    def text_fields_must_not_be_empty(cls, v: str) -> str:
+        if not v or not v.strip():
+            raise ValueError("manifest text fields must not be empty")
+        return v.strip()
+
+    @field_validator("source_hash", "intelligence_hash")
+    @classmethod
+    def hashes_must_be_sha256(cls, v: str) -> str:
+        if len(v) != 64 or any(char not in "0123456789abcdef" for char in v.lower()):
+            raise ValueError("hash must be a SHA-256 hex digest")
+        return v.lower()
+
+
+# ==============================================================================
+# Module 9 - AI Decision Engine Models
+# ==============================================================================
+
+
+class DecisionAction(str, Enum):
+    """Supported visual decision action types for Module 9."""
+
+    KEEP = "keep"
+    REMOVE = "remove"
+    REPLACE = "replace"
+    ENHANCE = "enhance"
+    ADD = "add"
+
+
+class DecisionSource(str, Enum):
+    """Origin of a decision recommendation."""
+
+    RULE = "rule"
+    LLM = "llm"
+    RULE_LLM_AGREEMENT = "rule_llm_agreement"
+    CONFLICT_RESOLUTION = "conflict_resolution"
+
+
+class TargetElement(BaseModel):
+    """Visual or spatial target element for a decision."""
+
+    model_config = ConfigDict(frozen=True)
+
+    element_id: str
+    element_type: str
+    label: str
+    bbox: Optional[BoundingBox] = None
+
+
+class CandidateDecision(BaseModel):
+    """Candidate decision prior to conflict resolution and validation."""
+
+    model_config = ConfigDict(frozen=True)
+
+    candidate_id: str
+    target: TargetElement
+    action: DecisionAction
+    confidence: float
+    source: DecisionSource
+    rationale: str
+    rule_ids: list[str] = Field(default_factory=list)
+    llm_raw_response_ref: Optional[str] = None
+
+    @field_validator("confidence")
+    @classmethod
+    def confidence_must_be_unit_interval(cls, v: float) -> float:
+        if not (0.0 <= v <= 1.0):
+            raise ValueError("confidence must be in range [0.0, 1.0]")
+        return float(v)
+
+
+class ResolvedDecision(BaseModel):
+    """Finalized decision post conflict resolution and validation."""
+
+    model_config = ConfigDict(frozen=True)
+
+    decision_id: str
+    target: TargetElement
+    action: DecisionAction
+    confidence: float
+    source: DecisionSource
+    rationale: str
+    priority_rank: int
+    superseded_candidate_ids: list[str] = Field(default_factory=list)
+    machine_reasoning: dict[str, Any] = Field(default_factory=dict)
+
+    @field_validator("confidence")
+    @classmethod
+    def confidence_must_be_unit_interval(cls, v: float) -> float:
+        if not (0.0 <= v <= 1.0):
+            raise ValueError("confidence must be in range [0.0, 1.0]")
+        return float(v)
+
+
+class DecisionManifestStatus(str, Enum):
+    """Execution status for a Decision Manifest."""
+
+    SUCCESS = "success"
+    PARTIAL = "partial"
+    ERROR = "error"
+
+
+class DecisionManifest(BaseModel):
+    """Umbrella manifest containing all resolved decisions for a video."""
+
+    model_config = ConfigDict(frozen=True)
+
+    video_id: str
+    source_generated_image_path: str
+    source_generated_image_hash: str
+    decisions: list[ResolvedDecision] = Field(default_factory=list)
+    keep_count: int = 0
+    remove_count: int = 0
+    replace_count: int = 0
+    enhance_count: int = 0
+    add_count: int = 0
+    overall_confidence: float = 0.0
+    conflicts_resolved: int = 0
+    llm_adjudications: int = 0
+    status: DecisionManifestStatus = DecisionManifestStatus.SUCCESS
+    partial_failure_reasons: list[str] = Field(default_factory=list)
+    error_message: Optional[str] = None
+    total_duration_seconds: float = 0.0
+    decided_at: str
+
+    @field_validator("video_id")
+    @classmethod
+    def video_id_must_not_be_empty(cls, v: str) -> str:
+        if not v or not v.strip():
+            raise ValueError("video_id must not be empty")
+        return v.strip()
+
+
+class ReasoningTraceEntry(BaseModel):
+    """Machine-readable step snapshot in reasoning_trace.json audit log."""
+
+    model_config = ConfigDict(frozen=True)
+
+    decision_id: str
+    stage: Literal[
+        "rule_engine",
+        "ambiguity_router",
+        "llm_reasoner",
+        "conflict_resolver",
+        "validator",
+    ]
+    input_snapshot: dict[str, Any] = Field(default_factory=dict)
+    output_snapshot: dict[str, Any] = Field(default_factory=dict)
+    timestamp: str
+
+
+# ---------------------------------------------------------------------------
+# Module 10 — Asset Composer
+# ---------------------------------------------------------------------------
+
+
+class LayerDecision(str, Enum):
+    """Action bucket governing how a composition layer is treated."""
+
+    KEEP = "keep"
+    REMOVE = "remove"
+    REPLACE = "replace"
+    ENHANCE = "enhance"
+    ADD = "add"
+
+
+class LayerRole(str, Enum):
+    """Semantic role of a composition layer."""
+
+    BACKGROUND = "background"
+    FOREGROUND = "foreground"
+    PERSON = "person"
+    OBJECT = "object"
+    TEXT = "text"
+    EFFECT = "effect"
+
+
+class CanvasTransform(BaseModel):
+    """Pixel resolution and aspect ratio of the composition canvas."""
+
+    model_config = ConfigDict(frozen=True)
+
+    width: int
+    height: int
+    aspect_ratio: str
+
+    @field_validator("width", "height")
+    @classmethod
+    def dimension_must_be_positive(cls, v: int) -> int:
+        if v <= 0:
+            raise ValueError("canvas dimensions must be positive")
+        return v
+
+
+class LayerTransform(BaseModel):
+    """Pixel placement translation, scale factor, and optional crop bounding box."""
+
+    model_config = ConfigDict(frozen=True)
+
+    translate_x: int = 0
+    translate_y: int = 0
+    scale_x: float = 1.0
+    scale_y: float = 1.0
+    crop_box: Optional[VisualBoundingBox] = None
+
+
+class MaskReference(BaseModel):
+    """Reference to a VRE mask asset and optional feathering parameters."""
+
+    model_config = ConfigDict(frozen=True)
+
+    mask_path: str
+    mask_checksum: str
+    feather_px: int = 0
+    source: Literal["vre"] = "vre"
+
+    @field_validator("mask_path")
+    @classmethod
+    def mask_path_must_not_be_empty(cls, v: str) -> str:
+        if not v or not v.strip():
+            raise ValueError("mask_path must not be empty")
+        return v.strip()
+
+    @field_validator("mask_checksum")
+    @classmethod
+    def mask_checksum_must_be_sha256(cls, v: str) -> str:
+        if len(v) != 64 or any(char not in "0123456789abcdef" for char in v.lower()):
+            raise ValueError("mask_checksum must be a SHA-256 hex digest")
+        return v.lower()
+
+
+class PlacementConstraints(BaseModel):
+    """Safe margins, focal zone, and avoid zones in pixel space."""
+
+    model_config = ConfigDict(frozen=True)
+
+    safe_margin_px: int = 0
+    avoid_zones_px: list[VisualBoundingBox] = Field(default_factory=list)
+    focal_zone_px: Optional[VisualBoundingBox] = None
+
+
+class TextPlacement(BaseModel):
+    """Placement geometry and avoid zones for text overlay in pixel space."""
+
+    model_config = ConfigDict(frozen=True)
+
+    include_text: bool = False
+    placement_zone_px: Optional[VisualBoundingBox] = None
+    avoid_zones_px: list[VisualBoundingBox] = Field(default_factory=list)
+
+
+class LightingAdjustment(BaseModel):
+    """Target lighting parameters for color direction pass-through."""
+
+    model_config = ConfigDict(frozen=True)
+
+    target_brightness: float
+    target_contrast: float
+    target_saturation: float
+    warm_or_cool: Literal["warm", "cool", "neutral"]
+
+
+class AssetPlacement(BaseModel):
+    """Resolved placement, decision, transform, and mask reference for an asset."""
+
+    model_config = ConfigDict(frozen=True)
+
+    asset_id: str
+    role: LayerRole
+    decision: LayerDecision
+    source_path: Optional[str] = None
+    mask: Optional[MaskReference] = None
+    transform: LayerTransform
+    z_index: int
+    rationale: str = ""
+
+    @field_validator("asset_id")
+    @classmethod
+    def asset_id_must_not_be_empty(cls, v: str) -> str:
+        if not v or not v.strip():
+            raise ValueError("asset_id must not be empty")
+        return v.strip()
+
+
+class CompositionLayer(BaseModel):
+    """One z-ordered layer in the composition stack."""
+
+    model_config = ConfigDict(frozen=True)
+
+    layer_id: str
+    placement: AssetPlacement
+    depth_hint_path: Optional[str] = None
+
+    @field_validator("layer_id")
+    @classmethod
+    def layer_id_must_not_be_empty(cls, v: str) -> str:
+        if not v or not v.strip():
+            raise ValueError("layer_id must not be empty")
+        return v.strip()
+
+
+class LayerGroup(BaseModel):
+    """Logical grouping of layer IDs sharing a role."""
+
+    model_config = ConfigDict(frozen=True)
+
+    group_id: str
+    role: LayerRole
+    layer_ids: list[str]
+
+    @field_validator("group_id")
+    @classmethod
+    def group_id_must_not_be_empty(cls, v: str) -> str:
+        if not v or not v.strip():
+            raise ValueError("group_id must not be empty")
+        return v.strip()
+
+
+class WorkspaceStatistics(BaseModel):
+    """Summary counts of layer decisions in a workspace."""
+
+    model_config = ConfigDict(frozen=True)
+
+    total_layers: int
+    kept: int = 0
+    removed: int = 0
+    replaced: int = 0
+    enhanced: int = 0
+    added: int = 0
+
+
+class WorkspaceMetadata(BaseModel):
+    """Traceable provenance and hash metadata for a composition workspace."""
+
+    model_config = ConfigDict(frozen=True)
+
+    video_id: str
+    created_at: str
+    vre_source_hash: str
+    redesign_spec_hash: str
+    prompt_package_hash: str
+    engine_version: str
+
+    @field_validator("video_id", "created_at", "engine_version")
+    @classmethod
+    def text_fields_must_not_be_empty(cls, v: str) -> str:
+        if not v or not v.strip():
+            raise ValueError("metadata text fields must not be empty")
+        return v.strip()
+
+    @field_validator("vre_source_hash", "redesign_spec_hash", "prompt_package_hash")
+    @classmethod
+    def hashes_must_be_sha256(cls, v: str) -> str:
+        if len(v) != 64 or any(char not in "0123456789abcdef" for char in v.lower()):
+            raise ValueError("hashes must be SHA-256 hex digests")
+        return v.lower()
+
+
+class CompositionWorkspace(BaseModel):
+    """Complete versioned Composition Workspace schema."""
+
+    model_config = ConfigDict(frozen=True)
+
+    video_id: str
+    canvas: CanvasTransform
+    layers: list[CompositionLayer]
+    groups: list[LayerGroup]
+    text_placement: TextPlacement
+    lighting: LightingAdjustment
+    constraints: PlacementConstraints
+    statistics: WorkspaceStatistics
+    metadata: WorkspaceMetadata
+    status: Literal["success", "partial", "error"] = "success"
+    error_message: Optional[str] = None
+    duration_seconds: float = 0.0
+
+    @field_validator("video_id")
+    @classmethod
+    def video_id_must_not_be_empty(cls, v: str) -> str:
+        if not v or not v.strip():
+            raise ValueError("video_id must not be empty")
+        return v.strip()
+
+
+class GenerationBundle(BaseModel):
+    """Flat, ComfyUI-consumable summary artifact exported from a workspace."""
+
+    model_config = ConfigDict(frozen=True)
+
+    video_id: str
+    canvas: CanvasTransform
+    reference_image_paths: dict[str, str] = Field(default_factory=dict)
+    mask_paths: dict[str, str] = Field(default_factory=dict)
+    depth_path: Optional[str] = None
+    canny_path: Optional[str] = None
+    layer_order: list[str] = Field(default_factory=list)
+    workspace_hash: str
+    prompt_package_hash: str
+    generated_at: str
+
+    @field_validator("video_id", "generated_at")
+    @classmethod
+    def text_fields_must_not_be_empty(cls, v: str) -> str:
+        if not v or not v.strip():
+            raise ValueError("bundle text fields must not be empty")
+        return v.strip()
+
+    @field_validator("workspace_hash", "prompt_package_hash")
+    @classmethod
+    def hashes_must_be_sha256(cls, v: str) -> str:
+        if len(v) != 64 or any(char not in "0123456789abcdef" for char in v.lower()):
+            raise ValueError("hashes must be SHA-256 hex digests")
+        return v.lower()
+
+
+
