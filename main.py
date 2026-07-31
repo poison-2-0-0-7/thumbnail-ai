@@ -392,6 +392,7 @@ def run_pipeline(
                 "thumbnail_dir": thumbnail_dir,
                 "analysis_dir": analysis_dir,
                 "generation_bundle": generation_bundle,
+                "design_blueprint": design_blueprint,
             }
             if generation_plan is not None:
                 m7_kwargs["generation_plan"] = generation_plan
@@ -442,9 +443,10 @@ def _run_module7_generation(
     analysis_dir: Path,
     generation_bundle: GenerationBundle | None = None,
     generation_plan: GenerationPlan | None = None,
+    design_blueprint: DesignBlueprint | None = None,
 ) -> Path:
 
-    """Build the existing Module 7 inputs, generate one image, and persist it."""
+    """Build the existing Module 7 inputs, generate image candidates, and persist output."""
     profile = _select_module7_profile()
     niche = _module7_niche(metadata)
     client = ComfyUIClient()
@@ -455,11 +457,13 @@ def _run_module7_generation(
         prompt_package=prompt_package,
         generation_bundle=generation_bundle,
         generation_plan=generation_plan,
+        design_blueprint=design_blueprint,
         client=client,
         thumbnail_dir=thumbnail_dir,
         analysis_dir=analysis_dir,
         output_dir=MODULE7_OUTPUT_DIR,
     )
+
 
 
 

@@ -591,6 +591,16 @@ class GenerationParameters(BaseModel):
     guidance_scale: float = 7.5
     inference_steps: int = 30
     sampler: str = "deterministic"
+    num_candidates: int = 1
+    strategy_pack: Optional[str] = None
+
+    @field_validator("num_candidates")
+    @classmethod
+    def num_candidates_must_be_at_least_one(cls, v: int) -> int:
+        if v < 1:
+            raise ValueError("num_candidates must be at least 1")
+        return v
+
 
 
 class QualityParameters(BaseModel):
@@ -993,6 +1003,152 @@ class GenerationMetrics(BaseModel):
     peak_vram_mb: Optional[float] = None
     gpu_utilization_percent: Optional[float] = None
     recorded_at: str
+
+
+# ---------------------------------------------------------------------------
+# Module 7 — Phase 4 Multi-Candidate Models
+# ---------------------------------------------------------------------------
+
+
+class CandidateStrategy(BaseModel):
+    """Named, bounded transformation parameters applied per candidate."""
+
+    model_config = ConfigDict(frozen=True)
+
+    name: str
+    camera_distance_shift: int = 0
+    object_emphasis_bias: float = 0.0
+    background_intensity_bias: float = 0.0
+    color_grade_bias: float = 0.0
+    typography_weight_bias: float = 0.0
+    emotion_bias: float = 0.0
+    description: str = ""
+
+    @field_validator("name")
+    @classmethod
+    def name_must_not_be_empty(cls, v: str) -> str:
+        if not v or not v.strip():
+            raise ValueError("CandidateStrategy name must not be empty")
+        return v.strip()
+
+    @field_validator("camera_distance_shift")
+    @classmethod
+    def validate_camera_distance_shift(cls, v: int) -> int:
+        if v not in {-1, 0, 1}:
+            raise ValueError("camera_distance_shift must be -1, 0, or 1")
+        return v
+
+    @field_validator(
+        "object_emphasis_bias",
+        "background_intensity_bias",
+        "color_grade_bias",
+        "typography_weight_bias",
+        "emotion_bias",
+    )
+    @classmethod
+    def validate_bias_range(cls, v: float) -> float:
+        if not -0.5 <= v <= 0.5:
+            raise ValueError("Strategy bias fields must be within [-0.5, 0.5]")
+        return float(v)
+
+    @classmethod
+    def faithful_default(cls) -> CandidateStrategy:
+        return cls(
+            name="faithful",
+            camera_distance_shift=0,
+            object_emphasis_bias=0.0,
+            background_intensity_bias=0.0,
+            color_grade_bias=0.0,
+            typography_weight_bias=0.0,
+            emotion_bias=0.0,
+            description="Variant A — Faithful to base blueprint without perturbation.",
+        )
+
+
+class StrategyPack(BaseModel):
+    """Ordered set of declarative candidate strategies."""
+
+    model_config = ConfigDict(frozen=True)
+
+    name: str
+    strategies: list[CandidateStrategy] = Field(default_factory=list)
+    pack_version: str = "1.0.0"
+
+    @field_validator("name")
+    @classmethod
+    def name_must_not_be_empty(cls, v: str) -> str:
+        if not v or not v.strip():
+            raise ValueError("StrategyPack name must not be empty")
+        return v.strip()
+
+    @field_validator("strategies")
+    @classmethod
+    def strategies_must_not_be_empty(cls, v: list[CandidateStrategy]) -> list[CandidateStrategy]:
+        if not v:
+            raise ValueError("StrategyPack must contain at least one strategy")
+        return v
+
+
+class CandidateManifestEntry(BaseModel):
+    """Detailed audit entry for one candidate generated in a run."""
+
+    model_config = ConfigDict(frozen=True)
+
+    candidate_index: int
+    strategy_name: str
+    seed: int
+    workflow_hash: str
+    generation_parameters: GenerationParameters
+    qa_report: QualityAssuranceReport
+    face_match: FaceMatchResult
+    candidate_score: CandidateScore
+    stage_durations_seconds: dict[str, float] = Field(default_factory=dict)
+    output_path: str
+
+
+class CandidateManifest(BaseModel):
+    """Multi-candidate generation audit trail serialized to candidate_manifest.json."""
+
+    model_config = ConfigDict(frozen=True)
+
+    video_id: str
+    entries: list[CandidateManifestEntry] = Field(default_factory=list)
+    winning_candidate_index: int
+    strategy_pack_name: Optional[str] = None
+    generated_at: str
+
+    @field_validator("video_id")
+    @classmethod
+    def video_id_must_not_be_empty(cls, v: str) -> str:
+        if not v or not v.strip():
+            raise ValueError("video_id must not be empty")
+        return v.strip()
+
+
+class GenerationRunMetadata(BaseModel):
+    """Run-level execution provenance serialized to generation_metadata.json."""
+
+    model_config = ConfigDict(frozen=True)
+
+    video_id: str
+    profile_name: str
+    workflow_version: str
+    workflow_hash: str
+    conditioning_asset_hashes: dict[str, str] = Field(default_factory=dict)
+    model_versions: dict[str, str] = Field(default_factory=dict)
+    num_candidates_requested: int
+    num_candidates_completed: int
+    total_duration_seconds: float
+    parallel_generation_used: bool = False
+    retry_summary: dict[str, int] = Field(default_factory=dict)
+
+    @field_validator("video_id", "profile_name", "workflow_version")
+    @classmethod
+    def text_fields_must_not_be_empty(cls, v: str) -> str:
+        if not v or not v.strip():
+            raise ValueError("GenerationRunMetadata text fields must not be empty")
+        return v.strip()
+
 
 
 # ---------------------------------------------------------------------------

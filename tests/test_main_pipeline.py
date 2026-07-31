@@ -91,6 +91,8 @@ def test_run_pipeline_invokes_module7_after_prompt_package(monkeypatch: pytest.M
         thumbnail_dir: Path,
         analysis_dir: Path,
         generation_bundle: object = None,
+        design_blueprint: object = None,
+        **kwargs: object,
     ) -> Path:
         order.append("module7_generated")
         assert prompt_package.video_id == VIDEO_ID
@@ -148,10 +150,11 @@ def test_run_pipeline_treats_module7_error_as_per_creator_failure(
     monkeypatch.setattr(
         main,
         "_run_module7_generation",
-        lambda prompt_package, *, metadata, thumbnail_dir, analysis_dir, generation_bundle=None: (
+        lambda prompt_package, *, metadata, thumbnail_dir, analysis_dir, generation_bundle=None, design_blueprint=None, **kwargs: (
             _ for _ in ()
         ).throw(Module7Error("generation failed")),
     )
+
 
 
     main.run_pipeline(

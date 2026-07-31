@@ -26,16 +26,20 @@ from config import (
     LOG_DIR, MAX_IDENTITY_RETRIES, MAX_GENERATION_RETRIES,
     MODULE7_CODEFORMER_FIDELITY, MODULE7_GENERATION_PROFILES,
     MODULE7_IDENTITY_SIMILARITY_THRESHOLD, MODULE7_LOG_PATH, MODULE7_METRICS_PATH,
-    MODULE7_NSFW_THRESHOLD, MODULE7_OUTPUT_DIR, MODULE7_PROFILE,
+    MODULE7_MAX_CANDIDATES, MODULE7_NSFW_THRESHOLD, MODULE7_OUTPUT_DIR, MODULE7_PROFILE,
     MODULE7_PROFILE_PREFERENCE, MODULE7_QA_WEIGHTS, MODULE7_SAVE_CANDIDATES,
-    MODULE7_VRAM_HEADROOM_GB,
+    MODULE7_STRATEGY_PACK, MODULE7_VRAM_HEADROOM_GB, MODULE7_WORKFLOW_GRAPH_CACHE_ENABLED,
+    MODULE7_WORKFLOW_VERSION, MODULE7_PARALLEL_CANDIDATES,
 )
 from models import (
-    CandidateScore, FaceMatchResult, GeneratedAsset, GenerationMetrics,
-    GenerationProfile, ImageGenerationResult, PromptPackage, QualityAssuranceReport,
-    WorkflowTemplateRef, CompositionWorkspace, GenerationBundle, GenerationPlan,
+    CandidateManifest, CandidateManifestEntry, CandidateScore, CandidateStrategy,
+    CompositionWorkspace, DesignBlueprint, FaceMatchResult, GeneratedAsset,
+    GenerationBundle, GenerationMetrics, GenerationPlan, GenerationProfile,
+    GenerationRunMetadata, ImageGenerationResult, PromptPackage, QualityAssuranceReport,
+    StrategyPack, WorkflowTemplateRef,
 )
 from generation_components import (
+    CandidateStrategyPlanner,
     ConditioningAssetResolver,
     CompositionWorkspaceLoader,
     GenerationBundleLoader,
@@ -47,17 +51,21 @@ from generation_components import (
     INodeFragmentLibrary,
     IWorkflowGraphAssembler,
     NodeFragmentLibrary,
+    StrategyPackLibrary,
+    StrategyPackResolver,
     WorkflowGraphAssembler,
+    WorkflowGraphCache,
 )
 
 from module7_exceptions import (
-    ArtifactWriteError, ComfyUIConnectionError, ComfyUIQueueError,
-    IdentityPreservationError, MetricsWriteError, Module7Error,
-    NoEligibleCandidateError, PromptPackageInvalidError, QualityAssuranceError,
-    ProfileDowngradedWarning, ReferenceAssetError, VRAMExhaustedError,
+    ArtifactWriteError, CandidateGenerationTimeoutError, ComfyUIConnectionError,
+    ComfyUIQueueError, IdentityPreservationError, MetricsWriteError, Module7Error,
+    NoEligibleCandidateError, ProfileDowngradedWarning, PromptPackageInvalidError,
+    QualityAssuranceError, ReferenceAssetError, StrategyPackError, VRAMExhaustedError,
     WorkflowBuildError, WorkflowTemplateError,
 )
 from workflow_library import WorkflowLibrary
+
 
 _LOG_FORMAT = "{time:YYYY-MM-DD HH:mm:ss} | {level:<8} | {name} | {message}"
 _PLACEHOLDER_PREFIX = "{{"
@@ -201,6 +209,25 @@ class ProfileSelector:
         return low
 
 
+def _conditioning_context_hash(ctx: GenerationConditioningContext | None) -> str:
+    """Compute deterministic hash for GenerationConditioningContext."""
+    if ctx is None:
+        return "none"
+    return canonical_json_hash({
+        "source_thumbnail_path": str(ctx.source_thumbnail_path) if ctx.source_thumbnail_path else None,
+        "canvas_width": ctx.canvas_width,
+        "canvas_height": ctx.canvas_height,
+        "role_image_paths": {k: str(v) for k, v in ctx.role_image_paths.items()},
+        "role_mask_paths": {k: str(v) for k, v in ctx.role_mask_paths.items()},
+        "depth_path": str(ctx.depth_path) if ctx.depth_path else None,
+        "canny_path": str(ctx.canny_path) if ctx.canny_path else None,
+        "segmentation_path": str(ctx.segmentation_path) if ctx.segmentation_path else None,
+        "ip_adapter_reference_paths": {k: str(v) for k, v in ctx.ip_adapter_reference_paths.items()},
+        "text_exclusion_mask_path": str(ctx.text_exclusion_mask_path) if ctx.text_exclusion_mask_path else None,
+        "layer_order": ctx.layer_order,
+    })
+
+
 class WorkflowBuilder:
     """Pure deterministic materializer for ComfyUI graph templates; never submits them."""
 
@@ -214,26 +241,17 @@ class WorkflowBuilder:
         self.graph_assembler = graph_assembler or WorkflowGraphAssembler()
         self.capability_probe = capability_probe
 
-    def build(
+    def build_base(
         self,
-        package: PromptPackage,
         profile: GenerationProfile,
         workflow_ref: WorkflowTemplateRef,
-        reference_assets: ReferenceAssets | None = None,
         library: WorkflowLibrary | None = None,
         conditioning: GenerationConditioningContext | None = None,
-        plan: GenerationPlan | None = None,
-    ) -> BuiltWorkflow:
-        """Fill named template slots and return the exact graph plus its hash."""
+    ) -> dict[str, Any]:
+        """Materialize base template dict and fragment assembly prior to per-candidate slot substitution."""
         source = library or WorkflowLibrary(Path(workflow_ref.template_path).parent)
         template = source.load(Path(workflow_ref.template_path))
-        slots = self._slots(package, profile, reference_assets, conditioning, plan)
-        try:
-            base_graph = self._substitute(template["graph"], slots)
-        except KeyError as exc:
-            raise WorkflowBuildError(f"Template {workflow_ref.template_name} uses unknown placeholder {exc.args[0]}") from exc
-        if not isinstance(base_graph, dict):
-            raise WorkflowBuildError("Resolved workflow graph must be an object")
+        raw_graph = template.get("graph", {})
 
         if conditioning is not None:
             fragment_ids = self._select_fragments(profile, conditioning)
@@ -248,18 +266,50 @@ class WorkflowBuilder:
                     continue
                 fragment_dicts.append(frag_data)
 
-            final_graph = self.graph_assembler.assemble(
-                {"_meta": template.get("_meta", {}), "graph": base_graph},
+            assembled = self.graph_assembler.assemble(
+                {"_meta": template.get("_meta", {}), "graph": raw_graph},
                 fragment_dicts,
                 conditioning,
                 profile,
-            ).get("graph", base_graph)
-        else:
-            final_graph = base_graph
+            )
+            return assembled.get("graph", raw_graph)
+        return raw_graph
+
+    def build(
+        self,
+        package: PromptPackage,
+        profile: GenerationProfile,
+        workflow_ref: WorkflowTemplateRef,
+        reference_assets: ReferenceAssets | None = None,
+        library: WorkflowLibrary | None = None,
+        conditioning: GenerationConditioningContext | None = None,
+        plan: GenerationPlan | None = None,
+        cache: Any | None = None,
+    ) -> BuiltWorkflow:
+        """Fill named template slots and return the exact graph plus its hash."""
+        cond_hash = _conditioning_context_hash(conditioning)
+        key = (workflow_ref.template_path, workflow_ref.workflow_version, profile.name, cond_hash)
+
+
+        base_unsubstituted = cache.get(key) if cache is not None else None
+        if base_unsubstituted is None:
+            base_unsubstituted = self.build_base(profile, workflow_ref, library=library, conditioning=conditioning)
+            if cache is not None:
+                cache.put(key, base_unsubstituted)
+
+
+        slots = self._slots(package, profile, reference_assets, conditioning, plan)
+        try:
+            final_graph = self._substitute(base_unsubstituted, slots)
+        except KeyError as exc:
+            raise WorkflowBuildError(f"Template {workflow_ref.template_name} uses unknown placeholder {exc.args[0]}") from exc
+        if not isinstance(final_graph, dict):
+            raise WorkflowBuildError("Resolved workflow graph must be an object")
 
         workflow_hash = canonical_json_hash(final_graph)
         logger.info("Built workflow template={template}, version={version}, workflow_hash={hash}", template=workflow_ref.template_name, version=workflow_ref.workflow_version, hash=workflow_hash)
         return BuiltWorkflow(graph=final_graph, workflow_ref=workflow_ref, workflow_hash=workflow_hash)
+
 
     def _select_fragments(
         self, profile: GenerationProfile, conditioning: GenerationConditioningContext | None
@@ -372,6 +422,12 @@ class ArtifactWriter:
     def manifest_path(self, video_id: str) -> Path:
         return self.output_dir / video_id / f"{video_id}_manifest.json"
 
+    def candidate_manifest_path(self, video_id: str) -> Path:
+        return self.output_dir / video_id / "candidate_manifest.json"
+
+    def generation_metadata_path(self, video_id: str) -> Path:
+        return self.output_dir / video_id / "generation_metadata.json"
+
     def write_manifest(self, result: ImageGenerationResult) -> Path:
         """Write one complete manifest with temp-file-then-replace semantics."""
         target = self.manifest_path(result.video_id)
@@ -388,6 +444,41 @@ class ArtifactWriter:
             raise ArtifactWriteError(f"Could not write Module 7 manifest to {target}: {exc}") from exc
         logger.info("Wrote Module 7 manifest for video_id={video_id}: {path}", video_id=result.video_id, path=target)
         return target
+
+    def write_candidate_manifest(self, manifest: CandidateManifest) -> Path:
+        """Write candidate manifest with temp-file-then-replace semantics."""
+        target = self.candidate_manifest_path(manifest.video_id)
+        temporary = target.with_suffix(".tmp")
+        try:
+            target.parent.mkdir(parents=True, exist_ok=True)
+            temporary.write_text(manifest.model_dump_json(indent=2), encoding="utf-8")
+            temporary.replace(target)
+        except OSError as exc:
+            try:
+                temporary.unlink(missing_ok=True)
+            except OSError:
+                pass
+            raise ArtifactWriteError(f"Could not write candidate manifest to {target}: {exc}") from exc
+        logger.info("Wrote candidate manifest for video_id={video_id}: {path}", video_id=manifest.video_id, path=target)
+        return target
+
+    def write_generation_metadata(self, metadata: GenerationRunMetadata) -> Path:
+        """Write generation run metadata with temp-file-then-replace semantics."""
+        target = self.generation_metadata_path(metadata.video_id)
+        temporary = target.with_suffix(".tmp")
+        try:
+            target.parent.mkdir(parents=True, exist_ok=True)
+            temporary.write_text(metadata.model_dump_json(indent=2), encoding="utf-8")
+            temporary.replace(target)
+        except OSError as exc:
+            try:
+                temporary.unlink(missing_ok=True)
+            except OSError:
+                pass
+            raise ArtifactWriteError(f"Could not write generation metadata to {target}: {exc}") from exc
+        logger.info("Wrote generation metadata for video_id={video_id}: {path}", video_id=metadata.video_id, path=target)
+        return target
+
 
 
 class MetricsCollector:
@@ -784,7 +875,7 @@ class CandidateRanker:
 
 
 class ImageGeneratorPipeline:
-    """Pipeline orchestrator for Module 7 Phase 3 local image generation."""
+    """Pipeline orchestrator for Module 7 Phase 4 local image generation."""
 
     def __init__(
         self,
@@ -805,6 +896,8 @@ class ImageGeneratorPipeline:
         bundle_loader: IGenerationBundleLoader | None = None,
         workspace_loader: ICompositionWorkspaceLoader | None = None,
         conditioning_resolver: IConditioningAssetResolver | None = None,
+        strategy_pack_resolver: StrategyPackResolver | None = None,
+        strategy_planner: CandidateStrategyPlanner | None = None,
     ) -> None:
         self.client = client
         self.package_loader = package_loader or PromptPackageLoader()
@@ -823,6 +916,8 @@ class ImageGeneratorPipeline:
         self.bundle_loader = bundle_loader or GenerationBundleLoader()
         self.workspace_loader = workspace_loader or CompositionWorkspaceLoader()
         self.conditioning_resolver = conditioning_resolver or ConditioningAssetResolver()
+        self.strategy_pack_resolver = strategy_pack_resolver or StrategyPackResolver()
+        self.strategy_planner = strategy_planner or CandidateStrategyPlanner()
 
     def run(
         self,
@@ -833,6 +928,7 @@ class ImageGeneratorPipeline:
         generation_bundle: GenerationBundle | None = None,
         composition_workspace: CompositionWorkspace | None = None,
         generation_plan: GenerationPlan | None = None,
+        design_blueprint: DesignBlueprint | None = None,
     ) -> ImageGenerationResult:
         start_time = time.monotonic()
         package = prompt_package or self.package_loader.load(video_id)
@@ -848,11 +944,25 @@ class ImageGeneratorPipeline:
             plan=generation_plan,
         )
 
-        num_candidates = getattr(package.generation_parameters, "num_candidates", 1)
+        pack_name = package.generation_parameters.strategy_pack or MODULE7_STRATEGY_PACK
+        requested_num = getattr(package.generation_parameters, "num_candidates", 1)
+        max_cands = max(requested_num, MODULE7_MAX_CANDIDATES)
+
+        if design_blueprint is None:
+            strategies = [CandidateStrategy.faithful_default()]
+        else:
+            strategies = self.strategy_pack_resolver.resolve(
+                requested_pack=pack_name,
+                max_candidates=max_cands,
+            )
+        num_candidates = len(strategies)
+
         base_seed = package.generation_parameters.seed
 
         out_dir = self.artifact_writer.output_dir
-        cand_work_dir = out_dir / video_id / "tmp_candidates"
+        target_dir = out_dir / video_id
+        target_dir.mkdir(parents=True, exist_ok=True)
+        cand_work_dir = target_dir / "tmp_candidates"
         cand_work_dir.mkdir(parents=True, exist_ok=True)
 
         if self.client is None:
@@ -860,113 +970,106 @@ class ImageGeneratorPipeline:
             client_obj = ComfyUIClient()
         else:
             client_obj = self.client
+
+        wf_cache = WorkflowGraphCache(enabled=MODULE7_WORKFLOW_GRAPH_CACHE_ENABLED)
+        wf_cache = WorkflowGraphCache(enabled=MODULE7_WORKFLOW_GRAPH_CACHE_ENABLED)
         stage_durations: dict[str, float] = {}
-        candidate_results: list[tuple[int, Path, QualityAssuranceReport, FaceMatchResult]] = []
-        for cand_idx in range(num_candidates):
-            cand_seed = base_seed + cand_idx
-            cand_package = package.model_copy(
-                update={"generation_parameters": package.generation_parameters.model_copy(update={"seed": cand_seed})}
-            )
-            workflow_ref = self.workflow_library.resolve(niche, profile)
-            built_wf = self.workflow_builder.build(
-                cand_package, profile, workflow_ref, reference_assets=references, library=self.workflow_library, conditioning=conditioning_ctx, plan=generation_plan
-            )
+        candidate_results: list[tuple[int, Path, QualityAssuranceReport, FaceMatchResult, CandidateStrategy, PromptPackage, str, dict[str, float]]] = []
+        total_identity_retries = 0
 
-            # Step A: ComfyUI generate with VRAM fallback ladder
-            t0 = time.monotonic()
-            try:
-                raw_output = client_obj.generate(
-                    built_wf,
-                    video_id=video_id,
-                    num_candidates_requested=num_candidates,
+        if MODULE7_PARALLEL_CANDIDATES and num_candidates > 1:
+            import concurrent.futures
+            max_workers = min(MODULE7_MAX_PARALLEL_CANDIDATES, num_candidates)
+            with concurrent.futures.ThreadPoolExecutor(max_workers=max_workers) as executor:
+                futures = [
+                    executor.submit(
+                        self._process_single_candidate,
+                        cand_idx,
+                        strategy,
+                        package,
+                        design_blueprint,
+                        profile,
+                        niche,
+                        video_id,
+                        num_candidates,
+                        references,
+                        conditioning_ctx,
+                        generation_plan,
+                        client_obj,
+                        cand_work_dir,
+                        wf_cache,
+                    )
+                    for cand_idx, strategy in enumerate(strategies)
+                ]
+                processed = [f.result() for f in futures]
+                processed.sort(key=lambda x: x[0])
+                for item in processed:
+                    c_idx, c_path, c_qa, c_fm, c_strat, c_pkg, c_wf_hash, c_durations, id_retries = item
+                    total_identity_retries += id_retries
+                    candidate_results.append((c_idx, c_path, c_qa, c_fm, c_strat, c_pkg, c_wf_hash, c_durations))
+                    for k, v in c_durations.items():
+                        stage_durations[k] = stage_durations.get(k, 0.0) + v
+        else:
+            for cand_idx, strategy in enumerate(strategies):
+                res = self._process_single_candidate(
+                    cand_idx,
+                    strategy,
+                    package,
+                    design_blueprint,
+                    profile,
+                    niche,
+                    video_id,
+                    num_candidates,
+                    references,
+                    conditioning_ctx,
+                    generation_plan,
+                    client_obj,
+                    cand_work_dir,
+                    wf_cache,
                 )
-            except VRAMExhaustedError:
-                logger.warning("VRAMExhaustedError encountered during generation for video_id={vid}; attempting profile fallback", vid=video_id)
-                fallback_profile = self.profile_selector.select(profile.expected_vram_gb - 1.0, MODULE7_PROFILE)
-                workflow_ref = self.workflow_library.resolve(niche, fallback_profile)
-                built_wf = self.workflow_builder.build(cand_package, fallback_profile, workflow_ref, reference_assets=references, library=self.workflow_library, conditioning=conditioning_ctx, plan=generation_plan)
-                raw_output = client_obj.generate(
-                    built_wf,
-                    video_id=video_id,
-                    num_candidates_requested=num_candidates,
-                )
-                profile = fallback_profile
-
-            stage_durations["comfyui_generate"] = stage_durations.get("comfyui_generate", 0.0) + (time.monotonic() - t0)
-
-            raw_path = cand_work_dir / f"cand_{cand_idx}_raw.png"
-            raw_path.write_bytes(raw_output.content)
-
-            # Step B: Identity check with bounded retries
-            t0 = time.monotonic()
-            face_match = self.identity_stage.verify(raw_path, references)
-            identity_retries = 0
-            curr_path = raw_path
-
-            while not face_match.passed and not face_match.skipped and identity_retries < MAX_IDENTITY_RETRIES:
-                identity_retries += 1
-                logger.warning(
-                    "Identity check failed for candidate idx={idx} (attempt {attempt}/{max_retries}); retrying with incremented seed",
-                    idx=cand_idx, attempt=identity_retries, max_retries=MAX_IDENTITY_RETRIES
-                )
-                retry_seed = cand_seed + identity_retries * 1000
-                retry_pkg = cand_package.model_copy(
-                    update={"generation_parameters": cand_package.generation_parameters.model_copy(update={"seed": retry_seed})}
-                )
-                retry_wf = self.workflow_builder.build(retry_pkg, profile, workflow_ref, reference_assets=references, library=self.workflow_library, conditioning=conditioning_ctx)
-                retry_output = client_obj.generate(retry_wf, video_id=video_id, num_candidates_requested=num_candidates)
-                curr_path = cand_work_dir / f"cand_{cand_idx}_retry_{identity_retries}.png"
-                curr_path.write_bytes(retry_output.content)
-                face_match = self.identity_stage.verify(curr_path, references)
-
-            stage_durations["identity_preservation"] = stage_durations.get("identity_preservation", 0.0) + (time.monotonic() - t0)
-
-            # Step C: Face restoration
-            t0 = time.monotonic()
-            restored_path = cand_work_dir / f"cand_{cand_idx}_restored.png"
-            self.restoration_stage.restore(curr_path, profile, output_path=restored_path)
-            stage_durations["face_restoration"] = stage_durations.get("face_restoration", 0.0) + (time.monotonic() - t0)
-
-            # Step D: Background composition pass
-            t0 = time.monotonic()
-            comp_path = cand_work_dir / f"cand_{cand_idx}_comp.png"
-            self.background_compositor.composite(restored_path, references, package, output_path=comp_path)
-            stage_durations["background_composition"] = stage_durations.get("background_composition", 0.0) + (time.monotonic() - t0)
-
-            # Step E: Upscale & Lanczos resize
-            t0 = time.monotonic()
-            final_cand_path = cand_work_dir / f"cand_{cand_idx}_final.png"
-            self.upscale_stage.upscale(
-                comp_path,
-                profile,
-                target_width=package.generation_parameters.width,
-                target_height=package.generation_parameters.height,
-                upscale_requested=getattr(package.quality_parameters, "upscale_requested", True),
-                output_path=final_cand_path,
-            )
-            stage_durations["upscale"] = stage_durations.get("upscale", 0.0) + (time.monotonic() - t0)
-
-            # Step F: Quality Assurance evaluation
-            t0 = time.monotonic()
-            qa_report = self.qa_stage.evaluate(final_cand_path, package, face_match, references)
-            stage_durations["quality_assurance"] = stage_durations.get("quality_assurance", 0.0) + (time.monotonic() - t0)
-
-            candidate_results.append((cand_idx, final_cand_path, qa_report, face_match))
+                c_idx, c_path, c_qa, c_fm, c_strat, c_pkg, c_wf_hash, c_durations, id_retries = res
+                total_identity_retries += id_retries
+                candidate_results.append((c_idx, c_path, c_qa, c_fm, c_strat, c_pkg, c_wf_hash, c_durations))
+                for k, v in c_durations.items():
+                    stage_durations[k] = stage_durations.get(k, 0.0) + v
 
         # Rank candidates
-        winner_tuple, candidate_scores = self.ranker.rank(candidate_results)
+        ranker_inputs = [
+            (c[0], c[1], c[2], c[3]) for c in candidate_results
+        ]
+        winner_tuple, candidate_scores = self.ranker.rank(ranker_inputs)
         winner_idx, winner_path, winner_qa, winner_face_match = winner_tuple
 
-        target_dir = out_dir / video_id
-        target_dir.mkdir(parents=True, exist_ok=True)
         final_target = target_dir / f"{video_id}.png"
         shutil.copyfile(winner_path, final_target)
 
-        if MODULE7_SAVE_CANDIDATES:
-            cand_dir = target_dir / f"{video_id}_candidates"
-            cand_dir.mkdir(parents=True, exist_ok=True)
-            for cand_idx, cand_path, cand_qa, _ in candidate_results:
-                shutil.copyfile(cand_path, cand_dir / f"candidate_{cand_idx}_score_{cand_qa.overall_score:.2f}.png")
+        pad_width = max(2, len(str(MODULE7_MAX_CANDIDATES)))
+        cand_manifest_entries: list[CandidateManifestEntry] = []
+
+        for item, cand_score in zip(candidate_results, candidate_scores):
+            c_idx, c_path, c_qa, c_fm, c_strat, c_pkg, c_wf_hash, c_durations = item
+            pad_name = f"candidate_{c_idx + 1:0{pad_width}d}.png"
+            cand_saved_path = target_dir / pad_name
+
+            if MODULE7_SAVE_CANDIDATES:
+                shutil.copyfile(c_path, cand_saved_path)
+                cand_legacy_dir = target_dir / f"{video_id}_candidates"
+                cand_legacy_dir.mkdir(parents=True, exist_ok=True)
+                shutil.copyfile(c_path, cand_legacy_dir / f"candidate_{c_idx}_score_{c_qa.overall_score:.2f}.png")
+
+            entry = CandidateManifestEntry(
+                candidate_index=c_idx,
+                strategy_name=c_strat.name,
+                seed=c_pkg.generation_parameters.seed,
+                workflow_hash=c_wf_hash,
+                generation_parameters=c_pkg.generation_parameters,
+                qa_report=c_qa,
+                face_match=c_fm,
+                candidate_score=cand_score,
+                stage_durations_seconds=c_durations,
+                output_path=str(cand_saved_path if MODULE7_SAVE_CANDIDATES else c_path),
+            )
+            cand_manifest_entries.append(entry)
 
         shutil.rmtree(cand_work_dir, ignore_errors=True)
 
@@ -983,9 +1086,10 @@ class ImageGeneratorPipeline:
             candidate_index=winner_idx,
         )
 
-        wf_hash = built_wf.workflow_hash
+        winner_item = next(c for c in candidate_results if c[0] == winner_idx)
+        winner_wf_hash = winner_item[6]
         gen_hash = generation_hash(
-            wf_hash,
+            winner_wf_hash,
             pkg_hash,
             None,
             [],
@@ -1000,15 +1104,15 @@ class ImageGeneratorPipeline:
             video_id=video_id,
             status="success",
             generated_asset=asset,
-            workflow_version=built_wf.workflow_ref.workflow_version,
-            workflow_hash=wf_hash,
+            workflow_version=MODULE7_WORKFLOW_VERSION,
+            workflow_hash=winner_wf_hash,
             prompt_package_hash=pkg_hash,
             generation_hash=gen_hash,
             profile_name=profile.name,
             seed=base_seed,
             candidate_scores=candidate_scores,
             selected_candidate_index=winner_idx,
-            retry_count=0,
+            retry_count=total_identity_retries,
             stage_durations_seconds=stage_durations,
             duration_seconds=total_duration,
             generated_at=utc_now(),
@@ -1016,12 +1120,36 @@ class ImageGeneratorPipeline:
 
         self.artifact_writer.write_manifest(result)
 
+        cand_manifest = CandidateManifest(
+            video_id=video_id,
+            entries=cand_manifest_entries,
+            winning_candidate_index=winner_idx,
+            strategy_pack_name=pack_name,
+            generated_at=utc_now(),
+        )
+        self.artifact_writer.write_candidate_manifest(cand_manifest)
+
+        run_metadata = GenerationRunMetadata(
+            video_id=video_id,
+            profile_name=profile.name,
+            workflow_version=result.workflow_version,
+            workflow_hash=winner_wf_hash,
+            conditioning_asset_hashes={},
+            model_versions={"checkpoint": profile.checkpoint, "sampler": profile.sampler},
+            num_candidates_requested=num_candidates,
+            num_candidates_completed=len(candidate_results),
+            total_duration_seconds=total_duration,
+            parallel_generation_used=MODULE7_PARALLEL_CANDIDATES,
+            retry_summary={"identity_retries": total_identity_retries},
+        )
+        self.artifact_writer.write_generation_metadata(run_metadata)
+
         metrics = GenerationMetrics(
             video_id=video_id,
             niche=niche,
             profile_name=profile.name,
-            workflow_version=built_wf.workflow_ref.workflow_version,
-            workflow_hash=wf_hash,
+            workflow_version=result.workflow_version,
+            workflow_hash=winner_wf_hash,
             generation_hash=gen_hash,
             num_candidates_requested=num_candidates,
             total_duration_seconds=total_duration,
@@ -1033,6 +1161,123 @@ class ImageGeneratorPipeline:
         logger.info("Pipeline completed successfully for video_id={vid}: asset={path}", vid=video_id, path=final_target)
         return result
 
+    def _process_single_candidate(
+        self,
+        cand_idx: int,
+        strategy: CandidateStrategy,
+        package: PromptPackage,
+        design_blueprint: DesignBlueprint | None,
+        profile: GenerationProfile,
+        niche: str,
+        video_id: str,
+        num_candidates: int,
+        references: ReferenceAssets,
+        conditioning_ctx: GenerationConditioningContext,
+        generation_plan: GenerationPlan | None,
+        client_obj: Any,
+        cand_work_dir: Path,
+        wf_cache: WorkflowGraphCache,
+    ) -> tuple[int, Path, QualityAssuranceReport, FaceMatchResult, CandidateStrategy, PromptPackage, str, dict[str, float], int]:
+        cand_stage_durations: dict[str, float] = {}
+        cand_package = self.strategy_planner.derive_package(
+            package, design_blueprint, strategy, cand_idx
+        )
+        workflow_ref = self.workflow_library.resolve(niche, profile)
+        built_wf = self.workflow_builder.build(
+            cand_package,
+            profile,
+            workflow_ref,
+            reference_assets=references,
+            library=self.workflow_library,
+            conditioning=conditioning_ctx,
+            plan=generation_plan,
+            cache=wf_cache,
+        )
+
+        t0 = time.monotonic()
+        try:
+            raw_output = client_obj.generate(
+                built_wf,
+                video_id=video_id,
+                num_candidates_requested=num_candidates,
+            )
+        except VRAMExhaustedError:
+            logger.warning("VRAMExhaustedError encountered during generation for video_id={vid}; attempting profile fallback", vid=video_id)
+            fallback_profile = self.profile_selector.select(profile.expected_vram_gb - 1.0, MODULE7_PROFILE)
+            workflow_ref = self.workflow_library.resolve(niche, fallback_profile)
+            built_wf = self.workflow_builder.build(
+                cand_package,
+                fallback_profile,
+                workflow_ref,
+                reference_assets=references,
+                library=self.workflow_library,
+                conditioning=conditioning_ctx,
+                plan=generation_plan,
+                cache=wf_cache,
+            )
+            raw_output = client_obj.generate(
+                built_wf,
+                video_id=video_id,
+                num_candidates_requested=num_candidates,
+            )
+
+        cand_stage_durations["comfyui_generate"] = time.monotonic() - t0
+
+        raw_path = cand_work_dir / f"cand_{cand_idx}_raw.png"
+        raw_path.write_bytes(raw_output.content)
+
+        t0 = time.monotonic()
+        face_match = self.identity_stage.verify(raw_path, references)
+        identity_retries = 0
+        curr_path = raw_path
+
+        while not face_match.passed and not face_match.skipped and identity_retries < MAX_IDENTITY_RETRIES:
+            identity_retries += 1
+            logger.warning(
+                "Identity check failed for candidate idx={idx} (attempt {attempt}/{max_retries}); retrying with incremented seed",
+                idx=cand_idx, attempt=identity_retries, max_retries=MAX_IDENTITY_RETRIES
+            )
+            retry_seed = cand_package.generation_parameters.seed + identity_retries * 1000
+            retry_pkg = cand_package.model_copy(
+                update={"generation_parameters": cand_package.generation_parameters.model_copy(update={"seed": retry_seed})}
+            )
+            retry_wf = self.workflow_builder.build(retry_pkg, profile, workflow_ref, reference_assets=references, library=self.workflow_library, conditioning=conditioning_ctx, cache=wf_cache)
+            retry_output = client_obj.generate(retry_wf, video_id=video_id, num_candidates_requested=num_candidates)
+            curr_path = cand_work_dir / f"cand_{cand_idx}_retry_{identity_retries}.png"
+            curr_path.write_bytes(retry_output.content)
+            face_match = self.identity_stage.verify(curr_path, references)
+
+        cand_stage_durations["identity_preservation"] = time.monotonic() - t0
+
+        t0 = time.monotonic()
+        restored_path = cand_work_dir / f"cand_{cand_idx}_restored.png"
+        self.restoration_stage.restore(curr_path, profile, output_path=restored_path)
+        cand_stage_durations["face_restoration"] = time.monotonic() - t0
+
+        t0 = time.monotonic()
+        comp_path = cand_work_dir / f"cand_{cand_idx}_comp.png"
+        self.background_compositor.composite(restored_path, references, package, output_path=comp_path)
+        cand_stage_durations["background_composition"] = time.monotonic() - t0
+
+        t0 = time.monotonic()
+        final_cand_path = cand_work_dir / f"cand_{cand_idx}_final.png"
+        self.upscale_stage.upscale(
+            comp_path,
+            profile,
+            target_width=package.generation_parameters.width,
+            target_height=package.generation_parameters.height,
+            upscale_requested=getattr(package.quality_parameters, "upscale_requested", True),
+            output_path=final_cand_path,
+        )
+        cand_stage_durations["upscale"] = time.monotonic() - t0
+
+        t0 = time.monotonic()
+        qa_report = self.qa_stage.evaluate(final_cand_path, package, face_match, references)
+        cand_stage_durations["quality_assurance"] = time.monotonic() - t0
+
+        return (cand_idx, final_cand_path, qa_report, face_match, strategy, cand_package, built_wf.workflow_hash, cand_stage_durations, identity_retries)
+
+
 
 def run_image_generation_pipeline(
     video_id: str,
@@ -1042,12 +1287,13 @@ def run_image_generation_pipeline(
     generation_bundle: GenerationBundle | None = None,
     composition_workspace: CompositionWorkspace | None = None,
     generation_plan: GenerationPlan | None = None,
+    design_blueprint: DesignBlueprint | None = None,
     client: Any | None = None,
     thumbnail_dir: Path = DEFAULT_THUMBNAIL_DIR,
     analysis_dir: Path = DEFAULT_ANALYSIS_DIR,
     output_dir: Path = MODULE7_OUTPUT_DIR,
 ) -> Path:
-    """Top-level helper function to run Phase 3 image generation pipeline and return thumbnail path."""
+    """Top-level helper function to run Phase 4 image generation pipeline and return thumbnail path."""
     pipeline = ImageGeneratorPipeline(
         client=client,
         asset_resolver=ReferenceAssetResolver(thumbnail_dir=thumbnail_dir, analysis_dir=analysis_dir),
@@ -1061,10 +1307,12 @@ def run_image_generation_pipeline(
         generation_bundle=generation_bundle,
         composition_workspace=composition_workspace,
         generation_plan=generation_plan,
+        design_blueprint=design_blueprint,
     )
     if result.generated_asset is None:
         raise ArtifactWriteError(f"No asset produced for {video_id}")
     return Path(result.generated_asset.path)
+
 
 
 __all__ = [

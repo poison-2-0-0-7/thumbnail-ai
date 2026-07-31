@@ -1,0 +1,56 @@
+{
+  "name": "default_five",
+  "pack_version": "1.0.0",
+  "strategies": [
+    {
+      "name": "faithful",
+      "camera_distance_shift": 0,
+      "object_emphasis_bias": 0.0,
+      "background_intensity_bias": 0.0,
+      "color_grade_bias": 0.0,
+      "typography_weight_bias": 0.0,
+      "emotion_bias": 0.0,
+      "description": "Variant A — Faithful to base blueprint without perturbation."
+    },
+    {
+      "name": "higher_emotion",
+      "camera_distance_shift": 0,
+      "object_emphasis_bias": 0.0,
+      "background_intensity_bias": 0.0,
+      "color_grade_bias": 0.0,
+      "typography_weight_bias": 0.0,
+      "emotion_bias": 0.25,
+      "description": "Variant B — Higher emotion conveying amplified facial expression."
+    },
+    {
+      "name": "cleaner_composition",
+      "camera_distance_shift": 1,
+      "object_emphasis_bias": -0.15,
+      "background_intensity_bias": -0.2,
+      "color_grade_bias": 0.0,
+      "typography_weight_bias": 0.0,
+      "emotion_bias": 0.0,
+      "description": "Variant C — Cleaner composition with wider framing and simplified background."
+    },
+    {
+      "name": "higher_contrast",
+      "camera_distance_shift": 0,
+      "object_emphasis_bias": 0.0,
+      "background_intensity_bias": 0.0,
+      "color_grade_bias": 0.25,
+      "typography_weight_bias": 0.0,
+      "emotion_bias": 0.0,
+      "description": "Variant D — Higher contrast with boosted saturation and vibrancy."
+    },
+    {
+      "name": "aggressive_ctr",
+      "camera_distance_shift": 0,
+      "object_emphasis_bias": 0.2,
+      "background_intensity_bias": 0.0,
+      "color_grade_bias": 0.2,
+      "typography_weight_bias": 0.25,
+      "emotion_bias": 0.2,
+      "description": "Variant E — Aggressive CTR with prominent primary objects, punchy colors, and bold typography."
+    }
+  ]
+}

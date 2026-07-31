@@ -98,6 +98,15 @@ class WorkflowBuildError(Module7Error):
     """Raised when a template cannot be deterministically materialized."""
 
 
+class StrategyPackError(Module7Error):
+    """Raised for malformed, missing, or invalid strategy pack definitions."""
+
+
+class CandidateGenerationTimeoutError(Module7Error):
+    """Raised when an individual candidate generation exceeds its timeout deadline."""
+
+
+
 class ArtifactWriteError(Module7Error):
     """Raised when a Module 7 manifest cannot be atomically persisted."""
 

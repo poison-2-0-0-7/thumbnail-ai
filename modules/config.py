@@ -435,6 +435,18 @@ MODULE7_IPADAPTER_WEIGHT_DEFAULT: float = 0.6
 MODULE7_CAPABILITY_PROBE_ENABLED: bool = True
 MODULE7_CAPABILITY_PROBE_CACHE_SECONDS: float = 300.0
 
+# --- Phase 4 Multi-Candidate Generation ---
+MODULE7_MAX_CANDIDATES: int = 1
+MODULE7_STRATEGY_PACK: Optional[str] = None
+MODULE7_STRATEGY_PACK_DIR: Path = PROJECT_ROOT / "data" / "strategy_packs"
+MODULE7_PARALLEL_CANDIDATES: bool = False
+MODULE7_MAX_PARALLEL_CANDIDATES: int = 2
+MODULE7_CANDIDATE_VRAM_BUDGET_GB: Optional[float] = None
+MODULE7_CANDIDATE_TIMEOUT_SECONDS: float = COMFYUI_EXECUTION_TIMEOUT_SECONDS
+MODULE7_CANDIDATE_RETRY_ATTEMPTS: int = 0
+MODULE7_WORKFLOW_GRAPH_CACHE_ENABLED: bool = True
+
+
 
 # ---------------------------------------------------------------------------
 # Module 6.5 - Visual Reference Engine

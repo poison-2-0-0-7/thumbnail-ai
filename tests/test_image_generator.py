@@ -321,3 +321,95 @@ def test_select_fragments_multi_object(tmp_path: Path):
     assert "multi_object_reference" in fragments
 
 
+def test_multi_candidate_generation_with_strategy_pack(tmp_path: Path, monkeypatch):
+    from models import DesignBlueprint, TextPlacement, CandidateManifest, GenerationRunMetadata
+
+    pkg_dir = tmp_path / "prompt_packages"
+    thumb_dir = tmp_path / "thumbnails"
+    analysis_dir = tmp_path / "analysis"
+    out_dir = tmp_path / "generated_thumbnails"
+    pkg_dir.mkdir()
+    thumb_dir.mkdir()
+    analysis_dir.mkdir()
+
+    monkeypatch.setattr("modules.image_generator.MODULE7_MAX_CANDIDATES", 3)
+    monkeypatch.setattr("modules.image_generator.MODULE7_STRATEGY_PACK", "default_five")
+
+    from models import GenerationParameters
+    pkg = _package().model_copy(
+        update={
+            "generation_parameters": GenerationParameters(
+                seed=123,
+                num_candidates=3,
+                strategy_pack="default_five",
+            )
+        }
+    )
+
+    (pkg_dir / f"{VIDEO_ID}.json").write_text(pkg.model_dump_json(), encoding="utf-8")
+    ref_img = _create_test_image(thumb_dir / f"{VIDEO_ID}.jpg")
+    mock_png_bytes = ref_img.read_bytes()
+
+    class MockClient:
+        def generate(self, built_wf, video_id, num_candidates_requested=1, **kwargs):
+            from comfyui_client import _OutputResult
+            return _OutputResult(
+                prompt_id="mock-prompt-id", output_node_id="7", filename="output.png",
+                subfolder="", image_type="output", format="png", content=mock_png_bytes,
+                width=1280, height=720,
+            )
+
+    blueprint = DesignBlueprint(
+        video_id=VIDEO_ID,
+        headline="TEST HEADLINE",
+        headline_score=0.95,
+        hook_type="curiosity",
+        emotion="excited",
+        face_strategy="smile",
+        background_strategy="blur",
+        text_position=TextPlacement(include_text=True),
+        camera_distance="medium",
+        lighting="bright",
+        duration_seconds=0.1,
+        generated_at="2026-08-01T00:00:00Z",
+    )
+
+    pipeline = ImageGeneratorPipeline(
+        client=MockClient(),
+        package_loader=PromptPackageLoader(pkg_dir),
+        asset_resolver=ReferenceAssetResolver(thumb_dir, analysis_dir),
+        artifact_writer=ArtifactWriter(out_dir),
+    )
+
+    result = pipeline.run(
+        VIDEO_ID,
+        niche="gaming",
+        prompt_package=pkg,
+        design_blueprint=blueprint,
+    )
+
+    assert result.status == "success"
+    assert result.generated_asset is not None
+
+    cand_manifest_path = out_dir / VIDEO_ID / "candidate_manifest.json"
+    gen_meta_path = out_dir / VIDEO_ID / "generation_metadata.json"
+
+    assert cand_manifest_path.is_file()
+    assert gen_meta_path.is_file()
+
+    cand_manifest = CandidateManifest.model_validate_json(cand_manifest_path.read_text(encoding="utf-8"))
+    assert len(cand_manifest.entries) == 3
+    assert cand_manifest.entries[0].strategy_name == "faithful"
+    assert cand_manifest.entries[1].strategy_name == "higher_emotion"
+    assert cand_manifest.entries[2].strategy_name == "cleaner_composition"
+
+    # Verify seeds differ sequentially
+    seeds = [e.seed for e in cand_manifest.entries]
+    assert len(set(seeds)) == 3
+
+    gen_meta = GenerationRunMetadata.model_validate_json(gen_meta_path.read_text(encoding="utf-8"))
+    assert gen_meta.num_candidates_requested == 3
+    assert gen_meta.num_candidates_completed == 3
+
+
+

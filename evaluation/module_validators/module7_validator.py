@@ -66,6 +66,25 @@ class Module7Validator(IModuleValidator):
                 elif img_path.stat().st_size == 0:
                     invariants_failed.append("generated_image_non_empty")
 
+            cand_manifest_path = artifact_path.parent / "candidate_manifest.json"
+            if cand_manifest_path.is_file():
+                invariants_checked.append("candidate_manifest_valid")
+                try:
+                    from modules.models import CandidateManifest
+                    CandidateManifest.model_validate_json(cand_manifest_path.read_text(encoding="utf-8"))
+                except Exception:
+                    invariants_failed.append("candidate_manifest_valid")
+
+            gen_meta_path = artifact_path.parent / "generation_metadata.json"
+            if gen_meta_path.is_file():
+                invariants_checked.append("generation_metadata_valid")
+                try:
+                    from modules.models import GenerationRunMetadata
+                    GenerationRunMetadata.model_validate_json(gen_meta_path.read_text(encoding="utf-8"))
+                except Exception:
+                    invariants_failed.append("generation_metadata_valid")
+
+
             status = "success" if not invariants_failed else "partial"
             return ModuleValidationResult(
                 video_id=video_id,
