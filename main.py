@@ -46,6 +46,9 @@ from pathlib import Path
 
 # ---------------------------------------------------------------------------
 # Ensure modules/ is importable regardless of working directory
+
+# ---------------------------------------------------------------------------
+# Ensure modules/ is importable regardless of working directory
 # ---------------------------------------------------------------------------
 
 _MODULES_DIR: Path = Path(__file__).resolve().parent / "modules"
@@ -63,6 +66,7 @@ from config import (  # noqa: E402
     MODULE7_GENERATION_PROFILES,
     MODULE7_OUTPUT_DIR,
     MODULE7_PROFILE,
+    THUMBNAIL_PLANNER_ENABLED,
 )
 from csv_reader import load_all_creators  # noqa: E402
 from comfyui_client import ComfyUIClient  # noqa: E402
@@ -81,6 +85,7 @@ from image_generator import (  # noqa: E402
 from models import (  # noqa: E402
     GeneratedAsset,
     GenerationBundle,
+    GenerationPlan,
     ImageGenerationResult,
     PromptPackage,
     ThumbnailData,
@@ -112,13 +117,11 @@ from prompt_compiler import (  # noqa: E402
 )
 from composition_engine import AssetComposer  # noqa: E402
 from composition_exceptions import CompositionBaseError  # noqa: E402
+from thumbnail_planner import ThumbnailPlanner  # noqa: E402
+from thumbnail_planner_exceptions import ThumbnailPlannerError  # noqa: E402
 from workflow_library import WorkflowLibrary  # noqa: E402
 from youtube_metadata import process_video  # noqa: E402
 
-
-# ---------------------------------------------------------------------------
-# Pipeline
-# ---------------------------------------------------------------------------
 
 
 def run_pipeline(
@@ -325,14 +328,42 @@ def run_pipeline(
             vid=metadata.video_id,
         )
 
+        # ── Module 10.5: plan generation ────────────────────────────────
+        generation_plan: GenerationPlan | None = None
+        if THUMBNAIL_PLANNER_ENABLED:
+            try:
+                generation_plan = ThumbnailPlanner().plan(prompt_package.video_id)
+            except ThumbnailPlannerError as exc:
+                logger.error(
+                    "Thumbnail planner failed for creator_email={email} "
+                    "video_id={vid}: {exc}",
+                    email=creator.email,
+                    vid=metadata.video_id,
+                    exc=exc,
+                )
+                skipped += 1
+                continue
+
+            logger.info(
+                "Thumbnail plan created for creator_email={email} video_id={vid}",
+                email=creator.email,
+                vid=metadata.video_id,
+            )
+
         # ── Module 7: generate final thumbnail ─────────────────────────────
         try:
+            m7_kwargs = {
+                "metadata": metadata,
+                "thumbnail_dir": thumbnail_dir,
+                "analysis_dir": analysis_dir,
+                "generation_bundle": generation_bundle,
+            }
+            if generation_plan is not None:
+                m7_kwargs["generation_plan"] = generation_plan
+
             generated_path = _run_module7_generation(
                 prompt_package,
-                metadata=metadata,
-                thumbnail_dir=thumbnail_dir,
-                analysis_dir=analysis_dir,
-                generation_bundle=generation_bundle,
+                **m7_kwargs,
             )
 
         except Module7Error as exc:
@@ -375,6 +406,7 @@ def _run_module7_generation(
     thumbnail_dir: Path,
     analysis_dir: Path,
     generation_bundle: GenerationBundle | None = None,
+    generation_plan: GenerationPlan | None = None,
 ) -> Path:
 
     """Build the existing Module 7 inputs, generate one image, and persist it."""
@@ -387,6 +419,7 @@ def _run_module7_generation(
         available_vram_gb=profile.expected_vram_gb,
         prompt_package=prompt_package,
         generation_bundle=generation_bundle,
+        generation_plan=generation_plan,
         client=client,
         thumbnail_dir=thumbnail_dir,
         analysis_dir=analysis_dir,

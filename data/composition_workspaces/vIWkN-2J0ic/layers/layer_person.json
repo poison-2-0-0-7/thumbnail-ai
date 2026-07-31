@@ -1,0 +1,25 @@
+{
+  "layer_id": "layer_person",
+  "placement": {
+    "asset_id": "person",
+    "role": "person",
+    "decision": "enhance",
+    "source_path": null,
+    "mask": null,
+    "transform": {
+      "translate_x": 369,
+      "translate_y": 89,
+      "scale_x": 1.15,
+      "scale_y": 1.15,
+      "crop_box": {
+        "x": 369,
+        "y": 89,
+        "width": 256,
+        "height": 203
+      }
+    },
+    "z_index": 10,
+    "rationale": "Largest detected face selected; crop tighter because subject area is below the minimum."
+  },
+  "depth_hint_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\visual_references\\vIWkN-2J0ic\\depth_map.png"
+}

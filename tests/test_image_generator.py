@@ -302,3 +302,22 @@ def test_golden_regression_workflow_hash_unchanged_when_conditioning_none(tmp_pa
         assert isinstance(built_wf_1.graph, dict)
         assert len(built_wf_1.graph) > 0
 
+
+def test_select_fragments_multi_object(tmp_path: Path):
+    from generation_components.conditioning_asset_resolver import GenerationConditioningContext
+    builder = WorkflowBuilder()
+    profile = ProfileSelector().select(8.0, "PROFILE_STANDARD")
+    f_obj1 = tmp_path / "mic.png"
+    f_obj2 = tmp_path / "laptop.png"
+
+    ctx = GenerationConditioningContext(
+        role_image_paths={
+            "object_0_mic": f_obj1,
+            "object_1_laptop": f_obj2,
+        }
+    )
+
+    fragments = builder._select_fragments(profile, ctx)
+    assert "multi_object_reference" in fragments
+
+

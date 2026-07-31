@@ -1,0 +1,10 @@
+{
+  "video_id": "O0Y-oLarao4",
+  "created_at": "2026-07-30T14:16:22.191074+00:00",
+  "vre_source_hash": "c7b650037eebe2b1a62c0c0a7f24ce2c1cbec13ac4b2be04a243dbe35aa9fff0",
+  "redesign_spec_hash": "7e9795b7b9ef5b1e9e8bf0a2a0a3b47f9322f2a57f1574a847822a5c0d3085b1",
+  "prompt_package_hash": "8a278c6519c0861ff46c6c54ee0595be97a5cbbf5a7f972dd9bb613326717840",
+  "engine_version": "1.0.0",
+  "validated": true,
+  "layers_written": true
+}

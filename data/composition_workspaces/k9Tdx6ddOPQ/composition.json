@@ -1,0 +1,189 @@
+{
+  "video_id": "k9Tdx6ddOPQ",
+  "canvas": {
+    "width": 1280,
+    "height": 720,
+    "aspect_ratio": "16:9"
+  },
+  "layers": [
+    {
+      "layer_id": "layer_background",
+      "placement": {
+        "asset_id": "background",
+        "role": "background",
+        "decision": "replace",
+        "source_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\visual_references\\k9Tdx6ddOPQ\\background.png",
+        "mask": null,
+        "transform": {
+          "translate_x": 0,
+          "translate_y": 0,
+          "scale_x": 1.0,
+          "scale_y": 1.0,
+          "crop_box": null
+        },
+        "z_index": 0,
+        "rationale": "Real background pixels are replaced by AI-generated background while structure is preserved via conditioning maps."
+      },
+      "depth_hint_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\visual_references\\k9Tdx6ddOPQ\\depth_map.png"
+    },
+    {
+      "layer_id": "layer_person",
+      "placement": {
+        "asset_id": "person",
+        "role": "person",
+        "decision": "enhance",
+        "source_path": null,
+        "mask": null,
+        "transform": {
+          "translate_x": 574,
+          "translate_y": 20,
+          "scale_x": 1.15,
+          "scale_y": 1.15,
+          "crop_box": {
+            "x": 574,
+            "y": 20,
+            "width": 200,
+            "height": 266
+          }
+        },
+        "z_index": 10,
+        "rationale": "Largest detected face selected; crop tighter because subject area is below the minimum."
+      },
+      "depth_hint_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\visual_references\\k9Tdx6ddOPQ\\depth_map.png"
+    },
+    {
+      "layer_id": "layer_object_0_person",
+      "placement": {
+        "asset_id": "object_0_person",
+        "role": "object",
+        "decision": "keep",
+        "source_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\visual_references\\k9Tdx6ddOPQ\\object_crop.png",
+        "mask": {
+          "mask_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\visual_references\\k9Tdx6ddOPQ\\object_mask.png",
+          "mask_checksum": "41e3cd35286e95707aeaa66ba4a46e37e1e12f7338275bc5c538a080c37b40dc",
+          "feather_px": 0,
+          "source": "vre"
+        },
+        "transform": {
+          "translate_x": 0,
+          "translate_y": 0,
+          "scale_x": 1.0,
+          "scale_y": 1.0,
+          "crop_box": null
+        },
+        "z_index": 20,
+        "rationale": "Clutter is within the acceptable range; preserve detected objects."
+      },
+      "depth_hint_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\visual_references\\k9Tdx6ddOPQ\\depth_map.png"
+    },
+    {
+      "layer_id": "layer_text",
+      "placement": {
+        "asset_id": "text",
+        "role": "text",
+        "decision": "add",
+        "source_path": null,
+        "mask": null,
+        "transform": {
+          "translate_x": 0,
+          "translate_y": 0,
+          "scale_x": 1.0,
+          "scale_y": 1.0,
+          "crop_box": null
+        },
+        "z_index": 30,
+        "rationale": "Existing OCR text is preserved as placement-only guidance."
+      },
+      "depth_hint_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\visual_references\\k9Tdx6ddOPQ\\depth_map.png"
+    }
+  ],
+  "groups": [
+    {
+      "group_id": "group_background",
+      "role": "background",
+      "layer_ids": [
+        "layer_background"
+      ]
+    },
+    {
+      "group_id": "group_person",
+      "role": "person",
+      "layer_ids": [
+        "layer_person"
+      ]
+    },
+    {
+      "group_id": "group_object",
+      "role": "object",
+      "layer_ids": [
+        "layer_object_0_person"
+      ]
+    },
+    {
+      "group_id": "group_text",
+      "role": "text",
+      "layer_ids": [
+        "layer_text"
+      ]
+    }
+  ],
+  "text_placement": {
+    "include_text": true,
+    "placement_zone_px": {
+      "x": 542,
+      "y": 576,
+      "width": 208,
+      "height": 104
+    },
+    "avoid_zones_px": [
+      {
+        "x": 574,
+        "y": 20,
+        "width": 200,
+        "height": 266
+      }
+    ]
+  },
+  "lighting": {
+    "target_brightness": 0.35,
+    "target_contrast": 0.43745872378349304,
+    "target_saturation": 0.3,
+    "warm_or_cool": "warm"
+  },
+  "constraints": {
+    "safe_margin_px": 24,
+    "avoid_zones_px": [
+      {
+        "x": 574,
+        "y": 20,
+        "width": 200,
+        "height": 266
+      }
+    ],
+    "focal_zone_px": {
+      "x": 574,
+      "y": 20,
+      "width": 200,
+      "height": 266
+    }
+  },
+  "statistics": {
+    "total_layers": 4,
+    "kept": 1,
+    "removed": 0,
+    "replaced": 1,
+    "enhanced": 1,
+    "added": 1
+  },
+  "metadata": {
+    "video_id": "k9Tdx6ddOPQ",
+    "created_at": "2026-07-30T14:17:37.832463+00:00",
+    "vre_source_hash": "69b222967a7d999d0c486109fd8e6ad659a19cfcc3dc1c701f8060acb849e8f3",
+    "redesign_spec_hash": "b8c34694e618f7796e278186ce31103399a69c24812d7f5383099d3339680f00",
+    "prompt_package_hash": "b5af38a71ae8e80b989fd709b3b36bdd9f8dca7ba237edc920be5855f30a6c22",
+    "engine_version": "1.0.0"
+  },
+  "status": "success",
+  "error_message": null,
+  "duration_seconds": 0.26454380000041056
+}

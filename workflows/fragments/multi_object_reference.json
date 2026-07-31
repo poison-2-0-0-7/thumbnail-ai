@@ -1,0 +1,35 @@
+{
+  "_meta": {
+    "name": "multi_object_reference",
+    "description": "Multi-object reference image conditioning fragment using IP-Adapter",
+    "required_node_types": ["LoadImage", "IPAdapterModelLoader", "IPAdapterApply"]
+  },
+  "_attach": {
+    "point": "model",
+    "output_node": "30",
+    "output_slot": 0
+  },
+  "graph": {
+    "10": {
+      "class_type": "LoadImage",
+      "inputs": {
+        "image": "{{foreground_image_path}}"
+      }
+    },
+    "20": {
+      "class_type": "IPAdapterModelLoader",
+      "inputs": {
+        "ipadapter_file": "ipadapter_sdxl.safetensors"
+      }
+    },
+    "30": {
+      "class_type": "IPAdapterApply",
+      "inputs": {
+        "model": ["ATTACHMENT_PREVIOUS", 0],
+        "ipadapter": ["20", 0],
+        "image": ["10", 0],
+        "weight": "{{ipadapter_weight}}"
+      }
+    }
+  }
+}

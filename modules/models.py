@@ -1421,6 +1421,7 @@ class CompositionLayer(BaseModel):
     layer_id: str
     placement: AssetPlacement
     depth_hint_path: Optional[str] = None
+    canny_hint_path: Optional[str] = None
 
     @field_validator("layer_id")
     @classmethod
@@ -1652,6 +1653,116 @@ class BenchmarkRecord(BaseModel):
     peak_vram_mb: Optional[float] = None
     profile_name: Optional[str] = None
     workflow_version: Optional[str] = None
+
+
+# ---------------------------------------------------------------------------
+# Module 10.5 — Thumbnail Planner Models
+# ---------------------------------------------------------------------------
+
+
+class HeadlineSource(str, Enum):
+    """Source provenance for thumbnail headline text."""
+
+    PRESERVED_OCR = "preserved_ocr"
+    NONE = "none"
+    GENERATED = "generated"  # Reserved for future LLM copy-gen extension
+
+
+class FaceStrategy(str, Enum):
+    """Strategy for creator face treatment in generated thumbnail."""
+
+    NONE = "none"
+    PRESERVE_AS_IS = "preserve_as_is"
+    ENHANCE_EXISTING = "enhance_existing"
+    PRESERVE_AS_IS_IDENTITY_LOCKED = "preserve_as_is_identity_locked"
+    ENHANCE_EXISTING_IDENTITY_LOCKED = "enhance_existing_identity_locked"
+
+
+class BackgroundStrategy(str, Enum):
+    """Strategy for background generation and controlnet guidance."""
+
+    STRUCTURE_GUIDED_REPLACE = "structure_guided_replace"
+    UNGUIDED_REPLACE = "unguided_replace"
+    KEEP = "keep"
+
+
+class PlanConditioningAsset(BaseModel):
+    """A single conditioning asset entry in a GenerationPlan."""
+
+    model_config = ConfigDict(frozen=True)
+
+    role: str
+    asset_id: str
+    path: str
+    kind: Literal[
+        "reference_image",
+        "mask",
+        "depth",
+        "canny",
+        "segmentation",
+        "ip_adapter_reference",
+        "text_exclusion_mask",
+    ]
+    source_module: Literal["module8", "vre", "module10"]
+
+    @field_validator("role", "asset_id", "path")
+    @classmethod
+    def asset_text_fields_must_not_be_empty(cls, v: str) -> str:
+        if not v or not v.strip():
+            raise ValueError("PlanConditioningAsset text fields must not be empty")
+        return v.strip()
+
+
+class GenerationPlan(BaseModel):
+    """Deterministic, versioned generation plan artifact (Module 10.5)."""
+
+    model_config = ConfigDict(frozen=True)
+
+    video_id: str
+    headline: str
+    headline_source: HeadlineSource
+    headline_placement_zone: Optional[BoundingBox] = None
+    face_strategy: FaceStrategy
+    background_strategy: BackgroundStrategy
+    preserve_objects: list[str] = Field(default_factory=list)
+    composition_strategy: str
+    camera_distance: str
+    lighting: str
+    color_palette: list[str] = Field(default_factory=list)
+    negative_constraints: list[str] = Field(default_factory=list)
+    conditioning_assets: list[PlanConditioningAsset] = Field(default_factory=list)
+    decision_manifest_hash: Optional[str] = None
+    asset_extraction_manifest_hash: Optional[str] = None
+    prompt_package_hash: str
+    workspace_hash: str
+    status: Literal["success", "partial", "error"] = "success"
+    partial_failure_reasons: list[str] = Field(default_factory=list)
+    engine_version: str
+    generated_at: str
+
+    @field_validator("video_id", "engine_version", "generated_at")
+    @classmethod
+    def text_fields_must_not_be_empty(cls, v: str) -> str:
+        if not v or not v.strip():
+            raise ValueError("GenerationPlan text fields must not be empty")
+        return v.strip()
+
+    @field_validator("prompt_package_hash", "workspace_hash")
+    @classmethod
+    def hashes_must_be_sha256(cls, v: str) -> str:
+        if len(v) != 64 or any(char not in "0123456789abcdef" for char in v.lower()):
+            raise ValueError("hashes must be SHA-256 hex digests")
+        return v.lower()
+
+    @field_validator("decision_manifest_hash", "asset_extraction_manifest_hash")
+    @classmethod
+    def optional_hashes_must_be_sha256(cls, v: Optional[str]) -> Optional[str]:
+        if v is None:
+            return None
+        if len(v) != 64 or any(char not in "0123456789abcdef" for char in v.lower()):
+            raise ValueError("optional hashes must be SHA-256 hex digests")
+        return v.lower()
+
 
 
 

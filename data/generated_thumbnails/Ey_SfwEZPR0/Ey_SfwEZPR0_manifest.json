@@ -1,0 +1,46 @@
+{
+  "video_id": "Ey_SfwEZPR0",
+  "status": "success",
+  "error_message": null,
+  "generated_asset": {
+    "path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\generated_thumbnails\\Ey_SfwEZPR0\\Ey_SfwEZPR0.png",
+    "width": 1280,
+    "height": 720,
+    "sha256": "8a44f89aa40233f58de7dfbe19984ab25d323f832e00a4a400a6c56ae9d4e95d",
+    "candidate_index": 0
+  },
+  "workflow_version": "workflow_v1",
+  "workflow_hash": "1a7917c4ae2e881d7d77fb94b82253b3ef42de0158f49cbaaec43c9e0ece9349",
+  "prompt_package_hash": "0b87ca17f66cf2f6f2d609852e441d5c5951d8380c6bbe5b74b431c2de902a49",
+  "generation_hash": "686d1772035cf1a25dc4e04c0353afbead6e968dc0ec29403b994a89a9a6f3b9",
+  "profile_name": "PROFILE_LOW_VRAM",
+  "checkpoint_hash": null,
+  "lora_hashes": [],
+  "controlnet_hashes": [],
+  "ipadapter_hash": null,
+  "restoration_model_hashes": [],
+  "upscaler_hash": null,
+  "seed": 2473700443,
+  "candidate_scores": [
+    {
+      "candidate_index": 0,
+      "overall_score": 0.9586587282165141,
+      "identity_similarity": 1.0,
+      "hard_gate_passed": true,
+      "rank": 1,
+      "selected": true
+    }
+  ],
+  "selected_candidate_index": 0,
+  "retry_count": 0,
+  "stage_durations_seconds": {
+    "comfyui_generate": 59.504767999999785,
+    "identity_preservation": 0.012657899999794608,
+    "face_restoration": 0.1628009999999449,
+    "background_composition": 0.13601070000004256,
+    "upscale": 0.13382929999988846,
+    "quality_assurance": 0.07482540000000881
+  },
+  "duration_seconds": 60.078376599999956,
+  "generated_at": "2026-07-30T14:12:34.357919+00:00"
+}

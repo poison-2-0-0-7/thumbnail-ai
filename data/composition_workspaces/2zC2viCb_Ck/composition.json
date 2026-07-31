@@ -1,0 +1,273 @@
+{
+  "video_id": "2zC2viCb_Ck",
+  "canvas": {
+    "width": 1280,
+    "height": 720,
+    "aspect_ratio": "16:9"
+  },
+  "layers": [
+    {
+      "layer_id": "layer_background",
+      "placement": {
+        "asset_id": "background",
+        "role": "background",
+        "decision": "replace",
+        "source_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\visual_references\\2zC2viCb_Ck\\background.png",
+        "mask": null,
+        "transform": {
+          "translate_x": 0,
+          "translate_y": 0,
+          "scale_x": 1.0,
+          "scale_y": 1.0,
+          "crop_box": null
+        },
+        "z_index": 0,
+        "rationale": "Real background pixels are replaced by AI-generated background while structure is preserved via conditioning maps."
+      },
+      "depth_hint_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\visual_references\\2zC2viCb_Ck\\depth_map.png"
+    },
+    {
+      "layer_id": "layer_person",
+      "placement": {
+        "asset_id": "person",
+        "role": "person",
+        "decision": "enhance",
+        "source_path": null,
+        "mask": null,
+        "transform": {
+          "translate_x": 490,
+          "translate_y": 366,
+          "scale_x": 1.15,
+          "scale_y": 1.15,
+          "crop_box": {
+            "x": 490,
+            "y": 366,
+            "width": 93,
+            "height": 89
+          }
+        },
+        "z_index": 10,
+        "rationale": "Largest detected face selected; crop tighter because subject area is below the minimum."
+      },
+      "depth_hint_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\visual_references\\2zC2viCb_Ck\\depth_map.png"
+    },
+    {
+      "layer_id": "layer_object_0_person",
+      "placement": {
+        "asset_id": "object_0_person",
+        "role": "object",
+        "decision": "remove",
+        "source_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\visual_references\\2zC2viCb_Ck\\object_crop.png",
+        "mask": {
+          "mask_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\visual_references\\2zC2viCb_Ck\\object_mask.png",
+          "mask_checksum": "d073e2a2853536ebb10afce5a3034e4f91b335d30b78422b08ce1820e28fc11a",
+          "feather_px": 0,
+          "source": "vre"
+        },
+        "transform": {
+          "translate_x": 0,
+          "translate_y": 0,
+          "scale_x": 1.0,
+          "scale_y": 1.0,
+          "crop_box": null
+        },
+        "z_index": 20,
+        "rationale": "High clutter requires simplifying detected objects."
+      },
+      "depth_hint_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\visual_references\\2zC2viCb_Ck\\depth_map.png"
+    },
+    {
+      "layer_id": "layer_object_1_person",
+      "placement": {
+        "asset_id": "object_1_person",
+        "role": "object",
+        "decision": "remove",
+        "source_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\visual_references\\2zC2viCb_Ck\\object_crop.png",
+        "mask": {
+          "mask_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\visual_references\\2zC2viCb_Ck\\object_mask.png",
+          "mask_checksum": "d073e2a2853536ebb10afce5a3034e4f91b335d30b78422b08ce1820e28fc11a",
+          "feather_px": 0,
+          "source": "vre"
+        },
+        "transform": {
+          "translate_x": 0,
+          "translate_y": 0,
+          "scale_x": 1.0,
+          "scale_y": 1.0,
+          "crop_box": null
+        },
+        "z_index": 20,
+        "rationale": "High clutter requires simplifying detected objects."
+      },
+      "depth_hint_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\visual_references\\2zC2viCb_Ck\\depth_map.png"
+    },
+    {
+      "layer_id": "layer_object_2_person",
+      "placement": {
+        "asset_id": "object_2_person",
+        "role": "object",
+        "decision": "remove",
+        "source_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\visual_references\\2zC2viCb_Ck\\object_crop.png",
+        "mask": {
+          "mask_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\visual_references\\2zC2viCb_Ck\\object_mask.png",
+          "mask_checksum": "d073e2a2853536ebb10afce5a3034e4f91b335d30b78422b08ce1820e28fc11a",
+          "feather_px": 0,
+          "source": "vre"
+        },
+        "transform": {
+          "translate_x": 0,
+          "translate_y": 0,
+          "scale_x": 1.0,
+          "scale_y": 1.0,
+          "crop_box": null
+        },
+        "z_index": 20,
+        "rationale": "High clutter requires simplifying detected objects."
+      },
+      "depth_hint_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\visual_references\\2zC2viCb_Ck\\depth_map.png"
+    },
+    {
+      "layer_id": "layer_object_3_person",
+      "placement": {
+        "asset_id": "object_3_person",
+        "role": "object",
+        "decision": "remove",
+        "source_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\visual_references\\2zC2viCb_Ck\\object_crop.png",
+        "mask": {
+          "mask_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\visual_references\\2zC2viCb_Ck\\object_mask.png",
+          "mask_checksum": "d073e2a2853536ebb10afce5a3034e4f91b335d30b78422b08ce1820e28fc11a",
+          "feather_px": 0,
+          "source": "vre"
+        },
+        "transform": {
+          "translate_x": 0,
+          "translate_y": 0,
+          "scale_x": 1.0,
+          "scale_y": 1.0,
+          "crop_box": null
+        },
+        "z_index": 20,
+        "rationale": "High clutter requires simplifying detected objects."
+      },
+      "depth_hint_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\visual_references\\2zC2viCb_Ck\\depth_map.png"
+    },
+    {
+      "layer_id": "layer_object_4_person",
+      "placement": {
+        "asset_id": "object_4_person",
+        "role": "object",
+        "decision": "remove",
+        "source_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\visual_references\\2zC2viCb_Ck\\object_crop.png",
+        "mask": {
+          "mask_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\visual_references\\2zC2viCb_Ck\\object_mask.png",
+          "mask_checksum": "d073e2a2853536ebb10afce5a3034e4f91b335d30b78422b08ce1820e28fc11a",
+          "feather_px": 0,
+          "source": "vre"
+        },
+        "transform": {
+          "translate_x": 0,
+          "translate_y": 0,
+          "scale_x": 1.0,
+          "scale_y": 1.0,
+          "crop_box": null
+        },
+        "z_index": 20,
+        "rationale": "High clutter requires simplifying detected objects."
+      },
+      "depth_hint_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\visual_references\\2zC2viCb_Ck\\depth_map.png"
+    },
+    {
+      "layer_id": "layer_object_5_person",
+      "placement": {
+        "asset_id": "object_5_person",
+        "role": "object",
+        "decision": "remove",
+        "source_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\visual_references\\2zC2viCb_Ck\\object_crop.png",
+        "mask": {
+          "mask_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\visual_references\\2zC2viCb_Ck\\object_mask.png",
+          "mask_checksum": "d073e2a2853536ebb10afce5a3034e4f91b335d30b78422b08ce1820e28fc11a",
+          "feather_px": 0,
+          "source": "vre"
+        },
+        "transform": {
+          "translate_x": 0,
+          "translate_y": 0,
+          "scale_x": 1.0,
+          "scale_y": 1.0,
+          "crop_box": null
+        },
+        "z_index": 20,
+        "rationale": "High clutter requires simplifying detected objects."
+      },
+      "depth_hint_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\visual_references\\2zC2viCb_Ck\\depth_map.png"
+    }
+  ],
+  "groups": [
+    {
+      "group_id": "group_background",
+      "role": "background",
+      "layer_ids": [
+        "layer_background"
+      ]
+    },
+    {
+      "group_id": "group_person",
+      "role": "person",
+      "layer_ids": [
+        "layer_person"
+      ]
+    },
+    {
+      "group_id": "group_object",
+      "role": "object",
+      "layer_ids": [
+        "layer_object_0_person",
+        "layer_object_1_person",
+        "layer_object_2_person",
+        "layer_object_3_person",
+        "layer_object_4_person",
+        "layer_object_5_person"
+      ]
+    }
+  ],
+  "text_placement": {
+    "include_text": false,
+    "placement_zone_px": null,
+    "avoid_zones_px": []
+  },
+  "lighting": {
+    "target_brightness": 0.35072845220565796,
+    "target_contrast": 0.5683448910713196,
+    "target_saturation": 0.3,
+    "warm_or_cool": "neutral"
+  },
+  "constraints": {
+    "safe_margin_px": 24,
+    "avoid_zones_px": [],
+    "focal_zone_px": {
+      "x": 490,
+      "y": 366,
+      "width": 93,
+      "height": 89
+    }
+  },
+  "statistics": {
+    "total_layers": 8,
+    "kept": 0,
+    "removed": 6,
+    "replaced": 1,
+    "enhanced": 1,
+    "added": 0
+  },
+  "metadata": {
+    "video_id": "2zC2viCb_Ck",
+    "created_at": "2026-07-30T14:13:28.420727+00:00",
+    "vre_source_hash": "c036d91b1223d482161907d1e64a2008363b2788ef5962cbd916a43c598c9169",
+    "redesign_spec_hash": "dc693f4d3d70a02e9a070a0f92016c5a929c537e7221a5bde31479d4299c31d7",
+    "prompt_package_hash": "e632833775ce2d586d3ee501f45147a774b333d35819092415db580f6ca3fa31",
+    "engine_version": "1.0.0"
+  },
+  "status": "success",
+  "error_message": null,
+  "duration_seconds": 0.3366158000003452
+}

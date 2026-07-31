@@ -33,7 +33,7 @@ from config import (
 from models import (
     CandidateScore, FaceMatchResult, GeneratedAsset, GenerationMetrics,
     GenerationProfile, ImageGenerationResult, PromptPackage, QualityAssuranceReport,
-    WorkflowTemplateRef, CompositionWorkspace, GenerationBundle,
+    WorkflowTemplateRef, CompositionWorkspace, GenerationBundle, GenerationPlan,
 )
 from generation_components import (
     ConditioningAssetResolver,
@@ -222,11 +222,12 @@ class WorkflowBuilder:
         reference_assets: ReferenceAssets | None = None,
         library: WorkflowLibrary | None = None,
         conditioning: GenerationConditioningContext | None = None,
+        plan: GenerationPlan | None = None,
     ) -> BuiltWorkflow:
         """Fill named template slots and return the exact graph plus its hash."""
         source = library or WorkflowLibrary(Path(workflow_ref.template_path).parent)
         template = source.load(Path(workflow_ref.template_path))
-        slots = self._slots(package, profile, reference_assets, conditioning)
+        slots = self._slots(package, profile, reference_assets, conditioning, plan)
         try:
             base_graph = self._substitute(template["graph"], slots)
         except KeyError as exc:
@@ -274,6 +275,8 @@ class WorkflowBuilder:
             fragments.append("controlnet_segmentation")
         if profile.ipadapter_enabled and conditioning.ip_adapter_reference_paths:
             fragments.append("ipadapter_reference")
+        if profile.ipadapter_enabled and len(conditioning.role_image_paths) > 1 and any(k.startswith("object_") for k in conditioning.role_image_paths):
+            fragments.append("multi_object_reference")
         if conditioning.text_exclusion_mask_path is not None:
             fragments.append("text_exclusion_mask")
         if conditioning.per_layer and any(layer.mask_path is not None for layer in conditioning.per_layer.values()):
@@ -286,11 +289,23 @@ class WorkflowBuilder:
         profile: GenerationProfile,
         references: ReferenceAssets | None,
         conditioning: GenerationConditioningContext | None = None,
+        plan: GenerationPlan | None = None,
     ) -> dict[str, Any]:
         positive = " ".join((package.positive_prompt, package.subject_instructions,
                              package.lighting_instructions, package.color_instructions))
-        negative = ", ".join((package.negative_prompt, *package.rendering_constraints,
-                              *package.safety_constraints))
+        
+        neg_parts = [package.negative_prompt, *package.rendering_constraints, *package.safety_constraints]
+        if plan and plan.negative_constraints:
+            for nc in plan.negative_constraints:
+                if nc not in neg_parts:
+                    neg_parts.append(nc)
+        negative = ", ".join(neg_parts)
+
+        headline_text = plan.headline if plan else ""
+        headline_zone_x = plan.headline_placement_zone.x_min if (plan and plan.headline_placement_zone) else 0
+        headline_zone_y = plan.headline_placement_zone.y_min if (plan and plan.headline_placement_zone) else 0
+        headline_zone_w = plan.headline_placement_zone.width if (plan and plan.headline_placement_zone) else 0
+        headline_zone_h = plan.headline_placement_zone.height if (plan and plan.headline_placement_zone) else 0
 
         thumb_path = ""
         if conditioning and conditioning.source_thumbnail_path:
@@ -321,6 +336,11 @@ class WorkflowBuilder:
             "controlnet_canny_strength": 0.45,
             "controlnet_segmentation_strength": 0.5,
             "ipadapter_weight": 0.6,
+            "headline_text": headline_text,
+            "headline_zone_x": headline_zone_x,
+            "headline_zone_y": headline_zone_y,
+            "headline_zone_w": headline_zone_w,
+            "headline_zone_h": headline_zone_h,
         }
 
 
@@ -812,6 +832,7 @@ class ImageGeneratorPipeline:
         prompt_package: PromptPackage | None = None,
         generation_bundle: GenerationBundle | None = None,
         composition_workspace: CompositionWorkspace | None = None,
+        generation_plan: GenerationPlan | None = None,
     ) -> ImageGenerationResult:
         start_time = time.monotonic()
         package = prompt_package or self.package_loader.load(video_id)
@@ -824,6 +845,7 @@ class ImageGeneratorPipeline:
             workspace=composition_workspace,
             reference_assets=references,
             profile=profile,
+            plan=generation_plan,
         )
 
         num_candidates = getattr(package.generation_parameters, "num_candidates", 1)
@@ -847,7 +869,7 @@ class ImageGeneratorPipeline:
             )
             workflow_ref = self.workflow_library.resolve(niche, profile)
             built_wf = self.workflow_builder.build(
-                cand_package, profile, workflow_ref, reference_assets=references, library=self.workflow_library, conditioning=conditioning_ctx
+                cand_package, profile, workflow_ref, reference_assets=references, library=self.workflow_library, conditioning=conditioning_ctx, plan=generation_plan
             )
 
             # Step A: ComfyUI generate with VRAM fallback ladder
@@ -862,7 +884,7 @@ class ImageGeneratorPipeline:
                 logger.warning("VRAMExhaustedError encountered during generation for video_id={vid}; attempting profile fallback", vid=video_id)
                 fallback_profile = self.profile_selector.select(profile.expected_vram_gb - 1.0, MODULE7_PROFILE)
                 workflow_ref = self.workflow_library.resolve(niche, fallback_profile)
-                built_wf = self.workflow_builder.build(cand_package, fallback_profile, workflow_ref, reference_assets=references, library=self.workflow_library, conditioning=conditioning_ctx)
+                built_wf = self.workflow_builder.build(cand_package, fallback_profile, workflow_ref, reference_assets=references, library=self.workflow_library, conditioning=conditioning_ctx, plan=generation_plan)
                 raw_output = client_obj.generate(
                     built_wf,
                     video_id=video_id,
@@ -1019,6 +1041,7 @@ def run_image_generation_pipeline(
     prompt_package: PromptPackage | None = None,
     generation_bundle: GenerationBundle | None = None,
     composition_workspace: CompositionWorkspace | None = None,
+    generation_plan: GenerationPlan | None = None,
     client: Any | None = None,
     thumbnail_dir: Path = DEFAULT_THUMBNAIL_DIR,
     analysis_dir: Path = DEFAULT_ANALYSIS_DIR,
@@ -1037,6 +1060,7 @@ def run_image_generation_pipeline(
         prompt_package=prompt_package,
         generation_bundle=generation_bundle,
         composition_workspace=composition_workspace,
+        generation_plan=generation_plan,
     )
     if result.generated_asset is None:
         raise ArtifactWriteError(f"No asset produced for {video_id}")

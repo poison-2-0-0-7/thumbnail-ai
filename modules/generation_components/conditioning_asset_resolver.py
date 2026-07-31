@@ -16,7 +16,7 @@ from composition_components.generation_bundle_builder import GenerationBundleBui
 from config import MODULE7_LOG_PATH
 from generation_components.interfaces import IConditioningAssetResolver
 from module7_exceptions import ConditioningResolutionError
-from models import CompositionWorkspace, GenerationBundle, GenerationProfile, LayerDecision
+from models import CompositionWorkspace, GenerationBundle, GenerationPlan, GenerationProfile, LayerDecision
 from loguru import logger
 
 if TYPE_CHECKING:
@@ -79,6 +79,7 @@ class ConditioningAssetResolver(IConditioningAssetResolver):
         workspace: CompositionWorkspace | None = None,
         reference_assets: ReferenceAssets | None = None,
         profile: GenerationProfile | None = None,
+        plan: GenerationPlan | None = None,
     ) -> GenerationConditioningContext:
         """
         Resolve all available inputs into a GenerationConditioningContext.
@@ -88,6 +89,7 @@ class ConditioningAssetResolver(IConditioningAssetResolver):
             workspace: Optional CompositionWorkspace instance.
             reference_assets: Optional legacy ReferenceAssets instance.
             profile: Optional GenerationProfile instance.
+            plan: Optional GenerationPlan instance.
 
         Returns:
             Resolved GenerationConditioningContext instance.
@@ -203,6 +205,26 @@ class ConditioningAssetResolver(IConditioningAssetResolver):
                     z_index=layer.placement.z_index,
                     crop_box=crop_box,
                 )
+
+        # 8. Cross-check and fold in GenerationPlan assets if provided
+        if plan is not None and plan.conditioning_assets:
+            for plan_asset in plan.conditioning_assets:
+                p = Path(plan_asset.path)
+                self._verify_file_exists(p, f"plan.conditioning_assets['{plan_asset.role}']")
+                if plan_asset.kind == "reference_image":
+                    role_image_paths[plan_asset.role] = p
+                elif plan_asset.kind == "mask":
+                    role_mask_paths[plan_asset.role] = p
+                elif plan_asset.kind == "depth":
+                    depth_path = p
+                elif plan_asset.kind == "canny":
+                    canny_path = p
+                elif plan_asset.kind == "segmentation":
+                    segmentation_path = p
+                elif plan_asset.kind == "ip_adapter_reference":
+                    ip_adapter_reference_paths[plan_asset.role] = p
+                elif plan_asset.kind == "text_exclusion_mask":
+                    text_exclusion_mask_path = p
 
         context = GenerationConditioningContext(
             source_thumbnail_path=source_thumbnail_path,

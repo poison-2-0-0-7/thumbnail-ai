@@ -47,6 +47,7 @@ from composition_exceptions import (
 )
 from config import (
     COMPOSITION_CACHE_ENABLED,
+    COMPOSITION_RESOLVE_CANNY_ASSET_KEY,
     COMPOSITION_SAFE_MARGIN_PX,
     COMPOSITION_WORKSPACE_ROOT,
     DEFAULT_PROMPT_PACKAGE_DIR,
@@ -221,6 +222,8 @@ class AssetComposer:
         layers: list[CompositionLayer] = []
         depth_asset = self._asset_registry.resolve("depth_map")
         depth_hint_path = depth_asset.file_path if depth_asset else None
+        canny_asset = self._asset_registry.resolve(COMPOSITION_RESOLVE_CANNY_ASSET_KEY)
+        canny_hint_path = canny_asset.file_path if canny_asset else None
 
         for element_key, role, decision, rationale in decisions:
             source_path = None
@@ -257,6 +260,7 @@ class AssetComposer:
                 layer_id=f"layer_{element_key}",
                 placement=placement,
                 depth_hint_path=depth_hint_path,
+                canny_hint_path=canny_hint_path,
             )
             layers.append(layer)
 

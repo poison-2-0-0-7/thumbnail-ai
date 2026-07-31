@@ -62,16 +62,16 @@
     }
   ],
   "elements_to_preserve": [
-    "Transformation journey text",
-    "Emotional impact through visuals",
-    "Clear and readable text"
+    "Positive facial expressions",
+    "Clear progression from MONTH 1 to MONTH 6",
+    "Engaging thumbnail layout"
   ],
-  "overall_rationale": "ctr_potential_score=8.20; curiosity_gap_score=7.50; content_mismatch_detected=False; rules applied: minimum_negative_space, crop_tighter.",
-  "source_ctr_potential_score": 8.2,
-  "source_curiosity_gap_score": 7.5,
+  "overall_rationale": "ctr_potential_score=0.75; curiosity_gap_score=0.85; content_mismatch_detected=False; rules applied: minimum_negative_space, crop_tighter.",
+  "source_ctr_potential_score": 0.75,
+  "source_curiosity_gap_score": 0.85,
   "source_content_mismatch_detected": false,
   "status": "success",
   "error_message": null,
-  "duration_seconds": 0.0005848000000696629,
-  "generated_at": "2026-07-29T18:33:45.751552+00:00"
+  "duration_seconds": 0.0002395999999862397,
+  "generated_at": "2026-07-30T14:09:33.423925+00:00"
 }

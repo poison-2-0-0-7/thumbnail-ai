@@ -134,3 +134,58 @@ def test_generation_bundle_builder_error_workspace(sample_workspace):
     builder = GenerationBundleBuilder()
     with pytest.raises(GenerationBundleError):
         builder.build_generation_bundle(err_workspace)
+
+
+def test_generation_bundle_builder_canny_path_populated(sample_workspace, tmp_path: Path):
+    f_canny = tmp_path / "canny.png"
+    f_canny.write_bytes(b"canny")
+
+    layers = list(sample_workspace.layers)
+    layers[0] = layers[0].model_copy(update={"canny_hint_path": str(f_canny)})
+    workspace = sample_workspace.model_copy(update={"layers": layers})
+
+    builder = GenerationBundleBuilder()
+    bundle = builder.build_generation_bundle(workspace)
+    assert bundle.canny_path == str(f_canny)
+
+
+def test_generation_bundle_builder_multi_object_preserves_distinct_keys(sample_workspace, tmp_path: Path):
+    f_obj1 = tmp_path / "mic.png"
+    f_obj1.write_bytes(b"mic")
+    f_obj2 = tmp_path / "laptop.png"
+    f_obj2.write_bytes(b"laptop")
+
+    l_obj1 = CompositionLayer(
+        layer_id="l_obj1",
+        placement=AssetPlacement(
+            asset_id="object_0_mic",
+            role=LayerRole.OBJECT,
+            decision=LayerDecision.KEEP,
+            source_path=str(f_obj1),
+            transform=LayerTransform(),
+            z_index=15,
+        ),
+    )
+    l_obj2 = CompositionLayer(
+        layer_id="l_obj2",
+        placement=AssetPlacement(
+            asset_id="object_1_laptop",
+            role=LayerRole.OBJECT,
+            decision=LayerDecision.KEEP,
+            source_path=str(f_obj2),
+            transform=LayerTransform(),
+            z_index=16,
+        ),
+    )
+
+    layers = list(sample_workspace.layers) + [l_obj1, l_obj2]
+    workspace = sample_workspace.model_copy(update={"layers": layers})
+
+    builder = GenerationBundleBuilder()
+    bundle = builder.build_generation_bundle(workspace)
+
+    assert "object_0_mic" in bundle.reference_image_paths
+    assert "object_1_laptop" in bundle.reference_image_paths
+    assert bundle.reference_image_paths["object_0_mic"] == str(f_obj1)
+    assert bundle.reference_image_paths["object_1_laptop"] == str(f_obj2)
+

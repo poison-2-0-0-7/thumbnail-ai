@@ -1,0 +1,10 @@
+{
+  "video_id": "I-bnBd5lCew",
+  "created_at": "2026-07-30T14:09:33.941314+00:00",
+  "vre_source_hash": "5ddd8f60de56950b9867f7cf78d029eacf50fdece74bca5c9d31fe7fc2297f7b",
+  "redesign_spec_hash": "caf555197b103f61e4f642b48ca0ea8b74a6dd4ac7f46b7d316ab7a0f258c0a1",
+  "prompt_package_hash": "71aee2648050b6cdd512c7d70ea4f2928492486cd9acbc9971e0c2ed8d0cb460",
+  "engine_version": "1.0.0",
+  "validated": true,
+  "layers_written": true
+}

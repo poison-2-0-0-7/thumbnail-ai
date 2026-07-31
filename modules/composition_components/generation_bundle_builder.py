@@ -13,7 +13,7 @@ from typing import Optional
 
 from composition_components.interfaces import IGenerationBundleBuilder
 from composition_exceptions import GenerationBundleError
-from models import CompositionWorkspace, GenerationBundle, LayerDecision
+from models import CompositionWorkspace, GenerationBundle, LayerDecision, LayerRole
 
 
 class GenerationBundleBuilder(IGenerationBundleBuilder):
@@ -48,7 +48,11 @@ class GenerationBundleBuilder(IGenerationBundleBuilder):
 
             # Exclude REMOVE layers from reference_image_paths per §11
             if layer.placement.decision != LayerDecision.REMOVE:
-                role_key = layer.placement.role.value
+                if layer.placement.role == LayerRole.OBJECT and layer.placement.asset_id:
+                    role_key = layer.placement.asset_id
+                else:
+                    role_key = layer.placement.role.value
+
                 if layer.placement.source_path:
                     ref_paths[role_key] = layer.placement.source_path
 
@@ -57,6 +61,9 @@ class GenerationBundleBuilder(IGenerationBundleBuilder):
 
             if layer.depth_hint_path and depth_path is None:
                 depth_path = layer.depth_hint_path
+
+            if layer.canny_hint_path and canny_path is None:
+                canny_path = layer.canny_hint_path
 
         # Compute workspace hash
         ws_json = workspace.model_dump_json(exclude_none=True).encode("utf-8")

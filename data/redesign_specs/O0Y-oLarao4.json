@@ -1,0 +1,64 @@
+{
+  "video_id": "O0Y-oLarao4",
+  "source_thumbnail_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\thumbnails\\O0Y-oLarao4.jpg",
+  "color_direction": {
+    "target_brightness": 0.457196980714798,
+    "target_contrast": 0.41664445400238037,
+    "target_saturation": 0.3786100745201111,
+    "warm_or_cool": "warm",
+    "rationale": "Color targets clamp source brightness, contrast, and saturation to their configured acceptable ranges."
+  },
+  "subject_treatment": {
+    "has_subject": false,
+    "target_bbox": null,
+    "target_position_label": "right-third",
+    "crop_tighter": false,
+    "rationale": "No detected face is available for subject treatment."
+  },
+  "text_overlay": {
+    "include_text": true,
+    "placement_zone": {
+      "x_min": 0.240625,
+      "y_min": 0.7208333333333333,
+      "x_max": 0.765625,
+      "y_max": 0.9583333333333334
+    },
+    "avoid_zones": [],
+    "rationale": "Existing OCR text is preserved as placement-only guidance."
+  },
+  "layout_direction": {
+    "target_negative_space_ratio": 0.25,
+    "target_clutter_score": 0.4,
+    "focal_zone": {
+      "x_min": 0.5083493232727051,
+      "y_min": 0.004598405626085069,
+      "x_max": 0.9874322891235352,
+      "y_max": 0.9751436869303386
+    },
+    "rationale": "Layout targets preserve source values. Negative space is raised to the configured minimum."
+  },
+  "object_directives": [
+    {
+      "label": "person",
+      "action": "preserve",
+      "rationale": "Clutter is within the acceptable range; preserve detected objects."
+    },
+    {
+      "label": "person",
+      "action": "preserve",
+      "rationale": "Clutter is within the acceptable range; preserve detected objects."
+    }
+  ],
+  "elements_to_preserve": [
+    "Bold text for clarity",
+    "Warm color palette for thematic consistency"
+  ],
+  "overall_rationale": "ctr_potential_score=0.85; curiosity_gap_score=0.75; content_mismatch_detected=False; rules applied: minimum_negative_space.",
+  "source_ctr_potential_score": 0.85,
+  "source_curiosity_gap_score": 0.75,
+  "source_content_mismatch_detected": false,
+  "status": "success",
+  "error_message": null,
+  "duration_seconds": 0.0000876999997672101,
+  "generated_at": "2026-07-30T14:16:21.950790+00:00"
+}

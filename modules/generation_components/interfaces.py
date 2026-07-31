@@ -12,7 +12,7 @@ from pathlib import Path
 from typing import Any, TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from models import CompositionWorkspace, GenerationBundle, GenerationProfile
+    from models import CompositionWorkspace, GenerationBundle, GenerationPlan, GenerationProfile
     from image_generator import ReferenceAssets
     from generation_components.conditioning_asset_resolver import GenerationConditioningContext
 
@@ -45,6 +45,7 @@ class IConditioningAssetResolver(ABC):
         workspace: CompositionWorkspace | None = None,
         reference_assets: ReferenceAssets | None = None,
         profile: GenerationProfile | None = None,
+        plan: GenerationPlan | None = None,
     ) -> GenerationConditioningContext:
         """Resolve all conditioning inputs into a unified value object."""
         ...

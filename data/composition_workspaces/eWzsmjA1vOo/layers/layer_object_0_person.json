@@ -1,0 +1,25 @@
+{
+  "layer_id": "layer_object_0_person",
+  "placement": {
+    "asset_id": "object_0_person",
+    "role": "object",
+    "decision": "remove",
+    "source_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\visual_references\\eWzsmjA1vOo\\object_crop.png",
+    "mask": {
+      "mask_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\visual_references\\eWzsmjA1vOo\\object_mask.png",
+      "mask_checksum": "46286191e9503a2704a1eb1d8dcfdc7819b2a9ad51e2e7eee2d5af99eb44e327",
+      "feather_px": 0,
+      "source": "vre"
+    },
+    "transform": {
+      "translate_x": 0,
+      "translate_y": 0,
+      "scale_x": 1.0,
+      "scale_y": 1.0,
+      "crop_box": null
+    },
+    "z_index": 20,
+    "rationale": "High clutter requires simplifying detected objects."
+  },
+  "depth_hint_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\visual_references\\eWzsmjA1vOo\\depth_map.png"
+}

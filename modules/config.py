@@ -519,6 +519,22 @@ COMPOSITION_SAFE_MARGIN_PX: int = 24
 COMPOSITION_TEXT_FEATHER_PX: int = 6
 COMPOSITION_MANIFEST_FILENAME: str = "workspace_manifest.json"
 MODULE7_COMPOSITION_WORKSPACE_ROOT: Path = COMPOSITION_WORKSPACE_ROOT
+COMPOSITION_RESOLVE_CANNY_ASSET_KEY: str = "canny_map"
+
+# ---------------------------------------------------------------------------
+# Module 10.5 — Thumbnail Planner
+# ---------------------------------------------------------------------------
+
+THUMBNAIL_PLANNER_ENABLED: bool = False
+
+MODULE10_5_LOG_PATH: Path = LOG_DIR / "module10_5.log"
+DEFAULT_GENERATION_PLAN_DIR: Path = PROJECT_ROOT / "data" / "generation_plans"
+GENERATION_PLAN_FILENAME: str = "generation_plan.json"
+PLANNER_ENGINE_VERSION: str = "1.0.0"
+PLANNER_CACHE_ENABLED: bool = True
+
+ASSET_EXTRACTION_ENGINE_ENABLED: bool = False
+DECISION_ENGINE_ENABLED: bool = False
 
 # ---------------------------------------------------------------------------
 

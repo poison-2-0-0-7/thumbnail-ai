@@ -1,0 +1,72 @@
+{
+  "video_id": "k9Tdx6ddOPQ",
+  "source_thumbnail_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\thumbnails\\k9Tdx6ddOPQ.jpg",
+  "color_direction": {
+    "target_brightness": 0.35,
+    "target_contrast": 0.43745872378349304,
+    "target_saturation": 0.3,
+    "warm_or_cool": "warm",
+    "rationale": "Color targets clamp source brightness, contrast, and saturation to their configured acceptable ranges."
+  },
+  "subject_treatment": {
+    "has_subject": true,
+    "target_bbox": {
+      "x_min": 0.44817614555358887,
+      "y_min": 0.02840311262342665,
+      "x_max": 0.6047355651855468,
+      "y_max": 0.3979814741346571
+    },
+    "target_position_label": "center",
+    "crop_tighter": true,
+    "rationale": "Largest detected face selected; crop tighter because subject area is below the minimum."
+  },
+  "text_overlay": {
+    "include_text": true,
+    "placement_zone": {
+      "x_min": 0.4234375,
+      "y_min": 0.8,
+      "x_max": 0.5859375,
+      "y_max": 0.9444444444444444
+    },
+    "avoid_zones": [
+      {
+        "x_min": 0.44817614555358887,
+        "y_min": 0.02840311262342665,
+        "x_max": 0.6047355651855468,
+        "y_max": 0.3979814741346571
+      }
+    ],
+    "rationale": "Existing OCR text is preserved as placement-only guidance."
+  },
+  "layout_direction": {
+    "target_negative_space_ratio": 0.3418226809636944,
+    "target_clutter_score": 0.3,
+    "focal_zone": {
+      "x_min": 0.44817614555358887,
+      "y_min": 0.02840311262342665,
+      "x_max": 0.6047355651855468,
+      "y_max": 0.3979814741346571
+    },
+    "rationale": "Layout targets preserve source values."
+  },
+  "object_directives": [
+    {
+      "label": "person",
+      "action": "preserve",
+      "rationale": "Clutter is within the acceptable range; preserve detected objects."
+    }
+  ],
+  "elements_to_preserve": [
+    "Happy emotion",
+    "Warm color palette",
+    "Centered subject placement"
+  ],
+  "overall_rationale": "ctr_potential_score=0.75; curiosity_gap_score=0.65; content_mismatch_detected=False; rules applied: crop_tighter.",
+  "source_ctr_potential_score": 0.75,
+  "source_curiosity_gap_score": 0.65,
+  "source_content_mismatch_detected": false,
+  "status": "success",
+  "error_message": null,
+  "duration_seconds": 0.00009450000015931437,
+  "generated_at": "2026-07-30T14:17:37.552532+00:00"
+}

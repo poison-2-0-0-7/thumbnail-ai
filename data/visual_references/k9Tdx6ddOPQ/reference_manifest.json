@@ -1,0 +1,92 @@
+{
+  "video_id": "k9Tdx6ddOPQ",
+  "source_image_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\thumbnails\\k9Tdx6ddOPQ.jpg",
+  "source_hash": "69b222967a7d999d0c486109fd8e6ad659a19cfcc3dc1c701f8060acb849e8f3",
+  "created_at": "2026-07-30T14:17:37.724192+00:00",
+  "assets": {
+    "creator_face": null,
+    "face_mask": null,
+    "object_crop": {
+      "asset_type": "object_crop",
+      "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\visual_references\\k9Tdx6ddOPQ\\object_crop.png",
+      "checksum": "93582d0fb74e0c472ac78d617ccb9040c0493a4d5bff7cb128c687c131d0934c",
+      "resolution": [
+        1280,
+        720
+      ],
+      "confidence_score": 0.915
+    },
+    "object_mask": {
+      "asset_type": "object_mask",
+      "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\visual_references\\k9Tdx6ddOPQ\\object_mask.png",
+      "checksum": "41e3cd35286e95707aeaa66ba4a46e37e1e12f7338275bc5c538a080c37b40dc",
+      "resolution": [
+        1280,
+        720
+      ],
+      "confidence_score": 0.915
+    },
+    "foreground": {
+      "asset_type": "foreground",
+      "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\visual_references\\k9Tdx6ddOPQ\\foreground.png",
+      "checksum": "01edc515aef846e0db12abbbdf1b114800af75c4ca425327a75a2d60e9dbb9dc",
+      "resolution": [
+        1280,
+        720
+      ],
+      "confidence_score": 0.95
+    },
+    "background": {
+      "asset_type": "background",
+      "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\visual_references\\k9Tdx6ddOPQ\\background.png",
+      "checksum": "108c08ac8a16b55363bc00cf68a021c576d4436ff149d473b01e0befe3d49f9a",
+      "resolution": [
+        1280,
+        720
+      ],
+      "confidence_score": 0.95
+    },
+    "depth_map": {
+      "asset_type": "depth_map",
+      "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\visual_references\\k9Tdx6ddOPQ\\depth_map.png",
+      "checksum": "8a61dc2108c22a4885fcb3298df953ab7695931d0bbc850f51906cc5423b3a7d",
+      "resolution": [
+        1280,
+        720
+      ],
+      "confidence_score": null
+    },
+    "canny_map": {
+      "asset_type": "canny_map",
+      "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\visual_references\\k9Tdx6ddOPQ\\canny_map.png",
+      "checksum": "f68a2ce948f85942b3b37387fcf409857dfd64e203ccd139cf843dbc727e7fd6",
+      "resolution": [
+        1280,
+        720
+      ],
+      "confidence_score": null
+    }
+  },
+  "processing_metadata": {
+    "engine_version": "1.0.0",
+    "total_duration_ms": 136,
+    "processors_executed": [
+      "FaceProcessor",
+      "SegmentationProcessor",
+      "TopologyProcessor"
+    ],
+    "cached_hit": false,
+    "confidence_scores": {
+      "foreground": 0.95,
+      "background": 0.95,
+      "object_crop": 0.915,
+      "object_mask": 0.915,
+      "depth_map": null,
+      "canny_map": null
+    },
+    "face_metadata": {
+      "face_detected": false,
+      "confidence": null
+    }
+  }
+}

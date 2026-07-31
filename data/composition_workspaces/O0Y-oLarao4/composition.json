@@ -1,0 +1,169 @@
+{
+  "video_id": "O0Y-oLarao4",
+  "canvas": {
+    "width": 1280,
+    "height": 720,
+    "aspect_ratio": "16:9"
+  },
+  "layers": [
+    {
+      "layer_id": "layer_background",
+      "placement": {
+        "asset_id": "background",
+        "role": "background",
+        "decision": "replace",
+        "source_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\visual_references\\O0Y-oLarao4\\background.png",
+        "mask": null,
+        "transform": {
+          "translate_x": 0,
+          "translate_y": 0,
+          "scale_x": 1.0,
+          "scale_y": 1.0,
+          "crop_box": null
+        },
+        "z_index": 0,
+        "rationale": "Real background pixels are replaced by AI-generated background while structure is preserved via conditioning maps."
+      },
+      "depth_hint_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\visual_references\\O0Y-oLarao4\\depth_map.png"
+    },
+    {
+      "layer_id": "layer_object_0_person",
+      "placement": {
+        "asset_id": "object_0_person",
+        "role": "object",
+        "decision": "keep",
+        "source_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\visual_references\\O0Y-oLarao4\\object_crop.png",
+        "mask": {
+          "mask_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\visual_references\\O0Y-oLarao4\\object_mask.png",
+          "mask_checksum": "c69780bc79a6cb38d3bf4a87e6c96df369925f637375b7a574b1de302f570a1b",
+          "feather_px": 0,
+          "source": "vre"
+        },
+        "transform": {
+          "translate_x": 0,
+          "translate_y": 0,
+          "scale_x": 1.0,
+          "scale_y": 1.0,
+          "crop_box": null
+        },
+        "z_index": 20,
+        "rationale": "Clutter is within the acceptable range; preserve detected objects."
+      },
+      "depth_hint_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\visual_references\\O0Y-oLarao4\\depth_map.png"
+    },
+    {
+      "layer_id": "layer_object_1_person",
+      "placement": {
+        "asset_id": "object_1_person",
+        "role": "object",
+        "decision": "keep",
+        "source_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\visual_references\\O0Y-oLarao4\\object_crop.png",
+        "mask": {
+          "mask_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\visual_references\\O0Y-oLarao4\\object_mask.png",
+          "mask_checksum": "c69780bc79a6cb38d3bf4a87e6c96df369925f637375b7a574b1de302f570a1b",
+          "feather_px": 0,
+          "source": "vre"
+        },
+        "transform": {
+          "translate_x": 0,
+          "translate_y": 0,
+          "scale_x": 1.0,
+          "scale_y": 1.0,
+          "crop_box": null
+        },
+        "z_index": 20,
+        "rationale": "Clutter is within the acceptable range; preserve detected objects."
+      },
+      "depth_hint_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\visual_references\\O0Y-oLarao4\\depth_map.png"
+    },
+    {
+      "layer_id": "layer_text",
+      "placement": {
+        "asset_id": "text",
+        "role": "text",
+        "decision": "add",
+        "source_path": null,
+        "mask": null,
+        "transform": {
+          "translate_x": 0,
+          "translate_y": 0,
+          "scale_x": 1.0,
+          "scale_y": 1.0,
+          "crop_box": null
+        },
+        "z_index": 30,
+        "rationale": "Existing OCR text is preserved as placement-only guidance."
+      },
+      "depth_hint_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\visual_references\\O0Y-oLarao4\\depth_map.png"
+    }
+  ],
+  "groups": [
+    {
+      "group_id": "group_background",
+      "role": "background",
+      "layer_ids": [
+        "layer_background"
+      ]
+    },
+    {
+      "group_id": "group_object",
+      "role": "object",
+      "layer_ids": [
+        "layer_object_0_person",
+        "layer_object_1_person"
+      ]
+    },
+    {
+      "group_id": "group_text",
+      "role": "text",
+      "layer_ids": [
+        "layer_text"
+      ]
+    }
+  ],
+  "text_placement": {
+    "include_text": true,
+    "placement_zone_px": {
+      "x": 308,
+      "y": 519,
+      "width": 672,
+      "height": 171
+    },
+    "avoid_zones_px": []
+  },
+  "lighting": {
+    "target_brightness": 0.457196980714798,
+    "target_contrast": 0.41664445400238037,
+    "target_saturation": 0.3786100745201111,
+    "warm_or_cool": "warm"
+  },
+  "constraints": {
+    "safe_margin_px": 24,
+    "avoid_zones_px": [],
+    "focal_zone_px": {
+      "x": 651,
+      "y": 3,
+      "width": 613,
+      "height": 699
+    }
+  },
+  "statistics": {
+    "total_layers": 4,
+    "kept": 2,
+    "removed": 0,
+    "replaced": 1,
+    "enhanced": 0,
+    "added": 1
+  },
+  "metadata": {
+    "video_id": "O0Y-oLarao4",
+    "created_at": "2026-07-30T14:16:22.191074+00:00",
+    "vre_source_hash": "c7b650037eebe2b1a62c0c0a7f24ce2c1cbec13ac4b2be04a243dbe35aa9fff0",
+    "redesign_spec_hash": "7e9795b7b9ef5b1e9e8bf0a2a0a3b47f9322f2a57f1574a847822a5c0d3085b1",
+    "prompt_package_hash": "8a278c6519c0861ff46c6c54ee0595be97a5cbbf5a7f972dd9bb613326717840",
+    "engine_version": "1.0.0"
+  },
+  "status": "success",
+  "error_message": null,
+  "duration_seconds": 0.22501999999985856
+}

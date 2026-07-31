@@ -1,0 +1,18 @@
+{
+  "metadata": {
+    "video_id": "Ey_SfwEZPR0",
+    "created_at": "2026-07-30T14:11:34.248538+00:00",
+    "vre_source_hash": "5f3cb77e0b5b9ac436b4c65f032fc45690311e693bf55a03965a35ab539ec3a0",
+    "redesign_spec_hash": "14f98be872b7b99f7d6bb2cab96799181332dc80910ab9e2f081dd93a441ac98",
+    "prompt_package_hash": "7163f07c0ca9eb59cbac46367963a2ad4e5a1073612032d953da7d7bce7e6fa9",
+    "engine_version": "1.0.0"
+  },
+  "statistics": {
+    "total_layers": 5,
+    "kept": 3,
+    "removed": 0,
+    "replaced": 1,
+    "enhanced": 1,
+    "added": 0
+  }
+}
