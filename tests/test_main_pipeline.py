@@ -57,6 +57,7 @@ def test_run_pipeline_invokes_module7_after_prompt_package(monkeypatch: pytest.M
     order: list[str] = []
     creator = SimpleNamespace(email="creator@example.com", video_url="https://youtu.be/abcdEFGH123")
 
+    monkeypatch.setattr(main.ComfyUIProcessManager, "ensure_started", lambda self: True)
     monkeypatch.setattr(main, "load_all_creators", lambda csv_path: [creator])
     monkeypatch.setattr(main, "process_video", lambda creator, enable_oembed_fallback: _metadata())
     monkeypatch.setattr(
@@ -123,6 +124,7 @@ def test_run_pipeline_treats_module7_error_as_per_creator_failure(
     tmp_path: Path,
 ) -> None:
     creator = SimpleNamespace(email="creator@example.com", video_url="https://youtu.be/abcdEFGH123")
+    monkeypatch.setattr(main.ComfyUIProcessManager, "ensure_started", lambda self: True)
     monkeypatch.setattr(main, "load_all_creators", lambda csv_path: [creator])
     monkeypatch.setattr(main, "process_video", lambda creator, enable_oembed_fallback: _metadata())
     monkeypatch.setattr(

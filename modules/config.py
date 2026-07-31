@@ -17,6 +17,8 @@ testable and loosely coupled.
 
 from __future__ import annotations
 
+import os
+import sys
 from pathlib import Path
 
 from models import GenerationProfile
@@ -365,9 +367,45 @@ MODULE55_HEADLINE_SCORE_WEIGHTS: dict[str, float] = {
 # Module 7 — Local Image Generation Engine
 # ---------------------------------------------------------------------------
 
-COMFYUI_HOST: str = "127.0.0.1"
-COMFYUI_PORT: int = 8188
-COMFYUI_STARTUP_TIMEOUT_SECONDS: float = 60.0
+COMFYUI_ENABLED: bool = os.getenv("COMFYUI_ENABLED", "true").lower() in ("true", "1", "yes")
+COMFYUI_HOST: str = os.getenv("COMFYUI_HOST", "127.0.0.1")
+COMFYUI_PORT: int = int(os.getenv("COMFYUI_PORT", "8188"))
+_DEFAULT_COMFYUI_DIR = Path("D:/Afsar/app development/ComfyUI/ComfyUI")
+COMFYUI_WORKING_DIRECTORY: Path | None = (
+    Path(os.getenv("COMFYUI_WORKING_DIRECTORY")).resolve()
+    if os.getenv("COMFYUI_WORKING_DIRECTORY")
+    else (_DEFAULT_COMFYUI_DIR.resolve() if _DEFAULT_COMFYUI_DIR.exists() else None)
+)
+
+_env_exe = os.getenv("COMFYUI_EXECUTABLE")
+if _env_exe:
+    _exe_p = Path(_env_exe)
+    if not _exe_p.is_absolute() and COMFYUI_WORKING_DIRECTORY:
+        _exe_p = (COMFYUI_WORKING_DIRECTORY / _exe_p).resolve()
+    COMFYUI_EXECUTABLE: str | None = str(_exe_p)
+elif COMFYUI_WORKING_DIRECTORY:
+    _dot_venv_exe = (COMFYUI_WORKING_DIRECTORY / ".venv" / "Scripts" / "python.exe").resolve()
+    _venv_exe = (COMFYUI_WORKING_DIRECTORY / "venv" / "Scripts" / "python.exe").resolve()
+    if _dot_venv_exe.exists():
+        COMFYUI_EXECUTABLE = str(_dot_venv_exe)
+    elif _venv_exe.exists():
+        COMFYUI_EXECUTABLE = str(_venv_exe)
+    else:
+        COMFYUI_EXECUTABLE = str(_dot_venv_exe)
+else:
+    COMFYUI_EXECUTABLE = str(Path(".venv/Scripts/python.exe").resolve())
+
+COMFYUI_START_COMMAND: str = os.getenv(
+    "COMFYUI_START_COMMAND",
+    f'"{COMFYUI_EXECUTABLE}" main.py'
+)
+COMFYUI_STARTUP_TIMEOUT: float = float(
+    os.getenv("COMFYUI_STARTUP_TIMEOUT", os.getenv("COMFYUI_STARTUP_TIMEOUT_SECONDS", "120.0"))
+)
+COMFYUI_STARTUP_TIMEOUT_SECONDS: float = COMFYUI_STARTUP_TIMEOUT
+COMFYUI_HEALTHCHECK_INTERVAL: float = float(os.getenv("COMFYUI_HEALTHCHECK_INTERVAL", "1.0"))
+COMFYUI_SHUTDOWN_ON_EXIT: bool = os.getenv("COMFYUI_SHUTDOWN_ON_EXIT", "false").lower() in ("true", "1", "yes")
+COMFYUI_PROCESS_LOG_PATH: Path = LOG_DIR / "comfyui_process.log"
 COMFYUI_REQUEST_TIMEOUT_SECONDS: float = 120.0
 COMFYUI_WS_PATH: str = "/ws"
 COMFYUI_CONNECT_RETRY_ATTEMPTS: int = 3

@@ -58,6 +58,8 @@ if str(_MODULES_DIR) not in sys.path:
 from loguru import logger  # noqa: E402
 
 from config import (  # noqa: E402
+    COMFYUI_HOST,
+    COMFYUI_PORT,
     DEFAULT_ANALYSIS_DIR,
     DEFAULT_CSV_PATH,
     DEFAULT_DESIGN_BLUEPRINT_DIR,
@@ -71,6 +73,7 @@ from config import (  # noqa: E402
 )
 from csv_reader import load_all_creators  # noqa: E402
 from comfyui_client import ComfyUIClient  # noqa: E402
+from comfyui_manager import ComfyUIProcessManager  # noqa: E402
 from image_generator import (  # noqa: E402
     ArtifactWriteError,
     ArtifactWriter,
@@ -93,7 +96,7 @@ from models import (  # noqa: E402
     VideoMetadata,
 )
 
-from module7_exceptions import Module7Error  # noqa: E402
+from module7_exceptions import ComfyUIStartupError, Module7Error  # noqa: E402
 from thumbnail_downloader import (  # noqa: E402
     ThumbnailDownloaderError,
     process_thumbnail,
@@ -138,6 +141,7 @@ def run_pipeline(
     redesign_spec_dir: Path = DEFAULT_REDESIGN_SPEC_DIR,
     design_blueprint_dir: Path = DEFAULT_DESIGN_BLUEPRINT_DIR,
     prompt_package_dir: Path = DEFAULT_PROMPT_PACKAGE_DIR,
+    comfyui_manager: ComfyUIProcessManager | None = None,
 ) -> None:
     """
     Execute the full four-module pipeline for every creator in ``csv_path``.
@@ -154,12 +158,47 @@ def run_pipeline(
         redesign_spec_dir: Directory where deterministic Module 5
                            redesign specifications are saved.
         design_blueprint_dir: Directory where deterministic Module 5.5
-                              design blueprints are saved.
+                               design blueprints are saved.
         prompt_package_dir: Directory where deterministic Module 6
                             prompt packages are saved.
+        comfyui_manager: Optional ComfyUI Process Manager instance.
     """
     logger.info("Pipeline starting — CSV: {csv}", csv=csv_path)
 
+    # ── ComfyUI Process Management ───────────────────────────────────────
+    manager = comfyui_manager if comfyui_manager is not None else ComfyUIProcessManager()
+    logger.info("Checking ComfyUI service status...")
+    try:
+        manager.ensure_started()
+    except ComfyUIStartupError as exc:
+        logger.error("Pipeline initialization failed — ComfyUI startup error: {exc}", exc=exc)
+        print(f"\nPipeline execution aborted: ComfyUI startup failed: {exc}")
+        return
+
+    try:
+        _run_pipeline_creators(
+            csv_path=csv_path,
+            thumbnail_dir=thumbnail_dir,
+            analysis_dir=analysis_dir,
+            redesign_spec_dir=redesign_spec_dir,
+            design_blueprint_dir=design_blueprint_dir,
+            prompt_package_dir=prompt_package_dir,
+            comfyui_manager=manager,
+        )
+    finally:
+        if manager.shutdown_on_exit:
+            manager.stop()
+
+
+def _run_pipeline_creators(
+    csv_path: Path,
+    thumbnail_dir: Path,
+    analysis_dir: Path,
+    redesign_spec_dir: Path,
+    design_blueprint_dir: Path,
+    prompt_package_dir: Path,
+    comfyui_manager: ComfyUIProcessManager | None = None,
+) -> None:
     # ── Module 1: load creators ──────────────────────────────────────────
     creators = load_all_creators(csv_path)
     total = len(creators)

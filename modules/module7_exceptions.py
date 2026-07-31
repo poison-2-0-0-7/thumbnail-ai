@@ -13,6 +13,10 @@ class ComfyUIConnectionError(Module7Error):
     """Reserved for Phase 2 local ComfyUI connectivity failures."""
 
 
+class ComfyUIStartupError(ComfyUIConnectionError):
+    """Raised when automatic ComfyUI process startup or health check fails."""
+
+
 class ComfyUIQueueError(Module7Error):
     """Reserved for Phase 2 ComfyUI execution failures."""
 

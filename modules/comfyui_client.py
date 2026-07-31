@@ -1840,4 +1840,6 @@ class ComfyUIClient:
         )
 
 
-__all__ = ["SystemStats", "ComfyUIClient"]
+from comfyui_manager import ComfyUIProcessManager
+
+__all__ = ["SystemStats", "ComfyUIClient", "ComfyUIProcessManager"]

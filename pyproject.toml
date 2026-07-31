@@ -1,0 +1,21 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "thumbnail-ai"
+version = "1.0.0"
+description = "AI-powered YouTube Thumbnail Outreach Automation System"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = []
+
+[project.scripts]
+tai = "cli:main"
+
+[tool.setuptools]
+package-dir = {"" = "modules"}
+
+[tool.setuptools.packages.find]
+where = ["modules"]
+
