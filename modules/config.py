@@ -321,6 +321,47 @@ SAFETY_CONSTRAINTS: tuple[str, ...] = (
 )
 
 # ---------------------------------------------------------------------------
+# Module 5.5 — Thumbnail Copywriter & Layout Planner Engine
+# ---------------------------------------------------------------------------
+
+#: Log file used by Module 5.5.
+MODULE55_LOG_PATH: Path = LOG_DIR / "module5_5.log"
+
+#: Directory where structured design blueprints are stored as JSON.
+DEFAULT_DESIGN_BLUEPRINT_DIR: Path = PROJECT_ROOT / "data" / "design_blueprints"
+
+#: Filename template for a saved design blueprint; formatted with ``video_id``.
+DESIGN_BLUEPRINT_FILENAME_TEMPLATE: str = "{video_id}.json"
+
+MODULE55_MOBILE_CHAR_SOFT_LIMIT: int = 40
+MODULE55_MOBILE_CHAR_HARD_LIMIT: int = 60
+MODULE55_MAX_ZONE_OVERLAP: float = 0.15
+MODULE55_SAFE_MARGIN_RATIO: float = 0.05
+
+MODULE55_HOOK_TYPE_THRESHOLDS: dict[str, float] = {
+    "high_curiosity": 0.7,
+    "mismatch": 0.5,
+}
+
+MODULE55_CURIOSITY_LEXICON: frozenset[str] = frozenset(
+    {
+        "why", "how", "secret", "never", "stop", "dont", "don't", "truth", "hidden",
+        "reason", "mistake", "fix", "top", "best", "worst", "i tried", "vs", "what",
+        "this", "shocking", "banned", "illegal", "changed", "finally", "revealed",
+        "exposed", "proven", "simple", "hack", "trick"
+    }
+)
+
+MODULE55_HEADLINE_SCORE_WEIGHTS: dict[str, float] = {
+    "curiosity": 0.25,
+    "emotional_impact": 0.20,
+    "readability": 0.15,
+    "ctr_potential": 0.20,
+    "mobile_readability": 0.10,
+    "brand_consistency": 0.10,
+}
+
+# ---------------------------------------------------------------------------
 # Module 7 — Local Image Generation Engine
 # ---------------------------------------------------------------------------
 

@@ -13,6 +13,7 @@ import pytest
 from evaluation.module_validators import (
     AssetComposerValidator,
     CSVReaderValidator,
+    DesignBlueprintValidator,
     Module7Validator,
     PromptCompilerValidator,
     RedesignSpecValidator,
@@ -20,6 +21,35 @@ from evaluation.module_validators import (
     ThumbnailIntelligenceValidator,
     YouTubeMetadataValidator,
 )
+
+
+def test_design_blueprint_validator(tmp_path):
+    validator = DesignBlueprintValidator()
+    art_path = tmp_path / "blueprint.json"
+    art_path.write_text(json.dumps({
+        "video_id": "vid123",
+        "headline": "Secret Coding Hacks",
+        "headline_variants": [],
+        "headline_score": 0.85,
+        "hook_type": "curiosity",
+        "emotion": "high",
+        "face_strategy": "smile",
+        "object_strategy": [],
+        "background_strategy": "keep",
+        "text_position": {"include_text": True},
+        "camera_distance": "medium",
+        "lighting": "balanced",
+        "color_palette": [],
+        "visual_priority": ["headline"],
+        "branding_constraints": [],
+        "conflicts_resolved": 0,
+        "status": "success",
+        "generated_at": "2026-08-01T00:00:00Z"
+    }))
+
+    res = validator.validate("vid123", art_path)
+    assert res.schema_valid is True
+    assert res.status == "success"
 
 
 def test_csv_reader_validator_success(tmp_path):

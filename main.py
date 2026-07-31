@@ -60,6 +60,7 @@ from loguru import logger  # noqa: E402
 from config import (  # noqa: E402
     DEFAULT_ANALYSIS_DIR,
     DEFAULT_CSV_PATH,
+    DEFAULT_DESIGN_BLUEPRINT_DIR,
     DEFAULT_PROMPT_PACKAGE_DIR,
     DEFAULT_REDESIGN_SPEC_DIR,
     DEFAULT_THUMBNAIL_DIR,
@@ -109,6 +110,12 @@ from redesign_spec_engine import (  # noqa: E402
     build_redesign_specification,
     save_redesign_spec,
 )
+from design_blueprint_engine import (  # noqa: E402
+    DesignBlueprintCacheError,
+    DesignBlueprintError,
+    build_design_blueprint,
+    save_design_blueprint,
+)
 from prompt_compiler import (  # noqa: E402
     InvalidRedesignSpecError,
     PromptPackageCacheError,
@@ -129,6 +136,7 @@ def run_pipeline(
     thumbnail_dir: Path = DEFAULT_THUMBNAIL_DIR,
     analysis_dir: Path = DEFAULT_ANALYSIS_DIR,
     redesign_spec_dir: Path = DEFAULT_REDESIGN_SPEC_DIR,
+    design_blueprint_dir: Path = DEFAULT_DESIGN_BLUEPRINT_DIR,
     prompt_package_dir: Path = DEFAULT_PROMPT_PACKAGE_DIR,
 ) -> None:
     """
@@ -145,6 +153,8 @@ def run_pipeline(
                        are saved as JSON.
         redesign_spec_dir: Directory where deterministic Module 5
                            redesign specifications are saved.
+        design_blueprint_dir: Directory where deterministic Module 5.5
+                              design blueprints are saved.
         prompt_package_dir: Directory where deterministic Module 6
                             prompt packages are saved.
     """
@@ -285,9 +295,34 @@ def run_pipeline(
             skipped += 1
             continue
 
-        # â”€â”€ Module 6: compile deterministic image-generation package â”€â”€
+        # ── Module 5.5: build deterministic design blueprint ──────────────
         try:
-            prompt_package = compile_prompt_package(redesign_spec)
+            design_blueprint = build_design_blueprint(
+                intelligence, redesign_spec, metadata
+            )
+            save_design_blueprint(design_blueprint, blueprint_dir=design_blueprint_dir)
+        except (DesignBlueprintError, DesignBlueprintCacheError) as exc:
+            logger.error(
+                "Design blueprint failed for creator_email={email} "
+                "video_id={vid}: {exc}",
+                email=creator.email,
+                vid=metadata.video_id,
+                exc=exc,
+            )
+            skipped += 1
+            continue
+
+        logger.info(
+            "Design blueprint saved for creator_email={email} video_id={vid}",
+            email=creator.email,
+            vid=metadata.video_id,
+        )
+
+        # ── Module 6: compile deterministic image-generation package ──────
+        try:
+            prompt_package = compile_prompt_package(
+                redesign_spec, design_blueprint=design_blueprint
+            )
             save_prompt_package(prompt_package, package_dir=prompt_package_dir)
         except (InvalidRedesignSpecError, PromptPackageCacheError) as exc:
             logger.error(

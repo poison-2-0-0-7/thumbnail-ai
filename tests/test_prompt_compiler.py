@@ -221,3 +221,25 @@ def test_prompt_package_persistence_wraps_write_errors(tmp_path: Path) -> None:
 def test_prompt_compiler_exceptions_share_the_module_base_class() -> None:
     assert issubclass(InvalidRedesignSpecError, PromptCompilerError)
     assert issubclass(PromptPackageCacheError, PromptCompilerError)
+
+
+def test_compile_prompt_package_with_design_blueprint() -> None:
+    from models import DesignBlueprint, TextPlacement, VisualBoundingBox
+    spec = _spec()
+    blueprint = DesignBlueprint(
+        video_id=spec.video_id,
+        headline="Secret Python Tricks",
+        headline_score=0.85,
+        hook_type="curiosity",
+        emotion="high",
+        face_strategy="smile",
+        background_strategy="keep",
+        text_position=TextPlacement(include_text=True, placement_zone_px=VisualBoundingBox(x=10, y=10, width=500, height=100)),
+        camera_distance="medium",
+        lighting="balanced",
+        generated_at="2026-08-01T00:00:00Z",
+    )
+    pkg = compile_prompt_package(spec, design_blueprint=blueprint)
+    assert "Secret Python Tricks" in pkg.typography_instructions
+    assert "Secret Python Tricks" in pkg.positive_prompt
+

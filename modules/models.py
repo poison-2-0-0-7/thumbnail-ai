@@ -652,6 +652,79 @@ class PromptPackage(BaseModel):
 
 
 # ---------------------------------------------------------------------------
+# Module 5.5 — Thumbnail Copywriter & Layout Planner
+# ---------------------------------------------------------------------------
+
+
+class HeadlineCandidate(BaseModel):
+    """Authored headline candidate scored deterministically across multiple metrics."""
+
+    model_config = ConfigDict(frozen=True)
+
+    text: str
+    template_id: str
+    curiosity_score: float
+    emotional_impact_score: float
+    readability_score: float
+    ctr_potential_score: float
+    character_count: int
+    mobile_readability_score: float
+    brand_consistency_score: float
+    composite_score: float
+
+
+class ObjectLayoutDirective(BaseModel):
+    """Layout directive for one object wrapping base action with scale and rank."""
+
+    model_config = ConfigDict(frozen=True)
+
+    label: str
+    action: Literal["include", "remove", "preserve"]
+    scale_factor: float = 1.0
+    emphasis_rank: int = 1
+    rationale: str = ""
+
+
+class DesignBlueprint(BaseModel):
+    """Top-level frozen artifact produced by Module 5.5 (Copywriter & Layout Planner)."""
+
+    model_config = ConfigDict(frozen=True)
+
+    video_id: str
+    headline: str
+    headline_variants: list[HeadlineCandidate] = Field(default_factory=list)
+    headline_score: float
+    hook_type: Literal[
+        "curiosity", "shock", "controversy", "benefit", "authority", "fomo", "question", "how_to"
+    ]
+    emotion: str
+    face_strategy: Literal["smile", "neutral", "shock", "exaggerate", "remove", "preserve"]
+    object_strategy: list[ObjectLayoutDirective] = Field(default_factory=list)
+    background_strategy: Literal["keep", "replace", "blur", "darken", "simplify"]
+    text_position: TextPlacement
+    subject_position: Optional[BoundingBox] = None
+    camera_distance: Literal["close_up", "medium", "wide"]
+    lighting: str
+    color_palette: list[str] = Field(default_factory=list)
+    visual_priority: list[str] = Field(default_factory=list)
+    branding_constraints: list[str] = Field(default_factory=list)
+    conflicts_resolved: int = 0
+    status: Literal["success", "partial", "error"] = "success"
+    partial_failure_reasons: list[str] = Field(default_factory=list)
+    error_message: Optional[str] = None
+    duration_seconds: float = 0.0
+    generated_at: str
+
+    @field_validator("video_id")
+    @classmethod
+    def video_id_must_not_be_empty(cls, v: str) -> str:
+        """Reject blank video IDs."""
+        if not v or not v.strip():
+            raise ValueError("video_id must not be empty")
+        return v.strip()
+
+
+# ---------------------------------------------------------------------------
 # Module 6.5 - Visual Reference Engine
 # ---------------------------------------------------------------------------
 

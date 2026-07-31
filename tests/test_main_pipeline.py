@@ -68,7 +68,13 @@ def test_run_pipeline_invokes_module7_after_prompt_package(monkeypatch: pytest.M
     monkeypatch.setattr(main, "save_intelligence", lambda intelligence, analysis_dir: None)
     monkeypatch.setattr(main, "build_redesign_specification", lambda intelligence: SimpleNamespace())
     monkeypatch.setattr(main, "save_redesign_spec", lambda redesign_spec, spec_dir: None)
-    monkeypatch.setattr(main, "compile_prompt_package", lambda redesign_spec: _prompt_package())
+    monkeypatch.setattr(
+        main,
+        "build_design_blueprint",
+        lambda intelligence, spec, metadata: SimpleNamespace(headline="Test Headline", text_position=None),
+    )
+    monkeypatch.setattr(main, "save_design_blueprint", lambda blueprint, blueprint_dir: order.append("module5_5_saved"))
+    monkeypatch.setattr(main, "compile_prompt_package", lambda redesign_spec, design_blueprint=None: _prompt_package())
 
     def save_prompt_package(prompt_package: PromptPackage, package_dir: Path) -> None:
         order.append("module6_saved")
@@ -103,10 +109,11 @@ def test_run_pipeline_invokes_module7_after_prompt_package(monkeypatch: pytest.M
         thumbnail_dir=tmp_path / "thumbnails",
         analysis_dir=tmp_path / "analysis",
         redesign_spec_dir=tmp_path / "specs",
+        design_blueprint_dir=tmp_path / "blueprints",
         prompt_package_dir=tmp_path / "packages",
     )
 
-    assert order == ["module6_saved", "module10_prepared", "module7_generated"]
+    assert order == ["module5_5_saved", "module6_saved", "module10_prepared", "module7_generated"]
 
 
 def test_run_pipeline_treats_module7_error_as_per_creator_failure(
@@ -125,7 +132,13 @@ def test_run_pipeline_treats_module7_error_as_per_creator_failure(
     monkeypatch.setattr(main, "save_intelligence", lambda intelligence, analysis_dir: None)
     monkeypatch.setattr(main, "build_redesign_specification", lambda intelligence: SimpleNamespace())
     monkeypatch.setattr(main, "save_redesign_spec", lambda redesign_spec, spec_dir: None)
-    monkeypatch.setattr(main, "compile_prompt_package", lambda redesign_spec: _prompt_package())
+    monkeypatch.setattr(
+        main,
+        "build_design_blueprint",
+        lambda intelligence, spec, metadata: SimpleNamespace(headline="Test Headline", text_position=None),
+    )
+    monkeypatch.setattr(main, "save_design_blueprint", lambda blueprint, blueprint_dir: None)
+    monkeypatch.setattr(main, "compile_prompt_package", lambda redesign_spec, design_blueprint=None: _prompt_package())
     monkeypatch.setattr(main, "save_prompt_package", lambda prompt_package, package_dir: None)
     monkeypatch.setattr(
         main,

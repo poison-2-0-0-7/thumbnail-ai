@@ -51,6 +51,7 @@ from config import (
 from models import (
     BoundingBox,
     ColorDirection,
+    DesignBlueprint,
     GenerationParameters,
     LayoutDirection,
     ModelSettings,
@@ -256,11 +257,15 @@ def _compile_model_settings(color: ColorDirection) -> ModelSettings:
     )
 
 
-def compile_prompt_package(spec: RedesignSpecification) -> PromptPackage:
+def compile_prompt_package(
+    spec: RedesignSpecification,
+    *,
+    design_blueprint: Optional[DesignBlueprint] = None,
+) -> PromptPackage:
     """Compile one usable Module 5 specification without external calls.
 
-    ``duration_seconds`` and ``generated_at`` are observability metadata only;
-    all prompt and generation fields are deterministic for identical input.
+    When ``design_blueprint`` is provided, typography instructions use its authored
+    headline and resolved zones; otherwise fallback to placement-only overlay guidance.
     """
     if spec.status == "error":
         raise InvalidRedesignSpecError("RedesignSpecification must have non-error status to compile a prompt package")
@@ -268,7 +273,14 @@ def compile_prompt_package(spec: RedesignSpecification) -> PromptPackage:
     started_at = time.monotonic()
     subject = _compile_subject_instructions(spec.subject_treatment)
     background = _compile_background_instructions(spec.layout_direction)
-    typography = _compile_typography_instructions(spec.text_overlay)
+
+    if design_blueprint is not None and design_blueprint.headline:
+        typography = f"Render text overlay: '{design_blueprint.headline}' on the thumbnail."
+        if design_blueprint.text_position and design_blueprint.text_position.placement_zone_px:
+            typography += " Reserve the designated text placement region for the headline overlay."
+    else:
+        typography = _compile_typography_instructions(spec.text_overlay)
+
     composition = _compile_composition_instructions(spec.layout_direction)
     lighting = _compile_lighting_instructions(spec.color_direction)
     color = _compile_color_instructions(spec.color_direction)
