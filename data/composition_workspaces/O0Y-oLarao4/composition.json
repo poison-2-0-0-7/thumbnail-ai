@@ -24,7 +24,8 @@
         "z_index": 0,
         "rationale": "Real background pixels are replaced by AI-generated background while structure is preserved via conditioning maps."
       },
-      "depth_hint_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\visual_references\\O0Y-oLarao4\\depth_map.png"
+      "depth_hint_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\visual_references\\O0Y-oLarao4\\depth_map.png",
+      "canny_hint_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\visual_references\\O0Y-oLarao4\\canny_map.png"
     },
     {
       "layer_id": "layer_object_0_person",
@@ -49,7 +50,8 @@
         "z_index": 20,
         "rationale": "Clutter is within the acceptable range; preserve detected objects."
       },
-      "depth_hint_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\visual_references\\O0Y-oLarao4\\depth_map.png"
+      "depth_hint_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\visual_references\\O0Y-oLarao4\\depth_map.png",
+      "canny_hint_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\visual_references\\O0Y-oLarao4\\canny_map.png"
     },
     {
       "layer_id": "layer_object_1_person",
@@ -74,7 +76,8 @@
         "z_index": 20,
         "rationale": "Clutter is within the acceptable range; preserve detected objects."
       },
-      "depth_hint_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\visual_references\\O0Y-oLarao4\\depth_map.png"
+      "depth_hint_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\visual_references\\O0Y-oLarao4\\depth_map.png",
+      "canny_hint_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\visual_references\\O0Y-oLarao4\\canny_map.png"
     },
     {
       "layer_id": "layer_text",
@@ -94,7 +97,8 @@
         "z_index": 30,
         "rationale": "Existing OCR text is preserved as placement-only guidance."
       },
-      "depth_hint_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\visual_references\\O0Y-oLarao4\\depth_map.png"
+      "depth_hint_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\visual_references\\O0Y-oLarao4\\depth_map.png",
+      "canny_hint_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\visual_references\\O0Y-oLarao4\\canny_map.png"
     }
   ],
   "groups": [
@@ -157,13 +161,13 @@
   },
   "metadata": {
     "video_id": "O0Y-oLarao4",
-    "created_at": "2026-07-30T14:16:22.191074+00:00",
+    "created_at": "2026-08-01T08:36:17.714336+00:00",
     "vre_source_hash": "c7b650037eebe2b1a62c0c0a7f24ce2c1cbec13ac4b2be04a243dbe35aa9fff0",
-    "redesign_spec_hash": "7e9795b7b9ef5b1e9e8bf0a2a0a3b47f9322f2a57f1574a847822a5c0d3085b1",
-    "prompt_package_hash": "8a278c6519c0861ff46c6c54ee0595be97a5cbbf5a7f972dd9bb613326717840",
+    "redesign_spec_hash": "645be70e04fca1d4ca839b4a07e1a2ccd2a676f4f330e5d8a1bef1dff96105f6",
+    "prompt_package_hash": "10ccac32b510eed241aac252a32d330859f8ec2fa961168aa7af91aba38506d3",
     "engine_version": "1.0.0"
   },
   "status": "success",
   "error_message": null,
-  "duration_seconds": 0.22501999999985856
+  "duration_seconds": 0.10606190000544302
 }

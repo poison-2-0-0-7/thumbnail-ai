@@ -1,10 +1,10 @@
 {
   "video_id": "eWzsmjA1vOo",
-  "positive_prompt": "Place the primary subject in the left of the frame, matching the source position label 'left-third'. Crop tighter around the subject so it occupies a larger share of the frame. Maintain approximately 59% negative space in the background. Background detail is acceptable within the configured clutter target. Anchor the composition's focal point in the left of the frame, targeting a clutter score of 0.70 and a negative-space ratio of 0.59. Use moody, low-key lighting with a high-contrast look (target brightness=0.37, target contrast=0.66). Render muted, desaturated colors with a warm color temperature (target saturation=0.36). Preserve existing text placement; do not invent new copy or wording. Reserve the top region of the frame for text. Avoid placing text over the following region(s): left. Preserve: Warm color palette, Engaging subject placement, Emotional expression through facial cues, Balanced composition.",
+  "positive_prompt": "Place the primary subject in the left of the frame, matching the source position label 'left-third'. Crop tighter around the subject so it occupies a larger share of the frame. Maintain approximately 59% negative space in the background. Background detail is acceptable within the configured clutter target. Anchor the composition's focal point in the left of the frame, targeting a clutter score of 0.70 and a negative-space ratio of 0.59. Use moody, low-key lighting with a high-contrast look (target brightness=0.37, target contrast=0.66). Render muted, desaturated colors with a warm color temperature (target saturation=0.36). Render text overlay: 'How to Master Happy expressions of the subjects Fast' on the thumbnail. Reserve the designated text placement region for the headline overlay. Preserve: Happy expressions of the subjects, Warm color palette, Rule of thirds composition.",
   "negative_prompt": "blurry, low resolution, watermark, distorted anatomy, extra limbs, text artifacts, jpeg compression artifacts, no person, no person, no person, no person, no refrigerator, no bowl, no bowl",
   "subject_instructions": "Place the primary subject in the left of the frame, matching the source position label 'left-third'. Crop tighter around the subject so it occupies a larger share of the frame.",
   "background_instructions": "Maintain approximately 59% negative space in the background. Background detail is acceptable within the configured clutter target.",
-  "typography_instructions": "Preserve existing text placement; do not invent new copy or wording. Reserve the top region of the frame for text. Avoid placing text over the following region(s): left.",
+  "typography_instructions": "Render text overlay: 'How to Master Happy expressions of the subjects Fast' on the thumbnail. Reserve the designated text placement region for the headline overlay.",
   "composition_instructions": "Anchor the composition's focal point in the left of the frame, targeting a clutter score of 0.70 and a negative-space ratio of 0.59.",
   "lighting_instructions": "Use moody, low-key lighting with a high-contrast look (target brightness=0.37, target contrast=0.66).",
   "color_instructions": "Render muted, desaturated colors with a warm color temperature (target saturation=0.36).",
@@ -20,7 +20,7 @@
   "rendering_constraints": [
     "Render at the exact target resolution; do not crop after generation.",
     "Do not add any watermark, logo, or signature.",
-    "Preserve the following elements exactly: Warm color palette, Engaging subject placement, Emotional expression through facial cues, Balanced composition."
+    "Preserve the following elements exactly: Happy expressions of the subjects, Warm color palette, Rule of thirds composition."
   ],
   "safety_constraints": [
     "Do not depict real, identifiable people; use a generic or anonymized figure.",
@@ -35,7 +35,9 @@
     "seed": 255403169,
     "guidance_scale": 7.5,
     "inference_steps": 30,
-    "sampler": "deterministic"
+    "sampler": "deterministic",
+    "num_candidates": 1,
+    "strategy_pack": null
   },
   "quality_parameters": {
     "quality_tags": [
@@ -53,6 +55,6 @@
   },
   "status": "success",
   "error_message": null,
-  "duration_seconds": 0.00017119999984060996,
-  "generated_at": "2026-07-30T14:07:26.229190+00:00"
+  "duration_seconds": 0.0007650000043213367,
+  "generated_at": "2026-08-01T08:31:38.543070+00:00"
 }

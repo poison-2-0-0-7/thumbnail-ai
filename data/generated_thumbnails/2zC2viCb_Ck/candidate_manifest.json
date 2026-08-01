@@ -1,0 +1,62 @@
+{
+  "video_id": "2zC2viCb_Ck",
+  "entries": [
+    {
+      "candidate_index": 0,
+      "strategy_name": "faithful",
+      "seed": 3480315140,
+      "workflow_hash": "3efe12ecb33bba578abbd2a75fc9b9a36f54f35c4979ad6c1252c7b9136dc023",
+      "generation_parameters": {
+        "width": 1280,
+        "height": 720,
+        "aspect_ratio": "16:9",
+        "seed": 3480315140,
+        "guidance_scale": 7.5,
+        "inference_steps": 30,
+        "sampler": "deterministic",
+        "num_candidates": 1,
+        "strategy_pack": null
+      },
+      "qa_report": {
+        "resolution_passed": true,
+        "file_integrity_passed": true,
+        "safety_passed": true,
+        "identity_score": 1.0,
+        "face_quality_score": 0.9096346094473413,
+        "composition_score": 1.0,
+        "text_safe_zone_score": 1.0,
+        "object_preservation_score": 1.0,
+        "color_compliance_score": 1.0,
+        "overall_score": 0.9864451914171012,
+        "hard_gate_passed": true
+      },
+      "face_match": {
+        "similarity": 1.0,
+        "threshold": 0.5,
+        "passed": true,
+        "face_detected": false,
+        "skipped": true
+      },
+      "candidate_score": {
+        "candidate_index": 0,
+        "overall_score": 0.9864451914171012,
+        "identity_similarity": 1.0,
+        "hard_gate_passed": true,
+        "rank": 1,
+        "selected": true
+      },
+      "stage_durations_seconds": {
+        "comfyui_generate": 39.809912099997746,
+        "identity_preservation": 0.012074099999153987,
+        "face_restoration": 0.15877419999742415,
+        "background_composition": 0.11527480000222567,
+        "upscale": 0.11674949999724049,
+        "quality_assurance": 0.05625829999917187
+      },
+      "output_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\generated_thumbnails\\2zC2viCb_Ck\\tmp_candidates\\cand_0_final.png"
+    }
+  ],
+  "winning_candidate_index": 0,
+  "strategy_pack_name": null,
+  "generated_at": "2026-07-31T22:08:01.038179+00:00"
+}

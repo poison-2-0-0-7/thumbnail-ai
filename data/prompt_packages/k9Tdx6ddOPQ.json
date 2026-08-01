@@ -1,10 +1,10 @@
 {
   "video_id": "k9Tdx6ddOPQ",
-  "positive_prompt": "Place the primary subject in the top of the frame, matching the source position label 'center'. Crop tighter around the subject so it occupies a larger share of the frame. Maintain approximately 34% negative space in the background. Keep the background minimal and uncluttered. Anchor the composition's focal point in the top of the frame, targeting a clutter score of 0.30 and a negative-space ratio of 0.34. Use moody, low-key lighting with a moderate-contrast look (target brightness=0.35, target contrast=0.44). Render muted, desaturated colors with a warm color temperature (target saturation=0.30). Preserve existing text placement; do not invent new copy or wording. Reserve the bottom region of the frame for text. Avoid placing text over the following region(s): top. Preserve: Happy emotion, Warm color palette, Centered subject placement.",
+  "positive_prompt": "Place the primary subject in the top of the frame, matching the source position label 'center'. Crop tighter around the subject so it occupies a larger share of the frame. Maintain approximately 34% negative space in the background. Keep the background minimal and uncluttered. Anchor the composition's focal point in the top of the frame, targeting a clutter score of 0.30 and a negative-space ratio of 0.34. Use moody, low-key lighting with a moderate-contrast look (target brightness=0.35, target contrast=0.44). Render muted, desaturated colors with a warm color temperature (target saturation=0.30). Render text overlay: 'How to Master Happy emotion Fast' on the thumbnail. Reserve the designated text placement region for the headline overlay. Preserve: Happy emotion, Warm color palette, Centered subject placement.",
   "negative_prompt": "blurry, low resolution, watermark, distorted anatomy, extra limbs, text artifacts, jpeg compression artifacts",
   "subject_instructions": "Place the primary subject in the top of the frame, matching the source position label 'center'. Crop tighter around the subject so it occupies a larger share of the frame.",
   "background_instructions": "Maintain approximately 34% negative space in the background. Keep the background minimal and uncluttered.",
-  "typography_instructions": "Preserve existing text placement; do not invent new copy or wording. Reserve the bottom region of the frame for text. Avoid placing text over the following region(s): top.",
+  "typography_instructions": "Render text overlay: 'How to Master Happy emotion Fast' on the thumbnail. Reserve the designated text placement region for the headline overlay.",
   "composition_instructions": "Anchor the composition's focal point in the top of the frame, targeting a clutter score of 0.30 and a negative-space ratio of 0.34.",
   "lighting_instructions": "Use moody, low-key lighting with a moderate-contrast look (target brightness=0.35, target contrast=0.44).",
   "color_instructions": "Render muted, desaturated colors with a warm color temperature (target saturation=0.30).",
@@ -29,7 +29,9 @@
     "seed": 3206005206,
     "guidance_scale": 7.5,
     "inference_steps": 30,
-    "sampler": "deterministic"
+    "sampler": "deterministic",
+    "num_candidates": 1,
+    "strategy_pack": null
   },
   "quality_parameters": {
     "quality_tags": [
@@ -47,6 +49,6 @@
   },
   "status": "success",
   "error_message": null,
-  "duration_seconds": 0.00005499999997482519,
-  "generated_at": "2026-07-30T14:17:37.557656+00:00"
+  "duration_seconds": 0.00007500001811422408,
+  "generated_at": "2026-08-01T08:36:50.805797+00:00"
 }

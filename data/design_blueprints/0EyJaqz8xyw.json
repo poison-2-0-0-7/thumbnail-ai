@@ -1,0 +1,181 @@
+{
+  "video_id": "0EyJaqz8xyw",
+  "headline": "The Secret Behind Multiple car objects",
+  "headline_variants": [
+    {
+      "text": "The Secret Behind Multiple car objects",
+      "template_id": "curiosity_01",
+      "curiosity_score": 0.35,
+      "emotional_impact_score": 0.6,
+      "readability_score": 1.0,
+      "ctr_potential_score": 0.89,
+      "character_count": 38,
+      "mobile_readability_score": 1.0,
+      "brand_consistency_score": 1.0,
+      "composite_score": 0.7355
+    },
+    {
+      "text": "How to Master Multiple car objects Fast",
+      "template_id": "benefit_01",
+      "curiosity_score": 0.35,
+      "emotional_impact_score": 0.6,
+      "readability_score": 1.0,
+      "ctr_potential_score": 0.89,
+      "character_count": 39,
+      "mobile_readability_score": 1.0,
+      "brand_consistency_score": 1.0,
+      "composite_score": 0.7355
+    },
+    {
+      "text": "Why Multiple car objects Changes Everything",
+      "template_id": "curiosity_02",
+      "curiosity_score": 0.35,
+      "emotional_impact_score": 0.6,
+      "readability_score": 0.98,
+      "ctr_potential_score": 0.875,
+      "character_count": 43,
+      "mobile_readability_score": 0.85,
+      "brand_consistency_score": 1.0,
+      "composite_score": 0.7145
+    },
+    {
+      "text": "I Tried Multiple car objects For 30 Days",
+      "template_id": "shock_01",
+      "curiosity_score": 0.15,
+      "emotional_impact_score": 0.6,
+      "readability_score": 1.0,
+      "ctr_potential_score": 0.866,
+      "character_count": 40,
+      "mobile_readability_score": 1.0,
+      "brand_consistency_score": 1.0,
+      "composite_score": 0.6807
+    },
+    {
+      "text": "Don't Do Multiple car objects Until You Watch This",
+      "template_id": "shock_02",
+      "curiosity_score": 0.35,
+      "emotional_impact_score": 0.6,
+      "readability_score": 0.94,
+      "ctr_potential_score": 0.84,
+      "character_count": 50,
+      "mobile_readability_score": 0.5,
+      "brand_consistency_score": 1.0,
+      "composite_score": 0.6665
+    },
+    {
+      "text": "Multiple car objects Is Broken",
+      "template_id": "shock_03",
+      "curiosity_score": 0.0,
+      "emotional_impact_score": 0.6,
+      "readability_score": 1.0,
+      "ctr_potential_score": 0.848,
+      "character_count": 30,
+      "mobile_readability_score": 1.0,
+      "brand_consistency_score": 1.0,
+      "composite_score": 0.6396
+    },
+    {
+      "text": "The Multiple car objects Nobody Talks About",
+      "template_id": "curiosity_03",
+      "curiosity_score": 0.0,
+      "emotional_impact_score": 0.6,
+      "readability_score": 1.0,
+      "ctr_potential_score": 0.833,
+      "character_count": 43,
+      "mobile_readability_score": 0.85,
+      "brand_consistency_score": 1.0,
+      "composite_score": 0.6216
+    },
+    {
+      "text": "The Ultimate Multiple car objects Blueprint",
+      "template_id": "benefit_02",
+      "curiosity_score": 0.0,
+      "emotional_impact_score": 0.6,
+      "readability_score": 0.98,
+      "ctr_potential_score": 0.833,
+      "character_count": 43,
+      "mobile_readability_score": 0.85,
+      "brand_consistency_score": 1.0,
+      "composite_score": 0.6186
+    },
+    {
+      "text": "Double Your Results With Multiple car objects",
+      "template_id": "benefit_03",
+      "curiosity_score": 0.0,
+      "emotional_impact_score": 0.6,
+      "readability_score": 1.0,
+      "ctr_potential_score": 0.823,
+      "character_count": 45,
+      "mobile_readability_score": 0.75,
+      "brand_consistency_score": 1.0,
+      "composite_score": 0.6096
+    }
+  ],
+  "headline_score": 0.7355,
+  "hook_type": "benefit",
+  "emotion": "Moderate",
+  "face_strategy": "neutral",
+  "object_strategy": [
+    {
+      "label": "car",
+      "action": "preserve",
+      "scale_factor": 1.0,
+      "emphasis_rank": 1,
+      "rationale": "Clutter is within the acceptable range; preserve detected objects."
+    },
+    {
+      "label": "car",
+      "action": "preserve",
+      "scale_factor": 1.0,
+      "emphasis_rank": 2,
+      "rationale": "Clutter is within the acceptable range; preserve detected objects."
+    },
+    {
+      "label": "car",
+      "action": "preserve",
+      "scale_factor": 1.0,
+      "emphasis_rank": 3,
+      "rationale": "Clutter is within the acceptable range; preserve detected objects."
+    },
+    {
+      "label": "car",
+      "action": "preserve",
+      "scale_factor": 1.0,
+      "emphasis_rank": 4,
+      "rationale": "Clutter is within the acceptable range; preserve detected objects."
+    }
+  ],
+  "background_strategy": "keep",
+  "text_position": {
+    "include_text": false,
+    "placement_zone_px": null,
+    "avoid_zones_px": []
+  },
+  "subject_position": null,
+  "camera_distance": "medium",
+  "lighting": "balanced natural studio lighting with warm color tone",
+  "color_palette": [
+    "warm tones",
+    "brightness=0.54",
+    "contrast=0.41",
+    "saturation=0.30"
+  ],
+  "visual_priority": [
+    "primary_object",
+    "background"
+  ],
+  "branding_constraints": [
+    "Multiple car objects",
+    "Warm color palette",
+    "Overall composition that highlights the incident",
+    "Do not reproduce copyrighted characters, logos, or branded imagery."
+  ],
+  "conflicts_resolved": 0,
+  "status": "partial",
+  "partial_failure_reasons": [
+    "No face detected in source thumbnail; defaulted face_strategy to neutral."
+  ],
+  "error_message": null,
+  "duration_seconds": 0.0002,
+  "generated_at": "2026-08-01T08:36:01.559942+00:00"
+}

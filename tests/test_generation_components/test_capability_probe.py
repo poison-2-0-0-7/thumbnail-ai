@@ -78,3 +78,79 @@ def test_controlnet_fragment_assembly_integration(tmp_path: Path):
 
     selected = builder._select_fragments(profile, ctx)
     assert "controlnet_depth" in selected
+
+
+def test_detect_workflow_node_types_scans_workflows_dir(tmp_path: Path):
+    from generation_components.capability_probe import detect_workflow_node_types
+
+    wf_dir = tmp_path / "workflows"
+    wf_dir.mkdir()
+    wf_file = wf_dir / "custom_test.json"
+    wf_file.write_text(
+        '{"_meta": {"name": "test"}, "graph": {"1": {"class_type": "IPAdapterApply"}, "2": {"class_type": "KSampler"}}}',
+        encoding="utf-8",
+    )
+
+    detected = detect_workflow_node_types(wf_dir)
+    assert "custom_test.json" in detected
+    assert "IPAdapterApply" in detected["custom_test.json"]
+    assert "KSampler" in detected["custom_test.json"]
+
+
+def test_validate_all_workflows_reports_missing_nodes(tmp_path: Path):
+    from generation_components.capability_probe import CapabilityProbe
+
+    client = MockComfyUIClient(["KSampler", "CheckpointLoaderSimple"])
+    probe = CapabilityProbe(client=client, enabled=True)
+
+    wf_dir = tmp_path / "workflows"
+    wf_dir.mkdir()
+    (wf_dir / "ipadapter_wf.json").write_text(
+        '{"_meta": {"name": "ipadapter_wf"}, "graph": {"1": {"class_type": "IPAdapterApply"}}}',
+        encoding="utf-8",
+    )
+
+    missing_map = probe.validate_all_workflows(wf_dir)
+    assert "ipadapter_wf.json" in missing_map
+    missing_item = missing_map["ipadapter_wf.json"][0]
+    assert missing_item["missing_node_type"] == "IPAdapterApply"
+    assert missing_item["recommended_package"] == "ComfyUI_IPAdapter_plus"
+    assert missing_item["workflow"] == "ipadapter_wf.json"
+
+
+def test_validate_workflow_graph_prevents_submission(tmp_path: Path):
+    import pytest
+    from generation_components.capability_probe import CapabilityProbe
+    from module7_exceptions import MissingCustomNodeError
+
+    client = MockComfyUIClient(["KSampler", "CheckpointLoaderSimple"])
+    probe = CapabilityProbe(client=client, enabled=True)
+
+    graph = {
+        "1": {"class_type": "CheckpointLoaderSimple"},
+        "2": {"class_type": "ReActorFaceSwap"},
+    }
+
+    with pytest.raises(MissingCustomNodeError) as exc_info:
+        probe.validate_workflow_graph(graph, workflow_name="face_swap_wf", raise_on_missing=True)
+
+    err = exc_info.value
+    assert "face_swap_wf" in str(err)
+    assert "ReActorFaceSwap" in err.missing_nodes_report
+    assert "comfyui-reactor_node" in err.missing_nodes_report
+
+
+def test_validate_workflow_graph_allows_valid_submission():
+    from generation_components.capability_probe import CapabilityProbe
+
+    client = MockComfyUIClient(["KSampler", "CheckpointLoaderSimple", "ReActorFaceSwap"])
+    probe = CapabilityProbe(client=client, enabled=True)
+
+    graph = {
+        "1": {"class_type": "CheckpointLoaderSimple"},
+        "2": {"class_type": "ReActorFaceSwap"},
+    }
+
+    missing = probe.validate_workflow_graph(graph, workflow_name="face_swap_wf", raise_on_missing=True)
+    assert missing == []
+

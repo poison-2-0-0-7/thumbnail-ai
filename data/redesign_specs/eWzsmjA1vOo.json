@@ -87,17 +87,16 @@
     }
   ],
   "elements_to_preserve": [
+    "Happy expressions of the subjects",
     "Warm color palette",
-    "Engaging subject placement",
-    "Emotional expression through facial cues",
-    "Balanced composition"
+    "Rule of thirds composition"
   ],
-  "overall_rationale": "ctr_potential_score=0.75; curiosity_gap_score=0.68; content_mismatch_detected=False; rules applied: clutter_reduction, crop_tighter.",
+  "overall_rationale": "ctr_potential_score=0.75; curiosity_gap_score=0.65; content_mismatch_detected=False; rules applied: clutter_reduction, crop_tighter.",
   "source_ctr_potential_score": 0.75,
-  "source_curiosity_gap_score": 0.68,
+  "source_curiosity_gap_score": 0.65,
   "source_content_mismatch_detected": false,
   "status": "success",
   "error_message": null,
-  "duration_seconds": 0.00023219999957291293,
-  "generated_at": "2026-07-30T14:07:26.214653+00:00"
+  "duration_seconds": 0.0013157000066712499,
+  "generated_at": "2026-08-01T08:31:38.195627+00:00"
 }

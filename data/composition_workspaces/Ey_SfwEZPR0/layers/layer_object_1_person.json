@@ -21,5 +21,6 @@
     "z_index": 20,
     "rationale": "Clutter is within the acceptable range; preserve detected objects."
   },
-  "depth_hint_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\visual_references\\Ey_SfwEZPR0\\depth_map.png"
+  "depth_hint_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\visual_references\\Ey_SfwEZPR0\\depth_map.png",
+  "canny_hint_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\visual_references\\Ey_SfwEZPR0\\canny_map.png"
 }

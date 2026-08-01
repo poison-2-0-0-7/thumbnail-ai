@@ -21,5 +21,6 @@
     "z_index": 10,
     "rationale": "Largest detected face selected; crop tighter because subject area is below the minimum."
   },
-  "depth_hint_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\visual_references\\2zC2viCb_Ck\\depth_map.png"
+  "depth_hint_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\visual_references\\2zC2viCb_Ck\\depth_map.png",
+  "canny_hint_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\visual_references\\2zC2viCb_Ck\\canny_map.png"
 }

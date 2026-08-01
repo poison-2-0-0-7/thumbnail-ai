@@ -92,3 +92,20 @@ class ICapabilityProbe(ABC):
     def is_fragment_supported(self, fragment: dict[str, Any]) -> bool:
         """Check if all node types required by fragment are installed."""
         ...
+
+    @abstractmethod
+    def validate_all_workflows(
+        self, workflows_dir: Path | str
+    ) -> dict[str, list[dict[str, str]]]:
+        """Validate all workflows in workflows_dir against installed node types."""
+        ...
+
+    @abstractmethod
+    def validate_workflow_graph(
+        self,
+        graph: dict[str, Any],
+        workflow_name: str = "workflow",
+        raise_on_missing: bool = True,
+    ) -> list[dict[str, str]]:
+        """Validate a workflow graph before submission; raises MissingCustomNodeError if missing nodes found."""
+        ...

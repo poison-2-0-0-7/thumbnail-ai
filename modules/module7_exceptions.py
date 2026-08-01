@@ -139,6 +139,14 @@ class FragmentAttachmentError(WorkflowBuildError):
     """Raised when a workflow fragment references an unknown or incompatible attachment point."""
 
 
+class MissingCustomNodeError(WorkflowBuildError):
+    """Raised when a workflow requires custom node types not installed on the ComfyUI server."""
+
+    def __init__(self, message: str, missing_nodes_report: str | None = None) -> None:
+        super().__init__(message)
+        self.missing_nodes_report = missing_nodes_report or message
+
+
 class UnsupportedNodeTypeWarning(Warning):
     """Signaled when a workflow fragment is dropped due to missing custom nodes on ComfyUI server."""
 

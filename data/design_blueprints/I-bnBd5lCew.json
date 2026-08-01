@@ -1,0 +1,190 @@
+{
+  "video_id": "I-bnBd5lCew",
+  "headline": "The Truth About Progress text indicating time frames",
+  "headline_variants": [
+    {
+      "text": "The Truth About Progress text indicating time frames",
+      "template_id": "controversy_01",
+      "curiosity_score": 0.35,
+      "emotional_impact_score": 0.8,
+      "readability_score": 1.0,
+      "ctr_potential_score": 1.0,
+      "character_count": 52,
+      "mobile_readability_score": 0.4,
+      "brand_consistency_score": 1.0,
+      "composite_score": 0.7375
+    },
+    {
+      "text": "The Secret Behind Progress text indicating time frames",
+      "template_id": "curiosity_01",
+      "curiosity_score": 0.35,
+      "emotional_impact_score": 0.8,
+      "readability_score": 1.0,
+      "ctr_potential_score": 1.0,
+      "character_count": 54,
+      "mobile_readability_score": 0.3,
+      "brand_consistency_score": 1.0,
+      "composite_score": 0.7275
+    },
+    {
+      "text": "Why Progress text indicating time frames Changes Everything",
+      "template_id": "curiosity_02",
+      "curiosity_score": 0.35,
+      "emotional_impact_score": 0.8,
+      "readability_score": 0.97,
+      "ctr_potential_score": 1.0,
+      "character_count": 59,
+      "mobile_readability_score": 0.05,
+      "brand_consistency_score": 1.0,
+      "composite_score": 0.698
+    },
+    {
+      "text": "Don't Do Progress text indicating time frames Until You Watch This",
+      "template_id": "shock_02",
+      "curiosity_score": 0.35,
+      "emotional_impact_score": 0.8,
+      "readability_score": 0.82,
+      "ctr_potential_score": 1.0,
+      "character_count": 66,
+      "mobile_readability_score": 0.0,
+      "brand_consistency_score": 1.0,
+      "composite_score": 0.6705
+    },
+    {
+      "text": "I Tried Progress text indicating time frames For 30 Days",
+      "template_id": "shock_01",
+      "curiosity_score": 0.15,
+      "emotional_impact_score": 0.8,
+      "readability_score": 0.88,
+      "ctr_potential_score": 1.0,
+      "character_count": 56,
+      "mobile_readability_score": 0.2,
+      "brand_consistency_score": 1.0,
+      "composite_score": 0.6495
+    },
+    {
+      "text": "Progress text indicating time frames Is Broken",
+      "template_id": "shock_03",
+      "curiosity_score": 0.0,
+      "emotional_impact_score": 0.6,
+      "readability_score": 1.0,
+      "ctr_potential_score": 1.0,
+      "character_count": 46,
+      "mobile_readability_score": 0.7,
+      "brand_consistency_score": 1.0,
+      "composite_score": 0.64
+    },
+    {
+      "text": "Why Everyone Is Wrong About Progress text indicating time frames",
+      "template_id": "controversy_02",
+      "curiosity_score": 0.35,
+      "emotional_impact_score": 0.6,
+      "readability_score": 0.88,
+      "ctr_potential_score": 1.0,
+      "character_count": 64,
+      "mobile_readability_score": 0.0,
+      "brand_consistency_score": 1.0,
+      "composite_score": 0.6395
+    },
+    {
+      "text": "The Progress text indicating time frames Nobody Talks About",
+      "template_id": "curiosity_03",
+      "curiosity_score": 0.0,
+      "emotional_impact_score": 0.8,
+      "readability_score": 0.94,
+      "ctr_potential_score": 1.0,
+      "character_count": 59,
+      "mobile_readability_score": 0.05,
+      "brand_consistency_score": 1.0,
+      "composite_score": 0.606
+    },
+    {
+      "text": "Lies You Were Told About Progress text indicating time frames",
+      "template_id": "controversy_03",
+      "curiosity_score": 0.0,
+      "emotional_impact_score": 0.6,
+      "readability_score": 0.88,
+      "ctr_potential_score": 1.0,
+      "character_count": 61,
+      "mobile_readability_score": 0.0,
+      "brand_consistency_score": 1.0,
+      "composite_score": 0.552
+    }
+  ],
+  "headline_score": 0.7375,
+  "hook_type": "curiosity",
+  "emotion": "High",
+  "face_strategy": "preserve",
+  "object_strategy": [
+    {
+      "label": "person",
+      "action": "preserve",
+      "scale_factor": 1.0,
+      "emphasis_rank": 1,
+      "rationale": "Clutter is within the acceptable range; preserve detected objects."
+    },
+    {
+      "label": "person",
+      "action": "preserve",
+      "scale_factor": 1.0,
+      "emphasis_rank": 2,
+      "rationale": "Clutter is within the acceptable range; preserve detected objects."
+    }
+  ],
+  "background_strategy": "blur",
+  "text_position": {
+    "include_text": true,
+    "placement_zone_px": {
+      "x": 380,
+      "y": 66,
+      "width": 446,
+      "height": 186
+    },
+    "avoid_zones_px": [
+      {
+        "x": 900,
+        "y": 120,
+        "width": 135,
+        "height": 185
+      },
+      {
+        "x": 900,
+        "y": 120,
+        "width": 135,
+        "height": 185
+      }
+    ]
+  },
+  "subject_position": {
+    "x_min": 0.7030036449432373,
+    "y_min": 0.16663836373223198,
+    "x_max": 0.808597183227539,
+    "y_max": 0.423225106133355
+  },
+  "camera_distance": "close_up",
+  "lighting": "balanced natural studio lighting with warm color tone",
+  "color_palette": [
+    "warm tones",
+    "brightness=0.57",
+    "contrast=0.77",
+    "saturation=0.30"
+  ],
+  "visual_priority": [
+    "headline",
+    "face",
+    "primary_object",
+    "background"
+  ],
+  "branding_constraints": [
+    "Progress text indicating time frames",
+    "Warm color palette for a friendly feel",
+    "Person-focused composition to maintain relatability",
+    "Do not reproduce copyrighted characters, logos, or branded imagery."
+  ],
+  "conflicts_resolved": 0,
+  "status": "success",
+  "partial_failure_reasons": [],
+  "error_message": null,
+  "duration_seconds": 0.0051,
+  "generated_at": "2026-08-01T08:35:06.244341+00:00"
+}

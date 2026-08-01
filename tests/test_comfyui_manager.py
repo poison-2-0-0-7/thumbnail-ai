@@ -252,3 +252,41 @@ def test_custom_configuration(tmp_path: Path) -> None:
     assert manager.healthcheck_interval == 0.5
     assert manager.shutdown_on_exit is True
     assert manager.base_url == "http://192.168.1.50:9999"
+
+
+def test_liveness_verification_and_fortran_error_categorization(tmp_path: Path) -> None:
+    from comfyui_manager import ComfyUIExitAnalysis
+
+    log_file = tmp_path / "comfy_process.log"
+    log_file.write_text(
+        "Prompt executed in 173.69 seconds\n"
+        "forrtl: error (200): program aborting due to window-CLOSE event\n"
+        "Image PC Routine Line Source\n",
+        encoding="utf-8",
+    )
+
+    proc_mock = MagicMock()
+    proc_mock.poll.return_value = 200
+    proc_mock.pid = 9999
+
+    session = MagicMock(spec=requests.Session)
+
+    manager = ComfyUIProcessManager(
+        host="127.0.0.1",
+        port=8188,
+        session=session,
+        log_path=log_file,
+    )
+    manager._process = proc_mock
+    manager.pid = 9999
+
+    alive = manager.verify_liveness()
+    assert alive is False
+    assert manager._prevent_auto_restart is True
+
+    analysis = manager._last_exit_analysis
+    assert analysis is not None
+    assert analysis.category == "Windows process termination"
+    assert "forrtl" in analysis.summary
+    assert "window-CLOSE event" in analysis.format_report()
+

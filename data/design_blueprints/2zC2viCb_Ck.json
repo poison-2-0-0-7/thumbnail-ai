@@ -1,0 +1,197 @@
+{
+  "video_id": "2zC2viCb_Ck",
+  "headline": "How to Master Happy expressions and smiles Fast",
+  "headline_variants": [
+    {
+      "text": "How to Master Happy expressions and smiles Fast",
+      "template_id": "benefit_01",
+      "curiosity_score": 0.35,
+      "emotional_impact_score": 0.9,
+      "readability_score": 1.0,
+      "ctr_potential_score": 0.879,
+      "character_count": 47,
+      "mobile_readability_score": 0.65,
+      "brand_consistency_score": 1.0,
+      "composite_score": 0.7583
+    },
+    {
+      "text": "The Secret Behind Happy expressions and smiles",
+      "template_id": "curiosity_01",
+      "curiosity_score": 0.35,
+      "emotional_impact_score": 0.8,
+      "readability_score": 1.0,
+      "ctr_potential_score": 0.876,
+      "character_count": 46,
+      "mobile_readability_score": 0.7,
+      "brand_consistency_score": 1.0,
+      "composite_score": 0.7427
+    },
+    {
+      "text": "Why Happy expressions and smiles Changes Everything",
+      "template_id": "curiosity_02",
+      "curiosity_score": 0.35,
+      "emotional_impact_score": 0.8,
+      "readability_score": 0.9743,
+      "ctr_potential_score": 0.851,
+      "character_count": 51,
+      "mobile_readability_score": 0.45,
+      "brand_consistency_score": 1.0,
+      "composite_score": 0.7088
+    },
+    {
+      "text": "I Tried Happy expressions and smiles For 30 Days",
+      "template_id": "shock_01",
+      "curiosity_score": 0.15,
+      "emotional_impact_score": 0.8,
+      "readability_score": 0.94,
+      "ctr_potential_score": 0.842,
+      "character_count": 48,
+      "mobile_readability_score": 0.6,
+      "brand_consistency_score": 1.0,
+      "composite_score": 0.6669
+    },
+    {
+      "text": "Don't Do Happy expressions and smiles Until You Watch This",
+      "template_id": "shock_02",
+      "curiosity_score": 0.35,
+      "emotional_impact_score": 0.8,
+      "readability_score": 0.88,
+      "ctr_potential_score": 0.816,
+      "character_count": 58,
+      "mobile_readability_score": 0.1,
+      "brand_consistency_score": 1.0,
+      "composite_score": 0.6527
+    },
+    {
+      "text": "Happy expressions and smiles Is Broken",
+      "template_id": "shock_03",
+      "curiosity_score": 0.0,
+      "emotional_impact_score": 0.6,
+      "readability_score": 1.0,
+      "ctr_potential_score": 0.848,
+      "character_count": 38,
+      "mobile_readability_score": 1.0,
+      "brand_consistency_score": 1.0,
+      "composite_score": 0.6396
+    },
+    {
+      "text": "The Ultimate Happy expressions and smiles Blueprint",
+      "template_id": "benefit_02",
+      "curiosity_score": 0.0,
+      "emotional_impact_score": 0.9,
+      "readability_score": 0.9743,
+      "ctr_potential_score": 0.817,
+      "character_count": 51,
+      "mobile_readability_score": 0.45,
+      "brand_consistency_score": 1.0,
+      "composite_score": 0.6345
+    },
+    {
+      "text": "The Happy expressions and smiles Nobody Talks About",
+      "template_id": "curiosity_03",
+      "curiosity_score": 0.0,
+      "emotional_impact_score": 0.8,
+      "readability_score": 1.0,
+      "ctr_potential_score": 0.809,
+      "character_count": 51,
+      "mobile_readability_score": 0.45,
+      "brand_consistency_score": 1.0,
+      "composite_score": 0.6168
+    },
+    {
+      "text": "Double Your Results With Happy expressions and smiles",
+      "template_id": "benefit_03",
+      "curiosity_score": 0.0,
+      "emotional_impact_score": 0.8,
+      "readability_score": 1.0,
+      "ctr_potential_score": 0.799,
+      "character_count": 53,
+      "mobile_readability_score": 0.35,
+      "brand_consistency_score": 1.0,
+      "composite_score": 0.6048
+    }
+  ],
+  "headline_score": 0.7583,
+  "hook_type": "benefit",
+  "emotion": "high",
+  "face_strategy": "preserve",
+  "object_strategy": [
+    {
+      "label": "person",
+      "action": "remove",
+      "scale_factor": 1.0,
+      "emphasis_rank": 1,
+      "rationale": "High clutter requires simplifying detected objects."
+    },
+    {
+      "label": "person",
+      "action": "remove",
+      "scale_factor": 1.0,
+      "emphasis_rank": 2,
+      "rationale": "High clutter requires simplifying detected objects."
+    },
+    {
+      "label": "person",
+      "action": "remove",
+      "scale_factor": 1.0,
+      "emphasis_rank": 3,
+      "rationale": "High clutter requires simplifying detected objects."
+    },
+    {
+      "label": "person",
+      "action": "remove",
+      "scale_factor": 1.0,
+      "emphasis_rank": 4,
+      "rationale": "High clutter requires simplifying detected objects."
+    },
+    {
+      "label": "person",
+      "action": "remove",
+      "scale_factor": 1.0,
+      "emphasis_rank": 5,
+      "rationale": "High clutter requires simplifying detected objects."
+    },
+    {
+      "label": "person",
+      "action": "remove",
+      "scale_factor": 1.0,
+      "emphasis_rank": 6,
+      "rationale": "High clutter requires simplifying detected objects."
+    }
+  ],
+  "background_strategy": "simplify",
+  "text_position": {
+    "include_text": false,
+    "placement_zone_px": null,
+    "avoid_zones_px": []
+  },
+  "subject_position": {
+    "x_min": 0.383146858215332,
+    "y_min": 0.5079363187154134,
+    "x_max": 0.45616517066955564,
+    "y_max": 0.6311800638834636
+  },
+  "camera_distance": "close_up",
+  "lighting": "soft low-key ambient lighting",
+  "color_palette": [
+    "brightness=0.35",
+    "contrast=0.57",
+    "saturation=0.30"
+  ],
+  "visual_priority": [
+    "face",
+    "background"
+  ],
+  "branding_constraints": [
+    "Happy expressions and smiles",
+    "Symmetry and balance",
+    "Multiple faces for interaction",
+    "Do not reproduce copyrighted characters, logos, or branded imagery."
+  ],
+  "conflicts_resolved": 0,
+  "status": "success",
+  "partial_failure_reasons": [],
+  "error_message": null,
+  "duration_seconds": 0.0005,
+  "generated_at": "2026-08-01T08:35:45.730114+00:00"
+}

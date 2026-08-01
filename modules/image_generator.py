@@ -40,6 +40,7 @@ from models import (
 )
 from generation_components import (
     CandidateStrategyPlanner,
+    CapabilityProbe,
     ConditioningAssetResolver,
     CompositionWorkspaceLoader,
     GenerationBundleLoader,
@@ -59,8 +60,8 @@ from generation_components import (
 
 from module7_exceptions import (
     ArtifactWriteError, CandidateGenerationTimeoutError, ComfyUIConnectionError,
-    ComfyUIQueueError, IdentityPreservationError, MetricsWriteError, Module7Error,
-    NoEligibleCandidateError, ProfileDowngradedWarning, PromptPackageInvalidError,
+    ComfyUIQueueError, IdentityPreservationError, MetricsWriteError, MissingCustomNodeError,
+    Module7Error, NoEligibleCandidateError, ProfileDowngradedWarning, PromptPackageInvalidError,
     QualityAssuranceError, ReferenceAssetError, StrategyPackError, VRAMExhaustedError,
     WorkflowBuildError, WorkflowTemplateError,
 )
@@ -305,6 +306,13 @@ class WorkflowBuilder:
             raise WorkflowBuildError(f"Template {workflow_ref.template_name} uses unknown placeholder {exc.args[0]}") from exc
         if not isinstance(final_graph, dict):
             raise WorkflowBuildError("Resolved workflow graph must be an object")
+
+        if self.capability_probe is not None:
+            self.capability_probe.validate_workflow_graph(
+                final_graph,
+                workflow_name=workflow_ref.template_name,
+                raise_on_missing=True,
+            )
 
         workflow_hash = canonical_json_hash(final_graph)
         logger.info("Built workflow template={template}, version={version}, workflow_hash={hash}", template=workflow_ref.template_name, version=workflow_ref.workflow_version, hash=workflow_hash)
@@ -898,13 +906,15 @@ class ImageGeneratorPipeline:
         conditioning_resolver: IConditioningAssetResolver | None = None,
         strategy_pack_resolver: StrategyPackResolver | None = None,
         strategy_planner: CandidateStrategyPlanner | None = None,
+        capability_probe: ICapabilityProbe | None = None,
     ) -> None:
         self.client = client
+        self.capability_probe = capability_probe or (CapabilityProbe(client=client) if client else None)
         self.package_loader = package_loader or PromptPackageLoader()
         self.asset_resolver = asset_resolver or ReferenceAssetResolver()
         self.profile_selector = profile_selector or ProfileSelector()
         self.workflow_library = workflow_library or WorkflowLibrary()
-        self.workflow_builder = workflow_builder or WorkflowBuilder()
+        self.workflow_builder = workflow_builder or WorkflowBuilder(capability_probe=self.capability_probe)
         self.identity_stage = identity_stage or IdentityPreservationStage()
         self.restoration_stage = restoration_stage or FaceRestorationStage()
         self.background_compositor = background_compositor or BackgroundCompositor()
@@ -1321,9 +1331,10 @@ __all__ = [
     "prompt_package_hash", "generation_hash", "validate_qa_weights", "Module7Error",
     "ComfyUIConnectionError", "ComfyUIQueueError", "VRAMExhaustedError", "IdentityPreservationError",
     "QualityAssuranceError", "PromptPackageInvalidError", "ReferenceAssetError", "WorkflowTemplateError",
-    "WorkflowBuildError", "ArtifactWriteError", "MetricsWriteError", "NoEligibleCandidateError",
-    "ProfileDowngradedWarning", "IdentityPreservationStage", "FaceRestorationStage",
-    "BackgroundCompositor", "UpscaleStage", "QualityAssuranceStage", "CandidateRanker",
-    "ImageGeneratorPipeline", "run_image_generation_pipeline", "cosine_similarity",
+    "WorkflowBuildError", "MissingCustomNodeError", "ArtifactWriteError", "MetricsWriteError",
+    "NoEligibleCandidateError", "ProfileDowngradedWarning", "IdentityPreservationStage",
+    "FaceRestorationStage", "BackgroundCompositor", "UpscaleStage", "QualityAssuranceStage",
+    "CandidateRanker", "CapabilityProbe", "ImageGeneratorPipeline", "run_image_generation_pipeline",
+    "cosine_similarity",
 ]
 

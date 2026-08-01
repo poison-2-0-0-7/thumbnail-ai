@@ -36,6 +36,93 @@ from config import (
 from module7_exceptions import ComfyUIStartupError
 
 
+class ComfyUIExitAnalysis:
+    """Detailed exit analysis of a terminated ComfyUI process."""
+
+    def __init__(self, pid: int | str | None, exit_code: int | None, log_path: Path) -> None:
+        self.pid = pid if pid is not None else "unknown"
+        self.exit_code = exit_code
+        self.log_path = log_path
+        self.last_200_lines: list[str] = []
+        self.category: str = "unknown"
+        self.summary: str = ""
+        self._analyze()
+
+    def _analyze(self) -> None:
+        if self.log_path.exists():
+            try:
+                lines = self.log_path.read_text(encoding="utf-8", errors="replace").splitlines()
+                self.last_200_lines = lines[-200:]
+            except OSError:
+                self.last_200_lines = []
+
+        log_text = "\n".join(self.last_200_lines)
+        log_lower = log_text.lower()
+
+        if (
+            "forrtl: error (200)" in log_lower
+            or "window-close event" in log_lower
+            or "program aborting due to window-close" in log_lower
+        ):
+            self.category = "Windows process termination"
+            self.summary = (
+                "Windows Process Termination via Intel Fortran Runtime (forrtl error 200). "
+                "A window-CLOSE event / console control signal was intercepted by forrtl (loaded by SciPy/MKL/OpenCV), "
+                "causing immediate forced process termination after prompt execution."
+            )
+        elif (
+            "cuda out of memory" in log_lower
+            or "out_of_memory" in log_lower
+            or "std::bad_alloc" in log_lower
+            or "torch.cuda.outofmemoryerror" in log_lower
+        ):
+            self.category = "out-of-memory"
+            self.summary = "GPU VRAM or System RAM exhausted during model loading / generation."
+        elif (
+            "cuda error" in log_lower
+            or "device-side assert" in log_lower
+            or "nvml" in log_lower
+            or "driver failure" in log_lower
+            or "cuda error: misaligned address" in log_lower
+        ):
+            self.category = "GPU/CUDA failure"
+            self.summary = "CUDA driver or hardware failure during PyTorch/CUDA execution."
+        elif "custom_nodes" in log_lower and ("exception" in log_lower or "traceback" in log_lower or "error" in log_lower):
+            self.category = "custom node exception"
+            self.summary = "Unhandled Python exception inside a custom node package."
+        elif "traceback (most recent call last)" in log_lower or "exception:" in log_lower:
+            self.category = "Python exception"
+            self.summary = "Unhandled Python exception in ComfyUI runtime."
+        elif self.exit_code == 0:
+            self.category = "normal exit"
+            self.summary = "ComfyUI process exited cleanly with code 0."
+        else:
+            self.category = "Windows process termination"
+            self.summary = f"Process terminated abnormally with exit code {self.exit_code}."
+
+    def format_report(self) -> str:
+        report_lines = [
+            "==================================================================",
+            "             COMFYUI PROCESS TERMINATION DIAGNOSTIC REPORT        ",
+            "==================================================================",
+            f"Process PID:        {self.pid}",
+            f"Exit Code:          {self.exit_code}",
+            f"Failure Category:   {self.category}",
+            f"Summary:            {self.summary}",
+            f"Log File Path:      {self.log_path}",
+            "------------------------------------------------------------------",
+            "LAST 200 LINES OF COMFYUI CONSOLE LOG (stdout/stderr):",
+            "------------------------------------------------------------------",
+        ]
+        report_lines.extend(self.last_200_lines)
+        report_lines.extend([
+            "==================================================================",
+            "Auto-restart prevented until root cause is logged.",
+            "==================================================================",
+        ])
+        return "\n".join(report_lines)
+
+
 class ComfyUIProcessManager:
     """
     Lifecycle manager for local ComfyUI instance.
@@ -90,8 +177,11 @@ class ComfyUIProcessManager:
         self._session = session or requests.Session()
 
         self._process: subprocess.Popen | None = None
+        self.pid: int | str | None = None
         self._was_spawned: bool = False
         self._log_file_handle = None
+        self._last_exit_analysis: ComfyUIExitAnalysis | None = None
+        self._prevent_auto_restart: bool = False
 
     @property
     def base_url(self) -> str:
@@ -119,6 +209,12 @@ class ComfyUIProcessManager:
         Returns True if ComfyUI is healthy and ready to process requests.
         Raises ComfyUIStartupError if startup fails or times out.
         """
+        if self._prevent_auto_restart and self._last_exit_analysis is not None:
+            raise ComfyUIStartupError(
+                f"ComfyUI auto-restart blocked due to previous process termination.\n"
+                f"{self._last_exit_analysis.format_report()}"
+            )
+
         if os.getenv("_COMFYUI_MANAGER_SPAWNED") == "1":
             raise ComfyUIStartupError(
                 "Recursive ComfyUIProcessManager spawn detected. "
@@ -215,7 +311,11 @@ class ComfyUIProcessManager:
             )
             self._log_file_handle = subprocess.DEVNULL
 
-        spawn_env = {**os.environ, "_COMFYUI_MANAGER_SPAWNED": "1"}
+        spawn_env = {
+            **os.environ,
+            "_COMFYUI_MANAGER_SPAWNED": "1",
+            "FOR_DISABLE_CONSOLE_CTRL_HANDLER": "1",
+        }
 
         try:
             self._process = subprocess.Popen(
@@ -226,7 +326,8 @@ class ComfyUIProcessManager:
                 stderr=subprocess.STDOUT,
             )
             self._was_spawned = True
-            logger.info("PID: {pid}", pid=self._process.pid)
+            self.pid = self._process.pid
+            logger.info("PID: {pid}", pid=self.pid)
             logger.info("Return code: {rc}", rc=self._process.poll())
             logger.info("stdout: {log}", log=self.log_path)
             logger.info("stderr: {log}", log=self.log_path)
@@ -235,6 +336,9 @@ class ComfyUIProcessManager:
             raise ComfyUIStartupError(
                 f"Failed to spawn ComfyUI process '{' '.join(cmd_args)}': {exc}"
             ) from exc
+
+        # 3. Wait for API to become healthy
+        return self._wait_for_health()
 
         # 3. Wait for API to become healthy
         return self._wait_for_health()
@@ -289,6 +393,37 @@ class ComfyUIProcessManager:
         except OSError as exc:
             return f"(Could not read log file: {exc})"
 
+    def verify_liveness(self) -> bool:
+        """
+        Verify whether the tracked ComfyUI process is still alive after generation.
+
+        If process has exited, immediately captures exit code, stdout/stderr log,
+        last 200 lines of console log, categorizes the failure mode, logs the diagnostic
+        report, and blocks auto-restart until root cause is logged.
+        """
+        if self._process is None:
+            return self.is_healthy(timeout=1.0)
+
+        code = self._process.poll()
+        if code is None:
+            logger.info("ComfyUI process PID {pid} verified alive post-generation.", pid=self.pid)
+            return True
+
+        # Process exited!
+        analysis = ComfyUIExitAnalysis(
+            pid=self.pid or self._process.pid,
+            exit_code=code,
+            log_path=self.log_path,
+        )
+        self._last_exit_analysis = analysis
+        self._prevent_auto_restart = True
+
+        report = analysis.format_report()
+        logger.error("ComfyUI process termination detected post-generation:\n{report}", report=report)
+
+        self._cleanup_process()
+        return False
+
     def stop(self) -> None:
         """
         Terminate the spawned ComfyUI process if it was started by this manager.
@@ -333,4 +468,4 @@ class ComfyUIProcessManager:
             self.stop()
 
 
-__all__ = ["ComfyUIProcessManager"]
+__all__ = ["ComfyUIProcessManager", "ComfyUIExitAnalysis"]
