@@ -6,13 +6,13 @@
     "path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\generated_thumbnails\\Ey_SfwEZPR0\\Ey_SfwEZPR0.png",
     "width": 1280,
     "height": 720,
-    "sha256": "2f5cdc46dc9cac68062e848dd8b5f34d523123eb07b676067c6f4f8ddb708255",
+    "sha256": "736918ec84f8fd5dfc55db4fbf5e915cb338842a6e12885540737394971d239e",
     "candidate_index": 0
   },
   "workflow_version": "workflow_v1",
   "workflow_hash": "ba2f8f7d9cc3450ee5b878a2bb6e0e55f7a736606ff77387ebc0cb22e4f866b0",
-  "prompt_package_hash": "4d99c53d759fb255d6eab0088329c77bada13f9f25c60cb6d8ca2fb23a9e338c",
-  "generation_hash": "c954b22fb28852b022f2308cc449adb9fe13aae6cb88157c41495514265e783f",
+  "prompt_package_hash": "b236dbc3a6395f40309969d877d0721422371823e2d1c122118e43de4e051f1e",
+  "generation_hash": "e07087446472a785f74ffd5071e2b92768e0aab03b9a841006414534cad60e98",
   "profile_name": "PROFILE_LOW_VRAM",
   "checkpoint_hash": null,
   "lora_hashes": [],
@@ -24,7 +24,7 @@
   "candidate_scores": [
     {
       "candidate_index": 0,
-      "overall_score": 0.967079113780953,
+      "overall_score": 0.9660691980741488,
       "identity_similarity": 1.0,
       "hard_gate_passed": true,
       "rank": 1,
@@ -34,13 +34,13 @@
   "selected_candidate_index": 0,
   "retry_count": 0,
   "stage_durations_seconds": {
-    "comfyui_generate": 40.387676799990004,
-    "identity_preservation": 0.012125899986131117,
-    "face_restoration": 0.15796020001289435,
-    "background_composition": 0.13802709997980855,
-    "upscale": 0.13055940001504496,
-    "quality_assurance": 0.06169949998729862
+    "comfyui_generate": 60.945229200006,
+    "identity_preservation": 0.016945400013355538,
+    "face_restoration": 0.20581799998763017,
+    "background_composition": 0.14867799999774434,
+    "upscale": 0.146698299999116,
+    "quality_assurance": 0.06356670000241138
   },
-  "duration_seconds": 41.07922679997864,
-  "generated_at": "2026-08-01T10:13:07.303194+00:00"
+  "duration_seconds": 62.3221461000212,
+  "generated_at": "2026-08-01T15:52:29.889966+00:00"
 }

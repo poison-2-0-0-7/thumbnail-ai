@@ -171,12 +171,13 @@
   "branding_constraints": [
     "Joyful expression",
     "Warm color palette",
+    "Balanced composition",
     "Do not reproduce copyrighted characters, logos, or branded imagery."
   ],
   "conflicts_resolved": 0,
   "status": "success",
   "partial_failure_reasons": [],
   "error_message": null,
-  "duration_seconds": 0.0059,
-  "generated_at": "2026-08-01T10:21:30.920971+00:00"
+  "duration_seconds": 0.0011,
+  "generated_at": "2026-08-01T16:03:40.888092+00:00"
 }

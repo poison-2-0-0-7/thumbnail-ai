@@ -91,7 +91,7 @@ def test_workflow_builder_is_pure_and_hashes_resolved_graph() -> None:
     second = WorkflowBuilder().build(package, profile, ref, library=library)
     assert first.graph == second.graph
     assert first.workflow_hash == second.workflow_hash
-    assert first.graph["4"]["inputs"]["seed"] == 123
+    assert first.graph["5"]["inputs"]["seed"] == 123
     assert first.graph["1"]["inputs"]["ckpt_name"] == profile.checkpoint
 
 

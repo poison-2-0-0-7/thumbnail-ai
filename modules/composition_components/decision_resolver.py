@@ -8,27 +8,72 @@ from Section 11 of Module 10 Architecture Document.
 
 from __future__ import annotations
 
+from typing import Optional
+
 from composition_components.interfaces import IDecisionResolver
-from models import LayerDecision, LayerRole, RedesignSpecification
+from models import DecisionManifest, LayerDecision, LayerRole, RedesignSpecification
 
 
 class DecisionResolver(IDecisionResolver):
     """
-    Deterministic decision resolver mapping RedesignSpecification fields to LayerDecisions.
+    Deterministic decision resolver mapping RedesignSpecification or DecisionManifest to LayerDecisions.
     """
 
     def resolve(
-        self, spec: RedesignSpecification
+        self,
+        spec: RedesignSpecification,
+        decision_manifest: Optional[DecisionManifest] = None,
     ) -> list[tuple[str, LayerRole, LayerDecision, str]]:
         """
-        Map RedesignSpecification to list of (element_key, role, decision, rationale) tuples.
+        Map RedesignSpecification or DecisionManifest to list of (element_key, role, decision, rationale) tuples.
 
-        Rules (§11):
-        1. Background is always REPLACE.
-        2. Subject/person is ENHANCE if crop_tighter else KEEP (when has_subject=True).
-        3. Object directives map action "remove" -> REMOVE, "preserve"/"include" -> KEEP.
-        4. Text overlay maps include_text=True -> ADD.
+        Rules (§11 & Integration §5):
+        - When DecisionManifest is present and status != 'error', uses decisions from DecisionManifest.
+        - Otherwise, falls back to RedesignSpecification-only mapping:
+          1. Background is always REPLACE.
+          2. Subject/person is ENHANCE if crop_tighter else KEEP (when has_subject=True).
+          3. Object directives map action "remove" -> REMOVE, "preserve"/"include" -> KEEP.
+          4. Text overlay maps include_text=True -> ADD.
         """
+        if (
+            decision_manifest is not None
+            and getattr(decision_manifest, "status", None) != "error"
+            and str(getattr(decision_manifest, "status", "")).lower() != "error"
+            and getattr(decision_manifest, "decisions", None)
+        ):
+            manifest_decisions: list[tuple[str, LayerRole, LayerDecision, str]] = []
+            for d in decision_manifest.decisions:
+                if hasattr(d, "target") and d.target:
+                    element_key = d.target.element_id
+                    role_str = str(d.target.element_type).lower()
+                else:
+                    element_key = getattr(d, "target_element_key", "element")
+                    role_str = str(getattr(d, "role", "object")).lower()
+
+                action_str = (
+                    d.action.value if hasattr(d.action, "value") else str(d.action)
+                ).lower()
+
+                try:
+                    role = LayerRole(role_str)
+                except ValueError:
+                    if role_str in ("subject", "person"):
+                        role = LayerRole.PERSON
+                    elif role_str == "background":
+                        role = LayerRole.BACKGROUND
+                    elif role_str == "text":
+                        role = LayerRole.TEXT
+                    else:
+                        role = LayerRole.OBJECT
+
+                try:
+                    decision = LayerDecision(action_str)
+                except ValueError:
+                    decision = LayerDecision.KEEP
+
+                manifest_decisions.append((element_key, role, decision, d.rationale))
+            return manifest_decisions
+
         decisions: list[tuple[str, LayerRole, LayerDecision, str]] = []
 
         # 1. Background

@@ -311,3 +311,47 @@ def test_processor_failure_propagates_explicitly(tmp_path: Path) -> None:
     engine.segmentation_processor = failing
     with pytest.raises(SegmentationInferenceError):
         engine.prepare_assets(VIDEO_ID, str(source), options={"cache_enabled": False})
+
+
+def test_vre_projects_from_asset_extraction_manifest(tmp_path: Path) -> None:
+    from config import ASSET_MANIFEST_FILENAME
+    from models import AssetExtractionManifest, AssetFileRef, PersonAsset
+
+    asset_ext_dir = tmp_path / "asset_extraction"
+    vid_dir = asset_ext_dir / VIDEO_ID
+    vid_dir.mkdir(parents=True)
+
+    face_png = _write_image(vid_dir / "face.png")
+    face_mask_png = _write_image(vid_dir / "face_mask.png")
+
+    dummy_hash = "a" * 64
+    manifest = AssetExtractionManifest(
+        video_id=VIDEO_ID,
+        source_thumbnail_path="thumb.jpg",
+        source_hash=dummy_hash,
+        intelligence_hash=dummy_hash,
+        engine_version="1.0.0",
+        people=[
+            PersonAsset(
+                person_index=0,
+                face=AssetFileRef(asset_type="face", file_path=str(face_png), checksum=dummy_hash, resolution=(100, 100), source="extracted"),
+                face_mask=AssetFileRef(asset_type="face_mask", file_path=str(face_mask_png), checksum=dummy_hash, resolution=(100, 100), source="extracted"),
+                source_face_detail_index=0,
+                extraction_status="success",
+            )
+        ],
+        extracted_at="2026-08-01T00:00:00Z",
+    )
+    (vid_dir / ASSET_MANIFEST_FILENAME).write_text(manifest.model_dump_json(), encoding="utf-8")
+
+    source = _write_image(tmp_path / "source.jpg")
+    engine, _, _, _ = _engine(tmp_path)
+
+    vre_manifest = engine.prepare_assets(
+        VIDEO_ID,
+        str(source),
+        options={"cache_enabled": False, "asset_extraction_dir": asset_ext_dir},
+    )
+
+    assert "creator_face" in vre_manifest.assets
+    assert vre_manifest.processing_metadata.get("projected_from_module8") is True

@@ -87,9 +87,9 @@
     }
   ],
   "elements_to_preserve": [
-    "Happy expressions of the individuals",
     "Warm color palette",
-    "Rule of thirds composition"
+    "Symmetrical composition",
+    "Emotional expressions of the subjects"
   ],
   "overall_rationale": "ctr_potential_score=0.75; curiosity_gap_score=0.68; content_mismatch_detected=False; rules applied: clutter_reduction, crop_tighter.",
   "source_ctr_potential_score": 0.75,
@@ -97,6 +97,6 @@
   "source_content_mismatch_detected": false,
   "status": "success",
   "error_message": null,
-  "duration_seconds": 0.00009899999713525176,
-  "generated_at": "2026-08-01T10:09:35.876001+00:00"
+  "duration_seconds": 0.0001309999788645655,
+  "generated_at": "2026-08-01T15:48:40.533106+00:00"
 }

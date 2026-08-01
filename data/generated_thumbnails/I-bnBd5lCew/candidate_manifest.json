@@ -5,7 +5,7 @@
       "candidate_index": 0,
       "strategy_name": "faithful",
       "seed": 749820954,
-      "workflow_hash": "073a08fbfae2040928261920c6818792d591626c8dcf14fd311320e3e55b2aee",
+      "workflow_hash": "941f6cf8c5748b89e852a3c498808c73fa24eb4bb4c5372c2908c1769ef55c4a",
       "generation_parameters": {
         "width": 1280,
         "height": 720,
@@ -22,12 +22,12 @@
         "file_integrity_passed": true,
         "safety_passed": true,
         "identity_score": 1.0,
-        "face_quality_score": 0.8570110526200794,
+        "face_quality_score": 0.9150144352251783,
         "composition_score": 1.0,
         "text_safe_zone_score": 1.0,
         "object_preservation_score": 1.0,
         "color_compliance_score": 1.0,
-        "overall_score": 0.9785516578930119,
+        "overall_score": 0.9872521652837768,
         "hard_gate_passed": true
       },
       "face_match": {
@@ -39,24 +39,24 @@
       },
       "candidate_score": {
         "candidate_index": 0,
-        "overall_score": 0.9785516578930119,
+        "overall_score": 0.9872521652837768,
         "identity_similarity": 1.0,
         "hard_gate_passed": true,
         "rank": 1,
         "selected": true
       },
       "stage_durations_seconds": {
-        "comfyui_generate": 90.30726100000902,
-        "identity_preservation": 0.010966700006974861,
-        "face_restoration": 0.14189089997671545,
-        "background_composition": 0.10511530001531355,
-        "upscale": 0.11935729999095201,
-        "quality_assurance": 0.05128849999164231
+        "comfyui_generate": 58.991783200006466,
+        "identity_preservation": 0.018077699991408736,
+        "face_restoration": 0.20078439998906106,
+        "background_composition": 0.15322189999278635,
+        "upscale": 0.14690769999288023,
+        "quality_assurance": 0.07552959999884479
       },
       "output_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\generated_thumbnails\\I-bnBd5lCew\\tmp_candidates\\cand_0_final.png"
     }
   ],
   "winning_candidate_index": 0,
   "strategy_pack_name": null,
-  "generated_at": "2026-08-01T10:12:10.646963+00:00"
+  "generated_at": "2026-08-01T15:51:07.121882+00:00"
 }

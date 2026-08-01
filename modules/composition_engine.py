@@ -59,6 +59,7 @@ from models import (
     CanvasTransform,
     CompositionLayer,
     CompositionWorkspace,
+    DecisionManifest,
     GenerationBundle,
     LayerRole,
     LightingAdjustment,
@@ -131,7 +132,10 @@ class AssetComposer:
         )
 
     def compose_workspace(
-        self, video_id: str, options: Optional[dict] = None
+        self,
+        video_id: str,
+        options: Optional[dict] = None,
+        decision_manifest: Optional[DecisionManifest] = None,
     ) -> CompositionWorkspace:
         """
         Compose a complete CompositionWorkspace for video_id.
@@ -139,6 +143,7 @@ class AssetComposer:
         Args:
             video_id: YouTube video identifier.
             options: Optional execution configuration dict.
+            decision_manifest: Optional DecisionManifest from Module 9.
 
         Returns:
             CompositionWorkspace instance.
@@ -213,7 +218,9 @@ class AssetComposer:
         )
 
         # 7. Resolve decisions & placement geometry
-        decisions = self._decision_resolver.resolve(spec)
+        decisions = self._decision_resolver.resolve(
+            spec, decision_manifest=decision_manifest
+        )
         placements_dict = self._placement_engine.place(spec, canvas)
         text_placement = self._placement_engine.resolve_text_zones(spec, canvas)
         focal_zone_px = self._placement_engine.resolve_focal_zone(spec, canvas)
@@ -337,12 +344,17 @@ class AssetComposer:
         return self._bundle_builder.build_generation_bundle(workspace)
 
     def prepare_generation_workspace(
-        self, video_id: str, options: Optional[dict] = None
+        self,
+        video_id: str,
+        options: Optional[dict] = None,
+        decision_manifest: Optional[DecisionManifest] = None,
     ) -> GenerationBundle:
         """
         Convenience pipeline: compose_workspace -> validate_workspace -> save_workspace -> build_generation_bundle.
         """
-        workspace = self.compose_workspace(video_id, options=options)
+        workspace = self.compose_workspace(
+            video_id, options=options, decision_manifest=decision_manifest
+        )
         self.validate_workspace(workspace)
         self.save_workspace(workspace)
         return self.build_generation_bundle(workspace)

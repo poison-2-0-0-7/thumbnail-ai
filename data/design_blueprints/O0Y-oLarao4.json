@@ -1,117 +1,117 @@
 {
   "video_id": "O0Y-oLarao4",
-  "headline": "The Truth About Bold text for clear messaging",
+  "headline": "The Truth About Bold text for the main topic",
   "headline_variants": [
     {
-      "text": "The Truth About Bold text for clear messaging",
+      "text": "The Truth About Bold text for the main topic",
       "template_id": "controversy_01",
       "curiosity_score": 0.35,
       "emotional_impact_score": 0.8,
-      "readability_score": 1.0,
-      "ctr_potential_score": 0.981,
-      "character_count": 45,
-      "mobile_readability_score": 0.75,
+      "readability_score": 0.94,
+      "ctr_potential_score": 0.986,
+      "character_count": 44,
+      "mobile_readability_score": 0.8,
       "brand_consistency_score": 1.0,
-      "composite_score": 0.7687
+      "composite_score": 0.7657
     },
     {
-      "text": "The Secret Behind Bold text for clear messaging",
+      "text": "The Secret Behind Bold text for the main topic",
       "template_id": "curiosity_01",
       "curiosity_score": 0.35,
       "emotional_impact_score": 0.8,
-      "readability_score": 1.0,
-      "ctr_potential_score": 0.971,
-      "character_count": 47,
-      "mobile_readability_score": 0.65,
+      "readability_score": 0.94,
+      "ctr_potential_score": 0.976,
+      "character_count": 46,
+      "mobile_readability_score": 0.7,
       "brand_consistency_score": 1.0,
-      "composite_score": 0.7567
+      "composite_score": 0.7537
     },
     {
-      "text": "Why Bold text for clear messaging Changes Everything",
+      "text": "Why Bold text for the main topic Changes Everything",
       "template_id": "curiosity_02",
       "curiosity_score": 0.35,
       "emotional_impact_score": 0.8,
-      "readability_score": 1.0,
-      "ctr_potential_score": 0.946,
-      "character_count": 52,
-      "mobile_readability_score": 0.4,
+      "readability_score": 0.94,
+      "ctr_potential_score": 0.951,
+      "character_count": 51,
+      "mobile_readability_score": 0.45,
       "brand_consistency_score": 1.0,
-      "composite_score": 0.7267
+      "composite_score": 0.7237
     },
     {
-      "text": "Bold text for clear messaging Is Broken",
+      "text": "Bold text for the main topic Is Broken",
       "template_id": "shock_03",
       "curiosity_score": 0.0,
       "emotional_impact_score": 0.8,
       "readability_score": 1.0,
       "ctr_potential_score": 0.964,
-      "character_count": 39,
+      "character_count": 38,
       "mobile_readability_score": 1.0,
       "brand_consistency_score": 1.0,
       "composite_score": 0.7028
     },
     {
-      "text": "Why Everyone Is Wrong About Bold text for clear messaging",
+      "text": "Why Everyone Is Wrong About Bold text for the main topic",
       "template_id": "controversy_02",
       "curiosity_score": 0.35,
       "emotional_impact_score": 0.8,
-      "readability_score": 0.88,
-      "ctr_potential_score": 0.921,
-      "character_count": 57,
-      "mobile_readability_score": 0.15,
+      "readability_score": 0.82,
+      "ctr_potential_score": 0.926,
+      "character_count": 56,
+      "mobile_readability_score": 0.2,
       "brand_consistency_score": 1.0,
-      "composite_score": 0.6787
+      "composite_score": 0.6757
     },
     {
-      "text": "I Tried Bold text for clear messaging For 30 Days",
+      "text": "I Tried Bold text for the main topic For 30 Days",
       "template_id": "shock_01",
       "curiosity_score": 0.15,
       "emotional_impact_score": 0.8,
-      "readability_score": 0.88,
-      "ctr_potential_score": 0.937,
-      "character_count": 49,
-      "mobile_readability_score": 0.55,
+      "readability_score": 0.82,
+      "ctr_potential_score": 0.942,
+      "character_count": 48,
+      "mobile_readability_score": 0.6,
       "brand_consistency_score": 1.0,
-      "composite_score": 0.6719
+      "composite_score": 0.6689
     },
     {
-      "text": "Don't Do Bold text for clear messaging Until You Watch This",
+      "text": "Don't Do Bold text for the main topic Until You Watch This",
       "template_id": "shock_02",
       "curiosity_score": 0.35,
       "emotional_impact_score": 0.8,
-      "readability_score": 0.82,
-      "ctr_potential_score": 0.911,
-      "character_count": 59,
-      "mobile_readability_score": 0.05,
+      "readability_score": 0.76,
+      "ctr_potential_score": 0.916,
+      "character_count": 58,
+      "mobile_readability_score": 0.1,
       "brand_consistency_score": 1.0,
-      "composite_score": 0.6577
+      "composite_score": 0.6547
     },
     {
-      "text": "The Bold text for clear messaging Nobody Talks About",
+      "text": "The Bold text for the main topic Nobody Talks About",
       "template_id": "curiosity_03",
       "curiosity_score": 0.0,
       "emotional_impact_score": 0.8,
-      "readability_score": 0.94,
-      "ctr_potential_score": 0.904,
-      "character_count": 52,
-      "mobile_readability_score": 0.4,
+      "readability_score": 0.88,
+      "ctr_potential_score": 0.909,
+      "character_count": 51,
+      "mobile_readability_score": 0.45,
       "brand_consistency_score": 1.0,
-      "composite_score": 0.6218
+      "composite_score": 0.6188
     },
     {
-      "text": "Lies You Were Told About Bold text for clear messaging",
+      "text": "Lies You Were Told About Bold text for the main topic",
       "template_id": "controversy_03",
       "curiosity_score": 0.0,
       "emotional_impact_score": 0.8,
-      "readability_score": 0.88,
-      "ctr_potential_score": 0.894,
-      "character_count": 54,
-      "mobile_readability_score": 0.3,
+      "readability_score": 0.82,
+      "ctr_potential_score": 0.899,
+      "character_count": 53,
+      "mobile_readability_score": 0.35,
       "brand_consistency_score": 1.0,
-      "composite_score": 0.6008
+      "composite_score": 0.5978
     }
   ],
-  "headline_score": 0.7687,
+  "headline_score": 0.7657,
   "hook_type": "curiosity",
   "emotion": "High",
   "face_strategy": "neutral",
@@ -157,8 +157,9 @@
     "background"
   ],
   "branding_constraints": [
-    "Bold text for clear messaging",
-    "Warm color palette for approachable feel",
+    "Bold text for the main topic",
+    "Warm color palette",
+    "Composition that draws attention to the text",
     "Do not reproduce copyrighted characters, logos, or branded imagery."
   ],
   "conflicts_resolved": 0,
@@ -168,5 +169,5 @@
   ],
   "error_message": null,
   "duration_seconds": 0.0051,
-  "generated_at": "2026-08-01T10:16:30.353308+00:00"
+  "generated_at": "2026-08-01T15:59:55.989525+00:00"
 }

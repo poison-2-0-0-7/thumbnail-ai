@@ -624,7 +624,9 @@ GENERATION_PLAN_FILENAME: str = "generation_plan.json"
 PLANNER_ENGINE_VERSION: str = "1.0.0"
 PLANNER_CACHE_ENABLED: bool = True
 
-ASSET_EXTRACTION_ENGINE_ENABLED: bool = False
+ASSET_EXTRACTION_ENABLED: bool = False
+ASSET_EXTRACTION_ENGINE_ENABLED: bool = ASSET_EXTRACTION_ENABLED
+ASSET_EXTRACTION_REQUIRED: bool = False
 DECISION_ENGINE_ENABLED: bool = False
 
 # ---------------------------------------------------------------------------

@@ -62,9 +62,9 @@
     }
   ],
   "elements_to_preserve": [
-    "Warm color palette",
-    "Faces showing engagement",
-    "Text indicating progress"
+    "Transformation journey text",
+    "Emotional impact through visuals",
+    "Clear and concise composition"
   ],
   "overall_rationale": "ctr_potential_score=8.20; curiosity_gap_score=7.50; content_mismatch_detected=False; rules applied: minimum_negative_space, crop_tighter.",
   "source_ctr_potential_score": 8.2,
@@ -72,6 +72,6 @@
   "source_content_mismatch_detected": false,
   "status": "success",
   "error_message": null,
-  "duration_seconds": 0.0017090999754145741,
-  "generated_at": "2026-08-01T10:10:39.396354+00:00"
+  "duration_seconds": 0.0017502999980933964,
+  "generated_at": "2026-08-01T15:50:06.902163+00:00"
 }

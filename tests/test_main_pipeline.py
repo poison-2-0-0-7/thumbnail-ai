@@ -81,7 +81,7 @@ def test_run_pipeline_invokes_module7_after_prompt_package(monkeypatch: pytest.M
         order.append("module6_saved")
 
     class FakeAssetComposer:
-        def prepare_generation_workspace(self, video_id: str, options: dict | None = None):
+        def prepare_generation_workspace(self, video_id: str, options: dict | None = None, decision_manifest: object = None):
             order.append("module10_prepared")
             return SimpleNamespace(video_id=video_id)
 
@@ -119,6 +119,78 @@ def test_run_pipeline_invokes_module7_after_prompt_package(monkeypatch: pytest.M
     assert order == ["module5_5_saved", "module6_saved", "module10_prepared", "module7_generated"]
 
 
+def test_run_pipeline_invokes_module8_and_module9_when_flags_enabled(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    order: list[str] = []
+    creator = SimpleNamespace(email="creator@example.com", video_url="https://youtu.be/abcdEFGH123")
+
+    monkeypatch.setattr(main, "ASSET_EXTRACTION_ENABLED", True)
+    monkeypatch.setattr(main, "DECISION_ENGINE_ENABLED", True)
+    monkeypatch.setattr(main.ComfyUIProcessManager, "ensure_started", lambda self: True)
+    monkeypatch.setattr(main, "load_all_creators", lambda csv_path: [creator])
+    monkeypatch.setattr(main, "process_video", lambda creator, enable_oembed_fallback: _metadata())
+    monkeypatch.setattr(
+        main,
+        "process_thumbnail",
+        lambda metadata, thumbnail_dir: ThumbnailData(metadata=metadata, thumbnail_path=str(tmp_path / "thumb.jpg")),
+    )
+    monkeypatch.setattr(main, "analyze_thumbnail", lambda thumbnail: SimpleNamespace(status="success"))
+    monkeypatch.setattr(main, "save_intelligence", lambda intelligence, analysis_dir: None)
+
+    def extract_assets(video_id, source_image_path, intelligence, storage_root=None):
+        order.append("module8_extracted")
+        assert video_id == VIDEO_ID
+        return SimpleNamespace()
+
+    monkeypatch.setattr(main, "extract_assets", extract_assets)
+    monkeypatch.setattr(main, "build_redesign_specification", lambda intelligence: SimpleNamespace())
+    monkeypatch.setattr(main, "save_redesign_spec", lambda redesign_spec, spec_dir: None)
+    monkeypatch.setattr(
+        main,
+        "build_design_blueprint",
+        lambda intelligence, spec, metadata: SimpleNamespace(headline="Test Headline", text_position=None),
+    )
+    monkeypatch.setattr(main, "save_design_blueprint", lambda blueprint, blueprint_dir: None)
+    monkeypatch.setattr(main, "compile_prompt_package", lambda redesign_spec, design_blueprint=None: _prompt_package())
+    monkeypatch.setattr(main, "save_prompt_package", lambda prompt_package, package_dir: None)
+
+    fake_decision_manifest = SimpleNamespace(video_id=VIDEO_ID, status="success")
+
+    def run_decision_engine(video_id, **kwargs):
+        order.append("module9_decided")
+        assert video_id == VIDEO_ID
+        return fake_decision_manifest
+
+    monkeypatch.setattr(main, "run_decision_engine", run_decision_engine)
+
+    class FakeAssetComposer:
+        def prepare_generation_workspace(self, video_id: str, options: dict | None = None, decision_manifest: object = None):
+            order.append("module10_prepared")
+            assert decision_manifest == fake_decision_manifest
+            return SimpleNamespace(video_id=video_id)
+
+    monkeypatch.setattr(main, "AssetComposer", FakeAssetComposer)
+    monkeypatch.setattr(
+        main,
+        "_run_module7_generation",
+        lambda prompt_package, **kwargs: tmp_path / "generated" / f"{VIDEO_ID}.png",
+    )
+
+    main.run_pipeline(
+        csv_path=tmp_path / "creators.csv",
+        thumbnail_dir=tmp_path / "thumbnails",
+        analysis_dir=tmp_path / "analysis",
+        redesign_spec_dir=tmp_path / "specs",
+        design_blueprint_dir=tmp_path / "blueprints",
+        prompt_package_dir=tmp_path / "packages",
+        asset_extraction_dir=tmp_path / "asset_extraction",
+        decision_dir=tmp_path / "decisions",
+    )
+
+    assert order == ["module8_extracted", "module9_decided", "module10_prepared"]
+
+
 def test_run_pipeline_treats_module7_error_as_per_creator_failure(
     monkeypatch: pytest.MonkeyPatch,
     tmp_path: Path,
@@ -147,7 +219,7 @@ def test_run_pipeline_treats_module7_error_as_per_creator_failure(
     monkeypatch.setattr(
         main,
         "AssetComposer",
-        lambda: SimpleNamespace(prepare_generation_workspace=lambda vid: SimpleNamespace()),
+        lambda: SimpleNamespace(prepare_generation_workspace=lambda vid, **kwargs: SimpleNamespace()),
     )
     monkeypatch.setattr(
         main,

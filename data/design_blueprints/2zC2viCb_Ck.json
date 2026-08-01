@@ -1,111 +1,111 @@
 {
   "video_id": "2zC2viCb_Ck",
-  "headline": "How to Master Symmetry and balance Fast",
+  "headline": "How to Master Happy expressions Fast",
   "headline_variants": [
     {
-      "text": "How to Master Symmetry and balance Fast",
+      "text": "How to Master Happy expressions Fast",
       "template_id": "benefit_01",
       "curiosity_score": 0.35,
       "emotional_impact_score": 0.9,
       "readability_score": 1.0,
       "ctr_potential_score": 0.914,
-      "character_count": 39,
+      "character_count": 36,
       "mobile_readability_score": 1.0,
       "brand_consistency_score": 1.0,
       "composite_score": 0.8003
     },
     {
-      "text": "The Secret Behind Symmetry and balance",
+      "text": "The Secret Behind Happy expressions",
       "template_id": "curiosity_01",
       "curiosity_score": 0.35,
       "emotional_impact_score": 0.8,
-      "readability_score": 1.0,
+      "readability_score": 0.988,
       "ctr_potential_score": 0.906,
-      "character_count": 38,
+      "character_count": 35,
       "mobile_readability_score": 1.0,
       "brand_consistency_score": 1.0,
-      "composite_score": 0.7787
+      "composite_score": 0.7769
     },
     {
-      "text": "Why Symmetry and balance Changes Everything",
+      "text": "Why Happy expressions Changes Everything",
       "template_id": "curiosity_02",
       "curiosity_score": 0.35,
       "emotional_impact_score": 0.8,
-      "readability_score": 0.98,
-      "ctr_potential_score": 0.891,
-      "character_count": 43,
-      "mobile_readability_score": 0.85,
+      "readability_score": 0.928,
+      "ctr_potential_score": 0.906,
+      "character_count": 40,
+      "mobile_readability_score": 1.0,
       "brand_consistency_score": 1.0,
-      "composite_score": 0.7577
+      "composite_score": 0.7679
     },
     {
-      "text": "I Tried Symmetry and balance For 30 Days",
+      "text": "Don't Do Happy expressions Until You Watch This",
+      "template_id": "shock_02",
+      "curiosity_score": 0.35,
+      "emotional_impact_score": 0.8,
+      "readability_score": 1.0,
+      "ctr_potential_score": 0.871,
+      "character_count": 47,
+      "mobile_readability_score": 0.65,
+      "brand_consistency_score": 1.0,
+      "composite_score": 0.7367
+    },
+    {
+      "text": "I Tried Happy expressions For 30 Days",
       "template_id": "shock_01",
       "curiosity_score": 0.15,
       "emotional_impact_score": 0.8,
       "readability_score": 1.0,
       "ctr_potential_score": 0.882,
-      "character_count": 40,
+      "character_count": 37,
       "mobile_readability_score": 1.0,
       "brand_consistency_score": 1.0,
       "composite_score": 0.7239
     },
     {
-      "text": "Don't Do Symmetry and balance Until You Watch This",
-      "template_id": "shock_02",
-      "curiosity_score": 0.35,
-      "emotional_impact_score": 0.8,
-      "readability_score": 0.94,
-      "ctr_potential_score": 0.856,
-      "character_count": 50,
-      "mobile_readability_score": 0.5,
-      "brand_consistency_score": 1.0,
-      "composite_score": 0.7097
-    },
-    {
-      "text": "The Ultimate Symmetry and balance Blueprint",
+      "text": "The Ultimate Happy expressions Blueprint",
       "template_id": "benefit_02",
       "curiosity_score": 0.0,
       "emotional_impact_score": 0.9,
-      "readability_score": 0.98,
-      "ctr_potential_score": 0.857,
-      "character_count": 43,
-      "mobile_readability_score": 0.85,
+      "readability_score": 0.928,
+      "ctr_potential_score": 0.872,
+      "character_count": 40,
+      "mobile_readability_score": 1.0,
       "brand_consistency_score": 1.0,
-      "composite_score": 0.6834
+      "composite_score": 0.6936
     },
     {
-      "text": "The Symmetry and balance Nobody Talks About",
+      "text": "The Happy expressions Nobody Talks About",
       "template_id": "curiosity_03",
       "curiosity_score": 0.0,
       "emotional_impact_score": 0.8,
       "readability_score": 1.0,
-      "ctr_potential_score": 0.849,
-      "character_count": 43,
-      "mobile_readability_score": 0.85,
+      "ctr_potential_score": 0.864,
+      "character_count": 40,
+      "mobile_readability_score": 1.0,
       "brand_consistency_score": 1.0,
-      "composite_score": 0.6648
+      "composite_score": 0.6828
     },
     {
-      "text": "Double Your Results With Symmetry and balance",
+      "text": "Double Your Results With Happy expressions",
       "template_id": "benefit_03",
       "curiosity_score": 0.0,
       "emotional_impact_score": 0.8,
-      "readability_score": 1.0,
-      "ctr_potential_score": 0.839,
-      "character_count": 45,
-      "mobile_readability_score": 0.75,
+      "readability_score": 0.99,
+      "ctr_potential_score": 0.854,
+      "character_count": 42,
+      "mobile_readability_score": 0.9,
       "brand_consistency_score": 1.0,
-      "composite_score": 0.6528
+      "composite_score": 0.6693
     },
     {
-      "text": "Symmetry and balance Is Broken",
+      "text": "Happy expressions Is Broken",
       "template_id": "shock_03",
       "curiosity_score": 0.0,
       "emotional_impact_score": 0.6,
       "readability_score": 1.0,
       "ctr_potential_score": 0.848,
-      "character_count": 30,
+      "character_count": 27,
       "mobile_readability_score": 1.0,
       "brand_consistency_score": 1.0,
       "composite_score": 0.6396
@@ -113,7 +113,7 @@
   ],
   "headline_score": 0.8003,
   "hook_type": "benefit",
-  "emotion": "High",
+  "emotion": "high",
   "face_strategy": "preserve",
   "object_strategy": [
     {
@@ -183,16 +183,16 @@
     "background"
   ],
   "branding_constraints": [
-    "Symmetry and balance",
     "Happy expressions",
-    "Dynamic interaction between faces",
-    "Rule of thirds composition",
+    "Symmetrical layout",
+    "Balanced composition",
+    "Positive emotional tone",
     "Do not reproduce copyrighted characters, logos, or branded imagery."
   ],
   "conflicts_resolved": 0,
   "status": "success",
   "partial_failure_reasons": [],
   "error_message": null,
-  "duration_seconds": 0.0007,
-  "generated_at": "2026-08-01T10:13:40.500830+00:00"
+  "duration_seconds": 0.0052,
+  "generated_at": "2026-08-01T15:53:00.087176+00:00"
 }

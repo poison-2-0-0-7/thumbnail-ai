@@ -58,7 +58,9 @@ class IDecisionResolver(ABC):
 
     @abstractmethod
     def resolve(
-        self, spec: RedesignSpecification
+        self,
+        spec: RedesignSpecification,
+        decision_manifest: Optional[DecisionManifest] = None,
     ) -> list[tuple[str, LayerRole, LayerDecision, str]]:
         """Return (element_key, role, decision, rationale) tuples."""
         pass

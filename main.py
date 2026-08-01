@@ -51,17 +51,25 @@ from pathlib import Path
 # Ensure modules/ is importable regardless of working directory
 # ---------------------------------------------------------------------------
 
-_MODULES_DIR: Path = Path(__file__).resolve().parent / "modules"
+_PROJECT_ROOT: Path = Path(__file__).resolve().parent
+_MODULES_DIR: Path = _PROJECT_ROOT / "modules"
+if str(_PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(_PROJECT_ROOT))
 if str(_MODULES_DIR) not in sys.path:
     sys.path.insert(0, str(_MODULES_DIR))
 
 from loguru import logger  # noqa: E402
 
 from config import (  # noqa: E402
+    ASSET_EXTRACTION_ENABLED,
+    ASSET_EXTRACTION_REQUIRED,
     COMFYUI_HOST,
     COMFYUI_PORT,
+    DECISION_ENGINE_ENABLED,
     DEFAULT_ANALYSIS_DIR,
+    DEFAULT_ASSET_EXTRACTION_DIR,
     DEFAULT_CSV_PATH,
+    DEFAULT_DECISION_DIR,
     DEFAULT_DESIGN_BLUEPRINT_DIR,
     DEFAULT_PROMPT_PACKAGE_DIR,
     DEFAULT_REDESIGN_SPEC_DIR,
@@ -87,6 +95,7 @@ from image_generator import (  # noqa: E402
     utc_now,
 )
 from models import (  # noqa: E402
+    DecisionManifest,
     GeneratedAsset,
     GenerationBundle,
     GenerationPlan,
@@ -97,6 +106,10 @@ from models import (  # noqa: E402
 )
 
 from module7_exceptions import ComfyUIStartupError, Module7Error  # noqa: E402
+from asset_extraction_engine import extract_assets  # noqa: E402
+from asset_extraction_exceptions import AssetExtractionError  # noqa: E402
+from decision_engine import run_decision_engine  # noqa: E402
+from decision_exceptions import DecisionEngineError  # noqa: E402
 from thumbnail_downloader import (  # noqa: E402
     ThumbnailDownloaderError,
     process_thumbnail,
@@ -141,10 +154,12 @@ def run_pipeline(
     redesign_spec_dir: Path = DEFAULT_REDESIGN_SPEC_DIR,
     design_blueprint_dir: Path = DEFAULT_DESIGN_BLUEPRINT_DIR,
     prompt_package_dir: Path = DEFAULT_PROMPT_PACKAGE_DIR,
+    asset_extraction_dir: Path = DEFAULT_ASSET_EXTRACTION_DIR,
+    decision_dir: Path = DEFAULT_DECISION_DIR,
     comfyui_manager: ComfyUIProcessManager | None = None,
 ) -> None:
     """
-    Execute the full four-module pipeline for every creator in ``csv_path``.
+    Execute the full pipeline for every creator in ``csv_path``.
 
     Processing is best-effort: a failure on one creator is logged and
     counted, but never prevents the remaining creators from being
@@ -161,6 +176,10 @@ def run_pipeline(
                                design blueprints are saved.
         prompt_package_dir: Directory where deterministic Module 6
                             prompt packages are saved.
+        asset_extraction_dir: Directory where Module 8 asset manifests
+                              are saved.
+        decision_dir:   Directory where Module 9 decision manifests
+                        are saved.
         comfyui_manager: Optional ComfyUI Process Manager instance.
     """
     logger.info("Pipeline starting — CSV: {csv}", csv=csv_path)
@@ -183,6 +202,8 @@ def run_pipeline(
             redesign_spec_dir=redesign_spec_dir,
             design_blueprint_dir=design_blueprint_dir,
             prompt_package_dir=prompt_package_dir,
+            asset_extraction_dir=asset_extraction_dir,
+            decision_dir=decision_dir,
             comfyui_manager=manager,
         )
     finally:
@@ -197,6 +218,8 @@ def _run_pipeline_creators(
     redesign_spec_dir: Path,
     design_blueprint_dir: Path,
     prompt_package_dir: Path,
+    asset_extraction_dir: Path = DEFAULT_ASSET_EXTRACTION_DIR,
+    decision_dir: Path = DEFAULT_DECISION_DIR,
     comfyui_manager: ComfyUIProcessManager | None = None,
 ) -> None:
     # ── Module 1: load creators ──────────────────────────────────────────
@@ -319,7 +342,33 @@ def _run_pipeline_creators(
             status=intelligence.status,
         )
 
-        # â”€â”€ Module 5: derive deterministic redesign specification â”€â”€
+        # ── Module 8: extract visual asset manifest ───────────────────────
+        if ASSET_EXTRACTION_ENABLED:
+            try:
+                extract_assets(
+                    metadata.video_id,
+                    source_image_path=str(thumbnail.thumbnail_path),
+                    intelligence=intelligence,
+                    storage_root=asset_extraction_dir,
+                )
+                logger.info(
+                    "Asset extraction saved for creator_email={email} video_id={vid}",
+                    email=creator.email,
+                    vid=metadata.video_id,
+                )
+            except AssetExtractionError as exc:
+                logger.error(
+                    "Asset extraction failed for creator_email={email} "
+                    "video_id={vid}: {exc}",
+                    email=creator.email,
+                    vid=metadata.video_id,
+                    exc=exc,
+                )
+                if ASSET_EXTRACTION_REQUIRED:
+                    skipped += 1
+                    continue
+
+        # ── Module 5: derive deterministic redesign specification ──
         try:
             redesign_spec = build_redesign_specification(intelligence)
             save_redesign_spec(redesign_spec, spec_dir=redesign_spec_dir)
@@ -380,10 +429,39 @@ def _run_pipeline_creators(
             vid=metadata.video_id,
         )
 
+        # ── Module 9: AI decision engine ──────────────────────────────────
+        decision_manifest: DecisionManifest | None = None
+        if DECISION_ENGINE_ENABLED:
+            try:
+                decision_manifest = run_decision_engine(
+                    metadata.video_id,
+                    decision_dir=decision_dir,
+                    analysis_dir=analysis_dir,
+                    redesign_spec_dir=redesign_spec_dir,
+                    prompt_package_dir=prompt_package_dir,
+                    asset_extraction_dir=asset_extraction_dir,
+                )
+                logger.info(
+                    "Decision manifest saved for creator_email={email} video_id={vid}",
+                    email=creator.email,
+                    vid=metadata.video_id,
+                )
+            except DecisionEngineError as exc:
+                logger.error(
+                    "Decision engine failed for creator_email={email} "
+                    "video_id={vid}: {exc}",
+                    email=creator.email,
+                    vid=metadata.video_id,
+                    exc=exc,
+                )
+                skipped += 1
+                continue
+
         # ── Module 10: prepare composition workspace ─────────────────────
         try:
             generation_bundle = AssetComposer().prepare_generation_workspace(
-                prompt_package.video_id
+                prompt_package.video_id,
+                decision_manifest=decision_manifest if DECISION_ENGINE_ENABLED else None,
             )
         except CompositionBaseError as exc:
             logger.error(

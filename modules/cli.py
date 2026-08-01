@@ -48,7 +48,9 @@ from config import (  # noqa: E402
     COMFYUI_STARTUP_TIMEOUT,
     COMFYUI_WORKING_DIRECTORY,
     DEFAULT_ANALYSIS_DIR,
+    DEFAULT_ASSET_EXTRACTION_DIR,
     DEFAULT_CSV_PATH,
+    DEFAULT_DECISION_DIR,
     DEFAULT_DESIGN_BLUEPRINT_DIR,
     DEFAULT_PROMPT_PACKAGE_DIR,
     DEFAULT_REDESIGN_SPEC_DIR,
@@ -91,12 +93,14 @@ def cmd_run(args: argparse.Namespace) -> int:
     print("Running pipeline...")
     try:
         run_pipeline(
-            csv_path=Path(args.csv) if args.csv else DEFAULT_CSV_PATH,
-            thumbnail_dir=Path(args.thumbnail_dir) if args.thumbnail_dir else DEFAULT_THUMBNAIL_DIR,
-            analysis_dir=Path(args.analysis_dir) if args.analysis_dir else DEFAULT_ANALYSIS_DIR,
-            redesign_spec_dir=Path(args.redesign_spec_dir) if args.redesign_spec_dir else DEFAULT_REDESIGN_SPEC_DIR,
-            design_blueprint_dir=Path(args.design_blueprint_dir) if args.design_blueprint_dir else DEFAULT_DESIGN_BLUEPRINT_DIR,
-            prompt_package_dir=Path(args.prompt_package_dir) if args.prompt_package_dir else DEFAULT_PROMPT_PACKAGE_DIR,
+            csv_path=Path(args.csv) if getattr(args, "csv", None) else DEFAULT_CSV_PATH,
+            thumbnail_dir=Path(args.thumbnail_dir) if getattr(args, "thumbnail_dir", None) else DEFAULT_THUMBNAIL_DIR,
+            analysis_dir=Path(args.analysis_dir) if getattr(args, "analysis_dir", None) else DEFAULT_ANALYSIS_DIR,
+            redesign_spec_dir=Path(args.redesign_spec_dir) if getattr(args, "redesign_spec_dir", None) else DEFAULT_REDESIGN_SPEC_DIR,
+            design_blueprint_dir=Path(args.design_blueprint_dir) if getattr(args, "design_blueprint_dir", None) else DEFAULT_DESIGN_BLUEPRINT_DIR,
+            prompt_package_dir=Path(args.prompt_package_dir) if getattr(args, "prompt_package_dir", None) else DEFAULT_PROMPT_PACKAGE_DIR,
+            asset_extraction_dir=Path(args.asset_extraction_dir) if getattr(args, "asset_extraction_dir", None) else DEFAULT_ASSET_EXTRACTION_DIR,
+            decision_dir=Path(args.decision_dir) if getattr(args, "decision_dir", None) else DEFAULT_DECISION_DIR,
             comfyui_manager=manager,
         )
         print("Pipeline completed successfully.")
@@ -337,6 +341,8 @@ def build_parser() -> argparse.ArgumentParser:
     run_parser.add_argument("--redesign-spec-dir", type=str, help="Redesign specs directory")
     run_parser.add_argument("--design-blueprint-dir", type=str, help="Blueprints directory")
     run_parser.add_argument("--prompt-package-dir", type=str, help="Prompt packages directory")
+    run_parser.add_argument("--asset-extraction-dir", type=str, help="Module 8 asset extraction directory")
+    run_parser.add_argument("--decision-dir", type=str, help="Module 9 decision manifests directory")
     run_parser.set_defaults(func=cmd_run)
 
     # tai doctor

@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import shutil
 import sys
 import threading
 import time
@@ -25,6 +26,8 @@ if str(_MODULES_DIR) not in sys.path:
     sys.path.insert(0, str(_MODULES_DIR))
 
 from config import (  # noqa: E402
+    ASSET_MANIFEST_FILENAME,
+    DEFAULT_ASSET_EXTRACTION_DIR,
     LOG_DIR,
     MODULE65_LOG_PATH,
     VRE_CACHE_ENABLED,
@@ -122,7 +125,10 @@ class VisualReferenceEngine:
         image = self._load_source_image(source_path)
 
         with self._lock:
-            asset_paths, processor_metadata = self._dispatch_processors(image, target_dir)
+            asset_extraction_dir = options.get("asset_extraction_dir")
+            asset_paths, processor_metadata = self._dispatch_processors(
+                image, target_dir, video_id=video_id, asset_extraction_dir=asset_extraction_dir
+            )
             duration_ms = int((time.monotonic() - started_at) * 1000)
             metadata = {
                 "source_hash": source_hash,
@@ -209,9 +215,135 @@ class VisualReferenceEngine:
             )
             return None
 
+    def _project_from_asset_manifest(
+        self,
+        video_id: str,
+        target_dir: Path,
+        asset_extraction_dir: Optional[Path] = None,
+    ) -> Optional[tuple[dict[str, str], dict[str, Any]]]:
+        if not video_id:
+            return None
+        storage_root = Path(asset_extraction_dir) if asset_extraction_dir else DEFAULT_ASSET_EXTRACTION_DIR
+        manifest_path = storage_root / video_id / ASSET_MANIFEST_FILENAME
+        if not manifest_path.is_file():
+            return None
+
+        try:
+            from models import AssetExtractionManifest
+            content = manifest_path.read_text(encoding="utf-8")
+            ext_manifest = AssetExtractionManifest.model_validate_json(content)
+        except Exception as exc:
+            logger.warning("Could not load asset manifest for VRE projection for video_id={id}: {exc}", id=video_id, exc=exc)
+            return None
+
+        target_dir.mkdir(parents=True, exist_ok=True)
+        asset_paths: dict[str, str] = {}
+        confidence_scores: dict[str, Optional[float]] = {}
+        face_metadata: dict[str, Any] = {}
+
+        def _copy_ref(file_ref, target_name: str) -> bool:
+            if file_ref and hasattr(file_ref, "file_path") and file_ref.file_path:
+                src = Path(file_ref.file_path)
+                if src.is_file() and src.stat().st_size > 0:
+                    dst = target_dir / f"{target_name}.png"
+                    shutil.copy2(src, dst)
+                    asset_paths[target_name] = str(dst)
+                    return True
+            return False
+
+        if ext_manifest.people:
+            person = next((p for p in ext_manifest.people if p.face is not None), ext_manifest.people[0])
+            if _copy_ref(person.face, "creator_face"):
+                confidence_scores["creator_face"] = person.face.confidence_score
+                face_metadata["confidence"] = person.face.confidence_score
+            if _copy_ref(person.face_mask, "face_mask"):
+                confidence_scores["face_mask"] = person.face_mask.confidence_score
+
+        if ext_manifest.objects:
+            obj = ext_manifest.objects[0]
+            if _copy_ref(obj.crop, "object_crop"):
+                confidence_scores["object_crop"] = obj.confidence
+            if _copy_ref(obj.mask, "object_mask"):
+                confidence_scores["object_mask"] = obj.confidence
+
+        if ext_manifest.scene:
+            scene = ext_manifest.scene
+            if _copy_ref(scene.foreground, "foreground"):
+                confidence_scores["foreground"] = 0.95
+            if _copy_ref(scene.background, "background"):
+                confidence_scores["background"] = 0.95
+            if _copy_ref(scene.depth_map, "depth_map"):
+                confidence_scores["depth_map"] = None
+            if _copy_ref(scene.segmentation_map, "canny_map"):
+                confidence_scores["canny_map"] = None
+
+        if asset_paths:
+            logger.info("Projected {n} VRE assets from Module 8 AssetExtractionManifest for video_id={id}", n=len(asset_paths), id=video_id)
+            return asset_paths, {
+                "confidence_scores": confidence_scores,
+                "face_metadata": face_metadata,
+                "projected_from_module8": True,
+            }
+        return None
+
     def _dispatch_processors(
-        self, source_image: np.ndarray, target_dir: Path
+        self,
+        source_image: np.ndarray,
+        target_dir: Path,
+        video_id: str = "",
+        asset_extraction_dir: Optional[Path] = None,
     ) -> tuple[dict[str, str], dict[str, Any]]:
+        projected = self._project_from_asset_manifest(video_id, target_dir, asset_extraction_dir)
+        if projected is not None:
+            asset_paths, processor_metadata = projected
+            confidence_scores = processor_metadata.get("confidence_scores", {})
+            face_metadata = processor_metadata.get("face_metadata", {})
+
+            if "creator_face" not in asset_paths or "face_mask" not in asset_paths:
+                f_crop, f_mask, f_meta = self.face_processor.process(source_image)
+                if "creator_face" not in asset_paths and f_crop is not None:
+                    path = target_dir / "creator_face.png"
+                    self.asset_writer.write_image(f_crop, path)
+                    asset_paths["creator_face"] = str(path)
+                    confidence_scores["creator_face"] = f_meta.get("confidence")
+                    face_metadata = f_meta
+                if "face_mask" not in asset_paths and f_mask is not None:
+                    path = target_dir / "face_mask.png"
+                    self.asset_writer.write_image(f_mask, path)
+                    asset_paths["face_mask"] = str(path)
+                    confidence_scores["face_mask"] = f_meta.get("confidence")
+
+            missing_seg = [k for k in ("foreground", "background", "object_crop", "object_mask") if k not in asset_paths]
+            if missing_seg:
+                fg, bg, o_crop, o_mask = self.segmentation_processor.process(source_image)
+                seg = {"foreground": fg, "background": bg, "object_crop": o_crop, "object_mask": o_mask}
+                for name, arr in seg.items():
+                    if name not in asset_paths and arr is not None:
+                        path = target_dir / f"{name}.png"
+                        self.asset_writer.write_image(arr, path)
+                        asset_paths[name] = str(path)
+                        confidence_scores[name] = 0.95 if name in {"foreground", "background"} else 0.915
+
+            if "depth_map" not in asset_paths:
+                d_map = self.topology_processor.generate_depth_map(source_image)
+                if d_map is not None:
+                    path = target_dir / "depth_map.png"
+                    self.asset_writer.write_image(d_map, path)
+                    asset_paths["depth_map"] = str(path)
+                    confidence_scores["depth_map"] = None
+
+            if "canny_map" not in asset_paths:
+                c_map = self.topology_processor.generate_canny_map(source_image)
+                if c_map is not None:
+                    path = target_dir / "canny_map.png"
+                    self.asset_writer.write_image(c_map, path)
+                    asset_paths["canny_map"] = str(path)
+                    confidence_scores["canny_map"] = None
+
+            processor_metadata["confidence_scores"] = confidence_scores
+            processor_metadata["face_metadata"] = face_metadata
+            return asset_paths, processor_metadata
+
         asset_paths: dict[str, str] = {}
         confidence_scores: dict[str, Optional[float]] = {}
 
