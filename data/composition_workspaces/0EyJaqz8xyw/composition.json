@@ -182,13 +182,13 @@
   },
   "metadata": {
     "video_id": "0EyJaqz8xyw",
-    "created_at": "2026-08-01T08:36:01.759253+00:00",
+    "created_at": "2026-08-01T10:15:23.118629+00:00",
     "vre_source_hash": "4ff640bc0819d4051d1e7161282ff4702de6cba2b52e47d526837c46f0232189",
-    "redesign_spec_hash": "bad8fd7412ed4c532b81a2e282f2fa4ee1dcd17b6faff1b2acc9a3f8c84c226b",
-    "prompt_package_hash": "47d8a04bb674aeea9a4f3a2e6565443fc157e0074997bf2e7b7ca2b026a0d859",
+    "redesign_spec_hash": "39106730c2f29a8d9899128ddb69379d256ab4941009141c08944400220bbbf4",
+    "prompt_package_hash": "933b77ecd2a3bf932cf53ae379918d4a19e3ba7f8e762bae75d19ca121fa29fd",
     "engine_version": "1.0.0"
   },
   "status": "success",
   "error_message": null,
-  "duration_seconds": 0.18019970000023022
+  "duration_seconds": 0.04649399998015724
 }

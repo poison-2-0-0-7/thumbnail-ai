@@ -1,10 +1,10 @@
 {
   "video_id": "2zC2viCb_Ck",
-  "positive_prompt": "Place the primary subject in the center of the frame, matching the source position label 'center'. Crop tighter around the subject so it occupies a larger share of the frame. Maintain approximately 47% negative space in the background. Background detail is acceptable within the configured clutter target. Anchor the composition's focal point in the center of the frame, targeting a clutter score of 0.70 and a negative-space ratio of 0.47. Use moody, low-key lighting with a moderate-contrast look (target brightness=0.35, target contrast=0.57). Render muted, desaturated colors with a neutral color temperature (target saturation=0.30). Render text overlay: 'How to Master Happy expressions and smiles Fast' on the thumbnail. Preserve: Happy expressions and smiles, Symmetry and balance, Multiple faces for interaction.",
+  "positive_prompt": "Place the primary subject in the center of the frame, matching the source position label 'center'. Crop tighter around the subject so it occupies a larger share of the frame. Maintain approximately 47% negative space in the background. Background detail is acceptable within the configured clutter target. Anchor the composition's focal point in the center of the frame, targeting a clutter score of 0.70 and a negative-space ratio of 0.47. Use moody, low-key lighting with a moderate-contrast look (target brightness=0.35, target contrast=0.57). Render muted, desaturated colors with a neutral color temperature (target saturation=0.30). Render text overlay: 'How to Master Symmetry and balance Fast' on the thumbnail. Preserve: Symmetry and balance, Happy expressions, Dynamic interaction between faces, Rule of thirds composition.",
   "negative_prompt": "blurry, low resolution, watermark, distorted anatomy, extra limbs, text artifacts, jpeg compression artifacts, no person, no person, no person, no person, no person, no person",
   "subject_instructions": "Place the primary subject in the center of the frame, matching the source position label 'center'. Crop tighter around the subject so it occupies a larger share of the frame.",
   "background_instructions": "Maintain approximately 47% negative space in the background. Background detail is acceptable within the configured clutter target.",
-  "typography_instructions": "Render text overlay: 'How to Master Happy expressions and smiles Fast' on the thumbnail.",
+  "typography_instructions": "Render text overlay: 'How to Master Symmetry and balance Fast' on the thumbnail.",
   "composition_instructions": "Anchor the composition's focal point in the center of the frame, targeting a clutter score of 0.70 and a negative-space ratio of 0.47.",
   "lighting_instructions": "Use moody, low-key lighting with a moderate-contrast look (target brightness=0.35, target contrast=0.57).",
   "color_instructions": "Render muted, desaturated colors with a neutral color temperature (target saturation=0.30).",
@@ -19,7 +19,7 @@
   "rendering_constraints": [
     "Render at the exact target resolution; do not crop after generation.",
     "Do not add any watermark, logo, or signature.",
-    "Preserve the following elements exactly: Happy expressions and smiles, Symmetry and balance, Multiple faces for interaction.",
+    "Preserve the following elements exactly: Symmetry and balance, Happy expressions, Dynamic interaction between faces, Rule of thirds composition.",
     "Do not add any text to the rendered image."
   ],
   "safety_constraints": [
@@ -55,6 +55,6 @@
   },
   "status": "success",
   "error_message": null,
-  "duration_seconds": 0.0000653000024612993,
-  "generated_at": "2026-08-01T08:35:45.739167+00:00"
+  "duration_seconds": 0.00008690002141520381,
+  "generated_at": "2026-08-01T10:13:40.508724+00:00"
 }

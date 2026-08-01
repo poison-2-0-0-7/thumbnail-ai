@@ -161,13 +161,13 @@
   },
   "metadata": {
     "video_id": "O0Y-oLarao4",
-    "created_at": "2026-08-01T08:36:17.714336+00:00",
+    "created_at": "2026-08-01T10:16:30.459171+00:00",
     "vre_source_hash": "c7b650037eebe2b1a62c0c0a7f24ce2c1cbec13ac4b2be04a243dbe35aa9fff0",
-    "redesign_spec_hash": "645be70e04fca1d4ca839b4a07e1a2ccd2a676f4f330e5d8a1bef1dff96105f6",
-    "prompt_package_hash": "10ccac32b510eed241aac252a32d330859f8ec2fa961168aa7af91aba38506d3",
+    "redesign_spec_hash": "808b6fd6a6ab49d065487919ada75359a3d9ff8c4cd870ca2c52a2c23e05bc89",
+    "prompt_package_hash": "4fb264368246f4b54329c96d7a2013c466f9602dd64e3891880ec50abfe17d84",
     "engine_version": "1.0.0"
   },
   "status": "success",
   "error_message": null,
-  "duration_seconds": 0.10606190000544302
+  "duration_seconds": 0.08085209998534992
 }

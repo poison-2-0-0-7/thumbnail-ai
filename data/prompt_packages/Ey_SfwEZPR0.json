@@ -1,6 +1,6 @@
 {
   "video_id": "Ey_SfwEZPR0",
-  "positive_prompt": "Place the primary subject in the top-left of the frame, matching the source position label 'left-third'. Crop tighter around the subject so it occupies a larger share of the frame. Maintain approximately 83% negative space in the background. Keep the background moderately simple with limited competing elements. Anchor the composition's focal point in the top-left of the frame, targeting a clutter score of 0.40 and a negative-space ratio of 0.83. Use balanced lighting with a moderate-contrast look (target brightness=0.43, target contrast=0.58). Render muted, desaturated colors with a neutral color temperature (target saturation=0.30). Render text overlay: 'How to Master Happy facial expression Fast' on the thumbnail. Preserve: Happy facial expression, Motorcycle and person interaction, Neutral color palette and balanced composition.",
+  "positive_prompt": "Place the primary subject in the top-left of the frame, matching the source position label 'left-third'. Crop tighter around the subject so it occupies a larger share of the frame. Maintain approximately 83% negative space in the background. Keep the background moderately simple with limited competing elements. Anchor the composition's focal point in the top-left of the frame, targeting a clutter score of 0.40 and a negative-space ratio of 0.83. Use balanced lighting with a moderate-contrast look (target brightness=0.43, target contrast=0.58). Render muted, desaturated colors with a neutral color temperature (target saturation=0.30). Render text overlay: 'How to Master Happy facial expression Fast' on the thumbnail. Preserve: Happy facial expression, Motorcycle subject, Neutral color palette.",
   "negative_prompt": "blurry, low resolution, watermark, distorted anatomy, extra limbs, text artifacts, jpeg compression artifacts",
   "subject_instructions": "Place the primary subject in the top-left of the frame, matching the source position label 'left-third'. Crop tighter around the subject so it occupies a larger share of the frame.",
   "background_instructions": "Maintain approximately 83% negative space in the background. Keep the background moderately simple with limited competing elements.",
@@ -16,7 +16,7 @@
   "rendering_constraints": [
     "Render at the exact target resolution; do not crop after generation.",
     "Do not add any watermark, logo, or signature.",
-    "Preserve the following elements exactly: Happy facial expression, Motorcycle and person interaction, Neutral color palette and balanced composition.",
+    "Preserve the following elements exactly: Happy facial expression, Motorcycle subject, Neutral color palette.",
     "Do not add any text to the rendered image."
   ],
   "safety_constraints": [
@@ -52,6 +52,6 @@
   },
   "status": "success",
   "error_message": null,
-  "duration_seconds": 0.00016460000188089907,
-  "generated_at": "2026-08-01T08:35:22.351193+00:00"
+  "duration_seconds": 0.00007750000804662704,
+  "generated_at": "2026-08-01T10:12:26.142239+00:00"
 }

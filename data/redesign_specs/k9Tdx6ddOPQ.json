@@ -57,9 +57,8 @@
     }
   ],
   "elements_to_preserve": [
-    "Happy emotion",
-    "Warm color palette",
-    "Centered subject placement"
+    "Joyful expression",
+    "Warm color palette"
   ],
   "overall_rationale": "ctr_potential_score=0.75; curiosity_gap_score=0.65; content_mismatch_detected=False; rules applied: crop_tighter.",
   "source_ctr_potential_score": 0.75,
@@ -67,6 +66,6 @@
   "source_content_mismatch_detected": false,
   "status": "success",
   "error_message": null,
-  "duration_seconds": 0.00008450000314041972,
-  "generated_at": "2026-08-01T08:36:50.789560+00:00"
+  "duration_seconds": 0.0018788999877870083,
+  "generated_at": "2026-08-01T10:21:30.905478+00:00"
 }

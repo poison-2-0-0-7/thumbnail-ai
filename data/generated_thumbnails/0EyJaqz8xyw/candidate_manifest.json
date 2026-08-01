@@ -1,0 +1,62 @@
+{
+  "video_id": "0EyJaqz8xyw",
+  "entries": [
+    {
+      "candidate_index": 0,
+      "strategy_name": "faithful",
+      "seed": 1951552483,
+      "workflow_hash": "ab99850d81699029cd6028ddebbd418a8fe5bdafd6f2fd93d05847dbd6e725f5",
+      "generation_parameters": {
+        "width": 1280,
+        "height": 720,
+        "aspect_ratio": "16:9",
+        "seed": 1951552483,
+        "guidance_scale": 7.5,
+        "inference_steps": 30,
+        "sampler": "deterministic",
+        "num_candidates": 1,
+        "strategy_pack": null
+      },
+      "qa_report": {
+        "resolution_passed": true,
+        "file_integrity_passed": true,
+        "safety_passed": true,
+        "identity_score": 1.0,
+        "face_quality_score": 0.8720572605396605,
+        "composition_score": 1.0,
+        "text_safe_zone_score": 1.0,
+        "object_preservation_score": 1.0,
+        "color_compliance_score": 1.0,
+        "overall_score": 0.980808589080949,
+        "hard_gate_passed": true
+      },
+      "face_match": {
+        "similarity": 1.0,
+        "threshold": 0.5,
+        "passed": true,
+        "face_detected": false,
+        "skipped": true
+      },
+      "candidate_score": {
+        "candidate_index": 0,
+        "overall_score": 0.980808589080949,
+        "identity_similarity": 1.0,
+        "hard_gate_passed": true,
+        "rank": 1,
+        "selected": true
+      },
+      "stage_durations_seconds": {
+        "comfyui_generate": 43.014719500002684,
+        "identity_preservation": 0.01445149999926798,
+        "face_restoration": 0.1509432999882847,
+        "background_composition": 0.11195379999116994,
+        "upscale": 0.10911940000369214,
+        "quality_assurance": 0.053938700002618134
+      },
+      "output_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\generated_thumbnails\\0EyJaqz8xyw\\tmp_candidates\\cand_0_final.png"
+    }
+  ],
+  "winning_candidate_index": 0,
+  "strategy_pack_name": null,
+  "generated_at": "2026-08-01T10:16:06.848442+00:00"
+}

@@ -1,117 +1,117 @@
 {
   "video_id": "O0Y-oLarao4",
-  "headline": "The Truth About Bold text highlighting the main topic",
+  "headline": "The Truth About Bold text for clear messaging",
   "headline_variants": [
     {
-      "text": "The Truth About Bold text highlighting the main topic",
+      "text": "The Truth About Bold text for clear messaging",
       "template_id": "controversy_01",
       "curiosity_score": 0.35,
       "emotional_impact_score": 0.8,
-      "readability_score": 0.94,
-      "ctr_potential_score": 0.941,
-      "character_count": 53,
-      "mobile_readability_score": 0.35,
+      "readability_score": 1.0,
+      "ctr_potential_score": 0.981,
+      "character_count": 45,
+      "mobile_readability_score": 0.75,
       "brand_consistency_score": 1.0,
-      "composite_score": 0.7117
+      "composite_score": 0.7687
     },
     {
-      "text": "The Secret Behind Bold text highlighting the main topic",
+      "text": "The Secret Behind Bold text for clear messaging",
       "template_id": "curiosity_01",
       "curiosity_score": 0.35,
       "emotional_impact_score": 0.8,
-      "readability_score": 0.94,
-      "ctr_potential_score": 0.931,
-      "character_count": 55,
-      "mobile_readability_score": 0.25,
+      "readability_score": 1.0,
+      "ctr_potential_score": 0.971,
+      "character_count": 47,
+      "mobile_readability_score": 0.65,
       "brand_consistency_score": 1.0,
-      "composite_score": 0.6997
+      "composite_score": 0.7567
     },
     {
-      "text": "Why Bold text highlighting the main topic Changes Everything",
+      "text": "Why Bold text for clear messaging Changes Everything",
       "template_id": "curiosity_02",
       "curiosity_score": 0.35,
       "emotional_impact_score": 0.8,
-      "readability_score": 0.94,
-      "ctr_potential_score": 0.906,
-      "character_count": 60,
-      "mobile_readability_score": 0.0,
+      "readability_score": 1.0,
+      "ctr_potential_score": 0.946,
+      "character_count": 52,
+      "mobile_readability_score": 0.4,
       "brand_consistency_score": 1.0,
-      "composite_score": 0.6697
+      "composite_score": 0.7267
     },
     {
-      "text": "Bold text highlighting the main topic Is Broken",
+      "text": "Bold text for clear messaging Is Broken",
       "template_id": "shock_03",
       "curiosity_score": 0.0,
       "emotional_impact_score": 0.8,
       "readability_score": 1.0,
-      "ctr_potential_score": 0.929,
-      "character_count": 47,
-      "mobile_readability_score": 0.65,
+      "ctr_potential_score": 0.964,
+      "character_count": 39,
+      "mobile_readability_score": 1.0,
       "brand_consistency_score": 1.0,
-      "composite_score": 0.6608
+      "composite_score": 0.7028
     },
     {
-      "text": "Why Everyone Is Wrong About Bold text highlighting the main topic",
+      "text": "Why Everyone Is Wrong About Bold text for clear messaging",
       "template_id": "controversy_02",
       "curiosity_score": 0.35,
       "emotional_impact_score": 0.8,
-      "readability_score": 0.82,
-      "ctr_potential_score": 0.906,
-      "character_count": 65,
-      "mobile_readability_score": 0.0,
-      "brand_consistency_score": 1.0,
-      "composite_score": 0.6517
-    },
-    {
-      "text": "Don't Do Bold text highlighting the main topic Until You Watch This",
-      "template_id": "shock_02",
-      "curiosity_score": 0.35,
-      "emotional_impact_score": 0.8,
-      "readability_score": 0.76,
-      "ctr_potential_score": 0.906,
-      "character_count": 67,
-      "mobile_readability_score": 0.0,
-      "brand_consistency_score": 1.0,
-      "composite_score": 0.6427
-    },
-    {
-      "text": "I Tried Bold text highlighting the main topic For 30 Days",
-      "template_id": "shock_01",
-      "curiosity_score": 0.15,
-      "emotional_impact_score": 0.8,
-      "readability_score": 0.82,
-      "ctr_potential_score": 0.897,
+      "readability_score": 0.88,
+      "ctr_potential_score": 0.921,
       "character_count": 57,
       "mobile_readability_score": 0.15,
       "brand_consistency_score": 1.0,
-      "composite_score": 0.6149
+      "composite_score": 0.6787
     },
     {
-      "text": "The Bold text highlighting the main topic Nobody Talks About",
+      "text": "I Tried Bold text for clear messaging For 30 Days",
+      "template_id": "shock_01",
+      "curiosity_score": 0.15,
+      "emotional_impact_score": 0.8,
+      "readability_score": 0.88,
+      "ctr_potential_score": 0.937,
+      "character_count": 49,
+      "mobile_readability_score": 0.55,
+      "brand_consistency_score": 1.0,
+      "composite_score": 0.6719
+    },
+    {
+      "text": "Don't Do Bold text for clear messaging Until You Watch This",
+      "template_id": "shock_02",
+      "curiosity_score": 0.35,
+      "emotional_impact_score": 0.8,
+      "readability_score": 0.82,
+      "ctr_potential_score": 0.911,
+      "character_count": 59,
+      "mobile_readability_score": 0.05,
+      "brand_consistency_score": 1.0,
+      "composite_score": 0.6577
+    },
+    {
+      "text": "The Bold text for clear messaging Nobody Talks About",
       "template_id": "curiosity_03",
       "curiosity_score": 0.0,
       "emotional_impact_score": 0.8,
-      "readability_score": 0.88,
-      "ctr_potential_score": 0.864,
-      "character_count": 60,
-      "mobile_readability_score": 0.0,
+      "readability_score": 0.94,
+      "ctr_potential_score": 0.904,
+      "character_count": 52,
+      "mobile_readability_score": 0.4,
       "brand_consistency_score": 1.0,
-      "composite_score": 0.5648
+      "composite_score": 0.6218
     },
     {
-      "text": "Lies You Were Told About Bold text highlighting the main topic",
+      "text": "Lies You Were Told About Bold text for clear messaging",
       "template_id": "controversy_03",
       "curiosity_score": 0.0,
       "emotional_impact_score": 0.8,
-      "readability_score": 0.82,
-      "ctr_potential_score": 0.864,
-      "character_count": 62,
-      "mobile_readability_score": 0.0,
+      "readability_score": 0.88,
+      "ctr_potential_score": 0.894,
+      "character_count": 54,
+      "mobile_readability_score": 0.3,
       "brand_consistency_score": 1.0,
-      "composite_score": 0.5558
+      "composite_score": 0.6008
     }
   ],
-  "headline_score": 0.7117,
+  "headline_score": 0.7687,
   "hook_type": "curiosity",
   "emotion": "High",
   "face_strategy": "neutral",
@@ -157,8 +157,8 @@
     "background"
   ],
   "branding_constraints": [
-    "Bold text highlighting the main topic",
-    "Warm color palette for approachability",
+    "Bold text for clear messaging",
+    "Warm color palette for approachable feel",
     "Do not reproduce copyrighted characters, logos, or branded imagery."
   ],
   "conflicts_resolved": 0,
@@ -167,6 +167,6 @@
     "No face detected in source thumbnail; defaulted face_strategy to neutral."
   ],
   "error_message": null,
-  "duration_seconds": 0.0004,
-  "generated_at": "2026-08-01T08:36:17.573091+00:00"
+  "duration_seconds": 0.0051,
+  "generated_at": "2026-08-01T10:16:30.353308+00:00"
 }

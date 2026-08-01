@@ -1,114 +1,114 @@
 {
   "video_id": "vIWkN-2J0ic",
-  "headline": "The Truth About Warm color palette",
+  "headline": "The Truth About Dynamic pose",
   "headline_variants": [
     {
-      "text": "The Truth About Warm color palette",
+      "text": "The Truth About Dynamic pose",
       "template_id": "controversy_01",
       "curiosity_score": 0.35,
       "emotional_impact_score": 0.8,
       "readability_score": 1.0,
       "ctr_potential_score": 1.0,
-      "character_count": 34,
+      "character_count": 28,
       "mobile_readability_score": 1.0,
       "brand_consistency_score": 1.0,
       "composite_score": 0.7975
     },
     {
-      "text": "The Secret Behind Warm color palette",
+      "text": "The Secret Behind Dynamic pose",
       "template_id": "curiosity_01",
       "curiosity_score": 0.35,
       "emotional_impact_score": 0.8,
       "readability_score": 1.0,
       "ctr_potential_score": 1.0,
-      "character_count": 36,
+      "character_count": 30,
       "mobile_readability_score": 1.0,
       "brand_consistency_score": 1.0,
       "composite_score": 0.7975
     },
     {
-      "text": "Why Warm color palette Changes Everything",
+      "text": "Why Dynamic pose Changes Everything",
       "template_id": "curiosity_02",
       "curiosity_score": 0.35,
       "emotional_impact_score": 0.8,
-      "readability_score": 1.0,
+      "readability_score": 0.988,
       "ctr_potential_score": 1.0,
-      "character_count": 41,
-      "mobile_readability_score": 0.95,
+      "character_count": 35,
+      "mobile_readability_score": 1.0,
       "brand_consistency_score": 1.0,
-      "composite_score": 0.7925
+      "composite_score": 0.7957
     },
     {
-      "text": "I Tried Warm color palette For 30 Days",
+      "text": "Don't Do Dynamic pose Until You Watch This",
+      "template_id": "shock_02",
+      "curiosity_score": 0.35,
+      "emotional_impact_score": 0.8,
+      "readability_score": 1.0,
+      "ctr_potential_score": 0.996,
+      "character_count": 42,
+      "mobile_readability_score": 0.9,
+      "brand_consistency_score": 1.0,
+      "composite_score": 0.7867
+    },
+    {
+      "text": "Why Everyone Is Wrong About Dynamic pose",
+      "template_id": "controversy_02",
+      "curiosity_score": 0.35,
+      "emotional_impact_score": 0.6,
+      "readability_score": 1.0,
+      "ctr_potential_score": 0.99,
+      "character_count": 40,
+      "mobile_readability_score": 1.0,
+      "brand_consistency_score": 1.0,
+      "composite_score": 0.7555
+    },
+    {
+      "text": "I Tried Dynamic pose For 30 Days",
       "template_id": "shock_01",
       "curiosity_score": 0.15,
       "emotional_impact_score": 0.8,
       "readability_score": 1.0,
       "ctr_potential_score": 0.982,
-      "character_count": 38,
+      "character_count": 32,
       "mobile_readability_score": 1.0,
       "brand_consistency_score": 1.0,
       "composite_score": 0.7439
     },
     {
-      "text": "Don't Do Warm color palette Until You Watch This",
-      "template_id": "shock_02",
-      "curiosity_score": 0.35,
-      "emotional_impact_score": 0.8,
-      "readability_score": 0.94,
-      "ctr_potential_score": 0.966,
-      "character_count": 48,
-      "mobile_readability_score": 0.6,
-      "brand_consistency_score": 1.0,
-      "composite_score": 0.7417
-    },
-    {
-      "text": "Why Everyone Is Wrong About Warm color palette",
-      "template_id": "controversy_02",
-      "curiosity_score": 0.35,
-      "emotional_impact_score": 0.6,
-      "readability_score": 1.0,
-      "ctr_potential_score": 0.96,
-      "character_count": 46,
-      "mobile_readability_score": 0.7,
-      "brand_consistency_score": 1.0,
-      "composite_score": 0.7195
-    },
-    {
-      "text": "The Warm color palette Nobody Talks About",
+      "text": "The Dynamic pose Nobody Talks About",
       "template_id": "curiosity_03",
       "curiosity_score": 0.0,
       "emotional_impact_score": 0.8,
       "readability_score": 1.0,
-      "ctr_potential_score": 0.959,
-      "character_count": 41,
-      "mobile_readability_score": 0.95,
+      "ctr_potential_score": 0.964,
+      "character_count": 35,
+      "mobile_readability_score": 1.0,
       "brand_consistency_score": 1.0,
-      "composite_score": 0.6968
+      "composite_score": 0.7028
     },
     {
-      "text": "Warm color palette Is Broken",
+      "text": "Dynamic pose Is Broken",
       "template_id": "shock_03",
       "curiosity_score": 0.0,
       "emotional_impact_score": 0.6,
       "readability_score": 1.0,
       "ctr_potential_score": 0.948,
-      "character_count": 28,
+      "character_count": 22,
       "mobile_readability_score": 1.0,
       "brand_consistency_score": 1.0,
       "composite_score": 0.6596
     },
     {
-      "text": "Lies You Were Told About Warm color palette",
+      "text": "Lies You Were Told About Dynamic pose",
       "template_id": "controversy_03",
       "curiosity_score": 0.0,
       "emotional_impact_score": 0.6,
       "readability_score": 1.0,
-      "ctr_potential_score": 0.933,
-      "character_count": 43,
-      "mobile_readability_score": 0.85,
+      "ctr_potential_score": 0.948,
+      "character_count": 37,
+      "mobile_readability_score": 1.0,
       "brand_consistency_score": 1.0,
-      "composite_score": 0.6416
+      "composite_score": 0.6596
     }
   ],
   "headline_score": 0.7975,
@@ -157,15 +157,15 @@
     "background"
   ],
   "branding_constraints": [
+    "Dynamic pose",
     "Warm color palette",
-    "Balanced composition",
-    "Centered face with happy expression",
+    "Centered subject placement",
     "Do not reproduce copyrighted characters, logos, or branded imagery."
   ],
   "conflicts_resolved": 0,
   "status": "success",
   "partial_failure_reasons": [],
   "error_message": null,
-  "duration_seconds": 0.0003,
-  "generated_at": "2026-08-01T08:36:34.397398+00:00"
+  "duration_seconds": 0.0004,
+  "generated_at": "2026-08-01T10:20:19.889340+00:00"
 }

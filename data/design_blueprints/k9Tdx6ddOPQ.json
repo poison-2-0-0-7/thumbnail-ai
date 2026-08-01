@@ -1,111 +1,111 @@
 {
   "video_id": "k9Tdx6ddOPQ",
-  "headline": "How to Master Happy emotion Fast",
+  "headline": "How to Master Joyful expression Fast",
   "headline_variants": [
     {
-      "text": "How to Master Happy emotion Fast",
+      "text": "How to Master Joyful expression Fast",
       "template_id": "benefit_01",
       "curiosity_score": 0.35,
       "emotional_impact_score": 0.6,
       "readability_score": 1.0,
       "ctr_potential_score": 0.89,
-      "character_count": 32,
+      "character_count": 36,
       "mobile_readability_score": 1.0,
       "brand_consistency_score": 1.0,
       "composite_score": 0.7355
     },
     {
-      "text": "The Secret Behind Happy emotion",
+      "text": "The Secret Behind Joyful expression",
       "template_id": "curiosity_01",
       "curiosity_score": 0.35,
       "emotional_impact_score": 0.5,
-      "readability_score": 1.0,
+      "readability_score": 0.988,
       "ctr_potential_score": 0.882,
-      "character_count": 31,
+      "character_count": 35,
       "mobile_readability_score": 1.0,
       "brand_consistency_score": 1.0,
-      "composite_score": 0.7139
+      "composite_score": 0.7121
     },
     {
-      "text": "Why Happy emotion Changes Everything",
+      "text": "Why Joyful expression Changes Everything",
       "template_id": "curiosity_02",
       "curiosity_score": 0.35,
       "emotional_impact_score": 0.5,
-      "readability_score": 0.976,
+      "readability_score": 0.928,
       "ctr_potential_score": 0.882,
-      "character_count": 36,
+      "character_count": 40,
       "mobile_readability_score": 1.0,
       "brand_consistency_score": 1.0,
-      "composite_score": 0.7103
+      "composite_score": 0.7031
     },
     {
-      "text": "Don't Do Happy emotion Until You Watch This",
+      "text": "Don't Do Joyful expression Until You Watch This",
       "template_id": "shock_02",
       "curiosity_score": 0.35,
       "emotional_impact_score": 0.5,
       "readability_score": 1.0,
-      "ctr_potential_score": 0.867,
-      "character_count": 43,
-      "mobile_readability_score": 0.85,
+      "ctr_potential_score": 0.847,
+      "character_count": 47,
+      "mobile_readability_score": 0.65,
       "brand_consistency_score": 1.0,
-      "composite_score": 0.6959
+      "composite_score": 0.6719
     },
     {
-      "text": "I Tried Happy emotion For 30 Days",
+      "text": "I Tried Joyful expression For 30 Days",
       "template_id": "shock_01",
       "curiosity_score": 0.15,
       "emotional_impact_score": 0.5,
       "readability_score": 1.0,
       "ctr_potential_score": 0.858,
-      "character_count": 33,
+      "character_count": 37,
       "mobile_readability_score": 1.0,
       "brand_consistency_score": 1.0,
       "composite_score": 0.6591
     },
     {
-      "text": "The Ultimate Happy emotion Blueprint",
+      "text": "The Ultimate Joyful expression Blueprint",
       "template_id": "benefit_02",
       "curiosity_score": 0.0,
       "emotional_impact_score": 0.6,
-      "readability_score": 0.976,
+      "readability_score": 0.928,
       "ctr_potential_score": 0.848,
-      "character_count": 36,
+      "character_count": 40,
       "mobile_readability_score": 1.0,
       "brand_consistency_score": 1.0,
-      "composite_score": 0.636
+      "composite_score": 0.6288
     },
     {
-      "text": "The Happy emotion Nobody Talks About",
+      "text": "The Joyful expression Nobody Talks About",
       "template_id": "curiosity_03",
       "curiosity_score": 0.0,
       "emotional_impact_score": 0.5,
       "readability_score": 1.0,
       "ctr_potential_score": 0.84,
-      "character_count": 36,
+      "character_count": 40,
       "mobile_readability_score": 1.0,
       "brand_consistency_score": 1.0,
       "composite_score": 0.618
     },
     {
-      "text": "Double Your Results With Happy emotion",
+      "text": "Double Your Results With Joyful expression",
       "template_id": "benefit_03",
       "curiosity_score": 0.0,
       "emotional_impact_score": 0.5,
-      "readability_score": 1.0,
-      "ctr_potential_score": 0.84,
-      "character_count": 38,
-      "mobile_readability_score": 1.0,
+      "readability_score": 0.99,
+      "ctr_potential_score": 0.83,
+      "character_count": 42,
+      "mobile_readability_score": 0.9,
       "brand_consistency_score": 1.0,
-      "composite_score": 0.618
+      "composite_score": 0.6045
     },
     {
-      "text": "Happy emotion Is Broken",
+      "text": "Joyful expression Is Broken",
       "template_id": "shock_03",
       "curiosity_score": 0.0,
       "emotional_impact_score": 0.3,
       "readability_score": 1.0,
       "ctr_potential_score": 0.824,
-      "character_count": 23,
+      "character_count": 27,
       "mobile_readability_score": 1.0,
       "brand_consistency_score": 1.0,
       "composite_score": 0.5748
@@ -169,15 +169,14 @@
     "background"
   ],
   "branding_constraints": [
-    "Happy emotion",
+    "Joyful expression",
     "Warm color palette",
-    "Centered subject placement",
     "Do not reproduce copyrighted characters, logos, or branded imagery."
   ],
   "conflicts_resolved": 0,
   "status": "success",
   "partial_failure_reasons": [],
   "error_message": null,
-  "duration_seconds": 0.0003,
-  "generated_at": "2026-08-01T08:36:50.796291+00:00"
+  "duration_seconds": 0.0059,
+  "generated_at": "2026-08-01T10:21:30.920971+00:00"
 }

@@ -1,10 +1,10 @@
 {
   "video_id": "O0Y-oLarao4",
-  "positive_prompt": "No primary subject was specified; compose the thumbnail without inventing a dominant foreground figure. Maintain approximately 25% negative space in the background. Keep the background moderately simple with limited competing elements. Anchor the composition's focal point in the right of the frame, targeting a clutter score of 0.40 and a negative-space ratio of 0.25. Use balanced lighting with a moderate-contrast look (target brightness=0.46, target contrast=0.42). Render muted, desaturated colors with a warm color temperature (target saturation=0.38). Render text overlay: 'The Truth About Bold text highlighting the main topic' on the thumbnail. Reserve the designated text placement region for the headline overlay. Preserve: Bold text highlighting the main topic, Warm color palette for approachability.",
+  "positive_prompt": "No primary subject was specified; compose the thumbnail without inventing a dominant foreground figure. Maintain approximately 25% negative space in the background. Keep the background moderately simple with limited competing elements. Anchor the composition's focal point in the right of the frame, targeting a clutter score of 0.40 and a negative-space ratio of 0.25. Use balanced lighting with a moderate-contrast look (target brightness=0.46, target contrast=0.42). Render muted, desaturated colors with a warm color temperature (target saturation=0.38). Render text overlay: 'The Truth About Bold text for clear messaging' on the thumbnail. Reserve the designated text placement region for the headline overlay. Preserve: Bold text for clear messaging, Warm color palette for approachable feel.",
   "negative_prompt": "blurry, low resolution, watermark, distorted anatomy, extra limbs, text artifacts, jpeg compression artifacts",
   "subject_instructions": "No primary subject was specified; compose the thumbnail without inventing a dominant foreground figure.",
   "background_instructions": "Maintain approximately 25% negative space in the background. Keep the background moderately simple with limited competing elements.",
-  "typography_instructions": "Render text overlay: 'The Truth About Bold text highlighting the main topic' on the thumbnail. Reserve the designated text placement region for the headline overlay.",
+  "typography_instructions": "Render text overlay: 'The Truth About Bold text for clear messaging' on the thumbnail. Reserve the designated text placement region for the headline overlay.",
   "composition_instructions": "Anchor the composition's focal point in the right of the frame, targeting a clutter score of 0.40 and a negative-space ratio of 0.25.",
   "lighting_instructions": "Use balanced lighting with a moderate-contrast look (target brightness=0.46, target contrast=0.42).",
   "color_instructions": "Render muted, desaturated colors with a warm color temperature (target saturation=0.38).",
@@ -15,7 +15,7 @@
   "rendering_constraints": [
     "Render at the exact target resolution; do not crop after generation.",
     "Do not add any watermark, logo, or signature.",
-    "Preserve the following elements exactly: Bold text highlighting the main topic, Warm color palette for approachability."
+    "Preserve the following elements exactly: Bold text for clear messaging, Warm color palette for approachable feel."
   ],
   "safety_constraints": [
     "Do not depict real, identifiable people; use a generic or anonymized figure.",
@@ -50,6 +50,6 @@
   },
   "status": "success",
   "error_message": null,
-  "duration_seconds": 0.0001024999946821481,
-  "generated_at": "2026-08-01T08:36:17.590296+00:00"
+  "duration_seconds": 0.0006594000151380897,
+  "generated_at": "2026-08-01T10:16:30.365768+00:00"
 }

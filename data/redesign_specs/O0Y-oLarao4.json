@@ -50,8 +50,8 @@
     }
   ],
   "elements_to_preserve": [
-    "Bold text highlighting the main topic",
-    "Warm color palette for approachability"
+    "Bold text for clear messaging",
+    "Warm color palette for approachable feel"
   ],
   "overall_rationale": "ctr_potential_score=0.85; curiosity_gap_score=0.78; content_mismatch_detected=False; rules applied: minimum_negative_space.",
   "source_ctr_potential_score": 0.85,
@@ -59,6 +59,6 @@
   "source_content_mismatch_detected": false,
   "status": "success",
   "error_message": null,
-  "duration_seconds": 0.0002167999919038266,
-  "generated_at": "2026-08-01T08:36:17.562295+00:00"
+  "duration_seconds": 0.0010677999816834927,
+  "generated_at": "2026-08-01T10:16:30.340841+00:00"
 }
