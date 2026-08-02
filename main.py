@@ -343,6 +343,37 @@ def _run_pipeline_creators(
             status=intelligence.status,
         )
 
+        # ── Module 10: extract creator style signature & update profile store ──
+        try:
+            from creator_style import StyleExtractor, StyleProfileStore, StyleSimilarityEngine
+            style_sig = StyleExtractor.extract_signature(
+                video_id=metadata.video_id,
+                channel_id=metadata.channel_id,
+                intelligence=intelligence,
+            )
+            cand_vector = StyleSimilarityEngine.extract_image_embedding(str(thumbnail.thumbnail_path))
+            manifest, style_emb = StyleProfileStore().update_profile(
+                video_id=metadata.video_id,
+                channel_id=metadata.channel_id,
+                signature=style_sig,
+                embedding_vector=cand_vector,
+            )
+            logger.info(
+                "Creator style profile updated for channel_id={cid} video_id={vid}: sample_count={count} established={est}",
+                cid=metadata.channel_id,
+                vid=metadata.video_id,
+                count=manifest.sample_count,
+                est=manifest.profile_established,
+            )
+        except Exception as style_exc:
+            logger.warning(
+                "Creator style profile update failed for creator_email={email} video_id={vid}: {exc}",
+                email=creator.email,
+                vid=metadata.video_id,
+                exc=style_exc,
+            )
+
+
         # ── Module 8: extract visual asset manifest ───────────────────────
         if ASSET_EXTRACTION_ENABLED:
             try:
@@ -647,6 +678,73 @@ def _run_module7_generation(
     profile = _select_module7_profile(vram_gb)
     niche = _module7_niche(metadata)
     client = ComfyUIClient()
+
+    try:
+        from optimization.config import OPTIMIZATION_LOOP_ENABLED
+        if OPTIMIZATION_LOOP_ENABLED:
+            from datetime import datetime, timezone
+            from optimization.orchestration.optimization_loop import OptimizationLoop
+            from optimization.trace.trace_extension import attach_optimization_to_trace
+            from optimization.feedback.outcome_recorder import OptimizationOutcome, OutcomeRecorder
+            from image_generator import ImageGeneratorPipeline, ReferenceAssetResolver, ArtifactWriter
+
+            candidates = [thumbnail_dir / f"{prompt_package.video_id}{suffix}" for suffix in (".jpg", ".jpeg", ".png", ".webp")]
+            source_thumbnail_path = next((p for p in candidates if p.is_file()), thumbnail_dir / f"{prompt_package.video_id}.png")
+
+            pipeline = ImageGeneratorPipeline(
+                client=client,
+                asset_resolver=ReferenceAssetResolver(thumbnail_dir=thumbnail_dir, analysis_dir=analysis_dir),
+                artifact_writer=ArtifactWriter(output_dir=MODULE7_OUTPUT_DIR),
+            )
+
+            def runner(**kwargs):
+                return pipeline.run(**kwargs)
+
+            run_kwargs = {
+                "video_id": prompt_package.video_id,
+                "niche": niche,
+                "available_vram_gb": vram_gb,
+                "prompt_package": prompt_package,
+                "generation_bundle": generation_bundle,
+                "generation_plan": generation_plan,
+                "design_blueprint": design_blueprint,
+                "edit_mode": "auto",
+                "channel_id": getattr(metadata, "channel_id", "default_channel"),
+            }
+
+            opt_loop = OptimizationLoop()
+            loop_result = opt_loop.run(
+                video_id=prompt_package.video_id,
+                source_thumbnail_path=source_thumbnail_path,
+                pipeline_runner=runner,
+                run_kwargs=run_kwargs,
+            )
+
+            # Persist outcome record
+            try:
+                decisions = [str(design_blueprint.rationale)] if design_blueprint and hasattr(design_blueprint, "rationale") else []
+                winning_idx = loop_result.selection.optimization_selected_index
+                winning_verdict = next((v for v in loop_result.verdicts if v.candidate_index == winning_idx), None)
+
+                outcome = OptimizationOutcome(
+                    video_id=prompt_package.video_id,
+                    niche=niche,
+                    decisions_applied=decisions,
+                    candidate_strategy_name="default",
+                    beats_original=winning_verdict.beats_original if winning_verdict else False,
+                    delta=winning_verdict.delta if winning_verdict else 0.0,
+                    per_dimension_delta=winning_verdict.per_dimension_delta if winning_verdict else {},
+                    recorded_at=datetime.now(timezone.utc).isoformat(),
+                )
+                OutcomeRecorder().record(outcome)
+            except Exception as exc:
+                logger.warning("Failed to record optimization outcome for {vid}: {exc}", vid=prompt_package.video_id, exc=exc)
+
+            if loop_result.generation_result and loop_result.generation_result.generated_asset:
+                return Path(loop_result.generation_result.generated_asset.path)
+    except Exception as exc:
+        logger.warning("Optimization loop execution encountered an issue; falling back to direct pipeline: {exc}", exc=exc)
+
     return run_image_generation_pipeline(
         video_id=prompt_package.video_id,
         niche=niche,

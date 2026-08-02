@@ -29,8 +29,10 @@ from .visual_consistency_scorer import VisualConsistencyScorer
 
 from .attractiveness_scorer import AttractivenessScorer
 from .determinism_checker import DeterminismCheckerScorer
+from .emotional_ctr_scorer import EmotionalCTRScorer
 from .performance_profiler import PerformanceProfilerScorer
 from .prompt_adherence_scorer import PromptAdherenceScorer
+from .whitespace_scorer import WhitespaceScorer
 
 
 class Aggregator:
@@ -54,6 +56,8 @@ class Aggregator:
             AttractivenessScorer(),
             DeterminismCheckerScorer(),
             PerformanceProfilerScorer(),
+            EmotionalCTRScorer(),
+            WhitespaceScorer(),
         ]
         self.scorers = scorers if scorers is not None else default_scorers
         self.weights = weights if weights is not None else EVAL_QUALITY_WEIGHTS

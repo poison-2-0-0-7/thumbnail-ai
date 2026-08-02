@@ -45,6 +45,11 @@ class CandidateStrategyPlanner:
         elif strategy.camera_distance_shift < 0:
             comp_inst += " Framing is stepped slightly closer around the primary subject."
 
+        if strategy.framing_bias > 0:
+            comp_inst += " Tighten framing to emphasize key visual focal points."
+        elif strategy.framing_bias < 0:
+            comp_inst += " Expand framing to incorporate wider contextual background."
+
         # 2. Object emphasis bias
         if strategy.object_emphasis_bias != 0.0 and obj_placement:
             new_placement = []
@@ -79,6 +84,12 @@ class CandidateStrategyPlanner:
         if strategy.emotion_bias > 0:
             subject_inst += " Amplify subject facial expression with high emotion and strong reaction."
 
+        # 7. Lighting bias
+        if strategy.lighting_bias > 0:
+            lighting_inst += " Use dramatic, high-contrast directional key and rim lighting."
+        elif strategy.lighting_bias < 0:
+            lighting_inst += " Use soft, diffused, balanced ambient lighting."
+
         # Re-assemble positive prompt while respecting invariant section order
         compiled_parts = [
             subject_inst,
@@ -101,6 +112,7 @@ class CandidateStrategyPlanner:
                 "subject_instructions": subject_inst,
                 "background_instructions": bg_inst,
                 "composition_instructions": comp_inst,
+                "lighting_instructions": lighting_inst,
                 "color_instructions": color_inst,
                 "typography_instructions": typo_inst,
                 "object_placement": obj_placement,

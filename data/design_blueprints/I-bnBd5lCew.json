@@ -1,117 +1,117 @@
 {
   "video_id": "I-bnBd5lCew",
-  "headline": "The Truth About Happy audience expression",
+  "headline": "The Truth About Positive emotional expression",
   "headline_variants": [
     {
-      "text": "The Truth About Happy audience expression",
+      "text": "The Truth About Positive emotional expression",
       "template_id": "controversy_01",
       "curiosity_score": 0.35,
       "emotional_impact_score": 0.8,
-      "readability_score": 1.0,
+      "readability_score": 0.96,
       "ctr_potential_score": 1.0,
-      "character_count": 41,
-      "mobile_readability_score": 0.95,
+      "character_count": 45,
+      "mobile_readability_score": 0.75,
       "brand_consistency_score": 1.0,
-      "composite_score": 0.7925
+      "composite_score": 0.7665
     },
     {
-      "text": "The Secret Behind Happy audience expression",
+      "text": "The Secret Behind Positive emotional expression",
       "template_id": "curiosity_01",
       "curiosity_score": 0.35,
       "emotional_impact_score": 0.8,
-      "readability_score": 0.98,
+      "readability_score": 0.94,
       "ctr_potential_score": 1.0,
-      "character_count": 43,
-      "mobile_readability_score": 0.85,
+      "character_count": 47,
+      "mobile_readability_score": 0.65,
       "brand_consistency_score": 1.0,
-      "composite_score": 0.7795
+      "composite_score": 0.7535
     },
     {
-      "text": "Why Happy audience expression Changes Everything",
+      "text": "Why Positive emotional expression Changes Everything",
       "template_id": "curiosity_02",
       "curiosity_score": 0.35,
       "emotional_impact_score": 0.8,
-      "readability_score": 0.93,
+      "readability_score": 0.89,
       "ctr_potential_score": 1.0,
-      "character_count": 48,
-      "mobile_readability_score": 0.6,
+      "character_count": 52,
+      "mobile_readability_score": 0.4,
       "brand_consistency_score": 1.0,
-      "composite_score": 0.747
+      "composite_score": 0.721
     },
     {
-      "text": "I Tried Happy audience expression For 30 Days",
+      "text": "I Tried Positive emotional expression For 30 Days",
       "template_id": "shock_01",
       "curiosity_score": 0.15,
       "emotional_impact_score": 0.8,
       "readability_score": 1.0,
       "ctr_potential_score": 1.0,
-      "character_count": 45,
-      "mobile_readability_score": 0.75,
+      "character_count": 49,
+      "mobile_readability_score": 0.55,
       "brand_consistency_score": 1.0,
-      "composite_score": 0.7225
+      "composite_score": 0.7025
     },
     {
-      "text": "Don't Do Happy audience expression Until You Watch This",
+      "text": "Don't Do Positive emotional expression Until You Watch This",
       "template_id": "shock_02",
       "curiosity_score": 0.35,
       "emotional_impact_score": 0.8,
       "readability_score": 0.94,
       "ctr_potential_score": 1.0,
-      "character_count": 55,
-      "mobile_readability_score": 0.25,
+      "character_count": 59,
+      "mobile_readability_score": 0.05,
       "brand_consistency_score": 1.0,
-      "composite_score": 0.7135
+      "composite_score": 0.6935
     },
     {
-      "text": "Why Everyone Is Wrong About Happy audience expression",
+      "text": "Why Everyone Is Wrong About Positive emotional expression",
       "template_id": "controversy_02",
       "curiosity_score": 0.35,
       "emotional_impact_score": 0.6,
-      "readability_score": 1.0,
+      "readability_score": 0.985,
       "ctr_potential_score": 1.0,
-      "character_count": 53,
-      "mobile_readability_score": 0.35,
+      "character_count": 57,
+      "mobile_readability_score": 0.15,
       "brand_consistency_score": 1.0,
-      "composite_score": 0.6925
+      "composite_score": 0.6703
     },
     {
-      "text": "The Happy audience expression Nobody Talks About",
-      "template_id": "curiosity_03",
-      "curiosity_score": 0.0,
-      "emotional_impact_score": 0.8,
-      "readability_score": 1.0,
-      "ctr_potential_score": 1.0,
-      "character_count": 48,
-      "mobile_readability_score": 0.6,
-      "brand_consistency_score": 1.0,
-      "composite_score": 0.67
-    },
-    {
-      "text": "Happy audience expression Is Broken",
+      "text": "Positive emotional expression Is Broken",
       "template_id": "shock_03",
       "curiosity_score": 0.0,
       "emotional_impact_score": 0.6,
-      "readability_score": 0.988,
+      "readability_score": 0.94,
       "ctr_potential_score": 1.0,
-      "character_count": 35,
+      "character_count": 39,
       "mobile_readability_score": 1.0,
       "brand_consistency_score": 1.0,
-      "composite_score": 0.6682
+      "composite_score": 0.661
     },
     {
-      "text": "Lies You Were Told About Happy audience expression",
+      "text": "The Positive emotional expression Nobody Talks About",
+      "template_id": "curiosity_03",
+      "curiosity_score": 0.0,
+      "emotional_impact_score": 0.8,
+      "readability_score": 0.9657,
+      "ctr_potential_score": 1.0,
+      "character_count": 52,
+      "mobile_readability_score": 0.4,
+      "brand_consistency_score": 1.0,
+      "composite_score": 0.6449
+    },
+    {
+      "text": "Lies You Were Told About Positive emotional expression",
       "template_id": "controversy_03",
       "curiosity_score": 0.0,
       "emotional_impact_score": 0.6,
       "readability_score": 1.0,
       "ctr_potential_score": 1.0,
-      "character_count": 50,
-      "mobile_readability_score": 0.5,
+      "character_count": 54,
+      "mobile_readability_score": 0.3,
       "brand_consistency_score": 1.0,
-      "composite_score": 0.62
+      "composite_score": 0.6
     }
   ],
-  "headline_score": 0.7925,
+  "headline_score": 0.7665,
   "hook_type": "curiosity",
   "emotion": "High",
   "face_strategy": "preserve",
@@ -176,15 +176,15 @@
     "background"
   ],
   "branding_constraints": [
-    "Happy audience expression",
-    "Warm color scheme",
-    "Balanced composition",
+    "Positive emotional expression",
+    "Transformation journey text",
+    "Clear subject placement",
     "Do not reproduce copyrighted characters, logos, or branded imagery."
   ],
   "conflicts_resolved": 0,
   "status": "success",
   "partial_failure_reasons": [],
   "error_message": null,
-  "duration_seconds": 0.0004,
-  "generated_at": "2026-08-02T19:49:41.812334+00:00"
+  "duration_seconds": 0.0003,
+  "generated_at": "2026-08-02T20:34:06.678854+00:00"
 }

@@ -1,6 +1,6 @@
 {
   "video_id": "vIWkN-2J0ic",
-  "positive_prompt": "Place the primary subject in the top of the frame, matching the source position label 'center'. Crop tighter around the subject so it occupies a larger share of the frame. Maintain approximately 27% negative space in the background. Keep the background minimal and uncluttered. Anchor the composition's focal point in the top of the frame, targeting a clutter score of 0.30 and a negative-space ratio of 0.27. Use moody, low-key lighting with a moderate-contrast look (target brightness=0.35, target contrast=0.54). Render muted, desaturated colors with a warm color temperature (target saturation=0.30). Render text overlay: 'The Truth About Warm color palette' on the thumbnail. Preserve: Warm color palette, Symmetrical composition, Centered face.",
+  "positive_prompt": "Place the primary subject in the top of the frame, matching the source position label 'center'. Crop tighter around the subject so it occupies a larger share of the frame. Maintain approximately 27% negative space in the background. Keep the background minimal and uncluttered. Anchor the composition's focal point in the top of the frame, targeting a clutter score of 0.30 and a negative-space ratio of 0.27. Use moody, low-key lighting with a moderate-contrast look (target brightness=0.35, target contrast=0.54). Render muted, desaturated colors with a warm color temperature (target saturation=0.30). Render text overlay: 'The Truth About Warm color palette' on the thumbnail. Preserve: Warm color palette, Balanced composition, Centered face with happy expression.",
   "negative_prompt": "blurry, low resolution, watermark, distorted anatomy, extra limbs, text artifacts, jpeg compression artifacts",
   "subject_instructions": "Place the primary subject in the top of the frame, matching the source position label 'center'. Crop tighter around the subject so it occupies a larger share of the frame.",
   "background_instructions": "Maintain approximately 27% negative space in the background. Keep the background minimal and uncluttered.",
@@ -15,7 +15,7 @@
   "rendering_constraints": [
     "Render at the exact target resolution; do not crop after generation.",
     "Do not add any watermark, logo, or signature.",
-    "Preserve the following elements exactly: Warm color palette, Symmetrical composition, Centered face.",
+    "Preserve the following elements exactly: Warm color palette, Balanced composition, Centered face with happy expression.",
     "Do not add any text to the rendered image."
   ],
   "safety_constraints": [
@@ -51,6 +51,6 @@
   },
   "status": "success",
   "error_message": null,
-  "duration_seconds": 0.00008420000085607171,
-  "generated_at": "2026-08-02T19:50:47.864533+00:00"
+  "duration_seconds": 0.00013860000035492703,
+  "generated_at": "2026-08-02T20:35:17.681994+00:00"
 }

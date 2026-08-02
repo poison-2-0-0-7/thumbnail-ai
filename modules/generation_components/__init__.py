@@ -45,6 +45,14 @@ from generation_components.controlnet_capability_resolver import (
 )
 
 
+from generation_components.clustering_engine import CandidateCluster, CandidateClusteringEngine, ClusteringResult, compute_dhash, hamming_distance
+from generation_components.ranking_engine import CandidateRankingEngine
+from generation_components.selection_explainer import SelectionExplainer, SelectionExplanation
+from generation_components.human_review import HumanReviewWorkspace, ManualSelectionRecord
+from generation_components.learning_feedback_store import LearningFeedbackRecord, LearningFeedbackStore
+
+
+
 __all__ = [
     "GenerationConditioningContext",
     "LayerConditioning",
@@ -61,6 +69,16 @@ __all__ = [
     "StrategyPackResolver",
     "CandidateStrategyPlanner",
     "WorkflowGraphCache",
+    "CandidateCluster",
+    "CandidateClusteringEngine",
+    "ClusteringResult",
+    "CandidateRankingEngine",
+    "SelectionExplainer",
+    "SelectionExplanation",
+    "HumanReviewWorkspace",
+    "ManualSelectionRecord",
+    "LearningFeedbackRecord",
+    "LearningFeedbackStore",
     "RegionPlanValidator",
     "BaseLatentStage",
     "MaskedCompositeStage",

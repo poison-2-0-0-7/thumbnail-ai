@@ -136,6 +136,38 @@ class GenerationTraceRecord(BaseModel):
     output_image_path: Optional[str] = None
     recorded_at: str = ""
 
+    # Module 8 Optimization Layer trace fields
+    baseline_score: Optional[float] = None
+    candidate_scores: list[float] = Field(default_factory=list)
+    beats_original: Optional[bool] = None
+    winning_candidate_index: Optional[int] = None
+    module7_selected_index: Optional[int] = None
+    selection_agreed: Optional[bool] = None
+    edit_magnitude: Optional[float] = None
+    over_edited: Optional[bool] = None
+    optimization_strategy_used: Optional[str] = None
+    retry_attempt_count: int = 0
+
+    # Module 9 Multi-Candidate Selection trace fields
+    strategy_name: Optional[str] = None
+    cluster_id: Optional[str] = None
+    exclusion_reason: Optional[str] = None
+    ranking_dimensions: Optional[dict[str, float]] = None
+    selection_explanation: Optional[str] = None
+    manual_override: bool = False
+
+    # Module 10 Creator Style Learning trace fields
+    creator_channel_id: Optional[str] = None
+    style_signature_reference: Optional[str] = None
+    style_embedding_similarity: Optional[float] = None
+    style_profile_established: Optional[bool] = None
+    style_bonus_applied: Optional[float] = None
+    drift_detected: Optional[bool] = None
+    drift_confidence: Optional[float] = None
+    style_prompt_guidance_applied: Optional[bool] = None
+
+
+
 
 class PipelineTrace(BaseModel):
     """

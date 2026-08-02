@@ -185,10 +185,24 @@ class FactExtractor(IFactExtractor):
             attached_fragment_count = len(gen_rec.fragments_attached or [])
             attached_fragment_names = [f.fragment_name for f in (gen_rec.fragments_attached or [])]
 
+            beats_original = getattr(gen_rec, "beats_original", None)
+            over_edited = getattr(gen_rec, "over_edited", None)
+            selection_agreed = getattr(gen_rec, "selection_agreed", None)
+            baseline_score = getattr(gen_rec, "baseline_score", None)
+            winning_candidate_index = getattr(gen_rec, "winning_candidate_index", None)
+            module7_selected_index = getattr(gen_rec, "module7_selected_index", None)
+            edit_magnitude = getattr(gen_rec, "edit_magnitude", None)
         else:
             # Fallback to module outputs if generation_rec is missing
             gen_plan_ref = outputs.get("module10.5")
             prompt_ref = outputs.get("module6")
+            beats_original = None
+            over_edited = None
+            selection_agreed = None
+            baseline_score = None
+            winning_candidate_index = None
+            module7_selected_index = None
+            edit_magnitude = None
 
         # Build TraceFacts model
         trace_facts = TraceFacts(
@@ -237,6 +251,13 @@ class FactExtractor(IFactExtractor):
             asset_extraction_enabled=asset_extraction_enabled,
             decision_engine_enabled=decision_engine_enabled,
             thumbnail_planner_enabled=thumbnail_planner_enabled,
+            beats_original=beats_original,
+            over_edited=over_edited,
+            selection_agreed=selection_agreed,
+            baseline_score=baseline_score,
+            winning_candidate_index=winning_candidate_index,
+            module7_selected_index=module7_selected_index,
+            edit_magnitude=edit_magnitude,
         )
 
         # Build individual FactModel list

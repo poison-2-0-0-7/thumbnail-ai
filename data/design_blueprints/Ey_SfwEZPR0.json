@@ -165,13 +165,13 @@
   "branding_constraints": [
     "Happy facial expression",
     "Motorcycle and person interaction",
-    "Neutral color palette and balanced composition",
+    "Neutral color palette",
     "Do not reproduce copyrighted characters, logos, or branded imagery."
   ],
   "conflicts_resolved": 0,
   "status": "success",
   "partial_failure_reasons": [],
   "error_message": null,
-  "duration_seconds": 0.0006,
-  "generated_at": "2026-08-02T19:49:55.139512+00:00"
+  "duration_seconds": 0.0003,
+  "generated_at": "2026-08-02T20:34:18.482106+00:00"
 }

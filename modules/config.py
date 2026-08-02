@@ -565,7 +565,7 @@ MODULE7_IPADAPTER_WEIGHT_DEFAULT: float = 0.6
 MODULE7_CAPABILITY_PROBE_ENABLED: bool = True
 MODULE7_CAPABILITY_PROBE_CACHE_SECONDS: float = 300.0
 
-# --- Phase 4 Multi-Candidate Generation ---
+# --- Phase 4 Multi-Candidate Generation & Selection ---
 MODULE7_MAX_CANDIDATES: int = 1
 MODULE7_STRATEGY_PACK: Optional[str] = None
 MODULE7_STRATEGY_PACK_DIR: Path = PROJECT_ROOT / "data" / "strategy_packs"
@@ -575,6 +575,109 @@ MODULE7_CANDIDATE_VRAM_BUDGET_GB: Optional[float] = None
 MODULE7_CANDIDATE_TIMEOUT_SECONDS: float = COMFYUI_EXECUTION_TIMEOUT_SECONDS
 MODULE7_CANDIDATE_RETRY_ATTEMPTS: int = 0
 MODULE7_WORKFLOW_GRAPH_CACHE_ENABLED: bool = True
+MODULE7_CLUSTERING_THRESHOLD: int = 5
+MODULE7_RANKING_WEIGHTS: dict[str, float] = {
+    "ctr_score": 0.30,
+    "readability_score": 0.25,
+    "branding_consistency": 0.20,
+    "originality_score": 0.15,
+    "diversity_bonus": 0.10,
+}
+MODULE7_HUMAN_REVIEW_ENABLED: bool = False
+MODULE7_HUMAN_REVIEW_TIMEOUT_SECONDS: float = 300.0
+MODULE7_HUMAN_REVIEW_WORKSPACE_DIR: Path = PROJECT_ROOT / "data" / "human_review"
+MODULE7_LEARNING_FEEDBACK_STORE_PATH: Path = PROJECT_ROOT / "data" / "learning_feedback.jsonl"
+
+# --- Module 10 Creator Style Learning Constants ---
+MODULE10_STYLE_PROMPT_ENABLED: bool = False
+MODULE10_STYLE_MIN_SAMPLES: int = 3
+MODULE10_STYLE_SIMILARITY_THRESHOLD: float = 0.75
+MODULE10_STYLE_PROMPT_WEIGHT: float = 0.20
+MODULE10_STYLE_DRIFT_WINDOW: int = 3
+MODULE10_STYLE_RANKING_WEIGHT: float = 0.15
+MODULE10_CREATOR_PROFILES_DIR: Path = PROJECT_ROOT / "data" / "creator_style_profiles"
+
+# Optimization Layer Aliases per Module 10 Architecture
+OPTIMIZATION_STYLE_MIN_SAMPLES: int = MODULE10_STYLE_MIN_SAMPLES
+OPTIMIZATION_STYLE_SIMILARITY_THRESHOLD: float = MODULE10_STYLE_SIMILARITY_THRESHOLD
+OPTIMIZATION_STYLE_PROMPT_ENABLED: bool = MODULE10_STYLE_PROMPT_ENABLED
+OPTIMIZATION_STYLE_PROMPT_WEIGHT: float = MODULE10_STYLE_PROMPT_WEIGHT
+OPTIMIZATION_STYLE_DRIFT_WINDOW: int = MODULE10_STYLE_DRIFT_WINDOW
+OPTIMIZATION_STYLE_RANKING_WEIGHT: float = MODULE10_STYLE_RANKING_WEIGHT
+
+
+def validate_creator_style_config(
+    min_samples: int | None = None,
+    similarity_threshold: float | None = None,
+    prompt_weight: float | None = None,
+    drift_window: int | None = None,
+    ranking_weight: float | None = None,
+) -> None:
+    """
+    Validate Creator Style Learning configuration parameters.
+    Raises Module7Error if any parameter is out of bounded ranges.
+    """
+    samples = min_samples if min_samples is not None else MODULE10_STYLE_MIN_SAMPLES
+    if samples < 1:
+        raise Module7Error(f"MODULE10_STYLE_MIN_SAMPLES must be >= 1, got {samples}")
+
+    threshold = similarity_threshold if similarity_threshold is not None else MODULE10_STYLE_SIMILARITY_THRESHOLD
+    if threshold < 0.0 or threshold > 1.0:
+        raise Module7Error(f"MODULE10_STYLE_SIMILARITY_THRESHOLD must be between 0.0 and 1.0, got {threshold}")
+
+    p_weight = prompt_weight if prompt_weight is not None else MODULE10_STYLE_PROMPT_WEIGHT
+    if p_weight < 0.0 or p_weight > 1.0:
+        raise Module7Error(f"MODULE10_STYLE_PROMPT_WEIGHT must be between 0.0 and 1.0, got {p_weight}")
+
+    window = drift_window if drift_window is not None else MODULE10_STYLE_DRIFT_WINDOW
+    if window < 1:
+        raise Module7Error(f"MODULE10_STYLE_DRIFT_WINDOW must be >= 1, got {window}")
+
+    r_weight = ranking_weight if ranking_weight is not None else MODULE10_STYLE_RANKING_WEIGHT
+    if r_weight < 0.0 or r_weight > 1.0:
+        raise Module7Error(f"MODULE10_STYLE_RANKING_WEIGHT must be between 0.0 and 1.0, got {r_weight}")
+
+
+
+def validate_candidate_ranking_weights(ranking_weights: dict[str, float] | None = None) -> None:
+    """
+    Validate that MODULE7_RANKING_WEIGHTS dictionary is valid and sums to ~1.0.
+    Raises Module7Error if invalid.
+    """
+    weights = ranking_weights if ranking_weights is not None else MODULE7_RANKING_WEIGHTS
+    if not weights:
+        raise Module7Error("MODULE7_RANKING_WEIGHTS dictionary must not be empty")
+
+    for k, v in weights.items():
+        if v < 0.0 or v > 1.0:
+            raise Module7Error(f"Ranking weight '{k}' must be between 0.0 and 1.0, got {v}")
+
+    total_weight = sum(weights.values())
+    if abs(total_weight - 1.0) > 0.05:
+        raise Module7Error(f"MODULE7_RANKING_WEIGHTS must sum to ~1.0, got {total_weight:.4f}")
+
+
+def validate_candidate_selection_config(
+    max_candidates: int | None = None,
+    clustering_threshold: int | None = None,
+    ranking_weights: dict[str, float] | None = None,
+) -> None:
+    """
+    Validate multi-candidate generation and selection configuration settings.
+    Follows startup validation architecture and raises Module7Error on invalid parameters.
+    """
+    cands = max_candidates if max_candidates is not None else MODULE7_MAX_CANDIDATES
+    if cands < 1:
+        raise Module7Error(f"MODULE7_MAX_CANDIDATES must be >= 1, got {cands}")
+
+    threshold = clustering_threshold if clustering_threshold is not None else MODULE7_CLUSTERING_THRESHOLD
+    if threshold <= 0 or threshold > 64:
+        raise Module7Error(f"MODULE7_CLUSTERING_THRESHOLD must be between 1 and 64, got {threshold}")
+
+    validate_candidate_ranking_weights(ranking_weights)
+    validate_creator_style_config()
+
+
 
 # --- Module 7 V2 Editing Engine Constants ---
 MODULE7_V2_DENOISE_BY_DECISION: dict[str, float] = {

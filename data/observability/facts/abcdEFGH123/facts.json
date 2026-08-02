@@ -2,9 +2,9 @@
   "video_id": "abcdEFGH123",
   "trace_facts": {
     "video_id": "abcdEFGH123",
-    "extracted_at": "2026-08-02T19:49:13.250164+00:00",
+    "extracted_at": "2026-08-02T21:23:45.365616+00:00",
     "fact_version": "1.0.0",
-    "workflow_selected": "gaming",
+    "workflow_selected": null,
     "edit_mode": "txt2img",
     "generation_profile": "PROFILE_PREMIUM",
     "model_used": null,
@@ -89,14 +89,21 @@
     "generated_thumbnail_exists": false,
     "asset_extraction_enabled": false,
     "decision_engine_enabled": false,
-    "thumbnail_planner_enabled": false
+    "thumbnail_planner_enabled": false,
+    "beats_original": null,
+    "over_edited": null,
+    "selection_agreed": null,
+    "baseline_score": null,
+    "winning_candidate_index": null,
+    "module7_selected_index": null,
+    "edit_magnitude": null
   },
   "atomic_facts": [
     {
       "fact_key": "workflow_selected",
       "category": "generation",
       "name": "Workflow Selected",
-      "value": "gaming",
+      "value": null,
       "data_type": "string",
       "source_module": "module7"
     },
@@ -173,6 +180,6 @@
       "source_module": "module7"
     }
   ],
-  "extracted_at": "2026-08-02T19:49:13.250164+00:00",
+  "extracted_at": "2026-08-02T21:23:45.365616+00:00",
   "fact_version": "1.0.0"
 }

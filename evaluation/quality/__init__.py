@@ -8,6 +8,7 @@ from .background_quality_scorer import BackgroundQualityScorer
 from .color_harmony_scorer import ColorHarmonyScorer
 from .composition_scorer import CompositionScorer
 from .determinism_checker import DeterminismCheckerScorer, compute_ssim
+from .emotional_ctr_scorer import EmotionalCTRScorer
 from .face_preservation_scorer import FacePreservationScorer
 from .inline_qa_scorer import InlineQAScorer
 from .interfaces import IQualityScorer
@@ -17,6 +18,7 @@ from .prompt_adherence_scorer import PromptAdherenceScorer
 from .scoring_context import QualityScoringContext
 from .text_readability_scorer import TextReadabilityScorer
 from .visual_consistency_scorer import VisualConsistencyScorer
+from .whitespace_scorer import WhitespaceScorer
 
 __all__ = [
     "Aggregator",
@@ -25,6 +27,7 @@ __all__ = [
     "ColorHarmonyScorer",
     "CompositionScorer",
     "DeterminismCheckerScorer",
+    "EmotionalCTRScorer",
     "FacePreservationScorer",
     "IQualityScorer",
     "InlineQAScorer",
@@ -34,6 +37,7 @@ __all__ = [
     "QualityScoringContext",
     "TextReadabilityScorer",
     "VisualConsistencyScorer",
+    "WhitespaceScorer",
     "compute_ssim",
     "get_peak_rss_mb",
     "get_peak_vram_mb",

@@ -34,8 +34,29 @@ from observability.diagnostics.rules.edit_mode_resolution_rules import (
 from observability.diagnostics.rules.latent_initialization_rules import (
     SourceNeverEncodedRule,
 )
+from observability.diagnostics.rules.optimization_diagnostic_rules import (
+    GeneratedThumbnailDidNotBeatOriginalRule,
+    OptimizationSelectionDisagreementRule,
+    OverEditedAcceptedRule,
+)
 from observability.diagnostics.rules.prompt_consistency_rules import (
     PromptContradictionRule,
+)
+from observability.diagnostics.rules.candidate_selection_rules import (
+    DuplicateCandidateDetectionRule,
+    WeakDiversityRule,
+    InconsistentRankingRule,
+    PoorWinnerSelectionRule,
+    CandidateDiversityRule,
+    CandidateHardGateRateRule,
+    CandidateRankingDominanceRule,
+    StrategyPackMismatchRule,
+)
+
+from observability.diagnostics.rules.creator_style_rules import (
+    BrandingInconsistencyRule,
+    IdentityLossWithoutDriftRule,
+    StyleViolationRule,
 )
 
 DEFAULT_RULE_CLASSES = [
@@ -55,6 +76,20 @@ DEFAULT_RULE_CLASSES = [
     IdentityDriftRule,
     EditCapabilityReachabilityRule,
     StagedEditDenoiseStrengthRule,
+    GeneratedThumbnailDidNotBeatOriginalRule,
+    OverEditedAcceptedRule,
+    OptimizationSelectionDisagreementRule,
+    DuplicateCandidateDetectionRule,
+    WeakDiversityRule,
+    InconsistentRankingRule,
+    PoorWinnerSelectionRule,
+    CandidateDiversityRule,
+    CandidateHardGateRateRule,
+    CandidateRankingDominanceRule,
+    StrategyPackMismatchRule,
+    StyleViolationRule,
+    BrandingInconsistencyRule,
+    IdentityLossWithoutDriftRule,
 ]
 
 __all__ = [
@@ -74,5 +109,21 @@ __all__ = [
     "IdentityDriftRule",
     "EditCapabilityReachabilityRule",
     "StagedEditDenoiseStrengthRule",
+    "GeneratedThumbnailDidNotBeatOriginalRule",
+    "OverEditedAcceptedRule",
+    "OptimizationSelectionDisagreementRule",
+    "DuplicateCandidateDetectionRule",
+    "WeakDiversityRule",
+    "InconsistentRankingRule",
+    "PoorWinnerSelectionRule",
+    "CandidateDiversityRule",
+    "CandidateHardGateRateRule",
+    "CandidateRankingDominanceRule",
+    "StrategyPackMismatchRule",
+    "StyleViolationRule",
+    "BrandingInconsistencyRule",
+    "IdentityLossWithoutDriftRule",
     "DEFAULT_RULE_CLASSES",
 ]
+
+

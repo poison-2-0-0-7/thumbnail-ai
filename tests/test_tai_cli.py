@@ -101,7 +101,8 @@ def test_cli_status(capsys: pytest.CaptureFixture[str]) -> None:
 
 
 def test_cli_doctor(capsys: pytest.CaptureFixture[str]) -> None:
-    with patch("comfyui_manager.ComfyUIProcessManager.is_healthy", return_value=True):
+    with patch("comfyui_manager.ComfyUIProcessManager.is_healthy", return_value=True), \
+         patch("config.validate_controlnet_capability_availability", return_value=None):
         code = cli.main(["doctor"])
         assert code == 0
         captured = capsys.readouterr()

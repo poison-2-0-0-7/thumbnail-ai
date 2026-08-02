@@ -168,7 +168,8 @@ def cmd_doctor(args: argparse.Namespace) -> int:
 
     # 5. ComfyUI API
     mgr = ComfyUIProcessManager()
-    if mgr.is_healthy():
+    comfy_running = mgr.is_healthy()
+    if comfy_running:
         results.append(("ComfyUI API", f"Healthy at {mgr.base_url}", "OK"))
     else:
         results.append(("ComfyUI API", f"Offline at {mgr.base_url} (auto-start ready)", "WARN"))
@@ -209,14 +210,17 @@ def cmd_doctor(args: argparse.Namespace) -> int:
     try:
         from image_generator import ProfileSelector
         ProfileSelector()
-        from config import validate_controlnet_capability_availability
-        from generation_components.model_discovery_service import ModelDiscoveryService
-        from generation_components.controlnet_capability_resolver import ControlNetCapabilityResolver
-        comfy_client = getattr(mgr, "client", None)
-        discovery = ModelDiscoveryService(client=comfy_client)
-        resolver = ControlNetCapabilityResolver(discovery_service=discovery)
-        validate_controlnet_capability_availability(resolver)
+        from config import validate_controlnet_capability_availability, validate_candidate_selection_config
+        validate_candidate_selection_config()
+        if comfy_running:
+            from generation_components.model_discovery_service import ModelDiscoveryService
+            from generation_components.controlnet_capability_resolver import ControlNetCapabilityResolver
+            comfy_client = getattr(mgr, "client", None)
+            discovery = ModelDiscoveryService(client=comfy_client)
+            resolver = ControlNetCapabilityResolver(discovery_service=discovery)
+            validate_controlnet_capability_availability(resolver)
         results.append(("Configuration", f"Host={COMFYUI_HOST}, Port={COMFYUI_PORT}", "OK"))
+
     except Exception as exc:
         results.append(("Configuration", f"Host={COMFYUI_HOST}, Port={COMFYUI_PORT} | Module 7 config invalid: {exc}", "FAIL"))
 

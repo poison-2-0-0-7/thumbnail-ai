@@ -93,6 +93,15 @@ class TraceFacts(BaseModel):
     decision_engine_enabled: bool = False
     thumbnail_planner_enabled: bool = False
 
+    # Module 8 Optimization facts
+    beats_original: Optional[bool] = None
+    over_edited: Optional[bool] = None
+    selection_agreed: Optional[bool] = None
+    baseline_score: Optional[float] = None
+    winning_candidate_index: Optional[int] = None
+    module7_selected_index: Optional[int] = None
+    edit_magnitude: Optional[float] = None
+
 
 class FactCollection(BaseModel):
     """

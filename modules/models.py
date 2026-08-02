@@ -1024,6 +1024,8 @@ class CandidateStrategy(BaseModel):
     color_grade_bias: float = 0.0
     typography_weight_bias: float = 0.0
     emotion_bias: float = 0.0
+    lighting_bias: float = 0.0
+    framing_bias: float = 0.0
     description: str = ""
 
     @field_validator("name")
@@ -1046,6 +1048,8 @@ class CandidateStrategy(BaseModel):
         "color_grade_bias",
         "typography_weight_bias",
         "emotion_bias",
+        "lighting_bias",
+        "framing_bias",
     )
     @classmethod
     def validate_bias_range(cls, v: float) -> float:
@@ -1063,6 +1067,8 @@ class CandidateStrategy(BaseModel):
             color_grade_bias=0.0,
             typography_weight_bias=0.0,
             emotion_bias=0.0,
+            lighting_bias=0.0,
+            framing_bias=0.0,
             description="Variant A — Faithful to base blueprint without perturbation.",
         )
 
@@ -2027,6 +2033,118 @@ class EditPlan(BaseModel):
 
 EditRegion.model_rebuild()
 EditPlan.model_rebuild()
+
+
+# ---------------------------------------------------------------------------
+# Module 10 — Creator Style Learning Models
+# ---------------------------------------------------------------------------
+
+
+class ThumbnailStyleSignature(BaseModel):
+    """Auditable structured signature extracted from a single video thumbnail's intelligence."""
+
+    model_config = ConfigDict(frozen=True)
+
+    video_id: str
+    channel_id: str
+    dominant_colors: list[str] = Field(default_factory=list)
+    brightness: float = 0.5
+    contrast: float = 0.5
+    saturation: float = 0.5
+    warm_or_cool: Literal["warm", "cool", "neutral"] = "neutral"
+    color_harmony_score: float = 0.5
+    subject_placement: str = "center"
+    negative_space_ratio: float = 0.3
+    balance_score: float = 0.5
+    symmetry_score: float = 0.5
+    face_scale_ratio: Optional[float] = None
+    text_coverage_ratio: float = 0.0
+    text_region_count: int = 0
+    object_classes_present: list[str] = Field(default_factory=list)
+    extracted_at: str = ""
+
+
+class CreatorStyleEmbedding(BaseModel):
+    """Running centroid embedding vector accumulated across a creator's thumbnails."""
+
+    model_config = ConfigDict(frozen=True)
+
+    channel_id: str
+    embedding: list[float] = Field(default_factory=list)
+    embedding_model: str = "OpenCLIP-ViT-B-32"
+    source_video_ids: list[str] = Field(default_factory=list)
+    sample_count: int = 0
+    computed_at: str = ""
+
+
+class StyleProfileManifest(BaseModel):
+    """Manifest summary of a creator's persistent style profile store."""
+
+    model_config = ConfigDict(frozen=True)
+
+    channel_id: str
+    sample_count: int = 0
+    profile_established: bool = False
+    first_seen_at: str = ""
+    last_updated_at: str = ""
+    video_ids: list[str] = Field(default_factory=list)
+    schema_version: str = "1.0.0"
+
+
+class StyleSimilarityResult(BaseModel):
+    """Evaluation result of candidate/thumbnail visual similarity against creator style centroid."""
+
+    model_config = ConfigDict(frozen=True)
+
+    video_id: str
+    channel_id: str
+    similarity_score: float
+    belongs_to_identity: bool
+    profile_established: bool
+
+
+class StylePromptGuidance(BaseModel):
+    """Deterministic prompt guidance block generated to align generation with creator style."""
+
+    model_config = ConfigDict(frozen=True)
+
+    channel_id: str
+    color_guidance: str = ""
+    composition_guidance: str = ""
+    face_scale_guidance: Optional[str] = None
+    applied: bool = False
+
+
+class StyleAwareScore(BaseModel):
+    """Additive style similarity score and bonus term for multi-dimensional candidate ranking."""
+
+    model_config = ConfigDict(frozen=True)
+
+    candidate_index: int
+    style_similarity: float
+    style_bonus: float
+
+
+class StyleDriftAssessment(BaseModel):
+    """Assessment of whether a creator has intentionally shifted their visual style."""
+
+    model_config = ConfigDict(frozen=True)
+
+    channel_id: str
+    recent_similarity_scores: list[float] = Field(default_factory=list)
+    drift_detected: bool = False
+    drift_confidence: float = 0.0
+    recommended_action: Literal["none", "monitor", "update_centroid"] = "none"
+
+
+ThumbnailStyleSignature.model_rebuild()
+CreatorStyleEmbedding.model_rebuild()
+StyleProfileManifest.model_rebuild()
+StyleSimilarityResult.model_rebuild()
+StylePromptGuidance.model_rebuild()
+StyleAwareScore.model_rebuild()
+StyleDriftAssessment.model_rebuild()
+
 
 
 

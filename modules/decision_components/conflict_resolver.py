@@ -18,9 +18,14 @@ from modules.models import BoundingBox, CandidateDecision, DecisionAction, Decis
 class ConflictResolver(IConflictResolver):
     """Resolves conflicts among candidate decisions into final ResolvedDecisions."""
 
-    def __init__(self, priority_order: tuple[str, ...] = DECISION_PRIORITY_ORDER) -> None:
+    def __init__(
+        self,
+        priority_order: tuple[str, ...] = DECISION_PRIORITY_ORDER,
+        prior_provider: Any | None = None,
+    ) -> None:
         self.priority_order = priority_order
         self._priority_map = {action_str: rank for rank, action_str in enumerate(self.priority_order)}
+        self.prior_provider = prior_provider
 
     def resolve(self, candidates: list[CandidateDecision]) -> list[ResolvedDecision]:
         """Resolve candidate decisions per element_id and apply global deduplication."""
@@ -67,11 +72,16 @@ class ConflictResolver(IConflictResolver):
         if len(cand_group) == 1:
             return cand_group[0], []
 
-        # Sort key: (priority_rank, -confidence, -is_llm)
+        # Sort key: (priority_rank, -effective_confidence, -is_llm)
         def sort_key(c: CandidateDecision) -> tuple[int, float, int]:
             rank = self._priority_map.get(c.action.value, 99)
             is_llm = 1 if c.source == DecisionSource.LLM else 0
-            return (rank, -c.confidence, -is_llm)
+            prior_adj = 0.0
+            if self.prior_provider and hasattr(self.prior_provider, "rule_confidence_prior"):
+                for r_id in c.rule_ids:
+                    prior_adj += self.prior_provider.rule_confidence_prior(r_id)
+            effective_conf = c.confidence + prior_adj
+            return (rank, -effective_conf, -is_llm)
 
         sorted_candidates = sorted(cand_group, key=sort_key)
         winner = sorted_candidates[0]

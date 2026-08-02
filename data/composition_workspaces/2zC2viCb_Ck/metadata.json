@@ -1,10 +1,10 @@
 {
   "metadata": {
     "video_id": "2zC2viCb_Ck",
-    "created_at": "2026-08-02T19:50:12.528665+00:00",
+    "created_at": "2026-08-02T20:34:36.765560+00:00",
     "vre_source_hash": "c036d91b1223d482161907d1e64a2008363b2788ef5962cbd916a43c598c9169",
-    "redesign_spec_hash": "8868f952e27f765af3470755d16e70c4881667d7e64fa3b285fb4868bb0b61e3",
-    "prompt_package_hash": "052b6f84f02cb5bb4e6802b3b97061def95945ff4108b6d523ae124e956eccb7",
+    "redesign_spec_hash": "0595f718953b352c0efe18a3a54177fd38560f7c65f2075dd96919f0d5117f48",
+    "prompt_package_hash": "a69b97c37252a283379ad078481fb483738c97f54c26c0296a8033d7bd597600",
     "engine_version": "1.0.0"
   },
   "statistics": {

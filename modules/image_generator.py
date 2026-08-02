@@ -32,8 +32,24 @@ from config import (
     MODULE7_STRATEGY_PACK, MODULE7_VRAM_HEADROOM_GB, MODULE7_WORKFLOW_GRAPH_CACHE_ENABLED,
     MODULE7_WORKFLOW_VERSION, MODULE7_PARALLEL_CANDIDATES,
     MODULE7_EDIT_CAPABLE_PROFILES, validate_module7_edit_reachability,
+    MODULE7_CLUSTERING_THRESHOLD, MODULE7_RANKING_WEIGHTS,
+    MODULE7_HUMAN_REVIEW_ENABLED, MODULE7_HUMAN_REVIEW_TIMEOUT_SECONDS,
+    MODULE7_HUMAN_REVIEW_WORKSPACE_DIR, MODULE7_LEARNING_FEEDBACK_STORE_PATH,
+    MODULE10_STYLE_PROMPT_ENABLED, MODULE10_STYLE_MIN_SAMPLES,
+    MODULE10_STYLE_SIMILARITY_THRESHOLD, MODULE10_STYLE_PROMPT_WEIGHT,
+    MODULE10_STYLE_DRIFT_WINDOW, MODULE10_STYLE_RANKING_WEIGHT,
+    MODULE10_CREATOR_PROFILES_DIR,
     COMFYUI_WORKING_DIRECTORY, PROJECT_ROOT,
 )
+from creator_style import (
+    StyleDriftDetector,
+    StyleExtractor,
+    StyleProfileStore,
+    StylePromptGuidanceGenerator,
+    StyleSimilarityEngine,
+    StyleAwareRankingEngine,
+)
+
 from models import (
     CandidateManifest, CandidateManifestEntry, CandidateScore, CandidateStrategy,
     CompositionWorkspace, DesignBlueprint, FaceMatchResult, GeneratedAsset,
@@ -58,6 +74,11 @@ from generation_components import (
     StrategyPackLibrary,
     StrategyPackResolver,
     WorkflowGraphAssembler,
+    CandidateClusteringEngine,
+    CandidateRankingEngine,
+    SelectionExplainer,
+    HumanReviewWorkspace,
+    LearningFeedbackStore,
     WorkflowGraphCache,
     RegionPlanValidator,
     BaseLatentStage,
@@ -1297,6 +1318,11 @@ class ImageGeneratorPipeline:
         typography_stage: TypographyStage | None = None,
         harmonization_stage: HarmonizationStage | None = None,
         trace_recorder: GenerationTraceRecorder | None = None,
+        clustering_engine: CandidateClusteringEngine | None = None,
+        ranking_engine: CandidateRankingEngine | None = None,
+        selection_explainer: SelectionExplainer | None = None,
+        human_review_workspace: HumanReviewWorkspace | None = None,
+        learning_feedback_store: LearningFeedbackStore | None = None,
     ) -> None:
         self.client = client
         self.capability_probe = capability_probe or (CapabilityProbe(client=client) if client else None)
@@ -1326,6 +1352,22 @@ class ImageGeneratorPipeline:
         self.object_edit_stage = object_edit_stage or ObjectEditStage()
         self.typography_stage = typography_stage or TypographyStage()
         self.harmonization_stage = harmonization_stage or HarmonizationStage()
+        self.clustering_engine = clustering_engine or CandidateClusteringEngine(threshold=MODULE7_CLUSTERING_THRESHOLD)
+        self.ranking_engine = ranking_engine or CandidateRankingEngine(weights=MODULE7_RANKING_WEIGHTS)
+        self.selection_explainer = selection_explainer or SelectionExplainer()
+        self.human_review_workspace = human_review_workspace or HumanReviewWorkspace(
+            enabled=MODULE7_HUMAN_REVIEW_ENABLED,
+            timeout_seconds=MODULE7_HUMAN_REVIEW_TIMEOUT_SECONDS,
+            workspace_dir=MODULE7_HUMAN_REVIEW_WORKSPACE_DIR,
+        )
+        self.learning_feedback_store = learning_feedback_store or LearningFeedbackStore(
+            store_path=MODULE7_LEARNING_FEEDBACK_STORE_PATH
+        )
+        self.style_profile_store = StyleProfileStore(base_dir=MODULE10_CREATOR_PROFILES_DIR)
+        self.style_similarity_engine = StyleSimilarityEngine()
+        self.style_prompt_generator = StylePromptGuidanceGenerator()
+        self.style_ranking_engine = StyleAwareRankingEngine(similarity_engine=self.style_similarity_engine)
+        self.style_drift_detector = StyleDriftDetector(similarity_engine=self.style_similarity_engine)
 
     def run(
         self,
@@ -1338,9 +1380,11 @@ class ImageGeneratorPipeline:
         generation_plan: GenerationPlan | None = None,
         design_blueprint: DesignBlueprint | None = None,
         edit_mode: Literal["legacy_txt2img", "staged_edit", "auto"] = "legacy_txt2img",
+        channel_id: Optional[str] = None,
     ) -> ImageGenerationResult:
         start_time = time.monotonic()
         package = prompt_package or self.package_loader.load(video_id)
+
         pkg_hash = prompt_package_hash(package)
         references = self.asset_resolver.resolve(package)
         profile = self.profile_selector.select(available_vram_gb, MODULE7_PROFILE)
@@ -1448,15 +1492,68 @@ class ImageGeneratorPipeline:
                 for k, v in c_durations.items():
                     stage_durations[k] = stage_durations.get(k, 0.0) + v
 
-        # Rank candidates
-        ranker_inputs = [
-            (c[0], c[1], c[2], c[3]) for c in candidate_results
-        ]
-        winner_tuple, candidate_scores = self.ranker.rank(ranker_inputs)
-        winner_idx, winner_path, winner_qa, winner_face_match = winner_tuple
+        # 1. Cluster candidates (Perceptual hashing & duplicate detection)
+        clustering_result = self.clustering_engine.cluster_candidates(candidate_results)
+
+        # 2. Rank candidates (Weighted multi-dimensional ranking with hard-gate preservation)
+        alg_winner_tuple, candidate_scores = self.ranking_engine.rank_candidates(
+            candidate_results,
+            candidate_cluster_map=clustering_result.candidate_cluster_map,
+            survivor_indices=clustering_result.survivor_indices,
+            perceptual_hashes=clustering_result.perceptual_hashes,
+        )
+
+        # 3. Generate Selection Explanation
+        explanation = self.selection_explainer.explain(
+            winner_candidate=alg_winner_tuple,
+            candidate_scores=candidate_scores,
+            all_candidates=candidate_results,
+            clustering_exclusions=clustering_result.excluded_duplicates,
+        )
+
+        # 4. Human Review Mode / Manual Selection Override
+        winner_tuple, manual_record = self.human_review_workspace.process_review(
+            video_id=video_id,
+            algorithmic_winner=alg_winner_tuple,
+            all_candidates=candidate_results,
+            candidate_scores=candidate_scores,
+        )
+
+        winner_idx, winner_path, winner_qa, winner_face_match, winner_strat, winner_pkg, winner_wf_hash, _ = winner_tuple
+        was_overridden = manual_record is not None and manual_record.selected_candidate_index != alg_winner_tuple[0]
+
+        # 5. Record Learning Feedback
+        self.learning_feedback_store.record_feedback(
+            video_id=video_id,
+            winning_candidate_index=winner_idx,
+            algorithmic_winner_index=alg_winner_tuple[0],
+            winning_strategy=winner_strat.name if winner_strat else "faithful",
+            was_overridden=was_overridden,
+            score_breakdown={c[0]: {"overall_score": c[2].overall_score} for c in candidate_results},
+        )
 
         final_target = target_dir / f"{video_id}.png"
         shutil.copyfile(winner_path, final_target)
+
+        # Record GenerationTraceRecord for PORCE observability
+        try:
+            self.trace_recorder.record(
+                video_id=video_id,
+                attempt_index=winner_idx,
+                package=winner_pkg,
+                profile=profile,
+                built_wf=None,
+                conditioning_ctx=conditioning_ctx,
+                output_image_path=final_target,
+                stage_durations=stage_durations,
+                strategy_name=winner_strat.name if winner_strat else "faithful",
+                cluster_id=clustering_result.candidate_cluster_map.get(winner_idx),
+                exclusion_reason=clustering_result.excluded_duplicates.get(winner_idx),
+                selection_explanation=explanation.winner_explanation,
+                manual_override=was_overridden,
+            )
+        except Exception as trace_exc:
+            logger.warning("Trace recorder error in multi-candidate pipeline: {exc}", exc=trace_exc)
 
         pad_width = max(2, len(str(MODULE7_MAX_CANDIDATES)))
         cand_manifest_entries: list[CandidateManifestEntry] = []
@@ -1501,8 +1598,6 @@ class ImageGeneratorPipeline:
             candidate_index=winner_idx,
         )
 
-        winner_item = next(c for c in candidate_results if c[0] == winner_idx)
-        winner_wf_hash = winner_item[6]
         gen_hash = generation_hash(
             winner_wf_hash,
             pkg_hash,

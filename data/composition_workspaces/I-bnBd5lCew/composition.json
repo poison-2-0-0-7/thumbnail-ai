@@ -208,13 +208,13 @@
   },
   "metadata": {
     "video_id": "I-bnBd5lCew",
-    "created_at": "2026-08-02T19:49:41.941288+00:00",
+    "created_at": "2026-08-02T20:34:06.769462+00:00",
     "vre_source_hash": "5ddd8f60de56950b9867f7cf78d029eacf50fdece74bca5c9d31fe7fc2297f7b",
-    "redesign_spec_hash": "0eac731bd16baadbf36e1c6e616d8e326ea4f3bf02d50d1bd48bc0344dc25182",
-    "prompt_package_hash": "ea75969fe9b9e7e0a5bbbd68dc8b269bb263d368c0bee93682379ce166cf0cfc",
+    "redesign_spec_hash": "1c8c2b88569070a97e4e6f9e29debbdcc4ae8b3ab69d5f37ab071bd7c34df8c9",
+    "prompt_package_hash": "d39776acd33567b632df16b31ef65d2da8775907da010084568f48641e4a15fc",
     "engine_version": "1.0.0"
   },
   "status": "success",
   "error_message": null,
-  "duration_seconds": 0.09619729999394622
+  "duration_seconds": 0.05644639999809442
 }

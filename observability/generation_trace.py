@@ -42,9 +42,16 @@ class GenerationTraceFactory:
         stage_durations: Optional[dict[str, float]] = None,
         fragments_attached: Optional[list[FragmentAttachmentRecord | dict[str, Any]]] = None,
         generation_id: Optional[str] = None,
+        strategy_name: Optional[str] = None,
+        cluster_id: Optional[str] = None,
+        exclusion_reason: Optional[str] = None,
+        ranking_dimensions: Optional[dict[str, float]] = None,
+        selection_explanation: Optional[str] = None,
+        manual_override: bool = False,
+        **kwargs: Any,
     ) -> GenerationTraceRecord:
         """
-        Construct a strongly-typed GenerationTraceRecord from Module 7 context objects.
+        Construct a strongly-typed GenerationTraceRecord from Module 7 execution context.
         """
         now_str = datetime.now(timezone.utc).isoformat()
         gen_id = generation_id or f"{video_id}_cand_{attempt_index}"
@@ -183,6 +190,20 @@ class GenerationTraceFactory:
             output_image_path=out_img_str,
             execution_timestamps=timestamps,
             recorded_at=now_str,
+            strategy_name=strategy_name,
+            cluster_id=cluster_id,
+            exclusion_reason=exclusion_reason,
+            ranking_dimensions=ranking_dimensions,
+            selection_explanation=selection_explanation,
+            manual_override=manual_override,
+            creator_channel_id=kwargs.get("creator_channel_id"),
+            style_signature_reference=kwargs.get("style_signature_reference"),
+            style_embedding_similarity=kwargs.get("style_embedding_similarity"),
+            style_profile_established=kwargs.get("style_profile_established"),
+            style_bonus_applied=kwargs.get("style_bonus_applied"),
+            drift_detected=kwargs.get("drift_detected"),
+            drift_confidence=kwargs.get("drift_confidence"),
+            style_prompt_guidance_applied=kwargs.get("style_prompt_guidance_applied"),
         )
 
 
@@ -281,6 +302,7 @@ class GenerationTraceRecorder:
         output_image_path: Optional[Path | str] = None,
         stage_durations: Optional[dict[str, float]] = None,
         fragments_attached: Optional[list[FragmentAttachmentRecord | dict[str, Any]]] = None,
+        **kwargs: Any,
     ) -> Optional[Path]:
         """
         Construct and persist a GenerationTraceRecord for a generation attempt.
@@ -298,8 +320,10 @@ class GenerationTraceRecorder:
                 output_image_path=output_image_path,
                 stage_durations=stage_durations,
                 fragments_attached=fragments_attached,
+                **kwargs,
             )
             return self.persistence.save(record)
+
         except Exception as exc:
             logger.warning(
                 "GenerationTraceRecorder failed to record trace for video_id={vid}: {exc}",

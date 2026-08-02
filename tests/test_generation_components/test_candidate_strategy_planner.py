@@ -109,3 +109,26 @@ def test_planner_all_five_strategies(base_prompt_package, sample_blueprint):
     assert "wider" in packages[2].composition_instructions
     # Candidate 3 (higher contrast) has color perturbation
     assert "increased contrast" in packages[3].color_instructions
+
+
+def test_planner_lighting_and_framing_bias(base_prompt_package, sample_blueprint):
+    planner = CandidateStrategyPlanner()
+    strat_pos = CandidateStrategy(
+        name="lighting_framing_pos",
+        lighting_bias=0.3,
+        framing_bias=0.3,
+    )
+    derived_pos = planner.derive_package(base_prompt_package, sample_blueprint, strat_pos, candidate_index=1)
+    assert "dramatic" in derived_pos.lighting_instructions
+    assert "Tighten framing" in derived_pos.composition_instructions
+    assert derived_pos.typography_instructions == base_prompt_package.typography_instructions
+
+    strat_neg = CandidateStrategy(
+        name="lighting_framing_neg",
+        lighting_bias=-0.3,
+        framing_bias=-0.3,
+    )
+    derived_neg = planner.derive_package(base_prompt_package, sample_blueprint, strat_neg, candidate_index=2)
+    assert "soft, diffused" in derived_neg.lighting_instructions
+    assert "Expand framing" in derived_neg.composition_instructions
+

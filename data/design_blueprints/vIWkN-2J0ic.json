@@ -158,14 +158,14 @@
   ],
   "branding_constraints": [
     "Warm color palette",
-    "Symmetrical composition",
-    "Centered face",
+    "Balanced composition",
+    "Centered face with happy expression",
     "Do not reproduce copyrighted characters, logos, or branded imagery."
   ],
   "conflicts_resolved": 0,
   "status": "success",
   "partial_failure_reasons": [],
   "error_message": null,
-  "duration_seconds": 0.0003,
-  "generated_at": "2026-08-02T19:50:47.851830+00:00"
+  "duration_seconds": 0.0006,
+  "generated_at": "2026-08-02T20:35:17.662677+00:00"
 }

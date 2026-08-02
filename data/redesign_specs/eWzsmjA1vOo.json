@@ -87,17 +87,16 @@
     }
   ],
   "elements_to_preserve": [
-    "Focal points in the center",
-    "Warm color scheme",
-    "Rule of thirds composition",
-    "Engaging emotional expressions"
+    "Positive emotional expressions",
+    "Balanced composition",
+    "Subject placement in the left-third"
   ],
-  "overall_rationale": "ctr_potential_score=0.75; curiosity_gap_score=0.68; content_mismatch_detected=False; rules applied: clutter_reduction, crop_tighter.",
+  "overall_rationale": "ctr_potential_score=0.75; curiosity_gap_score=0.65; content_mismatch_detected=False; rules applied: clutter_reduction, crop_tighter.",
   "source_ctr_potential_score": 0.75,
-  "source_curiosity_gap_score": 0.68,
+  "source_curiosity_gap_score": 0.65,
   "source_content_mismatch_detected": false,
   "status": "success",
   "error_message": null,
-  "duration_seconds": 0.00025099999766098335,
-  "generated_at": "2026-08-02T19:49:24.906408+00:00"
+  "duration_seconds": 0.0002210000020568259,
+  "generated_at": "2026-08-02T20:33:49.550838+00:00"
 }

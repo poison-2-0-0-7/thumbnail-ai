@@ -66,7 +66,21 @@ def test_fragment_library_loads_all_six_fragments():
     assert "regional_mask_conditioning.json" in names
 
 
-def test_controlnet_segmentation_fragment_selection(tmp_path: Path):
+def test_controlnet_segmentation_fragment_selection(tmp_path: Path, monkeypatch):
+    from generation_components.controlnet_capability_resolver import ControlNetCapabilityResolver, ResolvedCapability
+    dummy_res = ResolvedCapability(
+        capability="segmentation",
+        node_class="ControlNetApplyAdvanced",
+        filename_field="control_net_name",
+        resolved_filename="controlnet_seg_sdxl.safetensors",
+        resolution_source="pattern_match",
+        matched_pattern="seg",
+        fragment_variant="controlnet_segmentation",
+    )
+    monkeypatch.setattr(ControlNetCapabilityResolver, "resolve", lambda self, cap: dummy_res)
+
+
+
     seg_img = tmp_path / "seg.png"
     seg_img.write_bytes(b"seg")
 
@@ -76,4 +90,5 @@ def test_controlnet_segmentation_fragment_selection(tmp_path: Path):
 
     selected = builder._select_fragments(profile, ctx)
     assert "controlnet_segmentation" in selected
+
 

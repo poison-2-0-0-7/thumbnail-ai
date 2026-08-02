@@ -30,6 +30,8 @@ EVAL_QUALITY_WEIGHTS: dict[str, float] = {
     "determinism": 0.05,
     "inline_qa": 0.10,
     "runtime_performance": 0.05,
+    "emotional_ctr": 0.05,
+    "whitespace": 0.05,
     "memory_profile": 0.0,
     "failure_rate": 0.0,
 }
@@ -48,6 +50,8 @@ EVAL_DIMENSION_THRESHOLDS: dict[str, float] = {
     "determinism": 0.90,
     "inline_qa": 0.60,
     "runtime_performance": 0.0,
+    "emotional_ctr": 0.50,
+    "whitespace": 0.50,
     "memory_profile": 0.0,
     "failure_rate": 0.0,
 }

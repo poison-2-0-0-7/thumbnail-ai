@@ -53,7 +53,19 @@ def test_capability_probe_allows_supported_fragment():
     assert probe.is_fragment_supported(fragment) is True
 
 
-def test_controlnet_fragment_assembly_integration(tmp_path: Path):
+def test_controlnet_fragment_assembly_integration(tmp_path: Path, monkeypatch):
+    from generation_components.controlnet_capability_resolver import ControlNetCapabilityResolver, ResolvedCapability
+    dummy_res = ResolvedCapability(
+        capability="depth",
+        node_class="ControlNetApplyAdvanced",
+        filename_field="control_net_name",
+        resolved_filename="controlnet_depth_sdxl.safetensors",
+        resolution_source="pattern_match",
+        matched_pattern="depth",
+        fragment_variant="controlnet_depth",
+    )
+    monkeypatch.setattr(ControlNetCapabilityResolver, "resolve", lambda self, cap: dummy_res)
+
     depth_file = tmp_path / "depth.png"
     depth_file.write_bytes(b"depth")
 
@@ -78,6 +90,7 @@ def test_controlnet_fragment_assembly_integration(tmp_path: Path):
 
     selected = builder._select_fragments(profile, ctx)
     assert "controlnet_depth" in selected
+
 
 
 def test_detect_workflow_node_types_scans_workflows_dir(tmp_path: Path):
