@@ -14,8 +14,8 @@
       "artifact_type": "thumbnail_intelligence",
       "path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\analysis\\I-bnBd5lCew.json",
       "exists": true,
-      "sha256": "fc93e6edadb28c2b6f34b394562379a2bad99af9dfc3bc0b69766afeab26f67f",
-      "size_bytes": 4791
+      "sha256": "389f211dcf9f8ab34d5871c70fa1817d5ad23a5401bd5eb069d0f209ffc10c02",
+      "size_bytes": 4793
     },
     {
       "module": "module8",
@@ -30,7 +30,7 @@
       "artifact_type": "redesign_specification",
       "path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\redesign_specs\\I-bnBd5lCew.json",
       "exists": true,
-      "sha256": "e9887caf9f2e4a978d49590f2f1f9295d583376890c1f219f84d5aadffb48c23",
+      "sha256": "f75deff468d7236a41a5431e24e82e52c1c0554b971d5df93c68a7335f00949e",
       "size_bytes": 2653
     },
     {
@@ -38,7 +38,7 @@
       "artifact_type": "design_blueprint",
       "path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\design_blueprints\\I-bnBd5lCew.json",
       "exists": true,
-      "sha256": "721aea51e3b878904f2eba99e850ab47b66d5c66ea6955ca5f46cae801529d8a",
+      "sha256": "2d7d3b83a012bcf92b5fdfe7b3d3a5509ff294849f058bc9d48d8d2c2ac58388",
       "size_bytes": 5649
     },
     {
@@ -46,8 +46,8 @@
       "artifact_type": "prompt_package",
       "path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\prompt_packages\\I-bnBd5lCew.json",
       "exists": true,
-      "sha256": "338f3b320e7917d8b899584d1a416f80817c29ec434b6a2d4ec720276b7682a4",
-      "size_bytes": 3599
+      "sha256": "07728eae6f835b7f87aa9bf9e0465a30ad64d11a72eb7b39a7cb80888467a989",
+      "size_bytes": 3600
     },
     {
       "module": "module9",
@@ -62,7 +62,7 @@
       "artifact_type": "composition_workspace",
       "path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\composition_workspaces\\I-bnBd5lCew\\workspace_manifest.json",
       "exists": true,
-      "sha256": "2b4d982a5695d05339397a06832f6ee039403ce0c3df46dbb6111a105618cd48",
+      "sha256": "4d701c44bfeaf04fd760d0540cb3ca97b439cd454c58f46491f487eee8432b09",
       "size_bytes": 442
     },
     {
@@ -94,8 +94,8 @@
       "artifact_type": "generated_thumbnail",
       "path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\generated_thumbnails\\I-bnBd5lCew\\I-bnBd5lCew.png",
       "exists": true,
-      "sha256": "e244b483b71335c8171580553f75d4f69b25f1fd51d01972a0de5ae14fbc3801",
-      "size_bytes": 942787
+      "sha256": "e9c9400566d63c4eddf3391c44ed440b74457784c4fea344c967ec265c6bbef2",
+      "size_bytes": 1141939
     },
     {
       "module": "module7",
@@ -106,5 +106,5 @@
       "size_bytes": null
     }
   ],
-  "built_at": "2026-08-02T09:20:57.542260+00:00"
+  "built_at": "2026-08-02T16:38:31.659964+00:00"
 }

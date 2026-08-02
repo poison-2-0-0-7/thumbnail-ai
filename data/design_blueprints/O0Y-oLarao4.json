@@ -167,6 +167,6 @@
     "No face detected in source thumbnail; defaulted face_strategy to neutral."
   ],
   "error_message": null,
-  "duration_seconds": 0.0061,
-  "generated_at": "2026-08-02T09:25:44.983702+00:00"
+  "duration_seconds": 0.0003,
+  "generated_at": "2026-08-02T19:50:35.726367+00:00"
 }

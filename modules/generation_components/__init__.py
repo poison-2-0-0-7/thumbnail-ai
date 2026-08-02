@@ -38,6 +38,13 @@ from generation_components.staged_edit_stages import (
 )
 
 
+from generation_components.model_discovery_service import ModelDiscoveryService
+from generation_components.controlnet_capability_resolver import (
+    ControlNetCapabilityResolver,
+    ResolvedCapability,
+)
+
+
 __all__ = [
     "GenerationConditioningContext",
     "LayerConditioning",
@@ -47,6 +54,9 @@ __all__ = [
     "NodeFragmentLibrary",
     "WorkflowGraphAssembler",
     "CapabilityProbe",
+    "ModelDiscoveryService",
+    "ControlNetCapabilityResolver",
+    "ResolvedCapability",
     "StrategyPackLibrary",
     "StrategyPackResolver",
     "CandidateStrategyPlanner",

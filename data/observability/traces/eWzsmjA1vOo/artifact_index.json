@@ -14,8 +14,8 @@
       "artifact_type": "thumbnail_intelligence",
       "path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\analysis\\eWzsmjA1vOo.json",
       "exists": true,
-      "sha256": "dd4ca88a1143a2cdf4aedde0737f136e090e04b4216a72e52ee0125f5f7d48b5",
-      "size_bytes": 7869
+      "sha256": "b81099a31ad39ba06357858723f25f2fb8aee94c1ac066ef7fde00391d215cfc",
+      "size_bytes": 7609
     },
     {
       "module": "module8",
@@ -30,24 +30,24 @@
       "artifact_type": "redesign_specification",
       "path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\redesign_specs\\eWzsmjA1vOo.json",
       "exists": true,
-      "sha256": "50829fadb8c9608dc548b122a7760ad167dcdbd9e8ee472ee3b0af3200e0236c",
-      "size_bytes": 3357
+      "sha256": "9ffc95356c9ef1c2482da22945db4f619e0011f5aaac9164238b714793bc3d38",
+      "size_bytes": 3366
     },
     {
       "module": "module5.5",
       "artifact_type": "design_blueprint",
       "path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\design_blueprints\\eWzsmjA1vOo.json",
       "exists": true,
-      "sha256": "3d374bf8b5b8dc6924a92c0ea6f1d91ab48da25b9db344cabaff780cc84e0114",
-      "size_bytes": 6664
+      "sha256": "701eb1689b80cf0604065d77d80845ac4ec0fb08e4710cd1861082f18c63e4a0",
+      "size_bytes": 6620
     },
     {
       "module": "module6",
       "artifact_type": "prompt_package",
       "path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\prompt_packages\\eWzsmjA1vOo.json",
       "exists": true,
-      "sha256": "ce1bb355a1be90a9d9fffa66ff2d0666a46213f6d1287af161e0313250993940",
-      "size_bytes": 3776
+      "sha256": "7bc65eb7bb3072fa54000ec8b6372a1a6849bf7552b6c9ba18c7516c016855f0",
+      "size_bytes": 3785
     },
     {
       "module": "module9",
@@ -62,7 +62,7 @@
       "artifact_type": "composition_workspace",
       "path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\composition_workspaces\\eWzsmjA1vOo\\workspace_manifest.json",
       "exists": true,
-      "sha256": "32c6c440797a72c79f55c86b645d2c2809b57ae8981bc79385611d02cffea289",
+      "sha256": "050e22d08ef9d94fbb7ceea57dc223cc381c2928faf75ebd421b1221784da919",
       "size_bytes": 442
     },
     {
@@ -94,8 +94,8 @@
       "artifact_type": "generated_thumbnail",
       "path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\generated_thumbnails\\eWzsmjA1vOo\\eWzsmjA1vOo.png",
       "exists": true,
-      "sha256": "ca31107a2535065317c846d7866449cab548ab0e0dc97774dff7c86a3a2662cf",
-      "size_bytes": 1182700
+      "sha256": "196017b9d22c318d4f233bf753738688c13f0ac701e62526344326a25c3f94a5",
+      "size_bytes": 1193016
     },
     {
       "module": "module7",
@@ -106,5 +106,5 @@
       "size_bytes": null
     }
   ],
-  "built_at": "2026-08-02T09:19:30.847738+00:00"
+  "built_at": "2026-08-02T16:37:30.204770+00:00"
 }

@@ -158,11 +158,40 @@ class CapabilityProbe(ICapabilityProbe):
         self.enabled = enabled
         self.cache_ttl_seconds = cache_ttl_seconds
         self._cached_types: frozenset[str] | None = None
+        self._raw_object_info: dict[str, Any] | None = None
         self._last_probe_time: float = 0.0
 
     @classmethod
     def get_recommended_package(cls, node_type: str) -> str:
         return cls.RECOMMENDED_PACKAGES.get(node_type, f"ComfyUI-Manager search: '{node_type}'")
+
+    def get_raw_object_info(self) -> dict[str, Any]:
+        """Return the raw /object_info dict from ComfyUI, using cached payload if valid."""
+        if not self.enabled or self.client is None:
+            return {}
+
+        now = time.monotonic()
+        if self._raw_object_info is not None and (now - self._last_probe_time) < self.cache_ttl_seconds:
+            return self._raw_object_info
+
+        try:
+            info = self.client.object_info()
+            if isinstance(info, dict):
+                self._raw_object_info = info
+                self._cached_types = frozenset(info.keys())
+                self._last_probe_time = now
+                logger.info(
+                    "CapabilityProbe cached raw /object_info payload ({count} node types)",
+                    count=len(self._cached_types),
+                )
+                return self._raw_object_info
+        except Exception as exc:
+            logger.warning("CapabilityProbe failed to fetch /object_info: {exc}", exc=exc)
+
+        self._raw_object_info = {}
+        self._cached_types = frozenset()
+        self._last_probe_time = now
+        return self._raw_object_info
 
     def installed_node_types(self) -> frozenset[str]:
         """
@@ -178,22 +207,11 @@ class CapabilityProbe(ICapabilityProbe):
         if self._cached_types is not None and (now - self._last_probe_time) < self.cache_ttl_seconds:
             return self._cached_types
 
-        try:
-            info = self.client.object_info()
-            if isinstance(info, dict):
-                self._cached_types = frozenset(info.keys())
-                self._last_probe_time = now
-                logger.info(
-                    "CapabilityProbe cached {count} installed ComfyUI node types",
-                    count=len(self._cached_types),
-                )
-                return self._cached_types
-        except Exception as exc:
-            logger.warning("CapabilityProbe failed to fetch /object_info: {exc}", exc=exc)
+        info = self.get_raw_object_info()
+        if info:
+            return self._cached_types or frozenset(info.keys())
 
-        self._cached_types = frozenset()
-        self._last_probe_time = now
-        return self._cached_types
+        return frozenset()
 
     def is_fragment_supported(self, fragment: dict[str, Any]) -> bool:
         """

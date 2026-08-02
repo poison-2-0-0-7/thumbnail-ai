@@ -225,3 +225,24 @@ def test_legacy_fallback_preserved_when_vram_is_lower(tmp_path: Path) -> None:
         MODULE7_GENERATION_PROFILES["PROFILE_FAST"],
         edit_mode="legacy_txt2img",
     )
+
+
+def test_staged_edit_denoise_substitution() -> None:
+    """Verify built graph node '5' denoise is 0.75 for staged_edit and 1.0 for legacy_txt2img."""
+    from image_generator import WorkflowBuilder
+    library = WorkflowLibrary()
+    builder = WorkflowBuilder()
+    pkg = _package("test_denoise_substitution")
+
+    profile_edit = MODULE7_GENERATION_PROFILES["PROFILE_STANDARD_EDIT"]
+    ref_edit = library.resolve("general", profile_edit, edit_mode="staged_edit")
+    built_edit = builder.build(pkg, profile_edit, ref_edit, library=library)
+
+    assert built_edit.graph["5"]["inputs"]["denoise"] == 0.75
+
+    profile_legacy = MODULE7_GENERATION_PROFILES["PROFILE_STANDARD"]
+    ref_legacy = library.resolve("general", profile_legacy, edit_mode="legacy_txt2img")
+    built_legacy = builder.build(pkg, profile_legacy, ref_legacy, library=library)
+
+    assert built_legacy.graph["5"]["inputs"]["denoise"] == 1.0
+

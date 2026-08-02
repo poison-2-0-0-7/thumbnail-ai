@@ -43,18 +43,18 @@
   "source_thumbnail_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\thumbnails\\O0Y-oLarao4.jpg",
   "edit_mask_paths": [],
   "execution_timestamps": {
-    "recorded_at": "2026-08-02T09:26:41.278425+00:00",
-    "duration_comfyui_generate": "54.2935s",
-    "duration_identity_preservation": "0.0305s",
-    "duration_face_restoration": "0.1577s",
-    "duration_background_composition": "0.1160s",
-    "duration_upscale": "0.1158s",
-    "duration_quality_assurance": "0.7267s"
+    "recorded_at": "2026-08-02T16:43:18.145724+00:00",
+    "duration_comfyui_generate": "48.8736s",
+    "duration_identity_preservation": "0.0135s",
+    "duration_face_restoration": "0.1610s",
+    "duration_background_composition": "0.1368s",
+    "duration_upscale": "0.1403s",
+    "duration_quality_assurance": "0.3494s"
   },
   "renderer_version": "1.0.0",
   "model_version": null,
   "lora_list": [],
   "vae": null,
   "output_image_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\generated_thumbnails\\O0Y-oLarao4\\tmp_candidates\\cand_0_final.png",
-  "recorded_at": "2026-08-02T09:26:41.278425+00:00"
+  "recorded_at": "2026-08-02T16:43:18.145724+00:00"
 }

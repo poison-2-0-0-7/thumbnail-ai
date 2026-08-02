@@ -49,7 +49,7 @@
         "cfg": "{{cfg}}",
         "sampler_name": "{{sampler}}",
         "scheduler": "{{scheduler}}",
-        "denoise": 1.0,
+        "denoise": "{{denoise_strength}}",
         "model": ["1", 0],
         "positive": ["2", 0],
         "negative": ["3", 0],

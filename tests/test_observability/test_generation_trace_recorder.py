@@ -156,3 +156,43 @@ def test_module7_instrumentation_integration(tmp_path):
 
     pipeline = ImageGeneratorPipeline(trace_recorder=recorder)
     assert pipeline.trace_recorder == recorder
+
+
+def test_generation_trace_factory_truthful_graph_inspection() -> None:
+    """Verify GenerationTraceFactory truthfully extracts denoise, latent_source, and edit_mode from built_wf.graph."""
+    edit_built_wf = MagicMock()
+    edit_built_wf.workflow_hash = "hash_edit"
+    edit_built_wf.workflow_ref.template_name = "general_edit.json"
+    edit_built_wf.graph = {
+        "10": {"class_type": "VAEEncodeForInpaint", "inputs": {}},
+        "5": {"class_type": "KSampler", "inputs": {"denoise": 0.75}},
+    }
+
+    record_edit = GenerationTraceFactory.create(
+        video_id="vid_edit_test",
+        attempt_index=0,
+        built_wf=edit_built_wf,
+    )
+
+    assert record_edit.denoise == 0.75
+    assert record_edit.latent_source == "vae_encoded_source"
+    assert record_edit.edit_mode == "staged_edit"
+
+    legacy_built_wf = MagicMock()
+    legacy_built_wf.workflow_hash = "hash_legacy"
+    legacy_built_wf.workflow_ref.template_name = "general.json"
+    legacy_built_wf.graph = {
+        "4": {"class_type": "EmptyLatentImage", "inputs": {}},
+        "5": {"class_type": "KSampler", "inputs": {"denoise": 1.0}},
+    }
+
+    record_legacy = GenerationTraceFactory.create(
+        video_id="vid_legacy_test",
+        attempt_index=0,
+        built_wf=legacy_built_wf,
+    )
+
+    assert record_legacy.denoise == 1.0
+    assert record_legacy.latent_source == "noise"
+    assert record_legacy.edit_mode == "txt2img"
+

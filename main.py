@@ -42,6 +42,7 @@ from __future__ import annotations
 
 import hashlib
 import sys
+import requests
 from pathlib import Path
 
 # ---------------------------------------------------------------------------
@@ -564,6 +565,73 @@ def _run_pipeline_creators(
     )
 
 
+def _probe_available_vram_gb() -> float:
+    """Probe hardware/ComfyUI to determine actual available GPU VRAM in GB."""
+    # 1. Probe ComfyUI /system_stats API endpoint if running
+    try:
+        url = f"http://{COMFYUI_HOST}:{COMFYUI_PORT}/system_stats"
+        resp = requests.get(url, timeout=2.0)
+        if resp.status_code == 200:
+            data = resp.json()
+            devices = data.get("devices", [])
+            if isinstance(devices, list) and len(devices) > 0 and isinstance(devices[0], dict):
+                dev = devices[0]
+                vram_total = dev.get("vram_total") or dev.get("torch_vram_total")
+                if vram_total is not None and float(vram_total) > 0:
+                    vram_gb = round(float(vram_total) / (1024 ** 3), 1)
+                    logger.info(
+                        "VRAM probed via ComfyUI /system_stats: device='{device}', vram={vram_gb:.2f} GB",
+                        device=dev.get("name", "GPU"),
+                        vram_gb=vram_gb,
+                    )
+                    return vram_gb
+    except Exception as exc:
+        logger.debug("ComfyUI /system_stats VRAM probe failed: {exc}", exc=exc)
+
+    # 2. Probe PyTorch CUDA if available
+    try:
+        import torch
+        if torch.cuda.is_available() and torch.cuda.device_count() > 0:
+            vram_bytes = torch.cuda.get_device_properties(0).total_memory
+            vram_gb = round(float(vram_bytes) / (1024 ** 3), 1)
+            logger.info(
+                "VRAM probed via torch.cuda: device='{device}', vram={vram_gb:.2f} GB",
+                device=torch.cuda.get_device_name(0),
+                vram_gb=vram_gb,
+            )
+            return vram_gb
+    except Exception as exc:
+        logger.debug("torch.cuda VRAM probe failed: {exc}", exc=exc)
+
+    # Fallback to conservative LOW_VRAM if no GPU/ComfyUI detected
+    selector = ProfileSelector()
+    low_vram = MODULE7_GENERATION_PROFILES["PROFILE_LOW_VRAM"]
+    fallback_vram = low_vram.expected_vram_gb + selector.headroom_gb
+    logger.warning(
+        "Could not detect live GPU VRAM; using conservative VRAM={vram:.1f} GB ({profile})",
+        vram=fallback_vram,
+        profile=low_vram.name,
+    )
+    return fallback_vram
+
+
+def _select_module7_profile(vram_gb: float | None = None) -> GenerationProfile:
+    """Select the configured Module 7 profile using real VRAM detection when auto."""
+    selector = ProfileSelector()
+    if MODULE7_PROFILE != "auto":
+        return selector.select(float("inf"), MODULE7_PROFILE)
+
+    if vram_gb is None:
+        vram_gb = _probe_available_vram_gb()
+    selected = selector.select(vram_gb, "auto")
+    logger.info(
+        "Module 7 auto profile selection resolved profile={profile} for detected_vram={vram_gb:.2f} GB",
+        profile=selected.name,
+        vram_gb=vram_gb,
+    )
+    return selected
+
+
 def _run_module7_generation(
     prompt_package: PromptPackage,
     *,
@@ -574,15 +642,15 @@ def _run_module7_generation(
     generation_plan: GenerationPlan | None = None,
     design_blueprint: DesignBlueprint | None = None,
 ) -> Path:
-
     """Build the existing Module 7 inputs, generate image candidates, and persist output."""
-    profile = _select_module7_profile()
+    vram_gb = _probe_available_vram_gb()
+    profile = _select_module7_profile(vram_gb)
     niche = _module7_niche(metadata)
     client = ComfyUIClient()
     return run_image_generation_pipeline(
         video_id=prompt_package.video_id,
         niche=niche,
-        available_vram_gb=profile.expected_vram_gb,
+        available_vram_gb=vram_gb,
         prompt_package=prompt_package,
         generation_bundle=generation_bundle,
         generation_plan=generation_plan,
@@ -593,23 +661,6 @@ def _run_module7_generation(
         analysis_dir=analysis_dir,
         output_dir=MODULE7_OUTPUT_DIR,
     )
-
-
-
-
-def _select_module7_profile():
-    """Select the configured Module 7 profile without altering Module 7 internals."""
-    selector = ProfileSelector()
-    if MODULE7_PROFILE != "auto":
-        return selector.select(float("inf"), MODULE7_PROFILE)
-
-    low_vram = MODULE7_GENERATION_PROFILES["PROFILE_LOW_VRAM"]
-    logger.warning(
-        "MODULE7_PROFILE=auto requires a ComfyUI health-check facade; "
-        "using conservative profile={profile}",
-        profile=low_vram.name,
-    )
-    return selector.select(low_vram.expected_vram_gb + selector.headroom_gb)
 
 
 def _module7_niche(metadata: VideoMetadata) -> str:

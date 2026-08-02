@@ -209,6 +209,13 @@ def cmd_doctor(args: argparse.Namespace) -> int:
     try:
         from image_generator import ProfileSelector
         ProfileSelector()
+        from config import validate_controlnet_capability_availability
+        from generation_components.model_discovery_service import ModelDiscoveryService
+        from generation_components.controlnet_capability_resolver import ControlNetCapabilityResolver
+        comfy_client = getattr(mgr, "client", None)
+        discovery = ModelDiscoveryService(client=comfy_client)
+        resolver = ControlNetCapabilityResolver(discovery_service=discovery)
+        validate_controlnet_capability_availability(resolver)
         results.append(("Configuration", f"Host={COMFYUI_HOST}, Port={COMFYUI_PORT}", "OK"))
     except Exception as exc:
         results.append(("Configuration", f"Host={COMFYUI_HOST}, Port={COMFYUI_PORT} | Module 7 config invalid: {exc}", "FAIL"))

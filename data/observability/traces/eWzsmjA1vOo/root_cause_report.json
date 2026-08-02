@@ -16,7 +16,7 @@
         "denoise=1.0"
       ],
       "related_artifacts": [],
-      "evaluation_timestamp": "2026-08-02T09:19:33.732491+00:00",
+      "evaluation_timestamp": "2026-08-02T16:37:31.351155+00:00",
       "rule_version": "1.0.0"
     },
     {
@@ -34,7 +34,7 @@
         "controlnet_enabled=False"
       ],
       "related_artifacts": [],
-      "evaluation_timestamp": "2026-08-02T09:19:33.732725+00:00",
+      "evaluation_timestamp": "2026-08-02T16:37:31.351379+00:00",
       "rule_version": "1.0.0"
     }
   ],
@@ -45,10 +45,10 @@
   "top_root_causes": [
     "Generation profile 'PROFILE_LOW_VRAM' was selected but ControlNet conditioning was not enabled."
   ],
-  "generated_from_trace_hash": "8555f3af31fa48fa27f2b38eb3bba94f96330560fe843163e9bae97904fd1c15",
+  "generated_from_trace_hash": "4dc66cbc0742638d95a6b88e0a45318f190cc57a0a61833faa2e3258a816c9a0",
   "engine_version": "1.0.0",
   "status": "partial",
-  "generated_at": "2026-08-02T09:19:33.733631+00:00",
+  "generated_at": "2026-08-02T16:37:31.352400+00:00",
   "evidence_summary": {
     "total_findings": 2,
     "total_evidence_items": 0,

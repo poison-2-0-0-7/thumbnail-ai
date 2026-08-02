@@ -85,6 +85,11 @@ class FragmentAttachmentRecord(BaseModel):
     fragment_name: str
     attach_point: str
     strength_or_weight: Optional[float] = None
+    requested_capability: Optional[str] = None
+    resolved_model: Optional[str] = None
+    resolution_source: Optional[str] = None
+    fallback_path: Optional[bool] = False
+    compatibility_decision: Optional[str] = None
 
 
 class GenerationTraceRecord(BaseModel):

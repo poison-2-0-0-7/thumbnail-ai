@@ -22,12 +22,12 @@
         "file_integrity_passed": true,
         "safety_passed": true,
         "identity_score": 1.0,
-        "face_quality_score": 0.9334065812720325,
-        "composition_score": 0.7193932280553219,
-        "text_safe_zone_score": 0.9123012292759303,
+        "face_quality_score": 0.9330507360468923,
+        "composition_score": 0.7195426909296551,
+        "text_safe_zone_score": 0.9130233912502498,
         "object_preservation_score": 0.0,
-        "color_compliance_score": 0.8673708765382353,
-        "overall_score": 0.7715022434443164,
+        "color_compliance_score": 0.8671913529611959,
+        "overall_score": 0.7715616580301392,
         "hard_gate_passed": true
       },
       "face_match": {
@@ -39,24 +39,24 @@
       },
       "candidate_score": {
         "candidate_index": 0,
-        "overall_score": 0.7715022434443164,
+        "overall_score": 0.7715616580301392,
         "identity_similarity": 1.0,
         "hard_gate_passed": true,
         "rank": 1,
         "selected": true
       },
       "stage_durations_seconds": {
-        "comfyui_generate": 54.29354590000003,
-        "identity_preservation": 0.030535400001099333,
-        "face_restoration": 0.15768830000888556,
-        "background_composition": 0.11596219998318702,
-        "upscale": 0.11580610001692548,
-        "quality_assurance": 0.7267445999896154
+        "comfyui_generate": 48.87357189999966,
+        "identity_preservation": 0.013461599999573082,
+        "face_restoration": 0.16103889999794774,
+        "background_composition": 0.13681260000157636,
+        "upscale": 0.1403004999992845,
+        "quality_assurance": 0.34935829999812995
       },
       "output_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\generated_thumbnails\\O0Y-oLarao4\\tmp_candidates\\cand_0_final.png"
     }
   ],
   "winning_candidate_index": 0,
   "strategy_pack_name": null,
-  "generated_at": "2026-08-02T09:26:41.341249+00:00"
+  "generated_at": "2026-08-02T16:43:18.180906+00:00"
 }

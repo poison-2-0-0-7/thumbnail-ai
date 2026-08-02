@@ -20,7 +20,7 @@
     "20": {
       "class_type": "ControlNetLoader",
       "inputs": {
-        "control_net_name": "controlnet_seg_sdxl.safetensors"
+        "control_net_name": "{{resolved_segmentation_controlnet}}"
       }
     },
     "30": {

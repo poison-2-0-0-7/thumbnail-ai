@@ -25,7 +25,10 @@ from observability.diagnostics import (
     RuleExecutionEngine,
     RuleRegistry,
 )
-from observability.diagnostics.rules import EditCapabilityReachabilityRule
+from observability.diagnostics.rules import (
+    EditCapabilityReachabilityRule,
+    StagedEditDenoiseStrengthRule,
+)
 from types import SimpleNamespace
 from modules.config import MODULE7_GENERATION_PROFILES
 from observability.facts import FactLoader, FactPersistence
@@ -211,3 +214,67 @@ def test_golden_file_replay_historical_traces() -> None:
         # Replay under post-fix config: must pass (None) for all 9 traces
         post_finding = post_fix_rule.check(facts)
         assert post_finding is None, f"Trace {vid} should pass under post-fix config."
+
+
+def test_rule_edit_03_registry_registration() -> None:
+    """Verify RULE-EDIT-03 is properly registered in RuleRegistry defaults."""
+    registry = RuleRegistry()
+    rule = registry.get_rule("RULE-EDIT-03")
+    assert rule is not None
+    assert isinstance(rule, StagedEditDenoiseStrengthRule)
+    assert rule.rule_id == "RULE-EDIT-03"
+    assert rule.rule_name == "Staged Edit Denoise Strength"
+    assert rule.category == "conditioning"
+
+
+def test_rule_edit_03_fails_when_denoise_is_high() -> None:
+    """Verify RULE-EDIT-03 produces a FAIL finding when staged_edit has denoise >= 0.95."""
+    from observability.diagnostics.rules import StagedEditDenoiseStrengthRule
+    rule = StagedEditDenoiseStrengthRule()
+    facts = TraceFacts(
+        video_id="vid_high_denoise",
+        extracted_at="2026-08-02T12:00:00Z",
+        edit_mode="staged_edit",
+        workflow_selected="general_edit.json",
+        denoise=1.0,
+    )
+    finding = rule.check(facts)
+
+    assert finding is not None
+    assert finding.finding_id == "RULE-EDIT-03"
+    assert finding.severity == "FAIL"
+    assert finding.confidence == 1.0
+    assert "denoise strength is 1.00" in finding.root_cause
+
+
+def test_rule_edit_03_passes_when_denoise_is_low() -> None:
+    """Verify RULE-EDIT-03 passes (returns None) when staged_edit has denoise = 0.75."""
+    from observability.diagnostics.rules import StagedEditDenoiseStrengthRule
+    rule = StagedEditDenoiseStrengthRule()
+    facts = TraceFacts(
+        video_id="vid_low_denoise",
+        extracted_at="2026-08-02T12:00:00Z",
+        edit_mode="staged_edit",
+        workflow_selected="general_edit.json",
+        denoise=0.75,
+    )
+    finding = rule.check(facts)
+
+    assert finding is None
+
+
+def test_rule_edit_03_passes_for_txt2img() -> None:
+    """Verify RULE-EDIT-03 passes when edit_mode is txt2img even with denoise 1.0."""
+    from observability.diagnostics.rules import StagedEditDenoiseStrengthRule
+    rule = StagedEditDenoiseStrengthRule()
+    facts = TraceFacts(
+        video_id="vid_txt2img",
+        extracted_at="2026-08-02T12:00:00Z",
+        edit_mode="txt2img",
+        workflow_selected="general.json",
+        denoise=1.0,
+    )
+    finding = rule.check(facts)
+
+    assert finding is None
+

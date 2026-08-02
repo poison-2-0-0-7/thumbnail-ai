@@ -90,3 +90,65 @@ class EditCapabilityReachabilityRule(IDiagnosticRule):
                 evaluation_timestamp=now_str,
             )
         return None
+
+
+class StagedEditDenoiseStrengthRule(IDiagnosticRule):
+    """
+    RULE-EDIT-03: Staged Edit Denoise Strength Diagnostic Rule.
+
+    Evaluates whether a generation configured/executed as 'staged_edit' has a KSampler
+    denoise strength that allows conditioning on the source image (denoise < threshold, default 0.95).
+
+    If denoise >= 0.95 (e.g. denoise=1.0), the source image conditioning is fully overwritten
+    with pure noise during sampling, causing the renderer to behave like a text-to-image generator.
+    """
+
+    def __init__(self, denoise_threshold: float = 0.95) -> None:
+        self.denoise_threshold = denoise_threshold
+
+    @property
+    def rule_id(self) -> str:
+        return "RULE-EDIT-03"
+
+    @property
+    def rule_name(self) -> str:
+        return "Staged Edit Denoise Strength"
+
+    @property
+    def category(self) -> str:
+        return "conditioning"
+
+    def check(self, facts: TraceFacts, context: Optional[RuleContext] = None) -> Optional[Finding]:
+        now_str = datetime.now(timezone.utc).isoformat()
+
+        is_staged_edit = facts.edit_mode == "staged_edit" or (
+            bool(facts.workflow_selected and facts.workflow_selected.endswith("_edit"))
+        )
+
+        if is_staged_edit and facts.denoise is not None and facts.denoise >= self.denoise_threshold:
+            return Finding(
+                finding_id=self.rule_id,
+                rule_name=self.rule_name,
+                category=self.category,
+                severity="FAIL",
+                confidence=1.0,
+                affected_module="module7_render_execution",
+                root_cause=(
+                    f"Generation executed in staged_edit mode (workflow='{facts.workflow_selected}'), "
+                    f"but KSampler denoise strength is {facts.denoise:.2f} (>= {self.denoise_threshold}), "
+                    "which fully overwrites source image conditioning with pure noise."
+                ),
+                recommended_action=(
+                    "Configure template slot '{{denoise_strength}}' in the edit workflow KSampler node "
+                    "with partial denoise (e.g. 0.75) so source image conditioning is preserved during sampling."
+                ),
+                supporting_facts=[
+                    f"edit_mode={facts.edit_mode}",
+                    f"workflow_selected={facts.workflow_selected}",
+                    f"denoise={facts.denoise}",
+                    f"denoise_threshold={self.denoise_threshold}",
+                ],
+                evaluation_timestamp=now_str,
+            )
+        return None
+

@@ -118,10 +118,21 @@ class WorkflowGraphAssembler(IWorkflowGraphAssembler):
             # Update the base graph node input to consume the fragment output
             graph_nodes[target_node_id]["inputs"][input_key] = new_output_ref
 
-            attached_records.append({
+            record: dict[str, Any] = {
                 "fragment_name": frag_name,
                 "attach_point": point_name,
-            })
+            }
+            for field in (
+                "requested_capability",
+                "resolved_model",
+                "resolution_source",
+                "fallback_path",
+                "compatibility_decision",
+            ):
+                if field in frag_meta:
+                    record[field] = frag_meta[field]
+
+            attached_records.append(record)
 
         meta["attached_fragments"] = attached_records
         assembled["_meta"] = meta

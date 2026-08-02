@@ -18,7 +18,9 @@ testable and loosely coupled.
 from __future__ import annotations
 
 import os
+import re
 import sys
+from dataclasses import dataclass
 from pathlib import Path
 
 from module7_exceptions import Module7Error
@@ -470,6 +472,70 @@ def validate_module7_edit_reachability(
     if capable and not (set(pref) & capable):
         raise Module7Error(
             f"Configured edit-capable profiles {sorted(capable)} are unreachable via MODULE7_PROFILE_PREFERENCE {pref}"
+        )
+
+
+MODULE7_CAPABILITY_DISCOVERY_ENABLED: bool = True
+
+
+@dataclass(frozen=True)
+class CapabilityCandidate:
+    pattern_name: str
+    node_class: str
+    filename_field: str
+    fragment_variant: str
+    filename_regex: re.Pattern[str]
+
+
+CONTROLNET_CAPABILITY_TABLE: dict[str, tuple[CapabilityCandidate, ...]] = {
+    "depth": (
+        CapabilityCandidate("legacy_sdxl_official", "ControlNetLoader", "control_net_name", "controlnet_depth", re.compile(r"^controlnet_depth_sdxl\.safetensors$", re.IGNORECASE)),
+        CapabilityCandidate("sdxl_1_0_official_alt_naming", "ControlNetLoader", "control_net_name", "controlnet_depth", re.compile(r"controlnet.*?sd.*?xl.*?1\.0.*?depth", re.IGNORECASE)),
+        CapabilityCandidate("control_lora_depth", "ControlNetLoader", "control_net_name", "controlnet_depth", re.compile(r"control.*?lora.*?depth", re.IGNORECASE)),
+        CapabilityCandidate("t2i_adapter_depth", "T2IAdapterLoader", "t2i_adapter_name", "controlnet_depth_t2iadapter", re.compile(r"t2i.*?adapter.*?depth", re.IGNORECASE)),
+    ),
+    "canny": (
+        CapabilityCandidate("legacy_sdxl_official", "ControlNetLoader", "control_net_name", "controlnet_canny", re.compile(r"^controlnet_canny_sdxl\.safetensors$", re.IGNORECASE)),
+        CapabilityCandidate("sdxl_1_0_official_alt_naming", "ControlNetLoader", "control_net_name", "controlnet_canny", re.compile(r"controlnet.*?sd.*?xl.*?1\.0.*?canny", re.IGNORECASE)),
+        CapabilityCandidate("control_lora_canny", "ControlNetLoader", "control_net_name", "controlnet_canny", re.compile(r"control.*?lora.*?canny", re.IGNORECASE)),
+        CapabilityCandidate("t2i_adapter_canny", "T2IAdapterLoader", "t2i_adapter_name", "controlnet_canny_t2iadapter", re.compile(r"t2i.*?adapter.*?canny", re.IGNORECASE)),
+    ),
+    "segmentation": (
+        CapabilityCandidate("legacy_sdxl_official", "ControlNetLoader", "control_net_name", "controlnet_segmentation", re.compile(r"^controlnet_seg_sdxl\.safetensors$", re.IGNORECASE)),
+        CapabilityCandidate("sdxl_1_0_official_alt_naming", "ControlNetLoader", "control_net_name", "controlnet_segmentation", re.compile(r"controlnet.*?sd.*?xl.*?1\.0.*?(seg|segmentation)", re.IGNORECASE)),
+        CapabilityCandidate("control_lora_segmentation", "ControlNetLoader", "control_net_name", "controlnet_segmentation", re.compile(r"control.*?lora.*?(seg|segmentation)", re.IGNORECASE)),
+        CapabilityCandidate("t2i_adapter_segmentation", "T2IAdapterLoader", "t2i_adapter_name", "controlnet_segmentation_t2iadapter", re.compile(r"t2i.*?adapter.*?(seg|segmentation)", re.IGNORECASE)),
+    ),
+}
+
+
+def validate_controlnet_capability_availability(
+    resolver: Any,
+    required_capabilities: frozenset[str] = frozenset({"depth", "canny", "segmentation"}),
+) -> None:
+    """
+    Validate required ControlNet capabilities against live ComfyUI installed models.
+    Raises Module7Error if any required capability cannot be resolved when ComfyUI is reachable.
+    """
+    if resolver is None or getattr(resolver, "discovery_service", None) is None:
+        return
+    discovery = resolver.discovery_service
+    if not getattr(discovery, "enabled", True):
+        return
+
+    probe = getattr(discovery, "probe", None)
+    if probe is not None:
+        raw_info = probe.get_raw_object_info()
+        if not raw_info:
+            return  # Server offline or unreachable, fail-soft
+
+    unresolved = [cap for cap in sorted(required_capabilities) if not resolver.resolve(cap).resolved_filename]
+    if unresolved:
+        raise Module7Error(
+            f"ControlNet capabilities {sorted(unresolved)} could not be resolved to any installed model. "
+            f"Checked patterns: {resolver.describe_patterns(unresolved)}. "
+            f"Suggested fix: install one of the compatible model files listed above into ComfyUI's "
+            f"models/controlnet directory, or disable controlnet_enabled for affected profiles."
         )
 
 MODULE7_QA_WEIGHTS: dict[str, float] = {

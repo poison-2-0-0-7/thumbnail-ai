@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import copy
 import hashlib
 import json
 import os
@@ -31,6 +32,7 @@ from config import (
     MODULE7_STRATEGY_PACK, MODULE7_VRAM_HEADROOM_GB, MODULE7_WORKFLOW_GRAPH_CACHE_ENABLED,
     MODULE7_WORKFLOW_VERSION, MODULE7_PARALLEL_CANDIDATES,
     MODULE7_EDIT_CAPABLE_PROFILES, validate_module7_edit_reachability,
+    COMFYUI_WORKING_DIRECTORY, PROJECT_ROOT,
 )
 from models import (
     CandidateManifest, CandidateManifestEntry, CandidateScore, CandidateStrategy,
@@ -239,18 +241,87 @@ def _conditioning_context_hash(ctx: GenerationConditioningContext | None) -> str
     })
 
 
+
+
+def stage_image_for_comfyui(raw_path: str | Path | None, video_id: str = "") -> str:
+    """Stage an image file into ComfyUI's input directory and return its relative filename.
+
+    ComfyUI's stock LoadImage node resolves filenames relative to its input directory.
+    Passing absolute Windows filesystem paths causes HTTP 400 validation failures.
+    This function copies the image into the configured ComfyUI input directory and
+    returns the relative filename.
+    """
+    if not raw_path:
+        return ""
+
+    src_path = Path(raw_path)
+
+    # If string is already a filename without path components or drive letter and not existing as absolute
+    if not src_path.is_absolute() and not src_path.exists():
+        return src_path.name
+
+    if not src_path.exists() or not src_path.is_file():
+        return ""
+
+    if COMFYUI_WORKING_DIRECTORY and COMFYUI_WORKING_DIRECTORY.exists():
+        input_dir = COMFYUI_WORKING_DIRECTORY / "input"
+    else:
+        input_dir = PROJECT_ROOT / "data" / "comfyui_input"
+
+    input_dir.mkdir(parents=True, exist_ok=True)
+
+    # If src_path is already inside input_dir, return relative posix path
+    try:
+        rel = src_path.relative_to(input_dir)
+        return rel.as_posix()
+    except ValueError:
+        pass
+
+    clean_vid = "".join(c if c.isalnum() or c in ("-", "_") else "_" for c in (video_id or "")).strip("_")
+    if clean_vid and not src_path.name.startswith(clean_vid):
+        staged_filename = f"{clean_vid}_{src_path.name}"
+    else:
+        staged_filename = src_path.name
+
+    dst_path = input_dir / staged_filename
+
+    if not dst_path.exists() or src_path.stat().st_mtime > dst_path.stat().st_mtime:
+        try:
+            shutil.copy2(src_path, dst_path)
+            logger.info("Staged image for ComfyUI input dir: {src} -> {dst}", src=src_path, dst=dst_path)
+        except Exception as exc:
+            logger.warning(
+                "Failed to copy image to ComfyUI input dir: {src} -> {dst}: {exc}",
+                src=src_path,
+                dst=dst_path,
+                exc=exc,
+            )
+
+    return staged_filename
+
+
 class WorkflowBuilder:
-    """Pure deterministic materializer for ComfyUI graph templates; never submits them."""
+    """Fills named template slots and materializes executable ComfyUI graphs."""
 
     def __init__(
         self,
-        fragment_library: INodeFragmentLibrary | None = None,
-        graph_assembler: IWorkflowGraphAssembler | None = None,
+        fragment_library: NodeFragmentLibrary | None = None,
+        graph_assembler: WorkflowGraphAssembler | None = None,
         capability_probe: ICapabilityProbe | None = None,
+        controlnet_resolver: Any | None = None,
     ) -> None:
         self.fragment_library = fragment_library or NodeFragmentLibrary()
         self.graph_assembler = graph_assembler or WorkflowGraphAssembler()
         self.capability_probe = capability_probe
+        if controlnet_resolver is not None:
+            self.controlnet_resolver = controlnet_resolver
+        else:
+            from generation_components.model_discovery_service import ModelDiscoveryService
+            from generation_components.controlnet_capability_resolver import ControlNetCapabilityResolver
+            probe_obj = capability_probe if isinstance(capability_probe, CapabilityProbe) else None
+            client_obj = getattr(capability_probe, "client", None) if capability_probe else None
+            discovery = ModelDiscoveryService(client=client_obj, probe=probe_obj)
+            self.controlnet_resolver = ControlNetCapabilityResolver(discovery_service=discovery)
 
     def build_base(
         self,
@@ -268,13 +339,28 @@ class WorkflowBuilder:
             fragment_ids = self._select_fragments(profile, conditioning, workflow_ref=workflow_ref)
             fragment_dicts = []
             for fid in fragment_ids:
-                frag_data = self.fragment_library.load(fid)
+                frag_data = copy.deepcopy(self.fragment_library.load(fid))
                 if self.capability_probe and not self.capability_probe.is_fragment_supported(frag_data):
                     logger.warning(
                         "Fragment '{fragment_id}' dropped: required node types not available in ComfyUI",
                         fragment_id=fid,
                     )
                     continue
+
+                meta = frag_data.setdefault("_meta", {})
+                cap_name = None
+                if fid.startswith("controlnet_"):
+                    raw_cap = fid.replace("controlnet_", "").replace("_t2iadapter", "")
+                    if raw_cap in ("depth", "canny", "segmentation"):
+                        cap_name = raw_cap
+                if cap_name and hasattr(self, "controlnet_resolver") and self.controlnet_resolver:
+                    res = self.controlnet_resolver.resolve(cap_name)
+                    meta["requested_capability"] = res.capability
+                    meta["resolved_model"] = res.resolved_filename
+                    meta["resolution_source"] = res.resolution_source
+                    meta["fallback_path"] = (res.resolution_source != "legacy_exact_match")
+                    meta["compatibility_decision"] = res.compatibility_decision
+
                 fragment_dicts.append(frag_data)
 
             assembled = self.graph_assembler.assemble(
@@ -307,7 +393,7 @@ class WorkflowBuilder:
             if cache is not None:
                 cache.put(key, base_unsubstituted)
 
-        slots = self._slots(package, profile, reference_assets, conditioning, plan)
+        slots = self._slots(package, profile, reference_assets, conditioning, plan, controlnet_resolver=self.controlnet_resolver)
         try:
             final_graph = self._substitute(base_unsubstituted, slots)
         except KeyError as exc:
@@ -344,11 +430,31 @@ class WorkflowBuilder:
             fragments.append("edit_region_mask")
 
         if profile.controlnet_enabled and conditioning.depth_path is not None:
-            fragments.append("controlnet_depth")
+            res = self.controlnet_resolver.resolve("depth") if hasattr(self, "controlnet_resolver") and self.controlnet_resolver else None
+            if res and res.resolution_source != "unresolved":
+                fragments.append(res.fragment_variant)
+            elif res and res.resolution_source == "unresolved":
+                logger.warning("Dropping ControlNet depth fragment: no matching depth model installed in ComfyUI")
+            else:
+                fragments.append("controlnet_depth")
+
         if profile.controlnet_enabled and conditioning.canny_path is not None:
-            fragments.append("controlnet_canny")
+            res = self.controlnet_resolver.resolve("canny") if hasattr(self, "controlnet_resolver") and self.controlnet_resolver else None
+            if res and res.resolution_source != "unresolved":
+                fragments.append(res.fragment_variant)
+            elif res and res.resolution_source == "unresolved":
+                logger.warning("Dropping ControlNet canny fragment: no matching canny model installed in ComfyUI")
+            else:
+                fragments.append("controlnet_canny")
+
         if profile.controlnet_enabled and conditioning.segmentation_path is not None:
-            fragments.append("controlnet_segmentation")
+            res = self.controlnet_resolver.resolve("segmentation") if hasattr(self, "controlnet_resolver") and self.controlnet_resolver else None
+            if res and res.resolution_source != "unresolved":
+                fragments.append(res.fragment_variant)
+            elif res and res.resolution_source == "unresolved":
+                logger.warning("Dropping ControlNet segmentation fragment: no matching segmentation model installed in ComfyUI")
+            else:
+                fragments.append("controlnet_segmentation")
         if profile.ipadapter_enabled and conditioning.ip_adapter_reference_paths:
             fragments.append("ipadapter_reference")
         if profile.ipadapter_enabled and len(conditioning.role_image_paths) > 1 and any(k.startswith("object_") for k in conditioning.role_image_paths):
@@ -366,7 +472,9 @@ class WorkflowBuilder:
         references: ReferenceAssets | None,
         conditioning: GenerationConditioningContext | None = None,
         plan: GenerationPlan | None = None,
+        controlnet_resolver: Any | None = None,
     ) -> dict[str, Any]:
+        video_id = package.video_id if package else ""
         positive = " ".join((package.positive_prompt, package.subject_instructions,
                              package.lighting_instructions, package.color_instructions))
 
@@ -383,17 +491,36 @@ class WorkflowBuilder:
         headline_zone_w = plan.headline_placement_zone.width if (plan and plan.headline_placement_zone) else 0
         headline_zone_h = plan.headline_placement_zone.height if (plan and plan.headline_placement_zone) else 0
 
-        thumb_path = ""
+        raw_thumb = None
         if conditioning and conditioning.source_thumbnail_path:
-            thumb_path = str(conditioning.source_thumbnail_path)
+            raw_thumb = conditioning.source_thumbnail_path
         elif references and references.source_thumbnail_path:
-            thumb_path = str(references.source_thumbnail_path)
+            raw_thumb = references.source_thumbnail_path
+        thumb_path = stage_image_for_comfyui(raw_thumb, video_id) if raw_thumb else ""
 
-        edit_mask = ""
+        raw_edit_mask = None
         if conditioning and hasattr(conditioning, "role_mask_paths") and conditioning.role_mask_paths and "edit_mask" in conditioning.role_mask_paths:
-            edit_mask = str(conditioning.role_mask_paths["edit_mask"])
+            raw_edit_mask = conditioning.role_mask_paths["edit_mask"]
         elif conditioning and conditioning.text_exclusion_mask_path:
-            edit_mask = str(conditioning.text_exclusion_mask_path)
+            raw_edit_mask = conditioning.text_exclusion_mask_path
+        edit_mask = stage_image_for_comfyui(raw_edit_mask, video_id) if raw_edit_mask else ""
+
+        raw_fg = conditioning.role_image_paths.get("foreground") if (conditioning and conditioning.role_image_paths) else None
+        raw_bg = conditioning.role_image_paths.get("background") if (conditioning and conditioning.role_image_paths) else None
+        raw_person_mask = conditioning.role_mask_paths.get("person") if (conditioning and conditioning.role_mask_paths) else None
+        raw_object_mask = conditioning.role_mask_paths.get("object") if (conditioning and conditioning.role_mask_paths) else None
+        raw_depth = conditioning.depth_path if conditioning else None
+        raw_canny = conditioning.canny_path if conditioning else None
+        raw_seg = conditioning.segmentation_path if conditioning else None
+        raw_text_mask = conditioning.text_exclusion_mask_path if conditioning else None
+
+        res_depth = controlnet_resolver.resolve("depth") if controlnet_resolver else None
+        res_canny = controlnet_resolver.resolve("canny") if controlnet_resolver else None
+        res_seg = controlnet_resolver.resolve("segmentation") if controlnet_resolver else None
+
+        resolved_depth_file = (res_depth.resolved_filename if res_depth else None) or "controlnet_depth_sdxl.safetensors"
+        resolved_canny_file = (res_canny.resolved_filename if res_canny else None) or "controlnet_canny_sdxl.safetensors"
+        resolved_seg_file = (res_seg.resolved_filename if res_seg else None) or "controlnet_seg_sdxl.safetensors"
 
         return {
             "checkpoint": profile.checkpoint, "positive_prompt": positive,
@@ -408,14 +535,17 @@ class WorkflowBuilder:
             "source_thumbnail_path": thumb_path,
             "edit_mask_path": edit_mask,
             "denoise_strength": 0.75,
-            "foreground_image_path": str(conditioning.role_image_paths.get("foreground", "")) if conditioning else "",
-            "background_image_path": str(conditioning.role_image_paths.get("background", "")) if conditioning else "",
-            "person_mask_path": str(conditioning.role_mask_paths.get("person", "")) if conditioning else "",
-            "object_mask_path": str(conditioning.role_mask_paths.get("object", "")) if conditioning else "",
-            "depth_map_path": str(conditioning.depth_path) if conditioning and conditioning.depth_path else "",
-            "canny_map_path": str(conditioning.canny_path) if conditioning and conditioning.canny_path else "",
-            "segmentation_map_path": str(conditioning.segmentation_path) if conditioning and conditioning.segmentation_path else "",
-            "text_exclusion_mask_path": str(conditioning.text_exclusion_mask_path) if conditioning and conditioning.text_exclusion_mask_path else "",
+            "foreground_image_path": stage_image_for_comfyui(raw_fg, video_id) if raw_fg else "",
+            "background_image_path": stage_image_for_comfyui(raw_bg, video_id) if raw_bg else "",
+            "person_mask_path": stage_image_for_comfyui(raw_person_mask, video_id) if raw_person_mask else "",
+            "object_mask_path": stage_image_for_comfyui(raw_object_mask, video_id) if raw_object_mask else "",
+            "depth_map_path": stage_image_for_comfyui(raw_depth, video_id) if raw_depth else "",
+            "canny_map_path": stage_image_for_comfyui(raw_canny, video_id) if raw_canny else "",
+            "segmentation_map_path": stage_image_for_comfyui(raw_seg, video_id) if raw_seg else "",
+            "text_exclusion_mask_path": stage_image_for_comfyui(raw_text_mask, video_id) if raw_text_mask else "",
+            "resolved_depth_controlnet": resolved_depth_file,
+            "resolved_canny_controlnet": resolved_canny_file,
+            "resolved_segmentation_controlnet": resolved_seg_file,
             "controlnet_depth_strength": 0.55,
             "controlnet_canny_strength": 0.45,
             "controlnet_segmentation_strength": 0.5,

@@ -69,6 +69,11 @@ class GenerationTraceFactory:
                             fragment_name=item.get("fragment_name", "unknown"),
                             attach_point=item.get("attach_point", "unknown"),
                             strength_or_weight=item.get("strength_or_weight"),
+                            requested_capability=item.get("requested_capability"),
+                            resolved_model=item.get("resolved_model"),
+                            resolution_source=item.get("resolution_source"),
+                            fallback_path=item.get("fallback_path", False),
+                            compatibility_decision=item.get("compatibility_decision"),
                         )
                     )
 
@@ -115,6 +120,41 @@ class GenerationTraceFactory:
             for k, v in stage_durations.items():
                 timestamps[f"duration_{k}"] = f"{v:.4f}s"
 
+        # Determine latent_source, denoise, and edit_mode truthfully from built_wf.graph
+        latent_source = "noise"
+        denoise = 1.0
+        edit_mode = "txt2img"
+
+        if built_wf is not None:
+            graph = getattr(built_wf, "graph", None)
+            if isinstance(graph, dict):
+                ksampler_node = None
+                for node in graph.values():
+                    if isinstance(node, dict) and node.get("class_type") == "KSampler":
+                        ksampler_node = node
+                        break
+                if ksampler_node is None and "5" in graph and isinstance(graph["5"], dict):
+                    ksampler_node = graph["5"]
+
+                if ksampler_node is not None:
+                    inputs = ksampler_node.get("inputs", {})
+                    if "denoise" in inputs:
+                        try:
+                            denoise = float(inputs["denoise"])
+                        except (ValueError, TypeError):
+                            pass
+
+                has_inpaint = any(
+                    isinstance(node, dict) and node.get("class_type") in ("VAEEncodeForInpaint", "LoadImage")
+                    for node in graph.values()
+                )
+                is_edit_wf = bool(workflow_template and (workflow_template.endswith("_edit") or "_edit" in str(workflow_template)))
+
+                if has_inpaint or is_edit_wf or (denoise < 1.0):
+                    edit_mode = "staged_edit"
+                    if has_inpaint or is_edit_wf:
+                        latent_source = "vae_encoded_source"
+
         return GenerationTraceRecord(
             video_id=video_id,
             attempt_index=attempt_index,
@@ -123,8 +163,8 @@ class GenerationTraceFactory:
             workflow_hash=workflow_hash,
             workflow_fragments=[f.fragment_name for f in parsed_frags],
             fragments_attached=parsed_frags,
-            latent_source="noise",
-            denoise=1.0,
+            latent_source=latent_source,
+            denoise=denoise,
             seed=seed,
             scheduler=scheduler,
             sampler=sampler,
@@ -132,7 +172,7 @@ class GenerationTraceFactory:
             cfg=cfg,
             controlnet_enabled=controlnet_enabled,
             ipadapter_enabled=ipadapter_enabled,
-            edit_mode="txt2img",
+            edit_mode=edit_mode,
             generation_profile=profile_name,
             controlnet_config={"enabled": controlnet_enabled},
             ipadapter_config={"enabled": ipadapter_enabled},

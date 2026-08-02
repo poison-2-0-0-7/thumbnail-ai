@@ -2,7 +2,7 @@
   "video_id": "2zC2viCb_Ck",
   "trace_facts": {
     "video_id": "2zC2viCb_Ck",
-    "extracted_at": "2026-08-02T09:23:53.061305+00:00",
+    "extracted_at": "2026-08-02T16:40:57.134708+00:00",
     "fact_version": "1.0.0",
     "workflow_selected": "general",
     "edit_mode": "txt2img",
@@ -186,6 +186,6 @@
       "source_module": "module7"
     }
   ],
-  "extracted_at": "2026-08-02T09:23:53.061305+00:00",
+  "extracted_at": "2026-08-02T16:40:57.134708+00:00",
   "fact_version": "1.0.0"
 }

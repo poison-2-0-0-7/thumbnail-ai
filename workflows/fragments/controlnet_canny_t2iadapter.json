@@ -1,0 +1,36 @@
+{
+  "_meta": {
+    "name": "controlnet_canny_t2iadapter",
+    "description": "T2I-Adapter Canny edge conditioning fragment",
+    "required_node_types": ["LoadImage", "T2IAdapterLoader", "ControlNetApply"]
+  },
+  "_attach": {
+    "point": "positive_conditioning",
+    "output_node": "30",
+    "output_slot": 0,
+    "requires": ["canny_path"]
+  },
+  "graph": {
+    "10": {
+      "class_type": "LoadImage",
+      "inputs": {
+        "image": "{{canny_map_path}}"
+      }
+    },
+    "20": {
+      "class_type": "T2IAdapterLoader",
+      "inputs": {
+        "t2i_adapter_name": "{{resolved_canny_controlnet}}"
+      }
+    },
+    "30": {
+      "class_type": "ControlNetApply",
+      "inputs": {
+        "conditioning": ["ATTACHMENT_PREVIOUS", 0],
+        "control_net": ["20", 0],
+        "image": ["10", 0],
+        "strength": "{{controlnet_canny_strength}}"
+      }
+    }
+  }
+}

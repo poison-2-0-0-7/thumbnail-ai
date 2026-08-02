@@ -14,8 +14,8 @@
       "artifact_type": "thumbnail_intelligence",
       "path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\analysis\\O0Y-oLarao4.json",
       "exists": true,
-      "sha256": "8a137d37fae686d8b39d07d48bed70f820685f0a3ca957f9fb37a6a5f34c9407",
-      "size_bytes": 3732
+      "sha256": "0b0e6e733220baa814294f9f113bac1b1a649e0e4d4e05d1bd5fc3625599382f",
+      "size_bytes": 3731
     },
     {
       "module": "module8",
@@ -30,7 +30,7 @@
       "artifact_type": "redesign_specification",
       "path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\redesign_specs\\O0Y-oLarao4.json",
       "exists": true,
-      "sha256": "15b6e94ef359ab64414b6527d83e58e6bc3bca8920b6451df0c344d9f56bdbab",
+      "sha256": "cbecf602fb0dcf2a71ec741735b2aad557fc09bd1008277551a3f2f40114f8bd",
       "size_bytes": 2278
     },
     {
@@ -38,7 +38,7 @@
       "artifact_type": "design_blueprint",
       "path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\design_blueprints\\O0Y-oLarao4.json",
       "exists": true,
-      "sha256": "138c7eafdd61de003433de926996917a65ce77d0bb534954d29e8513eb5662e6",
+      "sha256": "728aa110d460facebc543f93ac894031bfc10419800380417a4d9f05bf7d4d6e",
       "size_bytes": 5282
     },
     {
@@ -46,8 +46,8 @@
       "artifact_type": "prompt_package",
       "path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\prompt_packages\\O0Y-oLarao4.json",
       "exists": true,
-      "sha256": "d099933fa6324207584a1a668804e1015567989ca175c4e3f1d801f3c4c7e953",
-      "size_bytes": 3365
+      "sha256": "bbb85be8992d06622778add00d2a4d04f19d7d55892200d464a260b1eeb72e82",
+      "size_bytes": 3366
     },
     {
       "module": "module9",
@@ -62,7 +62,7 @@
       "artifact_type": "composition_workspace",
       "path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\composition_workspaces\\O0Y-oLarao4\\workspace_manifest.json",
       "exists": true,
-      "sha256": "b970973c2933eccc653b953c337f41d8b3207202b615a8f1b997b8f01b96fd5e",
+      "sha256": "e2e3632a7e2b40854e9d73124e36d29ea1669ed744f609287d22409f4b465ab5",
       "size_bytes": 442
     },
     {
@@ -94,8 +94,8 @@
       "artifact_type": "generated_thumbnail",
       "path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\generated_thumbnails\\O0Y-oLarao4\\O0Y-oLarao4.png",
       "exists": true,
-      "sha256": "b92171c3b1f0c924ce75feb0a16dadc8a07d0bb3800255bebc23cc5a4a7a96c2",
-      "size_bytes": 1204706
+      "sha256": "f26446e8f08ee7f9e61c2efea8ca42c81e5c7a3e3f8153d755f333f535237f53",
+      "size_bytes": 1202267
     },
     {
       "module": "module7",
@@ -106,5 +106,5 @@
       "size_bytes": null
     }
   ],
-  "built_at": "2026-08-02T09:26:41.469933+00:00"
+  "built_at": "2026-08-02T16:43:18.249828+00:00"
 }

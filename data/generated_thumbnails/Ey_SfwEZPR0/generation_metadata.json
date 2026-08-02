@@ -10,7 +10,7 @@
   },
   "num_candidates_requested": 1,
   "num_candidates_completed": 1,
-  "total_duration_seconds": 47.73750089999521,
+  "total_duration_seconds": 44.437524900000426,
   "parallel_generation_used": false,
   "retry_summary": {
     "identity_retries": 0

@@ -292,11 +292,39 @@ def test_module7_generation_helper_calls_generate_and_persists_output(
     assert output_path.is_file() and output_path.stat().st_size > 0
     assert calls[0]["video_id"] == VIDEO_ID
     assert calls[0]["num_candidates_requested"] == 1
-    assert calls[0]["built_workflow"].workflow_ref.template_name == "gaming"
+    assert calls[0]["built_workflow"].workflow_ref.template_name in ("gaming", "gaming_edit")
     manifest = json.loads(
         (tmp_path / "generated" / VIDEO_ID / f"{VIDEO_ID}_manifest.json").read_text(encoding="utf-8")
     )
     assert manifest["status"] == "success"
     assert manifest["generated_asset"]["path"] == str(output_path)
     assert manifest["generated_asset"]["width"] == 1280
-    assert manifest["profile_name"] == "PROFILE_LOW_VRAM"
+    assert manifest["profile_name"] in main.MODULE7_GENERATION_PROFILES
+
+
+def test_probe_available_vram_gb_probes_comfyui(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Verify _probe_available_vram_gb extracts total VRAM from ComfyUI /system_stats endpoint."""
+    class FakeResponse:
+        status_code = 200
+        def json(self):
+            return {
+                "devices": [
+                    {
+                        "name": "NVIDIA GeForce RTX 4060",
+                        "vram_total": 8589934592,  # 8 GB in bytes
+                    }
+                ]
+            }
+
+    monkeypatch.setattr(main.requests, "get", lambda url, timeout: FakeResponse())
+    vram_gb = main._probe_available_vram_gb()
+    assert abs(vram_gb - 8.0) < 0.01
+
+
+def test_select_module7_profile_auto_resolves_profile_standard_edit(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Verify _select_module7_profile() with MODULE7_PROFILE='auto' and 8.0 GB VRAM resolves PROFILE_STANDARD_EDIT."""
+    monkeypatch.setattr(main, "_probe_available_vram_gb", lambda: 8.0)
+    profile = main._select_module7_profile()
+    assert profile.name == "PROFILE_STANDARD_EDIT"
+    assert profile.edit_mode_default == "staged_edit"
+

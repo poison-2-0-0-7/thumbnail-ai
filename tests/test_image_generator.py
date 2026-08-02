@@ -512,6 +512,52 @@ def test_backward_compatibility_legacy_txt2img_default(tmp_path: Path) -> None:
     assert result_default.workflow_hash == result_legacy.workflow_hash
 
 
+def test_stage_image_for_comfyui_copies_to_input_dir(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
+    from image_generator import stage_image_for_comfyui
+    src_file = tmp_path / "sample_thumb.jpg"
+    src_file.write_bytes(b"fake image data")
+
+    comfy_dir = tmp_path / "comfyui"
+    comfy_dir.mkdir()
+    monkeypatch.setattr("image_generator.COMFYUI_WORKING_DIRECTORY", comfy_dir)
+
+    staged_name = stage_image_for_comfyui(src_file, video_id="video123")
+    assert staged_name == "video123_sample_thumb.jpg"
+
+    staged_path = comfy_dir / "input" / staged_name
+    assert staged_path.exists()
+    assert staged_path.read_bytes() == b"fake image data"
+
+
+def test_workflow_builder_slots_stages_image_paths(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
+    from image_generator import WorkflowBuilder
+    from generation_components import GenerationConditioningContext
+
+    src_file = tmp_path / "thumb.jpg"
+    src_file.write_bytes(b"fake thumb")
+    depth_file = tmp_path / "depth.png"
+    depth_file.write_bytes(b"fake depth")
+
+    comfy_dir = tmp_path / "comfyui"
+    comfy_dir.mkdir()
+    monkeypatch.setattr("image_generator.COMFYUI_WORKING_DIRECTORY", comfy_dir)
+
+    pkg = _package()
+    profile = MODULE7_GENERATION_PROFILES["PROFILE_STANDARD_EDIT"]
+    conditioning = GenerationConditioningContext(
+        source_thumbnail_path=src_file,
+        depth_path=depth_file,
+    )
+
+    slots = WorkflowBuilder._slots(pkg, profile, references=None, conditioning=conditioning)
+
+    assert slots["source_thumbnail_path"] == f"{VIDEO_ID}_thumb.jpg"
+    assert slots["depth_map_path"] == f"{VIDEO_ID}_depth.png"
+    assert not Path(slots["source_thumbnail_path"]).is_absolute()
+    assert not Path(slots["depth_map_path"]).is_absolute()
+
+
+
 
 
 

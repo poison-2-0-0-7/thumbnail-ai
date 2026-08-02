@@ -1,9 +1,9 @@
 {
   "video_id": "vIWkN-2J0ic",
-  "created_at": "2026-08-02T09:27:08.711108+00:00",
+  "created_at": "2026-08-02T19:50:47.960232+00:00",
   "vre_source_hash": "3c9b2daa68b41a4fd7a10cc15f7525710263793be61986d62bf54b14b8a9ff66",
-  "redesign_spec_hash": "d9a77bf881b43dc6f3b37d0b52b43d663e1d1a3996e0929840f216ebf6a0e109",
-  "prompt_package_hash": "d321e8f8f9c694439f55b1ef3b8679679e0fd5632add72f43869090f96a553e1",
+  "redesign_spec_hash": "4b2df839ccd72ec9e73b2046258d43b894a61c92b4dc90fbf8c236774c61168f",
+  "prompt_package_hash": "6c5d554c9a7a074025e8c8b8722071ae1959c0e5bb96cd841dff44b319a41756",
   "engine_version": "1.0.0",
   "validated": true,
   "layers_written": true

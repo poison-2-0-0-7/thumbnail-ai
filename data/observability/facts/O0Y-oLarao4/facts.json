@@ -2,7 +2,7 @@
   "video_id": "O0Y-oLarao4",
   "trace_facts": {
     "video_id": "O0Y-oLarao4",
-    "extracted_at": "2026-08-02T09:26:42.840859+00:00",
+    "extracted_at": "2026-08-02T16:43:19.232671+00:00",
     "fact_version": "1.0.0",
     "workflow_selected": "general",
     "edit_mode": "txt2img",
@@ -189,6 +189,6 @@
       "source_module": "module7"
     }
   ],
-  "extracted_at": "2026-08-02T09:26:42.840859+00:00",
+  "extracted_at": "2026-08-02T16:43:19.232671+00:00",
   "fact_version": "1.0.0"
 }

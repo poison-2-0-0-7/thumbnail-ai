@@ -20,7 +20,7 @@
     "20": {
       "class_type": "ControlNetLoader",
       "inputs": {
-        "control_net_name": "controlnet_depth_sdxl.safetensors"
+        "control_net_name": "{{resolved_depth_controlnet}}"
       }
     },
     "30": {

@@ -19,6 +19,9 @@ from observability.diagnostics.rules.conditioning_rules import (
     ControlNetMissingButExpectedRule,
     IPAdapterDisabledButReferenceExistsRule,
 )
+from observability.diagnostics.rules.controlnet_capability_rules import (
+    ControlNetCapabilityResolutionRule,
+)
 from observability.diagnostics.rules.decision_honoring_rules import (
     BackgroundRegeneratedUnnecessarilyRule,
     EditMaskIgnoredRule,
@@ -26,6 +29,7 @@ from observability.diagnostics.rules.decision_honoring_rules import (
 )
 from observability.diagnostics.rules.edit_mode_resolution_rules import (
     EditCapabilityReachabilityRule,
+    StagedEditDenoiseStrengthRule,
 )
 from observability.diagnostics.rules.latent_initialization_rules import (
     SourceNeverEncodedRule,
@@ -37,6 +41,7 @@ from observability.diagnostics.rules.prompt_consistency_rules import (
 DEFAULT_RULE_CLASSES = [
     SourceNeverEncodedRule,
     ControlNetMissingButExpectedRule,
+    ControlNetCapabilityResolutionRule,
     IPAdapterDisabledButReferenceExistsRule,
     ConditioningFailureRule,
     EditMaskIgnoredRule,
@@ -49,11 +54,13 @@ DEFAULT_RULE_CLASSES = [
     MaskOverlapProblemRule,
     IdentityDriftRule,
     EditCapabilityReachabilityRule,
+    StagedEditDenoiseStrengthRule,
 ]
 
 __all__ = [
     "SourceNeverEncodedRule",
     "ControlNetMissingButExpectedRule",
+    "ControlNetCapabilityResolutionRule",
     "IPAdapterDisabledButReferenceExistsRule",
     "ConditioningFailureRule",
     "EditMaskIgnoredRule",
@@ -66,5 +73,6 @@ __all__ = [
     "MaskOverlapProblemRule",
     "IdentityDriftRule",
     "EditCapabilityReachabilityRule",
+    "StagedEditDenoiseStrengthRule",
     "DEFAULT_RULE_CLASSES",
 ]

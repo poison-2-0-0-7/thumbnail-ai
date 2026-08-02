@@ -16,7 +16,7 @@
         "denoise=1.0"
       ],
       "related_artifacts": [],
-      "evaluation_timestamp": "2026-08-02T09:26:42.851498+00:00",
+      "evaluation_timestamp": "2026-08-02T16:43:19.236236+00:00",
       "rule_version": "1.0.0"
     },
     {
@@ -34,7 +34,7 @@
         "controlnet_enabled=False"
       ],
       "related_artifacts": [],
-      "evaluation_timestamp": "2026-08-02T09:26:42.851652+00:00",
+      "evaluation_timestamp": "2026-08-02T16:43:19.236277+00:00",
       "rule_version": "1.0.0"
     },
     {
@@ -52,7 +52,7 @@
         "edit_mask_paths_attached=0"
       ],
       "related_artifacts": [],
-      "evaluation_timestamp": "2026-08-02T09:26:42.851899+00:00",
+      "evaluation_timestamp": "2026-08-02T16:43:19.236310+00:00",
       "rule_version": "1.0.0"
     }
   ],
@@ -63,10 +63,10 @@
   "top_root_causes": [
     "Generation profile 'PROFILE_LOW_VRAM' was selected but ControlNet conditioning was not enabled."
   ],
-  "generated_from_trace_hash": "5253548d1658b9f01683269977e5bbecc963967f77a440b6bd2d770d4e133770",
+  "generated_from_trace_hash": "0693fb29b74b4c6120b46d6a43482ace35d3562da2ed47e4fb29b9d6de66cc24",
   "engine_version": "1.0.0",
   "status": "partial",
-  "generated_at": "2026-08-02T09:26:42.852629+00:00",
+  "generated_at": "2026-08-02T16:43:19.236436+00:00",
   "evidence_summary": {
     "total_findings": 3,
     "total_evidence_items": 0,

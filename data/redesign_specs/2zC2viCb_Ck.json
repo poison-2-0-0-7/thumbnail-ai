@@ -70,10 +70,10 @@
     }
   ],
   "elements_to_preserve": [
-    "Happy expressions and smiles",
-    "Symmetry and balance in composition",
-    "Multiple faces to convey interaction",
-    "Rule of thirds for visual harmony"
+    "Symmetrical composition",
+    "Positive emotional tone",
+    "Group interaction",
+    "Clear subject placement"
   ],
   "overall_rationale": "ctr_potential_score=0.75; curiosity_gap_score=0.68; content_mismatch_detected=False; rules applied: clutter_reduction, crop_tighter.",
   "source_ctr_potential_score": 0.75,
@@ -81,6 +81,6 @@
   "source_content_mismatch_detected": false,
   "status": "success",
   "error_message": null,
-  "duration_seconds": 0.0009750000026542693,
-  "generated_at": "2026-08-02T09:22:49.471792+00:00"
+  "duration_seconds": 0.00010449999535921961,
+  "generated_at": "2026-08-02T19:50:12.392936+00:00"
 }
