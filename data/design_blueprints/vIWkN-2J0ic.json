@@ -159,12 +159,13 @@
   "branding_constraints": [
     "Dynamic pose",
     "Warm color palette",
+    "High contrast",
     "Do not reproduce copyrighted characters, logos, or branded imagery."
   ],
   "conflicts_resolved": 0,
   "status": "success",
   "partial_failure_reasons": [],
   "error_message": null,
-  "duration_seconds": 0.0065,
-  "generated_at": "2026-08-02T07:52:30.016004+00:00"
+  "duration_seconds": 0.0047,
+  "generated_at": "2026-08-02T09:27:08.354291+00:00"
 }

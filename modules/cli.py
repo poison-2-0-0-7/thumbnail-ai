@@ -206,7 +206,12 @@ def cmd_doctor(args: argparse.Namespace) -> int:
         results.append(("Required folders", f"Missing: {', '.join(missing_folders)}", "WARN"))
 
     # 9. Configuration
-    results.append(("Configuration", f"Host={COMFYUI_HOST}, Port={COMFYUI_PORT}", "OK"))
+    try:
+        from image_generator import ProfileSelector
+        ProfileSelector()
+        results.append(("Configuration", f"Host={COMFYUI_HOST}, Port={COMFYUI_PORT}", "OK"))
+    except Exception as exc:
+        results.append(("Configuration", f"Host={COMFYUI_HOST}, Port={COMFYUI_PORT} | Module 7 config invalid: {exc}", "FAIL"))
 
     # Display report
     has_fail = False

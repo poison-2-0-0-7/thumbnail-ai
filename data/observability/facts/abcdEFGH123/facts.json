@@ -1,0 +1,178 @@
+{
+  "video_id": "abcdEFGH123",
+  "trace_facts": {
+    "video_id": "abcdEFGH123",
+    "extracted_at": "2026-08-02T11:08:50.038518+00:00",
+    "fact_version": "1.0.0",
+    "workflow_selected": "gaming",
+    "edit_mode": "txt2img",
+    "generation_profile": "PROFILE_PREMIUM",
+    "model_used": null,
+    "sampler": "euler",
+    "scheduler": "simple",
+    "seed": 123,
+    "cfg": 1.0,
+    "steps": 20,
+    "denoise": 1.0,
+    "latent_initialization_mode": "EmptyLatentImage",
+    "controlnet_count": 0,
+    "controlnet_configuration": {
+      "enabled": false
+    },
+    "controlnet_enabled": false,
+    "ipadapter_count": 1,
+    "ipadapter_configuration": {
+      "enabled": true
+    },
+    "ipadapter_enabled": true,
+    "mask_count": 0,
+    "edit_mask_paths": [],
+    "conditioning_assets": [],
+    "background_assets": [],
+    "foreground_assets": [],
+    "composition_workspace": null,
+    "has_composition_workspace": false,
+    "generation_plan_reference": null,
+    "prompt_reference": null,
+    "negative_prompt_reference": null,
+    "positive_prompt": null,
+    "negative_prompt": null,
+    "renderer_version": "1.0.0",
+    "execution_timing": {
+      "module1": null,
+      "module2": null,
+      "module3": null,
+      "module4": null,
+      "module8": null,
+      "module5": null,
+      "module5.5": null,
+      "module6": null,
+      "module9": null,
+      "module10": null,
+      "module10.5": null,
+      "module7": 0.2761620999954175
+    },
+    "total_execution_time_seconds": 0.2761620999954175,
+    "artifact_availability": {
+      "module3_thumbnail_image": false,
+      "module4_thumbnail_intelligence": false,
+      "module8_asset_extraction_manifest": false,
+      "module5_redesign_specification": false,
+      "module5.5_design_blueprint": false,
+      "module6_prompt_package": false,
+      "module9_decision_manifest": false,
+      "module10_composition_workspace": false,
+      "module10_generation_bundle": false,
+      "module10.5_generation_plan": false,
+      "module10.5_strategy_pack": false,
+      "module7_generated_thumbnail": false,
+      "module7_image_generation_result": false
+    },
+    "persisted_outputs": {},
+    "module_completion_status": {
+      "module1": "success",
+      "module2": "success",
+      "module3": "error",
+      "module4": "error",
+      "module8": "not_run",
+      "module5": "error",
+      "module5.5": "error",
+      "module6": "error",
+      "module9": "not_run",
+      "module10": "error",
+      "module10.5": "not_run",
+      "module7": "error"
+    },
+    "attached_fragment_count": 0,
+    "attached_fragment_names": [],
+    "source_thumbnail_exists": false,
+    "generated_thumbnail_exists": false,
+    "asset_extraction_enabled": false,
+    "decision_engine_enabled": false,
+    "thumbnail_planner_enabled": false
+  },
+  "atomic_facts": [
+    {
+      "fact_key": "workflow_selected",
+      "category": "generation",
+      "name": "Workflow Selected",
+      "value": "gaming",
+      "data_type": "string",
+      "source_module": "module7"
+    },
+    {
+      "fact_key": "edit_mode",
+      "category": "generation",
+      "name": "Edit Mode",
+      "value": "txt2img",
+      "data_type": "string",
+      "source_module": "module7"
+    },
+    {
+      "fact_key": "generation_profile",
+      "category": "generation",
+      "name": "Generation Profile",
+      "value": "PROFILE_PREMIUM",
+      "data_type": "string",
+      "source_module": "module7"
+    },
+    {
+      "fact_key": "latent_initialization_mode",
+      "category": "generation",
+      "name": "Latent Initialization Mode",
+      "value": "EmptyLatentImage",
+      "data_type": "string",
+      "source_module": "module7"
+    },
+    {
+      "fact_key": "controlnet_count",
+      "category": "generation",
+      "name": "ControlNet Count",
+      "value": 0,
+      "data_type": "int",
+      "source_module": "module7"
+    },
+    {
+      "fact_key": "ipadapter_count",
+      "category": "generation",
+      "name": "IPAdapter Count",
+      "value": 1,
+      "data_type": "int",
+      "source_module": "module7"
+    },
+    {
+      "fact_key": "mask_count",
+      "category": "generation",
+      "name": "Mask Count",
+      "value": 0,
+      "data_type": "int",
+      "source_module": "module7"
+    },
+    {
+      "fact_key": "has_composition_workspace",
+      "category": "composition",
+      "name": "Has Composition Workspace",
+      "value": false,
+      "data_type": "bool",
+      "source_module": "module10"
+    },
+    {
+      "fact_key": "source_thumbnail_exists",
+      "category": "artifact",
+      "name": "Source Thumbnail Exists",
+      "value": false,
+      "data_type": "bool",
+      "source_module": "module3"
+    },
+    {
+      "fact_key": "generated_thumbnail_exists",
+      "category": "artifact",
+      "name": "Generated Thumbnail Exists",
+      "value": false,
+      "data_type": "bool",
+      "source_module": "module7"
+    }
+  ],
+  "extracted_at": "2026-08-02T11:08:50.038518+00:00",
+  "fact_version": "1.0.0"
+}

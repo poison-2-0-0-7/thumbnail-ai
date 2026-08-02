@@ -3,7 +3,7 @@
   "attempt_index": 0,
   "generation_id": "2zC2viCb_Ck_cand_0",
   "workflow_template": "general",
-  "workflow_hash": "58a5dbc41950fe704503266387922acab373bc93906bcb311735168b130dfe7c",
+  "workflow_hash": "fd347b9e9c8a231cacd8c54347ef9ac9ce4421fafacb5c0336c0e7eebb000334",
   "workflow_fragments": [],
   "fragments_attached": [],
   "latent_source": "noise",
@@ -38,18 +38,18 @@
   "source_thumbnail_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\thumbnails\\2zC2viCb_Ck.jpg",
   "edit_mask_paths": [],
   "execution_timestamps": {
-    "recorded_at": "2026-08-02T07:50:05.310282+00:00",
-    "duration_comfyui_generate": "44.6106s",
-    "duration_identity_preservation": "0.0180s",
-    "duration_face_restoration": "0.1768s",
-    "duration_background_composition": "0.1371s",
-    "duration_upscale": "0.1335s",
-    "duration_quality_assurance": "0.5585s"
+    "recorded_at": "2026-08-02T09:23:50.543514+00:00",
+    "duration_comfyui_generate": "59.3403s",
+    "duration_identity_preservation": "0.0318s",
+    "duration_face_restoration": "0.1759s",
+    "duration_background_composition": "0.1872s",
+    "duration_upscale": "0.1710s",
+    "duration_quality_assurance": "0.7003s"
   },
   "renderer_version": "1.0.0",
   "model_version": null,
   "lora_list": [],
   "vae": null,
   "output_image_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\generated_thumbnails\\2zC2viCb_Ck\\tmp_candidates\\cand_0_final.png",
-  "recorded_at": "2026-08-02T07:50:05.310282+00:00"
+  "recorded_at": "2026-08-02T09:23:50.543514+00:00"
 }

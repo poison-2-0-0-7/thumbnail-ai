@@ -1,0 +1,2895 @@
+{
+  "video_id": "O0Y-oLarao4",
+  "modules": [
+    {
+      "module": "module1",
+      "stage_order": 1,
+      "status": "success",
+      "started_at": null,
+      "completed_at": null,
+      "duration_seconds": null,
+      "duration_source": "unavailable",
+      "inputs": [],
+      "outputs": [],
+      "config_snapshot": {
+        "CSV_ENCODING": "utf-8"
+      },
+      "log_lines": [],
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "module": "module2",
+      "stage_order": 2,
+      "status": "success",
+      "started_at": null,
+      "completed_at": null,
+      "duration_seconds": null,
+      "duration_source": "unavailable",
+      "inputs": [],
+      "outputs": [],
+      "config_snapshot": {},
+      "log_lines": [],
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "module": "module3",
+      "stage_order": 3,
+      "status": "success",
+      "started_at": null,
+      "completed_at": null,
+      "duration_seconds": null,
+      "duration_source": "unavailable",
+      "inputs": [],
+      "outputs": [
+        {
+          "module": "module3",
+          "artifact_type": "thumbnail_image",
+          "path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\thumbnails\\O0Y-oLarao4.jpg",
+          "exists": true,
+          "sha256": "c7b650037eebe2b1a62c0c0a7f24ce2c1cbec13ac4b2be04a243dbe35aa9fff0",
+          "size_bytes": 122814
+        }
+      ],
+      "config_snapshot": {
+        "TIMEOUT": 30.0,
+        "ACCEPTED_FORMATS": [
+          "JPEG",
+          "PNG",
+          "WEBP",
+          "GIF"
+        ]
+      },
+      "log_lines": [],
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "module": "module4",
+      "stage_order": 4,
+      "status": "success",
+      "started_at": null,
+      "completed_at": null,
+      "duration_seconds": null,
+      "duration_source": "unavailable",
+      "inputs": [
+        {
+          "module": "module3",
+          "artifact_type": "thumbnail_image",
+          "path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\thumbnails\\O0Y-oLarao4.jpg",
+          "exists": true,
+          "sha256": "c7b650037eebe2b1a62c0c0a7f24ce2c1cbec13ac4b2be04a243dbe35aa9fff0",
+          "size_bytes": 122814
+        }
+      ],
+      "outputs": [
+        {
+          "module": "module4",
+          "artifact_type": "thumbnail_intelligence",
+          "path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\analysis\\O0Y-oLarao4.json",
+          "exists": true,
+          "sha256": "8a137d37fae686d8b39d07d48bed70f820685f0a3ca957f9fb37a6a5f34c9407",
+          "size_bytes": 3732
+        }
+      ],
+      "config_snapshot": {
+        "YOLO_MODEL": "yolo11n.pt",
+        "FACE_MODEL": "buffalo_l",
+        "OLLAMA_MODEL": "qwen3:8b"
+      },
+      "log_lines": [],
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "module": "module8",
+      "stage_order": 5,
+      "status": "not_run",
+      "started_at": null,
+      "completed_at": null,
+      "duration_seconds": null,
+      "duration_source": "unavailable",
+      "inputs": [
+        {
+          "module": "module3",
+          "artifact_type": "thumbnail_image",
+          "path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\thumbnails\\O0Y-oLarao4.jpg",
+          "exists": true,
+          "sha256": "c7b650037eebe2b1a62c0c0a7f24ce2c1cbec13ac4b2be04a243dbe35aa9fff0",
+          "size_bytes": 122814
+        },
+        {
+          "module": "module4",
+          "artifact_type": "thumbnail_intelligence",
+          "path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\analysis\\O0Y-oLarao4.json",
+          "exists": true,
+          "sha256": "8a137d37fae686d8b39d07d48bed70f820685f0a3ca957f9fb37a6a5f34c9407",
+          "size_bytes": 3732
+        }
+      ],
+      "outputs": [
+        {
+          "module": "module8",
+          "artifact_type": "asset_extraction_manifest",
+          "path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\asset_extraction\\O0Y-oLarao4\\asset_manifest.json",
+          "exists": false,
+          "sha256": null,
+          "size_bytes": null
+        }
+      ],
+      "config_snapshot": {
+        "ASSET_EXTRACTION_ENABLED": false
+      },
+      "log_lines": [],
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "module": "module5",
+      "stage_order": 6,
+      "status": "success",
+      "started_at": null,
+      "completed_at": null,
+      "duration_seconds": null,
+      "duration_source": "unavailable",
+      "inputs": [
+        {
+          "module": "module4",
+          "artifact_type": "thumbnail_intelligence",
+          "path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\analysis\\O0Y-oLarao4.json",
+          "exists": true,
+          "sha256": "8a137d37fae686d8b39d07d48bed70f820685f0a3ca957f9fb37a6a5f34c9407",
+          "size_bytes": 3732
+        }
+      ],
+      "outputs": [
+        {
+          "module": "module5",
+          "artifact_type": "redesign_specification",
+          "path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\redesign_specs\\O0Y-oLarao4.json",
+          "exists": true,
+          "sha256": "15b6e94ef359ab64414b6527d83e58e6bc3bca8920b6451df0c344d9f56bdbab",
+          "size_bytes": 2278
+        }
+      ],
+      "config_snapshot": {
+        "CLUTTER_HIGH_THRESHOLD": 0.6
+      },
+      "log_lines": [],
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "module": "module5.5",
+      "stage_order": 7,
+      "status": "success",
+      "started_at": null,
+      "completed_at": null,
+      "duration_seconds": null,
+      "duration_source": "unavailable",
+      "inputs": [
+        {
+          "module": "module5",
+          "artifact_type": "redesign_specification",
+          "path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\redesign_specs\\O0Y-oLarao4.json",
+          "exists": true,
+          "sha256": "15b6e94ef359ab64414b6527d83e58e6bc3bca8920b6451df0c344d9f56bdbab",
+          "size_bytes": 2278
+        },
+        {
+          "module": "module4",
+          "artifact_type": "thumbnail_intelligence",
+          "path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\analysis\\O0Y-oLarao4.json",
+          "exists": true,
+          "sha256": "8a137d37fae686d8b39d07d48bed70f820685f0a3ca957f9fb37a6a5f34c9407",
+          "size_bytes": 3732
+        }
+      ],
+      "outputs": [
+        {
+          "module": "module5.5",
+          "artifact_type": "design_blueprint",
+          "path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\design_blueprints\\O0Y-oLarao4.json",
+          "exists": true,
+          "sha256": "138c7eafdd61de003433de926996917a65ce77d0bb534954d29e8513eb5662e6",
+          "size_bytes": 5282
+        }
+      ],
+      "config_snapshot": {},
+      "log_lines": [],
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "module": "module6",
+      "stage_order": 8,
+      "status": "success",
+      "started_at": null,
+      "completed_at": null,
+      "duration_seconds": null,
+      "duration_source": "unavailable",
+      "inputs": [
+        {
+          "module": "module5.5",
+          "artifact_type": "design_blueprint",
+          "path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\design_blueprints\\O0Y-oLarao4.json",
+          "exists": true,
+          "sha256": "138c7eafdd61de003433de926996917a65ce77d0bb534954d29e8513eb5662e6",
+          "size_bytes": 5282
+        },
+        {
+          "module": "module5",
+          "artifact_type": "redesign_specification",
+          "path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\redesign_specs\\O0Y-oLarao4.json",
+          "exists": true,
+          "sha256": "15b6e94ef359ab64414b6527d83e58e6bc3bca8920b6451df0c344d9f56bdbab",
+          "size_bytes": 2278
+        }
+      ],
+      "outputs": [
+        {
+          "module": "module6",
+          "artifact_type": "prompt_package",
+          "path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\prompt_packages\\O0Y-oLarao4.json",
+          "exists": true,
+          "sha256": "d099933fa6324207584a1a668804e1015567989ca175c4e3f1d801f3c4c7e953",
+          "size_bytes": 3365
+        }
+      ],
+      "config_snapshot": {},
+      "log_lines": [],
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "module": "module9",
+      "stage_order": 9,
+      "status": "not_run",
+      "started_at": null,
+      "completed_at": null,
+      "duration_seconds": null,
+      "duration_source": "unavailable",
+      "inputs": [
+        {
+          "module": "module4",
+          "artifact_type": "thumbnail_intelligence",
+          "path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\analysis\\O0Y-oLarao4.json",
+          "exists": true,
+          "sha256": "8a137d37fae686d8b39d07d48bed70f820685f0a3ca957f9fb37a6a5f34c9407",
+          "size_bytes": 3732
+        },
+        {
+          "module": "module8",
+          "artifact_type": "asset_extraction_manifest",
+          "path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\asset_extraction\\O0Y-oLarao4\\asset_manifest.json",
+          "exists": false,
+          "sha256": null,
+          "size_bytes": null
+        },
+        {
+          "module": "module5",
+          "artifact_type": "redesign_specification",
+          "path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\redesign_specs\\O0Y-oLarao4.json",
+          "exists": true,
+          "sha256": "15b6e94ef359ab64414b6527d83e58e6bc3bca8920b6451df0c344d9f56bdbab",
+          "size_bytes": 2278
+        }
+      ],
+      "outputs": [
+        {
+          "module": "module9",
+          "artifact_type": "decision_manifest",
+          "path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\decisions\\O0Y-oLarao4\\decision_manifest.json",
+          "exists": false,
+          "sha256": null,
+          "size_bytes": null
+        }
+      ],
+      "config_snapshot": {
+        "DECISION_ENGINE_ENABLED": false
+      },
+      "log_lines": [],
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "module": "module10",
+      "stage_order": 10,
+      "status": "success",
+      "started_at": null,
+      "completed_at": null,
+      "duration_seconds": null,
+      "duration_source": "unavailable",
+      "inputs": [
+        {
+          "module": "module6",
+          "artifact_type": "prompt_package",
+          "path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\prompt_packages\\O0Y-oLarao4.json",
+          "exists": true,
+          "sha256": "d099933fa6324207584a1a668804e1015567989ca175c4e3f1d801f3c4c7e953",
+          "size_bytes": 3365
+        },
+        {
+          "module": "module9",
+          "artifact_type": "decision_manifest",
+          "path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\decisions\\O0Y-oLarao4\\decision_manifest.json",
+          "exists": false,
+          "sha256": null,
+          "size_bytes": null
+        },
+        {
+          "module": "module5.5",
+          "artifact_type": "design_blueprint",
+          "path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\design_blueprints\\O0Y-oLarao4.json",
+          "exists": true,
+          "sha256": "138c7eafdd61de003433de926996917a65ce77d0bb534954d29e8513eb5662e6",
+          "size_bytes": 5282
+        }
+      ],
+      "outputs": [
+        {
+          "module": "module10",
+          "artifact_type": "composition_workspace",
+          "path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\composition_workspaces\\O0Y-oLarao4\\workspace_manifest.json",
+          "exists": true,
+          "sha256": "b970973c2933eccc653b953c337f41d8b3207202b615a8f1b997b8f01b96fd5e",
+          "size_bytes": 442
+        },
+        {
+          "module": "module10",
+          "artifact_type": "generation_bundle",
+          "path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\composition_workspaces\\O0Y-oLarao4\\generation_bundle.json",
+          "exists": false,
+          "sha256": null,
+          "size_bytes": null
+        }
+      ],
+      "config_snapshot": {},
+      "log_lines": [],
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "module": "module10.5",
+      "stage_order": 11,
+      "status": "not_run",
+      "started_at": null,
+      "completed_at": null,
+      "duration_seconds": null,
+      "duration_source": "unavailable",
+      "inputs": [
+        {
+          "module": "module10",
+          "artifact_type": "composition_workspace",
+          "path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\composition_workspaces\\O0Y-oLarao4\\workspace_manifest.json",
+          "exists": true,
+          "sha256": "b970973c2933eccc653b953c337f41d8b3207202b615a8f1b997b8f01b96fd5e",
+          "size_bytes": 442
+        },
+        {
+          "module": "module10",
+          "artifact_type": "generation_bundle",
+          "path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\composition_workspaces\\O0Y-oLarao4\\generation_bundle.json",
+          "exists": false,
+          "sha256": null,
+          "size_bytes": null
+        },
+        {
+          "module": "module9",
+          "artifact_type": "decision_manifest",
+          "path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\decisions\\O0Y-oLarao4\\decision_manifest.json",
+          "exists": false,
+          "sha256": null,
+          "size_bytes": null
+        }
+      ],
+      "outputs": [
+        {
+          "module": "module10.5",
+          "artifact_type": "generation_plan",
+          "path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\generation_plans\\O0Y-oLarao4.json",
+          "exists": false,
+          "sha256": null,
+          "size_bytes": null
+        },
+        {
+          "module": "module10.5",
+          "artifact_type": "strategy_pack",
+          "path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\strategy_packs\\O0Y-oLarao4.json",
+          "exists": false,
+          "sha256": null,
+          "size_bytes": null
+        }
+      ],
+      "config_snapshot": {
+        "THUMBNAIL_PLANNER_ENABLED": false
+      },
+      "log_lines": [],
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "module": "module7",
+      "stage_order": 12,
+      "status": "success",
+      "started_at": null,
+      "completed_at": null,
+      "duration_seconds": 39.60537830000021,
+      "duration_source": "exact",
+      "inputs": [
+        {
+          "module": "module6",
+          "artifact_type": "prompt_package",
+          "path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\prompt_packages\\O0Y-oLarao4.json",
+          "exists": true,
+          "sha256": "d099933fa6324207584a1a668804e1015567989ca175c4e3f1d801f3c4c7e953",
+          "size_bytes": 3365
+        },
+        {
+          "module": "module10",
+          "artifact_type": "composition_workspace",
+          "path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\composition_workspaces\\O0Y-oLarao4\\workspace_manifest.json",
+          "exists": true,
+          "sha256": "b970973c2933eccc653b953c337f41d8b3207202b615a8f1b997b8f01b96fd5e",
+          "size_bytes": 442
+        },
+        {
+          "module": "module10",
+          "artifact_type": "generation_bundle",
+          "path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\composition_workspaces\\O0Y-oLarao4\\generation_bundle.json",
+          "exists": false,
+          "sha256": null,
+          "size_bytes": null
+        },
+        {
+          "module": "module10.5",
+          "artifact_type": "generation_plan",
+          "path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\generation_plans\\O0Y-oLarao4.json",
+          "exists": false,
+          "sha256": null,
+          "size_bytes": null
+        },
+        {
+          "module": "module10.5",
+          "artifact_type": "strategy_pack",
+          "path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\strategy_packs\\O0Y-oLarao4.json",
+          "exists": false,
+          "sha256": null,
+          "size_bytes": null
+        }
+      ],
+      "outputs": [
+        {
+          "module": "module7",
+          "artifact_type": "generated_thumbnail",
+          "path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\generated_thumbnails\\O0Y-oLarao4\\O0Y-oLarao4.png",
+          "exists": true,
+          "sha256": "b92171c3b1f0c924ce75feb0a16dadc8a07d0bb3800255bebc23cc5a4a7a96c2",
+          "size_bytes": 1204706
+        },
+        {
+          "module": "module7",
+          "artifact_type": "image_generation_result",
+          "path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\generated_thumbnails\\O0Y-oLarao4\\manifest.json",
+          "exists": false,
+          "sha256": null,
+          "size_bytes": null
+        }
+      ],
+      "config_snapshot": {
+        "COMFYUI_ENABLED": true
+      },
+      "log_lines": [
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 27212,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:55:20.607 | INFO     | main:_run_pipeline_creators:238 - Processing creator_email=trre@gmail.com url=https://www.youtube.com/watch?v=O0Y-oLarao4&pp=ugUEEgJlbg%3D%3D",
+          "raw_line": "2026-08-02 14:55:20.607 | INFO     | main:_run_pipeline_creators:238 - Processing creator_email=trre@gmail.com url=https://www.youtube.com/watch?v=O0Y-oLarao4&pp=ugUEEgJlbg%3D%3D"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 27213,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:55:20.607 | INFO     | main:_run_pipeline_creators:238 - Processing creator_email=trre@gmail.com url=https://www.youtube.com/watch?v=O0Y-oLarao4&pp=ugUEEgJlbg%3D%3D",
+          "raw_line": "2026-08-02 14:55:20.607 | INFO     | main:_run_pipeline_creators:238 - Processing creator_email=trre@gmail.com url=https://www.youtube.com/watch?v=O0Y-oLarao4&pp=ugUEEgJlbg%3D%3D"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 27214,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:55:20.607 | INFO     | main:_run_pipeline_creators:238 - Processing creator_email=trre@gmail.com url=https://www.youtube.com/watch?v=O0Y-oLarao4&pp=ugUEEgJlbg%3D%3D",
+          "raw_line": "2026-08-02 14:55:20.607 | INFO     | main:_run_pipeline_creators:238 - Processing creator_email=trre@gmail.com url=https://www.youtube.com/watch?v=O0Y-oLarao4&pp=ugUEEgJlbg%3D%3D"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 27217,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:55:20.607 | INFO     | main:_run_pipeline_creators:238 - Processing creator_email=trre@gmail.com url=https://www.youtube.com/watch?v=O0Y-oLarao4&pp=ugUEEgJlbg%3D%3D",
+          "raw_line": "2026-08-02 14:55:20.607 | INFO     | main:_run_pipeline_creators:238 - Processing creator_email=trre@gmail.com url=https://www.youtube.com/watch?v=O0Y-oLarao4&pp=ugUEEgJlbg%3D%3D"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 27219,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:55:20.607 | INFO     | main:_run_pipeline_creators:238 - Processing creator_email=trre@gmail.com url=https://www.youtube.com/watch?v=O0Y-oLarao4&pp=ugUEEgJlbg%3D%3D",
+          "raw_line": "2026-08-02 14:55:20.607 | INFO     | main:_run_pipeline_creators:238 - Processing creator_email=trre@gmail.com url=https://www.youtube.com/watch?v=O0Y-oLarao4&pp=ugUEEgJlbg%3D%3D"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 27220,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:55:20.612 | INFO     | youtube_metadata:process_video:1101 - Processing creator_email=trre@gmail.com url=https://www.youtube.com/watch?v=O0Y-oLarao4&pp=ugUEEgJlbg%3D%3D",
+          "raw_line": "2026-08-02 14:55:20.612 | INFO     | youtube_metadata:process_video:1101 - Processing creator_email=trre@gmail.com url=https://www.youtube.com/watch?v=O0Y-oLarao4&pp=ugUEEgJlbg%3D%3D"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 27221,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:55:20.607 | INFO     | main:_run_pipeline_creators:238 - Processing creator_email=trre@gmail.com url=https://www.youtube.com/watch?v=O0Y-oLarao4&pp=ugUEEgJlbg%3D%3D",
+          "raw_line": "2026-08-02 14:55:20.607 | INFO     | main:_run_pipeline_creators:238 - Processing creator_email=trre@gmail.com url=https://www.youtube.com/watch?v=O0Y-oLarao4&pp=ugUEEgJlbg%3D%3D"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 27223,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:55:20.612 | INFO     | youtube_metadata:process_video:1101 - Processing creator_email=trre@gmail.com url=https://www.youtube.com/watch?v=O0Y-oLarao4&pp=ugUEEgJlbg%3D%3D",
+          "raw_line": "2026-08-02 14:55:20.612 | INFO     | youtube_metadata:process_video:1101 - Processing creator_email=trre@gmail.com url=https://www.youtube.com/watch?v=O0Y-oLarao4&pp=ugUEEgJlbg%3D%3D"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 27224,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:55:20.612 | INFO     | youtube_metadata:process_video:1101 - Processing creator_email=trre@gmail.com url=https://www.youtube.com/watch?v=O0Y-oLarao4&pp=ugUEEgJlbg%3D%3D",
+          "raw_line": "2026-08-02 14:55:20.612 | INFO     | youtube_metadata:process_video:1101 - Processing creator_email=trre@gmail.com url=https://www.youtube.com/watch?v=O0Y-oLarao4&pp=ugUEEgJlbg%3D%3D"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 27225,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:55:20.612 | INFO     | youtube_metadata:process_video:1101 - Processing creator_email=trre@gmail.com url=https://www.youtube.com/watch?v=O0Y-oLarao4&pp=ugUEEgJlbg%3D%3D",
+          "raw_line": "2026-08-02 14:55:20.612 | INFO     | youtube_metadata:process_video:1101 - Processing creator_email=trre@gmail.com url=https://www.youtube.com/watch?v=O0Y-oLarao4&pp=ugUEEgJlbg%3D%3D"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 27228,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:55:20.612 | INFO     | youtube_metadata:process_video:1101 - Processing creator_email=trre@gmail.com url=https://www.youtube.com/watch?v=O0Y-oLarao4&pp=ugUEEgJlbg%3D%3D",
+          "raw_line": "2026-08-02 14:55:20.612 | INFO     | youtube_metadata:process_video:1101 - Processing creator_email=trre@gmail.com url=https://www.youtube.com/watch?v=O0Y-oLarao4&pp=ugUEEgJlbg%3D%3D"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 27229,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:55:20.612 | INFO     | youtube_metadata:process_video:1101 - Processing creator_email=trre@gmail.com url=https://www.youtube.com/watch?v=O0Y-oLarao4&pp=ugUEEgJlbg%3D%3D",
+          "raw_line": "2026-08-02 14:55:20.612 | INFO     | youtube_metadata:process_video:1101 - Processing creator_email=trre@gmail.com url=https://www.youtube.com/watch?v=O0Y-oLarao4&pp=ugUEEgJlbg%3D%3D"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 27240,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:55:20.627 | INFO     | youtube_metadata:extract_metadata:684 - Fetching metadata for video_id=O0Y-oLarao4",
+          "raw_line": "2026-08-02 14:55:20.627 | INFO     | youtube_metadata:extract_metadata:684 - Fetching metadata for video_id=O0Y-oLarao4"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 27241,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:55:20.627 | INFO     | youtube_metadata:extract_metadata:684 - Fetching metadata for video_id=O0Y-oLarao4",
+          "raw_line": "2026-08-02 14:55:20.627 | INFO     | youtube_metadata:extract_metadata:684 - Fetching metadata for video_id=O0Y-oLarao4"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 27242,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:55:20.627 | INFO     | youtube_metadata:extract_metadata:684 - Fetching metadata for video_id=O0Y-oLarao4",
+          "raw_line": "2026-08-02 14:55:20.627 | INFO     | youtube_metadata:extract_metadata:684 - Fetching metadata for video_id=O0Y-oLarao4"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 27243,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:55:20.627 | INFO     | youtube_metadata:extract_metadata:684 - Fetching metadata for video_id=O0Y-oLarao4",
+          "raw_line": "2026-08-02 14:55:20.627 | INFO     | youtube_metadata:extract_metadata:684 - Fetching metadata for video_id=O0Y-oLarao4"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 27244,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:55:20.627 | INFO     | youtube_metadata:extract_metadata:684 - Fetching metadata for video_id=O0Y-oLarao4",
+          "raw_line": "2026-08-02 14:55:20.627 | INFO     | youtube_metadata:extract_metadata:684 - Fetching metadata for video_id=O0Y-oLarao4"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 27245,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:55:20.627 | INFO     | youtube_metadata:extract_metadata:684 - Fetching metadata for video_id=O0Y-oLarao4",
+          "raw_line": "2026-08-02 14:55:20.627 | INFO     | youtube_metadata:extract_metadata:684 - Fetching metadata for video_id=O0Y-oLarao4"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 27249,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:55:22.517 | INFO     | youtube_metadata:extract_metadata:689 - Metadata extracted: video_id=O0Y-oLarao4 title='The Laziest Way to Build a V-TAPER at home... FAST'",
+          "raw_line": "2026-08-02 14:55:22.517 | INFO     | youtube_metadata:extract_metadata:689 - Metadata extracted: video_id=O0Y-oLarao4 title='The Laziest Way to Build a V-TAPER at home... FAST'"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 27250,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:55:22.517 | INFO     | youtube_metadata:extract_metadata:689 - Metadata extracted: video_id=O0Y-oLarao4 title='The Laziest Way to Build a V-TAPER at home... FAST'",
+          "raw_line": "2026-08-02 14:55:22.517 | INFO     | youtube_metadata:extract_metadata:689 - Metadata extracted: video_id=O0Y-oLarao4 title='The Laziest Way to Build a V-TAPER at home... FAST'"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 27251,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:55:22.517 | INFO     | youtube_metadata:extract_metadata:689 - Metadata extracted: video_id=O0Y-oLarao4 title='The Laziest Way to Build a V-TAPER at home... FAST'",
+          "raw_line": "2026-08-02 14:55:22.517 | INFO     | youtube_metadata:extract_metadata:689 - Metadata extracted: video_id=O0Y-oLarao4 title='The Laziest Way to Build a V-TAPER at home... FAST'"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 27252,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:55:22.517 | INFO     | youtube_metadata:extract_metadata:689 - Metadata extracted: video_id=O0Y-oLarao4 title='The Laziest Way to Build a V-TAPER at home... FAST'",
+          "raw_line": "2026-08-02 14:55:22.517 | INFO     | youtube_metadata:extract_metadata:689 - Metadata extracted: video_id=O0Y-oLarao4 title='The Laziest Way to Build a V-TAPER at home... FAST'"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 27256,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:55:22.517 | INFO     | youtube_metadata:extract_metadata:689 - Metadata extracted: video_id=O0Y-oLarao4 title='The Laziest Way to Build a V-TAPER at home... FAST'",
+          "raw_line": "2026-08-02 14:55:22.517 | INFO     | youtube_metadata:extract_metadata:689 - Metadata extracted: video_id=O0Y-oLarao4 title='The Laziest Way to Build a V-TAPER at home... FAST'"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 27257,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:55:22.517 | INFO     | youtube_metadata:extract_metadata:689 - Metadata extracted: video_id=O0Y-oLarao4 title='The Laziest Way to Build a V-TAPER at home... FAST'",
+          "raw_line": "2026-08-02 14:55:22.517 | INFO     | youtube_metadata:extract_metadata:689 - Metadata extracted: video_id=O0Y-oLarao4 title='The Laziest Way to Build a V-TAPER at home... FAST'"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 27258,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:55:24.158 | INFO     | youtube_metadata:extract_transcript:829 - Transcript extracted for video_id=O0Y-oLarao4 (378 words)",
+          "raw_line": "2026-08-02 14:55:24.158 | INFO     | youtube_metadata:extract_transcript:829 - Transcript extracted for video_id=O0Y-oLarao4 (378 words)"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 27260,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:55:24.158 | INFO     | youtube_metadata:extract_transcript:829 - Transcript extracted for video_id=O0Y-oLarao4 (378 words)",
+          "raw_line": "2026-08-02 14:55:24.158 | INFO     | youtube_metadata:extract_transcript:829 - Transcript extracted for video_id=O0Y-oLarao4 (378 words)"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 27263,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:55:24.158 | INFO     | youtube_metadata:extract_transcript:829 - Transcript extracted for video_id=O0Y-oLarao4 (378 words)",
+          "raw_line": "2026-08-02 14:55:24.158 | INFO     | youtube_metadata:extract_transcript:829 - Transcript extracted for video_id=O0Y-oLarao4 (378 words)"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 27264,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:55:24.158 | INFO     | youtube_metadata:extract_transcript:829 - Transcript extracted for video_id=O0Y-oLarao4 (378 words)",
+          "raw_line": "2026-08-02 14:55:24.158 | INFO     | youtube_metadata:extract_transcript:829 - Transcript extracted for video_id=O0Y-oLarao4 (378 words)"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 27265,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:55:24.158 | INFO     | youtube_metadata:extract_transcript:829 - Transcript extracted for video_id=O0Y-oLarao4 (378 words)",
+          "raw_line": "2026-08-02 14:55:24.158 | INFO     | youtube_metadata:extract_transcript:829 - Transcript extracted for video_id=O0Y-oLarao4 (378 words)"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 27266,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:55:24.158 | INFO     | youtube_metadata:extract_transcript:829 - Transcript extracted for video_id=O0Y-oLarao4 (378 words)",
+          "raw_line": "2026-08-02 14:55:24.158 | INFO     | youtube_metadata:extract_transcript:829 - Transcript extracted for video_id=O0Y-oLarao4 (378 words)"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 27270,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:55:24.171 | INFO     | youtube_metadata:process_video:1198 - process_video complete: creator_email=trre@gmail.com video_id=O0Y-oLarao4 status=success",
+          "raw_line": "2026-08-02 14:55:24.171 | INFO     | youtube_metadata:process_video:1198 - process_video complete: creator_email=trre@gmail.com video_id=O0Y-oLarao4 status=success"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 27271,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:55:24.171 | INFO     | youtube_metadata:process_video:1198 - process_video complete: creator_email=trre@gmail.com video_id=O0Y-oLarao4 status=success",
+          "raw_line": "2026-08-02 14:55:24.171 | INFO     | youtube_metadata:process_video:1198 - process_video complete: creator_email=trre@gmail.com video_id=O0Y-oLarao4 status=success"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 27272,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:55:24.171 | INFO     | youtube_metadata:process_video:1198 - process_video complete: creator_email=trre@gmail.com video_id=O0Y-oLarao4 status=success",
+          "raw_line": "2026-08-02 14:55:24.171 | INFO     | youtube_metadata:process_video:1198 - process_video complete: creator_email=trre@gmail.com video_id=O0Y-oLarao4 status=success"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 27273,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:55:24.171 | INFO     | youtube_metadata:process_video:1198 - process_video complete: creator_email=trre@gmail.com video_id=O0Y-oLarao4 status=success",
+          "raw_line": "2026-08-02 14:55:24.171 | INFO     | youtube_metadata:process_video:1198 - process_video complete: creator_email=trre@gmail.com video_id=O0Y-oLarao4 status=success"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 27275,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:55:24.171 | INFO     | youtube_metadata:process_video:1198 - process_video complete: creator_email=trre@gmail.com video_id=O0Y-oLarao4 status=success",
+          "raw_line": "2026-08-02 14:55:24.171 | INFO     | youtube_metadata:process_video:1198 - process_video complete: creator_email=trre@gmail.com video_id=O0Y-oLarao4 status=success"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 27276,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:55:24.171 | INFO     | youtube_metadata:process_video:1198 - process_video complete: creator_email=trre@gmail.com video_id=O0Y-oLarao4 status=success",
+          "raw_line": "2026-08-02 14:55:24.171 | INFO     | youtube_metadata:process_video:1198 - process_video complete: creator_email=trre@gmail.com video_id=O0Y-oLarao4 status=success"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 27285,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:55:24.176 | INFO     | thumbnail_downloader:process_thumbnail:498 - Processing thumbnail for video_id=O0Y-oLarao4",
+          "raw_line": "2026-08-02 14:55:24.176 | INFO     | thumbnail_downloader:process_thumbnail:498 - Processing thumbnail for video_id=O0Y-oLarao4"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 27287,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:55:24.176 | INFO     | thumbnail_downloader:process_thumbnail:498 - Processing thumbnail for video_id=O0Y-oLarao4",
+          "raw_line": "2026-08-02 14:55:24.176 | INFO     | thumbnail_downloader:process_thumbnail:498 - Processing thumbnail for video_id=O0Y-oLarao4"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 27288,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:55:24.176 | INFO     | thumbnail_downloader:process_thumbnail:498 - Processing thumbnail for video_id=O0Y-oLarao4",
+          "raw_line": "2026-08-02 14:55:24.176 | INFO     | thumbnail_downloader:process_thumbnail:498 - Processing thumbnail for video_id=O0Y-oLarao4"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 27290,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:55:24.176 | INFO     | thumbnail_downloader:process_thumbnail:498 - Processing thumbnail for video_id=O0Y-oLarao4",
+          "raw_line": "2026-08-02 14:55:24.176 | INFO     | thumbnail_downloader:process_thumbnail:498 - Processing thumbnail for video_id=O0Y-oLarao4"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 27294,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:55:24.176 | INFO     | thumbnail_downloader:process_thumbnail:498 - Processing thumbnail for video_id=O0Y-oLarao4",
+          "raw_line": "2026-08-02 14:55:24.176 | INFO     | thumbnail_downloader:process_thumbnail:498 - Processing thumbnail for video_id=O0Y-oLarao4"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 27296,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:55:24.176 | INFO     | thumbnail_downloader:process_thumbnail:498 - Processing thumbnail for video_id=O0Y-oLarao4",
+          "raw_line": "2026-08-02 14:55:24.176 | INFO     | thumbnail_downloader:process_thumbnail:498 - Processing thumbnail for video_id=O0Y-oLarao4"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 27300,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:55:24.184 | INFO     | thumbnail_downloader:process_thumbnail:534 - Downloading thumbnail for video_id=O0Y-oLarao4 from https://i.ytimg.com/vi/O0Y-oLarao4/maxresdefault.jpg",
+          "raw_line": "2026-08-02 14:55:24.184 | INFO     | thumbnail_downloader:process_thumbnail:534 - Downloading thumbnail for video_id=O0Y-oLarao4 from https://i.ytimg.com/vi/O0Y-oLarao4/maxresdefault.jpg"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 27301,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:55:24.184 | INFO     | thumbnail_downloader:process_thumbnail:534 - Downloading thumbnail for video_id=O0Y-oLarao4 from https://i.ytimg.com/vi/O0Y-oLarao4/maxresdefault.jpg",
+          "raw_line": "2026-08-02 14:55:24.184 | INFO     | thumbnail_downloader:process_thumbnail:534 - Downloading thumbnail for video_id=O0Y-oLarao4 from https://i.ytimg.com/vi/O0Y-oLarao4/maxresdefault.jpg"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 27302,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:55:24.184 | INFO     | thumbnail_downloader:process_thumbnail:534 - Downloading thumbnail for video_id=O0Y-oLarao4 from https://i.ytimg.com/vi/O0Y-oLarao4/maxresdefault.jpg",
+          "raw_line": "2026-08-02 14:55:24.184 | INFO     | thumbnail_downloader:process_thumbnail:534 - Downloading thumbnail for video_id=O0Y-oLarao4 from https://i.ytimg.com/vi/O0Y-oLarao4/maxresdefault.jpg"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 27303,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:55:24.184 | INFO     | thumbnail_downloader:process_thumbnail:534 - Downloading thumbnail for video_id=O0Y-oLarao4 from https://i.ytimg.com/vi/O0Y-oLarao4/maxresdefault.jpg",
+          "raw_line": "2026-08-02 14:55:24.184 | INFO     | thumbnail_downloader:process_thumbnail:534 - Downloading thumbnail for video_id=O0Y-oLarao4 from https://i.ytimg.com/vi/O0Y-oLarao4/maxresdefault.jpg"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 27304,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:55:24.184 | INFO     | thumbnail_downloader:process_thumbnail:534 - Downloading thumbnail for video_id=O0Y-oLarao4 from https://i.ytimg.com/vi/O0Y-oLarao4/maxresdefault.jpg",
+          "raw_line": "2026-08-02 14:55:24.184 | INFO     | thumbnail_downloader:process_thumbnail:534 - Downloading thumbnail for video_id=O0Y-oLarao4 from https://i.ytimg.com/vi/O0Y-oLarao4/maxresdefault.jpg"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 27305,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:55:24.184 | INFO     | thumbnail_downloader:process_thumbnail:534 - Downloading thumbnail for video_id=O0Y-oLarao4 from https://i.ytimg.com/vi/O0Y-oLarao4/maxresdefault.jpg",
+          "raw_line": "2026-08-02 14:55:24.184 | INFO     | thumbnail_downloader:process_thumbnail:534 - Downloading thumbnail for video_id=O0Y-oLarao4 from https://i.ytimg.com/vi/O0Y-oLarao4/maxresdefault.jpg"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 27309,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:55:24.188 | INFO     | thumbnail_downloader:download_thumbnail:311 - Downloading thumbnail: https://i.ytimg.com/vi/O0Y-oLarao4/maxresdefault.jpg",
+          "raw_line": "2026-08-02 14:55:24.188 | INFO     | thumbnail_downloader:download_thumbnail:311 - Downloading thumbnail: https://i.ytimg.com/vi/O0Y-oLarao4/maxresdefault.jpg"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 27310,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:55:24.188 | INFO     | thumbnail_downloader:download_thumbnail:311 - Downloading thumbnail: https://i.ytimg.com/vi/O0Y-oLarao4/maxresdefault.jpg",
+          "raw_line": "2026-08-02 14:55:24.188 | INFO     | thumbnail_downloader:download_thumbnail:311 - Downloading thumbnail: https://i.ytimg.com/vi/O0Y-oLarao4/maxresdefault.jpg"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 27311,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:55:24.188 | INFO     | thumbnail_downloader:download_thumbnail:311 - Downloading thumbnail: https://i.ytimg.com/vi/O0Y-oLarao4/maxresdefault.jpg",
+          "raw_line": "2026-08-02 14:55:24.188 | INFO     | thumbnail_downloader:download_thumbnail:311 - Downloading thumbnail: https://i.ytimg.com/vi/O0Y-oLarao4/maxresdefault.jpg"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 27313,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:55:24.188 | INFO     | thumbnail_downloader:download_thumbnail:311 - Downloading thumbnail: https://i.ytimg.com/vi/O0Y-oLarao4/maxresdefault.jpg",
+          "raw_line": "2026-08-02 14:55:24.188 | INFO     | thumbnail_downloader:download_thumbnail:311 - Downloading thumbnail: https://i.ytimg.com/vi/O0Y-oLarao4/maxresdefault.jpg"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 27314,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:55:24.188 | INFO     | thumbnail_downloader:download_thumbnail:311 - Downloading thumbnail: https://i.ytimg.com/vi/O0Y-oLarao4/maxresdefault.jpg",
+          "raw_line": "2026-08-02 14:55:24.188 | INFO     | thumbnail_downloader:download_thumbnail:311 - Downloading thumbnail: https://i.ytimg.com/vi/O0Y-oLarao4/maxresdefault.jpg"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 27316,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:55:24.188 | INFO     | thumbnail_downloader:download_thumbnail:311 - Downloading thumbnail: https://i.ytimg.com/vi/O0Y-oLarao4/maxresdefault.jpg",
+          "raw_line": "2026-08-02 14:55:24.188 | INFO     | thumbnail_downloader:download_thumbnail:311 - Downloading thumbnail: https://i.ytimg.com/vi/O0Y-oLarao4/maxresdefault.jpg"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 27318,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:55:24.870 | INFO     | thumbnail_downloader:download_thumbnail:313 - Download complete: 122814 bytes from https://i.ytimg.com/vi/O0Y-oLarao4/maxresdefault.jpg",
+          "raw_line": "2026-08-02 14:55:24.870 | INFO     | thumbnail_downloader:download_thumbnail:313 - Download complete: 122814 bytes from https://i.ytimg.com/vi/O0Y-oLarao4/maxresdefault.jpg"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 27319,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:55:24.870 | INFO     | thumbnail_downloader:download_thumbnail:313 - Download complete: 122814 bytes from https://i.ytimg.com/vi/O0Y-oLarao4/maxresdefault.jpg",
+          "raw_line": "2026-08-02 14:55:24.870 | INFO     | thumbnail_downloader:download_thumbnail:313 - Download complete: 122814 bytes from https://i.ytimg.com/vi/O0Y-oLarao4/maxresdefault.jpg"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 27320,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:55:24.870 | INFO     | thumbnail_downloader:download_thumbnail:313 - Download complete: 122814 bytes from https://i.ytimg.com/vi/O0Y-oLarao4/maxresdefault.jpg",
+          "raw_line": "2026-08-02 14:55:24.870 | INFO     | thumbnail_downloader:download_thumbnail:313 - Download complete: 122814 bytes from https://i.ytimg.com/vi/O0Y-oLarao4/maxresdefault.jpg"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 27321,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:55:24.870 | INFO     | thumbnail_downloader:download_thumbnail:313 - Download complete: 122814 bytes from https://i.ytimg.com/vi/O0Y-oLarao4/maxresdefault.jpg",
+          "raw_line": "2026-08-02 14:55:24.870 | INFO     | thumbnail_downloader:download_thumbnail:313 - Download complete: 122814 bytes from https://i.ytimg.com/vi/O0Y-oLarao4/maxresdefault.jpg"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 27322,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:55:24.870 | INFO     | thumbnail_downloader:download_thumbnail:313 - Download complete: 122814 bytes from https://i.ytimg.com/vi/O0Y-oLarao4/maxresdefault.jpg",
+          "raw_line": "2026-08-02 14:55:24.870 | INFO     | thumbnail_downloader:download_thumbnail:313 - Download complete: 122814 bytes from https://i.ytimg.com/vi/O0Y-oLarao4/maxresdefault.jpg"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 27323,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:55:24.870 | INFO     | thumbnail_downloader:download_thumbnail:313 - Download complete: 122814 bytes from https://i.ytimg.com/vi/O0Y-oLarao4/maxresdefault.jpg",
+          "raw_line": "2026-08-02 14:55:24.870 | INFO     | thumbnail_downloader:download_thumbnail:313 - Download complete: 122814 bytes from https://i.ytimg.com/vi/O0Y-oLarao4/maxresdefault.jpg"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 27333,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:55:24.901 | INFO     | thumbnail_downloader:process_thumbnail:548 - Thumbnail pipeline complete for video_id=O0Y-oLarao4: D:\\Afsar\\app development\\thumbnail-ai\\data\\thumbnails\\O0Y-oLarao4.jpg",
+          "raw_line": "2026-08-02 14:55:24.901 | INFO     | thumbnail_downloader:process_thumbnail:548 - Thumbnail pipeline complete for video_id=O0Y-oLarao4: D:\\Afsar\\app development\\thumbnail-ai\\data\\thumbnails\\O0Y-oLarao4.jpg"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 27334,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:55:24.901 | INFO     | thumbnail_downloader:process_thumbnail:548 - Thumbnail pipeline complete for video_id=O0Y-oLarao4: D:\\Afsar\\app development\\thumbnail-ai\\data\\thumbnails\\O0Y-oLarao4.jpg",
+          "raw_line": "2026-08-02 14:55:24.901 | INFO     | thumbnail_downloader:process_thumbnail:548 - Thumbnail pipeline complete for video_id=O0Y-oLarao4: D:\\Afsar\\app development\\thumbnail-ai\\data\\thumbnails\\O0Y-oLarao4.jpg"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 27335,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:55:24.901 | INFO     | thumbnail_downloader:process_thumbnail:548 - Thumbnail pipeline complete for video_id=O0Y-oLarao4: D:\\Afsar\\app development\\thumbnail-ai\\data\\thumbnails\\O0Y-oLarao4.jpg",
+          "raw_line": "2026-08-02 14:55:24.901 | INFO     | thumbnail_downloader:process_thumbnail:548 - Thumbnail pipeline complete for video_id=O0Y-oLarao4: D:\\Afsar\\app development\\thumbnail-ai\\data\\thumbnails\\O0Y-oLarao4.jpg"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 27336,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:55:24.901 | INFO     | thumbnail_downloader:process_thumbnail:548 - Thumbnail pipeline complete for video_id=O0Y-oLarao4: D:\\Afsar\\app development\\thumbnail-ai\\data\\thumbnails\\O0Y-oLarao4.jpg",
+          "raw_line": "2026-08-02 14:55:24.901 | INFO     | thumbnail_downloader:process_thumbnail:548 - Thumbnail pipeline complete for video_id=O0Y-oLarao4: D:\\Afsar\\app development\\thumbnail-ai\\data\\thumbnails\\O0Y-oLarao4.jpg"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 27340,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:55:24.901 | INFO     | thumbnail_downloader:process_thumbnail:548 - Thumbnail pipeline complete for video_id=O0Y-oLarao4: D:\\Afsar\\app development\\thumbnail-ai\\data\\thumbnails\\O0Y-oLarao4.jpg",
+          "raw_line": "2026-08-02 14:55:24.901 | INFO     | thumbnail_downloader:process_thumbnail:548 - Thumbnail pipeline complete for video_id=O0Y-oLarao4: D:\\Afsar\\app development\\thumbnail-ai\\data\\thumbnails\\O0Y-oLarao4.jpg"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 27341,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:55:24.904 | INFO     | main:_run_pipeline_creators:284 - Thumbnail saved for creator_email=trre@gmail.com: D:\\Afsar\\app development\\thumbnail-ai\\data\\thumbnails\\O0Y-oLarao4.jpg",
+          "raw_line": "2026-08-02 14:55:24.904 | INFO     | main:_run_pipeline_creators:284 - Thumbnail saved for creator_email=trre@gmail.com: D:\\Afsar\\app development\\thumbnail-ai\\data\\thumbnails\\O0Y-oLarao4.jpg"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 27342,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:55:24.904 | INFO     | main:_run_pipeline_creators:284 - Thumbnail saved for creator_email=trre@gmail.com: D:\\Afsar\\app development\\thumbnail-ai\\data\\thumbnails\\O0Y-oLarao4.jpg",
+          "raw_line": "2026-08-02 14:55:24.904 | INFO     | main:_run_pipeline_creators:284 - Thumbnail saved for creator_email=trre@gmail.com: D:\\Afsar\\app development\\thumbnail-ai\\data\\thumbnails\\O0Y-oLarao4.jpg"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 27344,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:55:24.904 | INFO     | main:_run_pipeline_creators:284 - Thumbnail saved for creator_email=trre@gmail.com: D:\\Afsar\\app development\\thumbnail-ai\\data\\thumbnails\\O0Y-oLarao4.jpg",
+          "raw_line": "2026-08-02 14:55:24.904 | INFO     | main:_run_pipeline_creators:284 - Thumbnail saved for creator_email=trre@gmail.com: D:\\Afsar\\app development\\thumbnail-ai\\data\\thumbnails\\O0Y-oLarao4.jpg"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 27345,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:55:24.904 | INFO     | main:_run_pipeline_creators:284 - Thumbnail saved for creator_email=trre@gmail.com: D:\\Afsar\\app development\\thumbnail-ai\\data\\thumbnails\\O0Y-oLarao4.jpg",
+          "raw_line": "2026-08-02 14:55:24.904 | INFO     | main:_run_pipeline_creators:284 - Thumbnail saved for creator_email=trre@gmail.com: D:\\Afsar\\app development\\thumbnail-ai\\data\\thumbnails\\O0Y-oLarao4.jpg"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 27346,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:55:24.910 | INFO     | thumbnail_intelligence:analyze_thumbnail:1666 - Starting thumbnail intelligence analysis for video_id=O0Y-oLarao4",
+          "raw_line": "2026-08-02 14:55:24.910 | INFO     | thumbnail_intelligence:analyze_thumbnail:1666 - Starting thumbnail intelligence analysis for video_id=O0Y-oLarao4"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 27347,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:55:24.901 | INFO     | thumbnail_downloader:process_thumbnail:548 - Thumbnail pipeline complete for video_id=O0Y-oLarao4: D:\\Afsar\\app development\\thumbnail-ai\\data\\thumbnails\\O0Y-oLarao4.jpg",
+          "raw_line": "2026-08-02 14:55:24.901 | INFO     | thumbnail_downloader:process_thumbnail:548 - Thumbnail pipeline complete for video_id=O0Y-oLarao4: D:\\Afsar\\app development\\thumbnail-ai\\data\\thumbnails\\O0Y-oLarao4.jpg"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 27348,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:55:24.904 | INFO     | main:_run_pipeline_creators:284 - Thumbnail saved for creator_email=trre@gmail.com: D:\\Afsar\\app development\\thumbnail-ai\\data\\thumbnails\\O0Y-oLarao4.jpg",
+          "raw_line": "2026-08-02 14:55:24.904 | INFO     | main:_run_pipeline_creators:284 - Thumbnail saved for creator_email=trre@gmail.com: D:\\Afsar\\app development\\thumbnail-ai\\data\\thumbnails\\O0Y-oLarao4.jpg"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 27350,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:55:24.910 | INFO     | thumbnail_intelligence:analyze_thumbnail:1666 - Starting thumbnail intelligence analysis for video_id=O0Y-oLarao4",
+          "raw_line": "2026-08-02 14:55:24.910 | INFO     | thumbnail_intelligence:analyze_thumbnail:1666 - Starting thumbnail intelligence analysis for video_id=O0Y-oLarao4"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 27351,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:55:24.910 | INFO     | thumbnail_intelligence:analyze_thumbnail:1666 - Starting thumbnail intelligence analysis for video_id=O0Y-oLarao4",
+          "raw_line": "2026-08-02 14:55:24.910 | INFO     | thumbnail_intelligence:analyze_thumbnail:1666 - Starting thumbnail intelligence analysis for video_id=O0Y-oLarao4"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 27352,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:55:24.910 | INFO     | thumbnail_intelligence:analyze_thumbnail:1666 - Starting thumbnail intelligence analysis for video_id=O0Y-oLarao4",
+          "raw_line": "2026-08-02 14:55:24.910 | INFO     | thumbnail_intelligence:analyze_thumbnail:1666 - Starting thumbnail intelligence analysis for video_id=O0Y-oLarao4"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 27353,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:55:24.904 | INFO     | main:_run_pipeline_creators:284 - Thumbnail saved for creator_email=trre@gmail.com: D:\\Afsar\\app development\\thumbnail-ai\\data\\thumbnails\\O0Y-oLarao4.jpg",
+          "raw_line": "2026-08-02 14:55:24.904 | INFO     | main:_run_pipeline_creators:284 - Thumbnail saved for creator_email=trre@gmail.com: D:\\Afsar\\app development\\thumbnail-ai\\data\\thumbnails\\O0Y-oLarao4.jpg"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 27354,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:55:24.910 | INFO     | thumbnail_intelligence:analyze_thumbnail:1666 - Starting thumbnail intelligence analysis for video_id=O0Y-oLarao4",
+          "raw_line": "2026-08-02 14:55:24.910 | INFO     | thumbnail_intelligence:analyze_thumbnail:1666 - Starting thumbnail intelligence analysis for video_id=O0Y-oLarao4"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 27357,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:55:24.910 | INFO     | thumbnail_intelligence:analyze_thumbnail:1666 - Starting thumbnail intelligence analysis for video_id=O0Y-oLarao4",
+          "raw_line": "2026-08-02 14:55:24.910 | INFO     | thumbnail_intelligence:analyze_thumbnail:1666 - Starting thumbnail intelligence analysis for video_id=O0Y-oLarao4"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 27371,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:55:44.953 | INFO     | thumbnail_intelligence:analyze_thumbnail:1767 - Thumbnail intelligence analysis complete for video_id=O0Y-oLarao4: status=success (20.04s)",
+          "raw_line": "2026-08-02 14:55:44.953 | INFO     | thumbnail_intelligence:analyze_thumbnail:1767 - Thumbnail intelligence analysis complete for video_id=O0Y-oLarao4: status=success (20.04s)"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 27373,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:55:44.953 | INFO     | thumbnail_intelligence:analyze_thumbnail:1767 - Thumbnail intelligence analysis complete for video_id=O0Y-oLarao4: status=success (20.04s)",
+          "raw_line": "2026-08-02 14:55:44.953 | INFO     | thumbnail_intelligence:analyze_thumbnail:1767 - Thumbnail intelligence analysis complete for video_id=O0Y-oLarao4: status=success (20.04s)"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 27374,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:55:44.953 | INFO     | thumbnail_intelligence:analyze_thumbnail:1767 - Thumbnail intelligence analysis complete for video_id=O0Y-oLarao4: status=success (20.04s)",
+          "raw_line": "2026-08-02 14:55:44.953 | INFO     | thumbnail_intelligence:analyze_thumbnail:1767 - Thumbnail intelligence analysis complete for video_id=O0Y-oLarao4: status=success (20.04s)"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 27375,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:55:44.953 | INFO     | thumbnail_intelligence:analyze_thumbnail:1767 - Thumbnail intelligence analysis complete for video_id=O0Y-oLarao4: status=success (20.04s)",
+          "raw_line": "2026-08-02 14:55:44.953 | INFO     | thumbnail_intelligence:analyze_thumbnail:1767 - Thumbnail intelligence analysis complete for video_id=O0Y-oLarao4: status=success (20.04s)"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 27376,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:55:44.953 | INFO     | thumbnail_intelligence:analyze_thumbnail:1767 - Thumbnail intelligence analysis complete for video_id=O0Y-oLarao4: status=success (20.04s)",
+          "raw_line": "2026-08-02 14:55:44.953 | INFO     | thumbnail_intelligence:analyze_thumbnail:1767 - Thumbnail intelligence analysis complete for video_id=O0Y-oLarao4: status=success (20.04s)"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 27378,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:55:44.953 | INFO     | thumbnail_intelligence:analyze_thumbnail:1767 - Thumbnail intelligence analysis complete for video_id=O0Y-oLarao4: status=success (20.04s)",
+          "raw_line": "2026-08-02 14:55:44.953 | INFO     | thumbnail_intelligence:analyze_thumbnail:1767 - Thumbnail intelligence analysis complete for video_id=O0Y-oLarao4: status=success (20.04s)"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 27382,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:55:44.963 | INFO     | main:_run_pipeline_creators:337 - Thumbnail intelligence saved for creator_email=trre@gmail.com video_id=O0Y-oLarao4: status=success",
+          "raw_line": "2026-08-02 14:55:44.963 | INFO     | main:_run_pipeline_creators:337 - Thumbnail intelligence saved for creator_email=trre@gmail.com video_id=O0Y-oLarao4: status=success"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 27385,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:55:44.963 | INFO     | main:_run_pipeline_creators:337 - Thumbnail intelligence saved for creator_email=trre@gmail.com video_id=O0Y-oLarao4: status=success",
+          "raw_line": "2026-08-02 14:55:44.963 | INFO     | main:_run_pipeline_creators:337 - Thumbnail intelligence saved for creator_email=trre@gmail.com video_id=O0Y-oLarao4: status=success"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 27386,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:55:44.963 | INFO     | main:_run_pipeline_creators:337 - Thumbnail intelligence saved for creator_email=trre@gmail.com video_id=O0Y-oLarao4: status=success",
+          "raw_line": "2026-08-02 14:55:44.963 | INFO     | main:_run_pipeline_creators:337 - Thumbnail intelligence saved for creator_email=trre@gmail.com video_id=O0Y-oLarao4: status=success"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 27387,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:55:44.963 | INFO     | main:_run_pipeline_creators:337 - Thumbnail intelligence saved for creator_email=trre@gmail.com video_id=O0Y-oLarao4: status=success",
+          "raw_line": "2026-08-02 14:55:44.963 | INFO     | main:_run_pipeline_creators:337 - Thumbnail intelligence saved for creator_email=trre@gmail.com video_id=O0Y-oLarao4: status=success"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 27389,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:55:44.963 | INFO     | main:_run_pipeline_creators:337 - Thumbnail intelligence saved for creator_email=trre@gmail.com video_id=O0Y-oLarao4: status=success",
+          "raw_line": "2026-08-02 14:55:44.963 | INFO     | main:_run_pipeline_creators:337 - Thumbnail intelligence saved for creator_email=trre@gmail.com video_id=O0Y-oLarao4: status=success"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 27390,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:55:44.963 | INFO     | main:_run_pipeline_creators:337 - Thumbnail intelligence saved for creator_email=trre@gmail.com video_id=O0Y-oLarao4: status=success",
+          "raw_line": "2026-08-02 14:55:44.963 | INFO     | main:_run_pipeline_creators:337 - Thumbnail intelligence saved for creator_email=trre@gmail.com video_id=O0Y-oLarao4: status=success"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 27391,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:55:44.967 | INFO     | redesign_spec_engine:build_redesign_specification:329 - Redesign specification complete for video_id=O0Y-oLarao4 (0.0011s)",
+          "raw_line": "2026-08-02 14:55:44.967 | INFO     | redesign_spec_engine:build_redesign_specification:329 - Redesign specification complete for video_id=O0Y-oLarao4 (0.0011s)"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 27392,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:55:44.967 | INFO     | redesign_spec_engine:build_redesign_specification:329 - Redesign specification complete for video_id=O0Y-oLarao4 (0.0011s)",
+          "raw_line": "2026-08-02 14:55:44.967 | INFO     | redesign_spec_engine:build_redesign_specification:329 - Redesign specification complete for video_id=O0Y-oLarao4 (0.0011s)"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 27393,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:55:44.967 | INFO     | redesign_spec_engine:build_redesign_specification:329 - Redesign specification complete for video_id=O0Y-oLarao4 (0.0011s)",
+          "raw_line": "2026-08-02 14:55:44.967 | INFO     | redesign_spec_engine:build_redesign_specification:329 - Redesign specification complete for video_id=O0Y-oLarao4 (0.0011s)"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 27394,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:55:44.967 | INFO     | redesign_spec_engine:build_redesign_specification:329 - Redesign specification complete for video_id=O0Y-oLarao4 (0.0011s)",
+          "raw_line": "2026-08-02 14:55:44.967 | INFO     | redesign_spec_engine:build_redesign_specification:329 - Redesign specification complete for video_id=O0Y-oLarao4 (0.0011s)"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 27395,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:55:44.967 | INFO     | redesign_spec_engine:build_redesign_specification:329 - Redesign specification complete for video_id=O0Y-oLarao4 (0.0011s)",
+          "raw_line": "2026-08-02 14:55:44.967 | INFO     | redesign_spec_engine:build_redesign_specification:329 - Redesign specification complete for video_id=O0Y-oLarao4 (0.0011s)"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 27398,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:55:44.967 | INFO     | redesign_spec_engine:build_redesign_specification:329 - Redesign specification complete for video_id=O0Y-oLarao4 (0.0011s)",
+          "raw_line": "2026-08-02 14:55:44.967 | INFO     | redesign_spec_engine:build_redesign_specification:329 - Redesign specification complete for video_id=O0Y-oLarao4 (0.0011s)"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 27401,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:55:44.984 | INFO     | design_blueprint_engine:build_design_blueprint:137 - Design blueprint built video_id=O0Y-oLarao4 headline_score=0.7975 conflicts=0 status=partial",
+          "raw_line": "2026-08-02 14:55:44.984 | INFO     | design_blueprint_engine:build_design_blueprint:137 - Design blueprint built video_id=O0Y-oLarao4 headline_score=0.7975 conflicts=0 status=partial"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 27404,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:55:44.984 | INFO     | design_blueprint_engine:build_design_blueprint:137 - Design blueprint built video_id=O0Y-oLarao4 headline_score=0.7975 conflicts=0 status=partial",
+          "raw_line": "2026-08-02 14:55:44.984 | INFO     | design_blueprint_engine:build_design_blueprint:137 - Design blueprint built video_id=O0Y-oLarao4 headline_score=0.7975 conflicts=0 status=partial"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 27406,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:55:44.984 | INFO     | design_blueprint_engine:build_design_blueprint:137 - Design blueprint built video_id=O0Y-oLarao4 headline_score=0.7975 conflicts=0 status=partial",
+          "raw_line": "2026-08-02 14:55:44.984 | INFO     | design_blueprint_engine:build_design_blueprint:137 - Design blueprint built video_id=O0Y-oLarao4 headline_score=0.7975 conflicts=0 status=partial"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 27407,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:55:44.984 | INFO     | design_blueprint_engine:build_design_blueprint:137 - Design blueprint built video_id=O0Y-oLarao4 headline_score=0.7975 conflicts=0 status=partial",
+          "raw_line": "2026-08-02 14:55:44.984 | INFO     | design_blueprint_engine:build_design_blueprint:137 - Design blueprint built video_id=O0Y-oLarao4 headline_score=0.7975 conflicts=0 status=partial"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 27408,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:55:44.984 | INFO     | design_blueprint_engine:build_design_blueprint:137 - Design blueprint built video_id=O0Y-oLarao4 headline_score=0.7975 conflicts=0 status=partial",
+          "raw_line": "2026-08-02 14:55:44.984 | INFO     | design_blueprint_engine:build_design_blueprint:137 - Design blueprint built video_id=O0Y-oLarao4 headline_score=0.7975 conflicts=0 status=partial"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 27411,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:55:44.984 | INFO     | design_blueprint_engine:build_design_blueprint:137 - Design blueprint built video_id=O0Y-oLarao4 headline_score=0.7975 conflicts=0 status=partial",
+          "raw_line": "2026-08-02 14:55:44.984 | INFO     | design_blueprint_engine:build_design_blueprint:137 - Design blueprint built video_id=O0Y-oLarao4 headline_score=0.7975 conflicts=0 status=partial"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 27414,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:55:44.995 | INFO     | main:_run_pipeline_creators:403 - Design blueprint saved for creator_email=trre@gmail.com video_id=O0Y-oLarao4",
+          "raw_line": "2026-08-02 14:55:44.995 | INFO     | main:_run_pipeline_creators:403 - Design blueprint saved for creator_email=trre@gmail.com video_id=O0Y-oLarao4"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 27415,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:55:44.995 | INFO     | main:_run_pipeline_creators:403 - Design blueprint saved for creator_email=trre@gmail.com video_id=O0Y-oLarao4",
+          "raw_line": "2026-08-02 14:55:44.995 | INFO     | main:_run_pipeline_creators:403 - Design blueprint saved for creator_email=trre@gmail.com video_id=O0Y-oLarao4"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 27417,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:55:44.995 | INFO     | main:_run_pipeline_creators:403 - Design blueprint saved for creator_email=trre@gmail.com video_id=O0Y-oLarao4",
+          "raw_line": "2026-08-02 14:55:44.995 | INFO     | main:_run_pipeline_creators:403 - Design blueprint saved for creator_email=trre@gmail.com video_id=O0Y-oLarao4"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 27418,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:55:44.995 | INFO     | main:_run_pipeline_creators:403 - Design blueprint saved for creator_email=trre@gmail.com video_id=O0Y-oLarao4",
+          "raw_line": "2026-08-02 14:55:44.995 | INFO     | main:_run_pipeline_creators:403 - Design blueprint saved for creator_email=trre@gmail.com video_id=O0Y-oLarao4"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 27419,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:55:44.995 | INFO     | main:_run_pipeline_creators:403 - Design blueprint saved for creator_email=trre@gmail.com video_id=O0Y-oLarao4",
+          "raw_line": "2026-08-02 14:55:44.995 | INFO     | main:_run_pipeline_creators:403 - Design blueprint saved for creator_email=trre@gmail.com video_id=O0Y-oLarao4"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 27420,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:55:44.995 | INFO     | main:_run_pipeline_creators:403 - Design blueprint saved for creator_email=trre@gmail.com video_id=O0Y-oLarao4",
+          "raw_line": "2026-08-02 14:55:44.995 | INFO     | main:_run_pipeline_creators:403 - Design blueprint saved for creator_email=trre@gmail.com video_id=O0Y-oLarao4"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 27424,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:55:45.000 | INFO     | prompt_compiler:compile_prompt_package:306 - Prompt package compiled for video_id=O0Y-oLarao4 (0.0008s)",
+          "raw_line": "2026-08-02 14:55:45.000 | INFO     | prompt_compiler:compile_prompt_package:306 - Prompt package compiled for video_id=O0Y-oLarao4 (0.0008s)"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 27426,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:55:45.000 | INFO     | prompt_compiler:compile_prompt_package:306 - Prompt package compiled for video_id=O0Y-oLarao4 (0.0008s)",
+          "raw_line": "2026-08-02 14:55:45.000 | INFO     | prompt_compiler:compile_prompt_package:306 - Prompt package compiled for video_id=O0Y-oLarao4 (0.0008s)"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 27427,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:55:45.000 | INFO     | prompt_compiler:compile_prompt_package:306 - Prompt package compiled for video_id=O0Y-oLarao4 (0.0008s)",
+          "raw_line": "2026-08-02 14:55:45.000 | INFO     | prompt_compiler:compile_prompt_package:306 - Prompt package compiled for video_id=O0Y-oLarao4 (0.0008s)"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 27428,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:55:45.000 | INFO     | prompt_compiler:compile_prompt_package:306 - Prompt package compiled for video_id=O0Y-oLarao4 (0.0008s)",
+          "raw_line": "2026-08-02 14:55:45.000 | INFO     | prompt_compiler:compile_prompt_package:306 - Prompt package compiled for video_id=O0Y-oLarao4 (0.0008s)"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 27430,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:55:45.000 | INFO     | prompt_compiler:compile_prompt_package:306 - Prompt package compiled for video_id=O0Y-oLarao4 (0.0008s)",
+          "raw_line": "2026-08-02 14:55:45.000 | INFO     | prompt_compiler:compile_prompt_package:306 - Prompt package compiled for video_id=O0Y-oLarao4 (0.0008s)"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 27432,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:55:45.000 | INFO     | prompt_compiler:compile_prompt_package:306 - Prompt package compiled for video_id=O0Y-oLarao4 (0.0008s)",
+          "raw_line": "2026-08-02 14:55:45.000 | INFO     | prompt_compiler:compile_prompt_package:306 - Prompt package compiled for video_id=O0Y-oLarao4 (0.0008s)"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 27436,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:55:45.009 | INFO     | main:_run_pipeline_creators:426 - Prompt package saved for creator_email=trre@gmail.com video_id=O0Y-oLarao4",
+          "raw_line": "2026-08-02 14:55:45.009 | INFO     | main:_run_pipeline_creators:426 - Prompt package saved for creator_email=trre@gmail.com video_id=O0Y-oLarao4"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 27437,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:55:45.009 | INFO     | main:_run_pipeline_creators:426 - Prompt package saved for creator_email=trre@gmail.com video_id=O0Y-oLarao4",
+          "raw_line": "2026-08-02 14:55:45.009 | INFO     | main:_run_pipeline_creators:426 - Prompt package saved for creator_email=trre@gmail.com video_id=O0Y-oLarao4"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 27438,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:55:45.009 | INFO     | main:_run_pipeline_creators:426 - Prompt package saved for creator_email=trre@gmail.com video_id=O0Y-oLarao4",
+          "raw_line": "2026-08-02 14:55:45.009 | INFO     | main:_run_pipeline_creators:426 - Prompt package saved for creator_email=trre@gmail.com video_id=O0Y-oLarao4"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 27439,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:55:45.009 | INFO     | main:_run_pipeline_creators:426 - Prompt package saved for creator_email=trre@gmail.com video_id=O0Y-oLarao4",
+          "raw_line": "2026-08-02 14:55:45.009 | INFO     | main:_run_pipeline_creators:426 - Prompt package saved for creator_email=trre@gmail.com video_id=O0Y-oLarao4"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 27440,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:55:45.009 | INFO     | main:_run_pipeline_creators:426 - Prompt package saved for creator_email=trre@gmail.com video_id=O0Y-oLarao4",
+          "raw_line": "2026-08-02 14:55:45.009 | INFO     | main:_run_pipeline_creators:426 - Prompt package saved for creator_email=trre@gmail.com video_id=O0Y-oLarao4"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 27443,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:55:45.009 | INFO     | main:_run_pipeline_creators:426 - Prompt package saved for creator_email=trre@gmail.com video_id=O0Y-oLarao4",
+          "raw_line": "2026-08-02 14:55:45.009 | INFO     | main:_run_pipeline_creators:426 - Prompt package saved for creator_email=trre@gmail.com video_id=O0Y-oLarao4"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 27454,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:55:45.021 | INFO     | composition_engine:compose_workspace:155 - Starting workspace composition for video_id 'O0Y-oLarao4'",
+          "raw_line": "2026-08-02 14:55:45.021 | INFO     | composition_engine:compose_workspace:155 - Starting workspace composition for video_id 'O0Y-oLarao4'"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 27455,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:55:45.021 | INFO     | composition_engine:compose_workspace:155 - Starting workspace composition for video_id 'O0Y-oLarao4'",
+          "raw_line": "2026-08-02 14:55:45.021 | INFO     | composition_engine:compose_workspace:155 - Starting workspace composition for video_id 'O0Y-oLarao4'"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 27456,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:55:45.021 | INFO     | composition_engine:compose_workspace:155 - Starting workspace composition for video_id 'O0Y-oLarao4'",
+          "raw_line": "2026-08-02 14:55:45.021 | INFO     | composition_engine:compose_workspace:155 - Starting workspace composition for video_id 'O0Y-oLarao4'"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 27457,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:55:45.021 | INFO     | composition_engine:compose_workspace:155 - Starting workspace composition for video_id 'O0Y-oLarao4'",
+          "raw_line": "2026-08-02 14:55:45.021 | INFO     | composition_engine:compose_workspace:155 - Starting workspace composition for video_id 'O0Y-oLarao4'"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 27458,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:55:45.021 | INFO     | composition_engine:compose_workspace:155 - Starting workspace composition for video_id 'O0Y-oLarao4'",
+          "raw_line": "2026-08-02 14:55:45.021 | INFO     | composition_engine:compose_workspace:155 - Starting workspace composition for video_id 'O0Y-oLarao4'"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 27459,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:55:45.021 | INFO     | composition_engine:compose_workspace:155 - Starting workspace composition for video_id 'O0Y-oLarao4'",
+          "raw_line": "2026-08-02 14:55:45.021 | INFO     | composition_engine:compose_workspace:155 - Starting workspace composition for video_id 'O0Y-oLarao4'"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 27502,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:55:45.365 | INFO     | visual_reference_engine:prepare_assets:160 - VRE pipeline complete for video_id=O0Y-oLarao4: 195ms",
+          "raw_line": "2026-08-02 14:55:45.365 | INFO     | visual_reference_engine:prepare_assets:160 - VRE pipeline complete for video_id=O0Y-oLarao4: 195ms"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 27503,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:55:45.365 | INFO     | visual_reference_engine:prepare_assets:160 - VRE pipeline complete for video_id=O0Y-oLarao4: 195ms",
+          "raw_line": "2026-08-02 14:55:45.365 | INFO     | visual_reference_engine:prepare_assets:160 - VRE pipeline complete for video_id=O0Y-oLarao4: 195ms"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 27504,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:55:45.365 | INFO     | visual_reference_engine:prepare_assets:160 - VRE pipeline complete for video_id=O0Y-oLarao4: 195ms",
+          "raw_line": "2026-08-02 14:55:45.365 | INFO     | visual_reference_engine:prepare_assets:160 - VRE pipeline complete for video_id=O0Y-oLarao4: 195ms"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 27505,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:55:45.365 | INFO     | visual_reference_engine:prepare_assets:160 - VRE pipeline complete for video_id=O0Y-oLarao4: 195ms",
+          "raw_line": "2026-08-02 14:55:45.365 | INFO     | visual_reference_engine:prepare_assets:160 - VRE pipeline complete for video_id=O0Y-oLarao4: 195ms"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 27507,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:55:45.365 | INFO     | visual_reference_engine:prepare_assets:160 - VRE pipeline complete for video_id=O0Y-oLarao4: 195ms",
+          "raw_line": "2026-08-02 14:55:45.365 | INFO     | visual_reference_engine:prepare_assets:160 - VRE pipeline complete for video_id=O0Y-oLarao4: 195ms"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 27508,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:55:45.365 | INFO     | visual_reference_engine:prepare_assets:160 - VRE pipeline complete for video_id=O0Y-oLarao4: 195ms",
+          "raw_line": "2026-08-02 14:55:45.365 | INFO     | visual_reference_engine:prepare_assets:160 - VRE pipeline complete for video_id=O0Y-oLarao4: 195ms"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 27511,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:55:45.380 | INFO     | composition_engine:compose_workspace:316 - Successfully composed workspace for 'O0Y-oLarao4' with 4 layers in 0.358s",
+          "raw_line": "2026-08-02 14:55:45.380 | INFO     | composition_engine:compose_workspace:316 - Successfully composed workspace for 'O0Y-oLarao4' with 4 layers in 0.358s"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 27512,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:55:45.380 | INFO     | composition_engine:compose_workspace:316 - Successfully composed workspace for 'O0Y-oLarao4' with 4 layers in 0.358s",
+          "raw_line": "2026-08-02 14:55:45.380 | INFO     | composition_engine:compose_workspace:316 - Successfully composed workspace for 'O0Y-oLarao4' with 4 layers in 0.358s"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 27513,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:55:45.380 | INFO     | composition_engine:compose_workspace:316 - Successfully composed workspace for 'O0Y-oLarao4' with 4 layers in 0.358s",
+          "raw_line": "2026-08-02 14:55:45.380 | INFO     | composition_engine:compose_workspace:316 - Successfully composed workspace for 'O0Y-oLarao4' with 4 layers in 0.358s"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 27515,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:55:45.380 | INFO     | composition_engine:compose_workspace:316 - Successfully composed workspace for 'O0Y-oLarao4' with 4 layers in 0.358s",
+          "raw_line": "2026-08-02 14:55:45.380 | INFO     | composition_engine:compose_workspace:316 - Successfully composed workspace for 'O0Y-oLarao4' with 4 layers in 0.358s"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 27516,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:55:45.380 | INFO     | composition_engine:compose_workspace:316 - Successfully composed workspace for 'O0Y-oLarao4' with 4 layers in 0.358s",
+          "raw_line": "2026-08-02 14:55:45.380 | INFO     | composition_engine:compose_workspace:316 - Successfully composed workspace for 'O0Y-oLarao4' with 4 layers in 0.358s"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 27519,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:55:45.380 | INFO     | composition_engine:compose_workspace:316 - Successfully composed workspace for 'O0Y-oLarao4' with 4 layers in 0.358s",
+          "raw_line": "2026-08-02 14:55:45.380 | INFO     | composition_engine:compose_workspace:316 - Successfully composed workspace for 'O0Y-oLarao4' with 4 layers in 0.358s"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 27520,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:55:45.403 | INFO     | main:_run_pipeline_creators:477 - Composition workspace prepared for creator_email=trre@gmail.com video_id=O0Y-oLarao4",
+          "raw_line": "2026-08-02 14:55:45.403 | INFO     | main:_run_pipeline_creators:477 - Composition workspace prepared for creator_email=trre@gmail.com video_id=O0Y-oLarao4"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 27522,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:55:45.403 | INFO     | main:_run_pipeline_creators:477 - Composition workspace prepared for creator_email=trre@gmail.com video_id=O0Y-oLarao4",
+          "raw_line": "2026-08-02 14:55:45.403 | INFO     | main:_run_pipeline_creators:477 - Composition workspace prepared for creator_email=trre@gmail.com video_id=O0Y-oLarao4"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 27523,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:55:45.403 | INFO     | main:_run_pipeline_creators:477 - Composition workspace prepared for creator_email=trre@gmail.com video_id=O0Y-oLarao4",
+          "raw_line": "2026-08-02 14:55:45.403 | INFO     | main:_run_pipeline_creators:477 - Composition workspace prepared for creator_email=trre@gmail.com video_id=O0Y-oLarao4"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 27524,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:55:45.403 | INFO     | main:_run_pipeline_creators:477 - Composition workspace prepared for creator_email=trre@gmail.com video_id=O0Y-oLarao4",
+          "raw_line": "2026-08-02 14:55:45.403 | INFO     | main:_run_pipeline_creators:477 - Composition workspace prepared for creator_email=trre@gmail.com video_id=O0Y-oLarao4"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 27525,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:55:45.403 | INFO     | main:_run_pipeline_creators:477 - Composition workspace prepared for creator_email=trre@gmail.com video_id=O0Y-oLarao4",
+          "raw_line": "2026-08-02 14:55:45.403 | INFO     | main:_run_pipeline_creators:477 - Composition workspace prepared for creator_email=trre@gmail.com video_id=O0Y-oLarao4"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 27526,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:55:45.403 | INFO     | main:_run_pipeline_creators:477 - Composition workspace prepared for creator_email=trre@gmail.com video_id=O0Y-oLarao4",
+          "raw_line": "2026-08-02 14:55:45.403 | INFO     | main:_run_pipeline_creators:477 - Composition workspace prepared for creator_email=trre@gmail.com video_id=O0Y-oLarao4"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 27547,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:55:45.426 | INFO     | image_generator:resolve:183 - Resolved reference thumbnail for video_id=O0Y-oLarao4: D:\\Afsar\\app development\\thumbnail-ai\\data\\thumbnails\\O0Y-oLarao4.jpg",
+          "raw_line": "2026-08-02 14:55:45.426 | INFO     | image_generator:resolve:183 - Resolved reference thumbnail for video_id=O0Y-oLarao4: D:\\Afsar\\app development\\thumbnail-ai\\data\\thumbnails\\O0Y-oLarao4.jpg"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 27548,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:55:45.426 | INFO     | image_generator:resolve:183 - Resolved reference thumbnail for video_id=O0Y-oLarao4: D:\\Afsar\\app development\\thumbnail-ai\\data\\thumbnails\\O0Y-oLarao4.jpg",
+          "raw_line": "2026-08-02 14:55:45.426 | INFO     | image_generator:resolve:183 - Resolved reference thumbnail for video_id=O0Y-oLarao4: D:\\Afsar\\app development\\thumbnail-ai\\data\\thumbnails\\O0Y-oLarao4.jpg"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 27549,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:55:45.426 | INFO     | image_generator:resolve:183 - Resolved reference thumbnail for video_id=O0Y-oLarao4: D:\\Afsar\\app development\\thumbnail-ai\\data\\thumbnails\\O0Y-oLarao4.jpg",
+          "raw_line": "2026-08-02 14:55:45.426 | INFO     | image_generator:resolve:183 - Resolved reference thumbnail for video_id=O0Y-oLarao4: D:\\Afsar\\app development\\thumbnail-ai\\data\\thumbnails\\O0Y-oLarao4.jpg"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 27551,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:55:45.426 | INFO     | image_generator:resolve:183 - Resolved reference thumbnail for video_id=O0Y-oLarao4: D:\\Afsar\\app development\\thumbnail-ai\\data\\thumbnails\\O0Y-oLarao4.jpg",
+          "raw_line": "2026-08-02 14:55:45.426 | INFO     | image_generator:resolve:183 - Resolved reference thumbnail for video_id=O0Y-oLarao4: D:\\Afsar\\app development\\thumbnail-ai\\data\\thumbnails\\O0Y-oLarao4.jpg"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 27552,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:55:45.426 | INFO     | image_generator:resolve:183 - Resolved reference thumbnail for video_id=O0Y-oLarao4: D:\\Afsar\\app development\\thumbnail-ai\\data\\thumbnails\\O0Y-oLarao4.jpg",
+          "raw_line": "2026-08-02 14:55:45.426 | INFO     | image_generator:resolve:183 - Resolved reference thumbnail for video_id=O0Y-oLarao4: D:\\Afsar\\app development\\thumbnail-ai\\data\\thumbnails\\O0Y-oLarao4.jpg"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 27555,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:55:45.426 | INFO     | image_generator:resolve:183 - Resolved reference thumbnail for video_id=O0Y-oLarao4: D:\\Afsar\\app development\\thumbnail-ai\\data\\thumbnails\\O0Y-oLarao4.jpg",
+          "raw_line": "2026-08-02 14:55:45.426 | INFO     | image_generator:resolve:183 - Resolved reference thumbnail for video_id=O0Y-oLarao4: D:\\Afsar\\app development\\thumbnail-ai\\data\\thumbnails\\O0Y-oLarao4.jpg"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 27565,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:55:45.439 | INFO     | generation_components.conditioning_asset_resolver:resolve:245 - Resolved GenerationConditioningContext for video_id=O0Y-oLarao4: roles=['background', 'object_0_person', 'object_1_person'], masks=['object_0_person', 'object_1_person'], depth=True, canny=True, ip_adapter_refs=0",
+          "raw_line": "2026-08-02 14:55:45.439 | INFO     | generation_components.conditioning_asset_resolver:resolve:245 - Resolved GenerationConditioningContext for video_id=O0Y-oLarao4: roles=['background', 'object_0_person', 'object_1_person'], masks=['object_0_person', 'object_1_person'], depth=True, canny=True, ip_adapter_refs=0"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 27566,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:55:45.439 | INFO     | generation_components.conditioning_asset_resolver:resolve:245 - Resolved GenerationConditioningContext for video_id=O0Y-oLarao4: roles=['background', 'object_0_person', 'object_1_person'], masks=['object_0_person', 'object_1_person'], depth=True, canny=True, ip_adapter_refs=0",
+          "raw_line": "2026-08-02 14:55:45.439 | INFO     | generation_components.conditioning_asset_resolver:resolve:245 - Resolved GenerationConditioningContext for video_id=O0Y-oLarao4: roles=['background', 'object_0_person', 'object_1_person'], masks=['object_0_person', 'object_1_person'], depth=True, canny=True, ip_adapter_refs=0"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 27567,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:55:45.439 | INFO     | generation_components.conditioning_asset_resolver:resolve:245 - Resolved GenerationConditioningContext for video_id=O0Y-oLarao4: roles=['background', 'object_0_person', 'object_1_person'], masks=['object_0_person', 'object_1_person'], depth=True, canny=True, ip_adapter_refs=0",
+          "raw_line": "2026-08-02 14:55:45.439 | INFO     | generation_components.conditioning_asset_resolver:resolve:245 - Resolved GenerationConditioningContext for video_id=O0Y-oLarao4: roles=['background', 'object_0_person', 'object_1_person'], masks=['object_0_person', 'object_1_person'], depth=True, canny=True, ip_adapter_refs=0"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 27569,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:55:45.439 | INFO     | generation_components.conditioning_asset_resolver:resolve:245 - Resolved GenerationConditioningContext for video_id=O0Y-oLarao4: roles=['background', 'object_0_person', 'object_1_person'], masks=['object_0_person', 'object_1_person'], depth=True, canny=True, ip_adapter_refs=0",
+          "raw_line": "2026-08-02 14:55:45.439 | INFO     | generation_components.conditioning_asset_resolver:resolve:245 - Resolved GenerationConditioningContext for video_id=O0Y-oLarao4: roles=['background', 'object_0_person', 'object_1_person'], masks=['object_0_person', 'object_1_person'], depth=True, canny=True, ip_adapter_refs=0"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 27571,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:55:45.439 | INFO     | generation_components.conditioning_asset_resolver:resolve:245 - Resolved GenerationConditioningContext for video_id=O0Y-oLarao4: roles=['background', 'object_0_person', 'object_1_person'], masks=['object_0_person', 'object_1_person'], depth=True, canny=True, ip_adapter_refs=0",
+          "raw_line": "2026-08-02 14:55:45.439 | INFO     | generation_components.conditioning_asset_resolver:resolve:245 - Resolved GenerationConditioningContext for video_id=O0Y-oLarao4: roles=['background', 'object_0_person', 'object_1_person'], masks=['object_0_person', 'object_1_person'], depth=True, canny=True, ip_adapter_refs=0"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 27573,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:55:45.439 | INFO     | generation_components.conditioning_asset_resolver:resolve:245 - Resolved GenerationConditioningContext for video_id=O0Y-oLarao4: roles=['background', 'object_0_person', 'object_1_person'], masks=['object_0_person', 'object_1_person'], depth=True, canny=True, ip_adapter_refs=0",
+          "raw_line": "2026-08-02 14:55:45.439 | INFO     | generation_components.conditioning_asset_resolver:resolve:245 - Resolved GenerationConditioningContext for video_id=O0Y-oLarao4: roles=['background', 'object_0_person', 'object_1_person'], masks=['object_0_person', 'object_1_person'], depth=True, canny=True, ip_adapter_refs=0"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 27651,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:55:45.831 | INFO     | comfyui_client:generate:1739 - Starting ComfyUI generation for video_id=O0Y-oLarao4",
+          "raw_line": "2026-08-02 14:55:45.831 | INFO     | comfyui_client:generate:1739 - Starting ComfyUI generation for video_id=O0Y-oLarao4"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 27652,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:55:45.831 | INFO     | comfyui_client:generate:1739 - Starting ComfyUI generation for video_id=O0Y-oLarao4",
+          "raw_line": "2026-08-02 14:55:45.831 | INFO     | comfyui_client:generate:1739 - Starting ComfyUI generation for video_id=O0Y-oLarao4"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 27655,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:55:45.831 | INFO     | comfyui_client:generate:1739 - Starting ComfyUI generation for video_id=O0Y-oLarao4",
+          "raw_line": "2026-08-02 14:55:45.831 | INFO     | comfyui_client:generate:1739 - Starting ComfyUI generation for video_id=O0Y-oLarao4"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 27657,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:55:45.831 | INFO     | comfyui_client:generate:1739 - Starting ComfyUI generation for video_id=O0Y-oLarao4",
+          "raw_line": "2026-08-02 14:55:45.831 | INFO     | comfyui_client:generate:1739 - Starting ComfyUI generation for video_id=O0Y-oLarao4"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 27658,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:55:45.831 | INFO     | comfyui_client:generate:1739 - Starting ComfyUI generation for video_id=O0Y-oLarao4",
+          "raw_line": "2026-08-02 14:55:45.831 | INFO     | comfyui_client:generate:1739 - Starting ComfyUI generation for video_id=O0Y-oLarao4"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 27661,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:55:45.831 | INFO     | comfyui_client:generate:1739 - Starting ComfyUI generation for video_id=O0Y-oLarao4",
+          "raw_line": "2026-08-02 14:55:45.831 | INFO     | comfyui_client:generate:1739 - Starting ComfyUI generation for video_id=O0Y-oLarao4"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 28205,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:56:39.978 | INFO     | comfyui_client:_log_selected:1305 - Selected ComfyUI output image: prompt_id=fde26e9d-9ec3-4871-8712-7da68db3e3d1 node=7 filename=module7_O0Y-oLarao4_00008_.png format=png via=fallback",
+          "raw_line": "2026-08-02 14:56:39.978 | INFO     | comfyui_client:_log_selected:1305 - Selected ComfyUI output image: prompt_id=fde26e9d-9ec3-4871-8712-7da68db3e3d1 node=7 filename=module7_O0Y-oLarao4_00008_.png format=png via=fallback"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 28206,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:56:39.978 | INFO     | comfyui_client:_log_selected:1305 - Selected ComfyUI output image: prompt_id=fde26e9d-9ec3-4871-8712-7da68db3e3d1 node=7 filename=module7_O0Y-oLarao4_00008_.png format=png via=fallback",
+          "raw_line": "2026-08-02 14:56:39.978 | INFO     | comfyui_client:_log_selected:1305 - Selected ComfyUI output image: prompt_id=fde26e9d-9ec3-4871-8712-7da68db3e3d1 node=7 filename=module7_O0Y-oLarao4_00008_.png format=png via=fallback"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 28209,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:56:39.978 | INFO     | comfyui_client:_log_selected:1305 - Selected ComfyUI output image: prompt_id=fde26e9d-9ec3-4871-8712-7da68db3e3d1 node=7 filename=module7_O0Y-oLarao4_00008_.png format=png via=fallback",
+          "raw_line": "2026-08-02 14:56:39.978 | INFO     | comfyui_client:_log_selected:1305 - Selected ComfyUI output image: prompt_id=fde26e9d-9ec3-4871-8712-7da68db3e3d1 node=7 filename=module7_O0Y-oLarao4_00008_.png format=png via=fallback"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 28211,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:56:39.978 | INFO     | comfyui_client:_log_selected:1305 - Selected ComfyUI output image: prompt_id=fde26e9d-9ec3-4871-8712-7da68db3e3d1 node=7 filename=module7_O0Y-oLarao4_00008_.png format=png via=fallback",
+          "raw_line": "2026-08-02 14:56:39.978 | INFO     | comfyui_client:_log_selected:1305 - Selected ComfyUI output image: prompt_id=fde26e9d-9ec3-4871-8712-7da68db3e3d1 node=7 filename=module7_O0Y-oLarao4_00008_.png format=png via=fallback"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 28212,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:56:39.978 | INFO     | comfyui_client:_log_selected:1305 - Selected ComfyUI output image: prompt_id=fde26e9d-9ec3-4871-8712-7da68db3e3d1 node=7 filename=module7_O0Y-oLarao4_00008_.png format=png via=fallback",
+          "raw_line": "2026-08-02 14:56:39.978 | INFO     | comfyui_client:_log_selected:1305 - Selected ComfyUI output image: prompt_id=fde26e9d-9ec3-4871-8712-7da68db3e3d1 node=7 filename=module7_O0Y-oLarao4_00008_.png format=png via=fallback"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 28213,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:56:39.978 | INFO     | comfyui_client:_log_selected:1305 - Selected ComfyUI output image: prompt_id=fde26e9d-9ec3-4871-8712-7da68db3e3d1 node=7 filename=module7_O0Y-oLarao4_00008_.png format=png via=fallback",
+          "raw_line": "2026-08-02 14:56:39.978 | INFO     | comfyui_client:_log_selected:1305 - Selected ComfyUI output image: prompt_id=fde26e9d-9ec3-4871-8712-7da68db3e3d1 node=7 filename=module7_O0Y-oLarao4_00008_.png format=png via=fallback"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 28221,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:56:40.030 | INFO     | comfyui_client:_download_image:1163 - ComfyUI output image downloaded: prompt_id=fde26e9d-9ec3-4871-8712-7da68db3e3d1 filename=module7_O0Y-oLarao4_00008_.png bytes=1101039",
+          "raw_line": "2026-08-02 14:56:40.030 | INFO     | comfyui_client:_download_image:1163 - ComfyUI output image downloaded: prompt_id=fde26e9d-9ec3-4871-8712-7da68db3e3d1 filename=module7_O0Y-oLarao4_00008_.png bytes=1101039"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 28222,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:56:40.030 | INFO     | comfyui_client:_download_image:1163 - ComfyUI output image downloaded: prompt_id=fde26e9d-9ec3-4871-8712-7da68db3e3d1 filename=module7_O0Y-oLarao4_00008_.png bytes=1101039",
+          "raw_line": "2026-08-02 14:56:40.030 | INFO     | comfyui_client:_download_image:1163 - ComfyUI output image downloaded: prompt_id=fde26e9d-9ec3-4871-8712-7da68db3e3d1 filename=module7_O0Y-oLarao4_00008_.png bytes=1101039"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 28223,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:56:40.030 | INFO     | comfyui_client:_download_image:1163 - ComfyUI output image downloaded: prompt_id=fde26e9d-9ec3-4871-8712-7da68db3e3d1 filename=module7_O0Y-oLarao4_00008_.png bytes=1101039",
+          "raw_line": "2026-08-02 14:56:40.030 | INFO     | comfyui_client:_download_image:1163 - ComfyUI output image downloaded: prompt_id=fde26e9d-9ec3-4871-8712-7da68db3e3d1 filename=module7_O0Y-oLarao4_00008_.png bytes=1101039"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 28224,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:56:40.030 | INFO     | comfyui_client:_download_image:1163 - ComfyUI output image downloaded: prompt_id=fde26e9d-9ec3-4871-8712-7da68db3e3d1 filename=module7_O0Y-oLarao4_00008_.png bytes=1101039",
+          "raw_line": "2026-08-02 14:56:40.030 | INFO     | comfyui_client:_download_image:1163 - ComfyUI output image downloaded: prompt_id=fde26e9d-9ec3-4871-8712-7da68db3e3d1 filename=module7_O0Y-oLarao4_00008_.png bytes=1101039"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 28225,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:56:40.030 | INFO     | comfyui_client:_download_image:1163 - ComfyUI output image downloaded: prompt_id=fde26e9d-9ec3-4871-8712-7da68db3e3d1 filename=module7_O0Y-oLarao4_00008_.png bytes=1101039",
+          "raw_line": "2026-08-02 14:56:40.030 | INFO     | comfyui_client:_download_image:1163 - ComfyUI output image downloaded: prompt_id=fde26e9d-9ec3-4871-8712-7da68db3e3d1 filename=module7_O0Y-oLarao4_00008_.png bytes=1101039"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 28226,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:56:40.030 | INFO     | comfyui_client:_download_image:1163 - ComfyUI output image downloaded: prompt_id=fde26e9d-9ec3-4871-8712-7da68db3e3d1 filename=module7_O0Y-oLarao4_00008_.png bytes=1101039",
+          "raw_line": "2026-08-02 14:56:40.030 | INFO     | comfyui_client:_download_image:1163 - ComfyUI output image downloaded: prompt_id=fde26e9d-9ec3-4871-8712-7da68db3e3d1 filename=module7_O0Y-oLarao4_00008_.png bytes=1101039"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 28230,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:56:40.079 | INFO     | comfyui_client:retrieve:990 - ComfyUI output retrieval complete: prompt_id=fde26e9d-9ec3-4871-8712-7da68db3e3d1 node=7 filename=module7_O0Y-oLarao4_00008_.png width=1280 height=720",
+          "raw_line": "2026-08-02 14:56:40.079 | INFO     | comfyui_client:retrieve:990 - ComfyUI output retrieval complete: prompt_id=fde26e9d-9ec3-4871-8712-7da68db3e3d1 node=7 filename=module7_O0Y-oLarao4_00008_.png width=1280 height=720"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 28231,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:56:40.079 | INFO     | comfyui_client:retrieve:990 - ComfyUI output retrieval complete: prompt_id=fde26e9d-9ec3-4871-8712-7da68db3e3d1 node=7 filename=module7_O0Y-oLarao4_00008_.png width=1280 height=720",
+          "raw_line": "2026-08-02 14:56:40.079 | INFO     | comfyui_client:retrieve:990 - ComfyUI output retrieval complete: prompt_id=fde26e9d-9ec3-4871-8712-7da68db3e3d1 node=7 filename=module7_O0Y-oLarao4_00008_.png width=1280 height=720"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 28232,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:56:40.079 | INFO     | comfyui_client:retrieve:990 - ComfyUI output retrieval complete: prompt_id=fde26e9d-9ec3-4871-8712-7da68db3e3d1 node=7 filename=module7_O0Y-oLarao4_00008_.png width=1280 height=720",
+          "raw_line": "2026-08-02 14:56:40.079 | INFO     | comfyui_client:retrieve:990 - ComfyUI output retrieval complete: prompt_id=fde26e9d-9ec3-4871-8712-7da68db3e3d1 node=7 filename=module7_O0Y-oLarao4_00008_.png width=1280 height=720"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 28233,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:56:40.079 | INFO     | comfyui_client:retrieve:990 - ComfyUI output retrieval complete: prompt_id=fde26e9d-9ec3-4871-8712-7da68db3e3d1 node=7 filename=module7_O0Y-oLarao4_00008_.png width=1280 height=720",
+          "raw_line": "2026-08-02 14:56:40.079 | INFO     | comfyui_client:retrieve:990 - ComfyUI output retrieval complete: prompt_id=fde26e9d-9ec3-4871-8712-7da68db3e3d1 node=7 filename=module7_O0Y-oLarao4_00008_.png width=1280 height=720"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 28235,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:56:40.079 | INFO     | comfyui_client:retrieve:990 - ComfyUI output retrieval complete: prompt_id=fde26e9d-9ec3-4871-8712-7da68db3e3d1 node=7 filename=module7_O0Y-oLarao4_00008_.png width=1280 height=720",
+          "raw_line": "2026-08-02 14:56:40.079 | INFO     | comfyui_client:retrieve:990 - ComfyUI output retrieval complete: prompt_id=fde26e9d-9ec3-4871-8712-7da68db3e3d1 node=7 filename=module7_O0Y-oLarao4_00008_.png width=1280 height=720"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 28238,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:56:40.079 | INFO     | comfyui_client:retrieve:990 - ComfyUI output retrieval complete: prompt_id=fde26e9d-9ec3-4871-8712-7da68db3e3d1 node=7 filename=module7_O0Y-oLarao4_00008_.png width=1280 height=720",
+          "raw_line": "2026-08-02 14:56:40.079 | INFO     | comfyui_client:retrieve:990 - ComfyUI output retrieval complete: prompt_id=fde26e9d-9ec3-4871-8712-7da68db3e3d1 node=7 filename=module7_O0Y-oLarao4_00008_.png width=1280 height=720"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 28254,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:56:40.156 | INFO     | image_generator:verify:887 - Identity preservation skipped for D:\\Afsar\\app development\\thumbnail-ai\\data\\generated_thumbnails\\O0Y-oLarao4\\tmp_candidates\\cand_0_raw.png: no reference face",
+          "raw_line": "2026-08-02 14:56:40.156 | INFO     | image_generator:verify:887 - Identity preservation skipped for D:\\Afsar\\app development\\thumbnail-ai\\data\\generated_thumbnails\\O0Y-oLarao4\\tmp_candidates\\cand_0_raw.png: no reference face"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 28255,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:56:40.156 | INFO     | image_generator:verify:887 - Identity preservation skipped for D:\\Afsar\\app development\\thumbnail-ai\\data\\generated_thumbnails\\O0Y-oLarao4\\tmp_candidates\\cand_0_raw.png: no reference face",
+          "raw_line": "2026-08-02 14:56:40.156 | INFO     | image_generator:verify:887 - Identity preservation skipped for D:\\Afsar\\app development\\thumbnail-ai\\data\\generated_thumbnails\\O0Y-oLarao4\\tmp_candidates\\cand_0_raw.png: no reference face"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 28257,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:56:40.156 | INFO     | image_generator:verify:887 - Identity preservation skipped for D:\\Afsar\\app development\\thumbnail-ai\\data\\generated_thumbnails\\O0Y-oLarao4\\tmp_candidates\\cand_0_raw.png: no reference face",
+          "raw_line": "2026-08-02 14:56:40.156 | INFO     | image_generator:verify:887 - Identity preservation skipped for D:\\Afsar\\app development\\thumbnail-ai\\data\\generated_thumbnails\\O0Y-oLarao4\\tmp_candidates\\cand_0_raw.png: no reference face"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 28258,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:56:40.156 | INFO     | image_generator:verify:887 - Identity preservation skipped for D:\\Afsar\\app development\\thumbnail-ai\\data\\generated_thumbnails\\O0Y-oLarao4\\tmp_candidates\\cand_0_raw.png: no reference face",
+          "raw_line": "2026-08-02 14:56:40.156 | INFO     | image_generator:verify:887 - Identity preservation skipped for D:\\Afsar\\app development\\thumbnail-ai\\data\\generated_thumbnails\\O0Y-oLarao4\\tmp_candidates\\cand_0_raw.png: no reference face"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 28260,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:56:40.156 | INFO     | image_generator:verify:887 - Identity preservation skipped for D:\\Afsar\\app development\\thumbnail-ai\\data\\generated_thumbnails\\O0Y-oLarao4\\tmp_candidates\\cand_0_raw.png: no reference face",
+          "raw_line": "2026-08-02 14:56:40.156 | INFO     | image_generator:verify:887 - Identity preservation skipped for D:\\Afsar\\app development\\thumbnail-ai\\data\\generated_thumbnails\\O0Y-oLarao4\\tmp_candidates\\cand_0_raw.png: no reference face"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 28262,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:56:40.156 | INFO     | image_generator:verify:887 - Identity preservation skipped for D:\\Afsar\\app development\\thumbnail-ai\\data\\generated_thumbnails\\O0Y-oLarao4\\tmp_candidates\\cand_0_raw.png: no reference face",
+          "raw_line": "2026-08-02 14:56:40.156 | INFO     | image_generator:verify:887 - Identity preservation skipped for D:\\Afsar\\app development\\thumbnail-ai\\data\\generated_thumbnails\\O0Y-oLarao4\\tmp_candidates\\cand_0_raw.png: no reference face"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 28263,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:56:40.314 | INFO     | image_generator:restore:936 - Face restoration completed for D:\\Afsar\\app development\\thumbnail-ai\\data\\generated_thumbnails\\O0Y-oLarao4\\tmp_candidates\\cand_0_restored.png using restoration=codeformer",
+          "raw_line": "2026-08-02 14:56:40.314 | INFO     | image_generator:restore:936 - Face restoration completed for D:\\Afsar\\app development\\thumbnail-ai\\data\\generated_thumbnails\\O0Y-oLarao4\\tmp_candidates\\cand_0_restored.png using restoration=codeformer"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 28264,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:56:40.314 | INFO     | image_generator:restore:936 - Face restoration completed for D:\\Afsar\\app development\\thumbnail-ai\\data\\generated_thumbnails\\O0Y-oLarao4\\tmp_candidates\\cand_0_restored.png using restoration=codeformer",
+          "raw_line": "2026-08-02 14:56:40.314 | INFO     | image_generator:restore:936 - Face restoration completed for D:\\Afsar\\app development\\thumbnail-ai\\data\\generated_thumbnails\\O0Y-oLarao4\\tmp_candidates\\cand_0_restored.png using restoration=codeformer"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 28265,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:56:40.314 | INFO     | image_generator:restore:936 - Face restoration completed for D:\\Afsar\\app development\\thumbnail-ai\\data\\generated_thumbnails\\O0Y-oLarao4\\tmp_candidates\\cand_0_restored.png using restoration=codeformer",
+          "raw_line": "2026-08-02 14:56:40.314 | INFO     | image_generator:restore:936 - Face restoration completed for D:\\Afsar\\app development\\thumbnail-ai\\data\\generated_thumbnails\\O0Y-oLarao4\\tmp_candidates\\cand_0_restored.png using restoration=codeformer"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 28266,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:56:40.314 | INFO     | image_generator:restore:936 - Face restoration completed for D:\\Afsar\\app development\\thumbnail-ai\\data\\generated_thumbnails\\O0Y-oLarao4\\tmp_candidates\\cand_0_restored.png using restoration=codeformer",
+          "raw_line": "2026-08-02 14:56:40.314 | INFO     | image_generator:restore:936 - Face restoration completed for D:\\Afsar\\app development\\thumbnail-ai\\data\\generated_thumbnails\\O0Y-oLarao4\\tmp_candidates\\cand_0_restored.png using restoration=codeformer"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 28268,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:56:40.314 | INFO     | image_generator:restore:936 - Face restoration completed for D:\\Afsar\\app development\\thumbnail-ai\\data\\generated_thumbnails\\O0Y-oLarao4\\tmp_candidates\\cand_0_restored.png using restoration=codeformer",
+          "raw_line": "2026-08-02 14:56:40.314 | INFO     | image_generator:restore:936 - Face restoration completed for D:\\Afsar\\app development\\thumbnail-ai\\data\\generated_thumbnails\\O0Y-oLarao4\\tmp_candidates\\cand_0_restored.png using restoration=codeformer"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 28269,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:56:40.314 | INFO     | image_generator:restore:936 - Face restoration completed for D:\\Afsar\\app development\\thumbnail-ai\\data\\generated_thumbnails\\O0Y-oLarao4\\tmp_candidates\\cand_0_restored.png using restoration=codeformer",
+          "raw_line": "2026-08-02 14:56:40.314 | INFO     | image_generator:restore:936 - Face restoration completed for D:\\Afsar\\app development\\thumbnail-ai\\data\\generated_thumbnails\\O0Y-oLarao4\\tmp_candidates\\cand_0_restored.png using restoration=codeformer"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 28272,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:56:40.432 | INFO     | image_generator:composite:963 - Background composition pass completed for D:\\Afsar\\app development\\thumbnail-ai\\data\\generated_thumbnails\\O0Y-oLarao4\\tmp_candidates\\cand_0_comp.png",
+          "raw_line": "2026-08-02 14:56:40.432 | INFO     | image_generator:composite:963 - Background composition pass completed for D:\\Afsar\\app development\\thumbnail-ai\\data\\generated_thumbnails\\O0Y-oLarao4\\tmp_candidates\\cand_0_comp.png"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 28273,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:56:40.432 | INFO     | image_generator:composite:963 - Background composition pass completed for D:\\Afsar\\app development\\thumbnail-ai\\data\\generated_thumbnails\\O0Y-oLarao4\\tmp_candidates\\cand_0_comp.png",
+          "raw_line": "2026-08-02 14:56:40.432 | INFO     | image_generator:composite:963 - Background composition pass completed for D:\\Afsar\\app development\\thumbnail-ai\\data\\generated_thumbnails\\O0Y-oLarao4\\tmp_candidates\\cand_0_comp.png"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 28274,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:56:40.432 | INFO     | image_generator:composite:963 - Background composition pass completed for D:\\Afsar\\app development\\thumbnail-ai\\data\\generated_thumbnails\\O0Y-oLarao4\\tmp_candidates\\cand_0_comp.png",
+          "raw_line": "2026-08-02 14:56:40.432 | INFO     | image_generator:composite:963 - Background composition pass completed for D:\\Afsar\\app development\\thumbnail-ai\\data\\generated_thumbnails\\O0Y-oLarao4\\tmp_candidates\\cand_0_comp.png"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 28276,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:56:40.432 | INFO     | image_generator:composite:963 - Background composition pass completed for D:\\Afsar\\app development\\thumbnail-ai\\data\\generated_thumbnails\\O0Y-oLarao4\\tmp_candidates\\cand_0_comp.png",
+          "raw_line": "2026-08-02 14:56:40.432 | INFO     | image_generator:composite:963 - Background composition pass completed for D:\\Afsar\\app development\\thumbnail-ai\\data\\generated_thumbnails\\O0Y-oLarao4\\tmp_candidates\\cand_0_comp.png"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 28278,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:56:40.432 | INFO     | image_generator:composite:963 - Background composition pass completed for D:\\Afsar\\app development\\thumbnail-ai\\data\\generated_thumbnails\\O0Y-oLarao4\\tmp_candidates\\cand_0_comp.png",
+          "raw_line": "2026-08-02 14:56:40.432 | INFO     | image_generator:composite:963 - Background composition pass completed for D:\\Afsar\\app development\\thumbnail-ai\\data\\generated_thumbnails\\O0Y-oLarao4\\tmp_candidates\\cand_0_comp.png"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 28280,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:56:40.432 | INFO     | image_generator:composite:963 - Background composition pass completed for D:\\Afsar\\app development\\thumbnail-ai\\data\\generated_thumbnails\\O0Y-oLarao4\\tmp_candidates\\cand_0_comp.png",
+          "raw_line": "2026-08-02 14:56:40.432 | INFO     | image_generator:composite:963 - Background composition pass completed for D:\\Afsar\\app development\\thumbnail-ai\\data\\generated_thumbnails\\O0Y-oLarao4\\tmp_candidates\\cand_0_comp.png"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 28282,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:56:40.548 | INFO     | image_generator:upscale:998 - Upscale/resize completed for D:\\Afsar\\app development\\thumbnail-ai\\data\\generated_thumbnails\\O0Y-oLarao4\\tmp_candidates\\cand_0_final.png: target=1280x720",
+          "raw_line": "2026-08-02 14:56:40.548 | INFO     | image_generator:upscale:998 - Upscale/resize completed for D:\\Afsar\\app development\\thumbnail-ai\\data\\generated_thumbnails\\O0Y-oLarao4\\tmp_candidates\\cand_0_final.png: target=1280x720"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 28283,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:56:40.548 | INFO     | image_generator:upscale:998 - Upscale/resize completed for D:\\Afsar\\app development\\thumbnail-ai\\data\\generated_thumbnails\\O0Y-oLarao4\\tmp_candidates\\cand_0_final.png: target=1280x720",
+          "raw_line": "2026-08-02 14:56:40.548 | INFO     | image_generator:upscale:998 - Upscale/resize completed for D:\\Afsar\\app development\\thumbnail-ai\\data\\generated_thumbnails\\O0Y-oLarao4\\tmp_candidates\\cand_0_final.png: target=1280x720"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 28285,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:56:40.548 | INFO     | image_generator:upscale:998 - Upscale/resize completed for D:\\Afsar\\app development\\thumbnail-ai\\data\\generated_thumbnails\\O0Y-oLarao4\\tmp_candidates\\cand_0_final.png: target=1280x720",
+          "raw_line": "2026-08-02 14:56:40.548 | INFO     | image_generator:upscale:998 - Upscale/resize completed for D:\\Afsar\\app development\\thumbnail-ai\\data\\generated_thumbnails\\O0Y-oLarao4\\tmp_candidates\\cand_0_final.png: target=1280x720"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 28286,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:56:40.548 | INFO     | image_generator:upscale:998 - Upscale/resize completed for D:\\Afsar\\app development\\thumbnail-ai\\data\\generated_thumbnails\\O0Y-oLarao4\\tmp_candidates\\cand_0_final.png: target=1280x720",
+          "raw_line": "2026-08-02 14:56:40.548 | INFO     | image_generator:upscale:998 - Upscale/resize completed for D:\\Afsar\\app development\\thumbnail-ai\\data\\generated_thumbnails\\O0Y-oLarao4\\tmp_candidates\\cand_0_final.png: target=1280x720"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 28287,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:56:40.548 | INFO     | image_generator:upscale:998 - Upscale/resize completed for D:\\Afsar\\app development\\thumbnail-ai\\data\\generated_thumbnails\\O0Y-oLarao4\\tmp_candidates\\cand_0_final.png: target=1280x720",
+          "raw_line": "2026-08-02 14:56:40.548 | INFO     | image_generator:upscale:998 - Upscale/resize completed for D:\\Afsar\\app development\\thumbnail-ai\\data\\generated_thumbnails\\O0Y-oLarao4\\tmp_candidates\\cand_0_final.png: target=1280x720"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 28289,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:56:40.548 | INFO     | image_generator:upscale:998 - Upscale/resize completed for D:\\Afsar\\app development\\thumbnail-ai\\data\\generated_thumbnails\\O0Y-oLarao4\\tmp_candidates\\cand_0_final.png: target=1280x720",
+          "raw_line": "2026-08-02 14:56:40.548 | INFO     | image_generator:upscale:998 - Upscale/resize completed for D:\\Afsar\\app development\\thumbnail-ai\\data\\generated_thumbnails\\O0Y-oLarao4\\tmp_candidates\\cand_0_final.png: target=1280x720"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 28290,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:56:41.273 | INFO     | image_generator:evaluate:1075 - QA report for D:\\Afsar\\app development\\thumbnail-ai\\data\\generated_thumbnails\\O0Y-oLarao4\\tmp_candidates\\cand_0_final.png: hard_gate_passed=True, overall_score=0.7715",
+          "raw_line": "2026-08-02 14:56:41.273 | INFO     | image_generator:evaluate:1075 - QA report for D:\\Afsar\\app development\\thumbnail-ai\\data\\generated_thumbnails\\O0Y-oLarao4\\tmp_candidates\\cand_0_final.png: hard_gate_passed=True, overall_score=0.7715"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 28291,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:56:41.273 | INFO     | image_generator:evaluate:1075 - QA report for D:\\Afsar\\app development\\thumbnail-ai\\data\\generated_thumbnails\\O0Y-oLarao4\\tmp_candidates\\cand_0_final.png: hard_gate_passed=True, overall_score=0.7715",
+          "raw_line": "2026-08-02 14:56:41.273 | INFO     | image_generator:evaluate:1075 - QA report for D:\\Afsar\\app development\\thumbnail-ai\\data\\generated_thumbnails\\O0Y-oLarao4\\tmp_candidates\\cand_0_final.png: hard_gate_passed=True, overall_score=0.7715"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 28292,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:56:41.273 | INFO     | image_generator:evaluate:1075 - QA report for D:\\Afsar\\app development\\thumbnail-ai\\data\\generated_thumbnails\\O0Y-oLarao4\\tmp_candidates\\cand_0_final.png: hard_gate_passed=True, overall_score=0.7715",
+          "raw_line": "2026-08-02 14:56:41.273 | INFO     | image_generator:evaluate:1075 - QA report for D:\\Afsar\\app development\\thumbnail-ai\\data\\generated_thumbnails\\O0Y-oLarao4\\tmp_candidates\\cand_0_final.png: hard_gate_passed=True, overall_score=0.7715"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 28293,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:56:41.273 | INFO     | image_generator:evaluate:1075 - QA report for D:\\Afsar\\app development\\thumbnail-ai\\data\\generated_thumbnails\\O0Y-oLarao4\\tmp_candidates\\cand_0_final.png: hard_gate_passed=True, overall_score=0.7715",
+          "raw_line": "2026-08-02 14:56:41.273 | INFO     | image_generator:evaluate:1075 - QA report for D:\\Afsar\\app development\\thumbnail-ai\\data\\generated_thumbnails\\O0Y-oLarao4\\tmp_candidates\\cand_0_final.png: hard_gate_passed=True, overall_score=0.7715"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 28294,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:56:41.273 | INFO     | image_generator:evaluate:1075 - QA report for D:\\Afsar\\app development\\thumbnail-ai\\data\\generated_thumbnails\\O0Y-oLarao4\\tmp_candidates\\cand_0_final.png: hard_gate_passed=True, overall_score=0.7715",
+          "raw_line": "2026-08-02 14:56:41.273 | INFO     | image_generator:evaluate:1075 - QA report for D:\\Afsar\\app development\\thumbnail-ai\\data\\generated_thumbnails\\O0Y-oLarao4\\tmp_candidates\\cand_0_final.png: hard_gate_passed=True, overall_score=0.7715"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 28297,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:56:41.273 | INFO     | image_generator:evaluate:1075 - QA report for D:\\Afsar\\app development\\thumbnail-ai\\data\\generated_thumbnails\\O0Y-oLarao4\\tmp_candidates\\cand_0_final.png: hard_gate_passed=True, overall_score=0.7715",
+          "raw_line": "2026-08-02 14:56:41.273 | INFO     | image_generator:evaluate:1075 - QA report for D:\\Afsar\\app development\\thumbnail-ai\\data\\generated_thumbnails\\O0Y-oLarao4\\tmp_candidates\\cand_0_final.png: hard_gate_passed=True, overall_score=0.7715"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 28311,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:56:41.338 | INFO     | image_generator:write_manifest:477 - Wrote Module 7 manifest for video_id=O0Y-oLarao4: D:\\Afsar\\app development\\thumbnail-ai\\data\\generated_thumbnails\\O0Y-oLarao4\\O0Y-oLarao4_manifest.json",
+          "raw_line": "2026-08-02 14:56:41.338 | INFO     | image_generator:write_manifest:477 - Wrote Module 7 manifest for video_id=O0Y-oLarao4: D:\\Afsar\\app development\\thumbnail-ai\\data\\generated_thumbnails\\O0Y-oLarao4\\O0Y-oLarao4_manifest.json"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 28312,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:56:41.338 | INFO     | image_generator:write_manifest:477 - Wrote Module 7 manifest for video_id=O0Y-oLarao4: D:\\Afsar\\app development\\thumbnail-ai\\data\\generated_thumbnails\\O0Y-oLarao4\\O0Y-oLarao4_manifest.json",
+          "raw_line": "2026-08-02 14:56:41.338 | INFO     | image_generator:write_manifest:477 - Wrote Module 7 manifest for video_id=O0Y-oLarao4: D:\\Afsar\\app development\\thumbnail-ai\\data\\generated_thumbnails\\O0Y-oLarao4\\O0Y-oLarao4_manifest.json"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 28313,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:56:41.338 | INFO     | image_generator:write_manifest:477 - Wrote Module 7 manifest for video_id=O0Y-oLarao4: D:\\Afsar\\app development\\thumbnail-ai\\data\\generated_thumbnails\\O0Y-oLarao4\\O0Y-oLarao4_manifest.json",
+          "raw_line": "2026-08-02 14:56:41.338 | INFO     | image_generator:write_manifest:477 - Wrote Module 7 manifest for video_id=O0Y-oLarao4: D:\\Afsar\\app development\\thumbnail-ai\\data\\generated_thumbnails\\O0Y-oLarao4\\O0Y-oLarao4_manifest.json"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 28316,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:56:41.338 | INFO     | image_generator:write_manifest:477 - Wrote Module 7 manifest for video_id=O0Y-oLarao4: D:\\Afsar\\app development\\thumbnail-ai\\data\\generated_thumbnails\\O0Y-oLarao4\\O0Y-oLarao4_manifest.json",
+          "raw_line": "2026-08-02 14:56:41.338 | INFO     | image_generator:write_manifest:477 - Wrote Module 7 manifest for video_id=O0Y-oLarao4: D:\\Afsar\\app development\\thumbnail-ai\\data\\generated_thumbnails\\O0Y-oLarao4\\O0Y-oLarao4_manifest.json"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 28318,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:56:41.338 | INFO     | image_generator:write_manifest:477 - Wrote Module 7 manifest for video_id=O0Y-oLarao4: D:\\Afsar\\app development\\thumbnail-ai\\data\\generated_thumbnails\\O0Y-oLarao4\\O0Y-oLarao4_manifest.json",
+          "raw_line": "2026-08-02 14:56:41.338 | INFO     | image_generator:write_manifest:477 - Wrote Module 7 manifest for video_id=O0Y-oLarao4: D:\\Afsar\\app development\\thumbnail-ai\\data\\generated_thumbnails\\O0Y-oLarao4\\O0Y-oLarao4_manifest.json"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 28319,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:56:41.338 | INFO     | image_generator:write_manifest:477 - Wrote Module 7 manifest for video_id=O0Y-oLarao4: D:\\Afsar\\app development\\thumbnail-ai\\data\\generated_thumbnails\\O0Y-oLarao4\\O0Y-oLarao4_manifest.json",
+          "raw_line": "2026-08-02 14:56:41.338 | INFO     | image_generator:write_manifest:477 - Wrote Module 7 manifest for video_id=O0Y-oLarao4: D:\\Afsar\\app development\\thumbnail-ai\\data\\generated_thumbnails\\O0Y-oLarao4\\O0Y-oLarao4_manifest.json"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 28320,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:56:41.347 | INFO     | image_generator:write_candidate_manifest:494 - Wrote candidate manifest for video_id=O0Y-oLarao4: D:\\Afsar\\app development\\thumbnail-ai\\data\\generated_thumbnails\\O0Y-oLarao4\\candidate_manifest.json",
+          "raw_line": "2026-08-02 14:56:41.347 | INFO     | image_generator:write_candidate_manifest:494 - Wrote candidate manifest for video_id=O0Y-oLarao4: D:\\Afsar\\app development\\thumbnail-ai\\data\\generated_thumbnails\\O0Y-oLarao4\\candidate_manifest.json"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 28321,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:56:41.347 | INFO     | image_generator:write_candidate_manifest:494 - Wrote candidate manifest for video_id=O0Y-oLarao4: D:\\Afsar\\app development\\thumbnail-ai\\data\\generated_thumbnails\\O0Y-oLarao4\\candidate_manifest.json",
+          "raw_line": "2026-08-02 14:56:41.347 | INFO     | image_generator:write_candidate_manifest:494 - Wrote candidate manifest for video_id=O0Y-oLarao4: D:\\Afsar\\app development\\thumbnail-ai\\data\\generated_thumbnails\\O0Y-oLarao4\\candidate_manifest.json"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 28322,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:56:41.347 | INFO     | image_generator:write_candidate_manifest:494 - Wrote candidate manifest for video_id=O0Y-oLarao4: D:\\Afsar\\app development\\thumbnail-ai\\data\\generated_thumbnails\\O0Y-oLarao4\\candidate_manifest.json",
+          "raw_line": "2026-08-02 14:56:41.347 | INFO     | image_generator:write_candidate_manifest:494 - Wrote candidate manifest for video_id=O0Y-oLarao4: D:\\Afsar\\app development\\thumbnail-ai\\data\\generated_thumbnails\\O0Y-oLarao4\\candidate_manifest.json"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 28323,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:56:41.347 | INFO     | image_generator:write_candidate_manifest:494 - Wrote candidate manifest for video_id=O0Y-oLarao4: D:\\Afsar\\app development\\thumbnail-ai\\data\\generated_thumbnails\\O0Y-oLarao4\\candidate_manifest.json",
+          "raw_line": "2026-08-02 14:56:41.347 | INFO     | image_generator:write_candidate_manifest:494 - Wrote candidate manifest for video_id=O0Y-oLarao4: D:\\Afsar\\app development\\thumbnail-ai\\data\\generated_thumbnails\\O0Y-oLarao4\\candidate_manifest.json"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 28324,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:56:41.347 | INFO     | image_generator:write_candidate_manifest:494 - Wrote candidate manifest for video_id=O0Y-oLarao4: D:\\Afsar\\app development\\thumbnail-ai\\data\\generated_thumbnails\\O0Y-oLarao4\\candidate_manifest.json",
+          "raw_line": "2026-08-02 14:56:41.347 | INFO     | image_generator:write_candidate_manifest:494 - Wrote candidate manifest for video_id=O0Y-oLarao4: D:\\Afsar\\app development\\thumbnail-ai\\data\\generated_thumbnails\\O0Y-oLarao4\\candidate_manifest.json"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 28326,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:56:41.347 | INFO     | image_generator:write_candidate_manifest:494 - Wrote candidate manifest for video_id=O0Y-oLarao4: D:\\Afsar\\app development\\thumbnail-ai\\data\\generated_thumbnails\\O0Y-oLarao4\\candidate_manifest.json",
+          "raw_line": "2026-08-02 14:56:41.347 | INFO     | image_generator:write_candidate_manifest:494 - Wrote candidate manifest for video_id=O0Y-oLarao4: D:\\Afsar\\app development\\thumbnail-ai\\data\\generated_thumbnails\\O0Y-oLarao4\\candidate_manifest.json"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 28329,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:56:41.356 | INFO     | image_generator:write_generation_metadata:511 - Wrote generation metadata for video_id=O0Y-oLarao4: D:\\Afsar\\app development\\thumbnail-ai\\data\\generated_thumbnails\\O0Y-oLarao4\\generation_metadata.json",
+          "raw_line": "2026-08-02 14:56:41.356 | INFO     | image_generator:write_generation_metadata:511 - Wrote generation metadata for video_id=O0Y-oLarao4: D:\\Afsar\\app development\\thumbnail-ai\\data\\generated_thumbnails\\O0Y-oLarao4\\generation_metadata.json"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 28330,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:56:41.356 | INFO     | image_generator:write_generation_metadata:511 - Wrote generation metadata for video_id=O0Y-oLarao4: D:\\Afsar\\app development\\thumbnail-ai\\data\\generated_thumbnails\\O0Y-oLarao4\\generation_metadata.json",
+          "raw_line": "2026-08-02 14:56:41.356 | INFO     | image_generator:write_generation_metadata:511 - Wrote generation metadata for video_id=O0Y-oLarao4: D:\\Afsar\\app development\\thumbnail-ai\\data\\generated_thumbnails\\O0Y-oLarao4\\generation_metadata.json"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 28331,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:56:41.356 | INFO     | image_generator:write_generation_metadata:511 - Wrote generation metadata for video_id=O0Y-oLarao4: D:\\Afsar\\app development\\thumbnail-ai\\data\\generated_thumbnails\\O0Y-oLarao4\\generation_metadata.json",
+          "raw_line": "2026-08-02 14:56:41.356 | INFO     | image_generator:write_generation_metadata:511 - Wrote generation metadata for video_id=O0Y-oLarao4: D:\\Afsar\\app development\\thumbnail-ai\\data\\generated_thumbnails\\O0Y-oLarao4\\generation_metadata.json"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 28332,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:56:41.356 | INFO     | image_generator:write_generation_metadata:511 - Wrote generation metadata for video_id=O0Y-oLarao4: D:\\Afsar\\app development\\thumbnail-ai\\data\\generated_thumbnails\\O0Y-oLarao4\\generation_metadata.json",
+          "raw_line": "2026-08-02 14:56:41.356 | INFO     | image_generator:write_generation_metadata:511 - Wrote generation metadata for video_id=O0Y-oLarao4: D:\\Afsar\\app development\\thumbnail-ai\\data\\generated_thumbnails\\O0Y-oLarao4\\generation_metadata.json"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 28333,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:56:41.356 | INFO     | image_generator:write_generation_metadata:511 - Wrote generation metadata for video_id=O0Y-oLarao4: D:\\Afsar\\app development\\thumbnail-ai\\data\\generated_thumbnails\\O0Y-oLarao4\\generation_metadata.json",
+          "raw_line": "2026-08-02 14:56:41.356 | INFO     | image_generator:write_generation_metadata:511 - Wrote generation metadata for video_id=O0Y-oLarao4: D:\\Afsar\\app development\\thumbnail-ai\\data\\generated_thumbnails\\O0Y-oLarao4\\generation_metadata.json"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 28334,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:56:41.356 | INFO     | image_generator:write_generation_metadata:511 - Wrote generation metadata for video_id=O0Y-oLarao4: D:\\Afsar\\app development\\thumbnail-ai\\data\\generated_thumbnails\\O0Y-oLarao4\\generation_metadata.json",
+          "raw_line": "2026-08-02 14:56:41.356 | INFO     | image_generator:write_generation_metadata:511 - Wrote generation metadata for video_id=O0Y-oLarao4: D:\\Afsar\\app development\\thumbnail-ai\\data\\generated_thumbnails\\O0Y-oLarao4\\generation_metadata.json"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 28341,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:56:41.368 | INFO     | image_generator:run:1442 - Pipeline completed successfully for video_id=O0Y-oLarao4: asset=D:\\Afsar\\app development\\thumbnail-ai\\data\\generated_thumbnails\\O0Y-oLarao4\\O0Y-oLarao4.png",
+          "raw_line": "2026-08-02 14:56:41.368 | INFO     | image_generator:run:1442 - Pipeline completed successfully for video_id=O0Y-oLarao4: asset=D:\\Afsar\\app development\\thumbnail-ai\\data\\generated_thumbnails\\O0Y-oLarao4\\O0Y-oLarao4.png"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 28343,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:56:41.368 | INFO     | image_generator:run:1442 - Pipeline completed successfully for video_id=O0Y-oLarao4: asset=D:\\Afsar\\app development\\thumbnail-ai\\data\\generated_thumbnails\\O0Y-oLarao4\\O0Y-oLarao4.png",
+          "raw_line": "2026-08-02 14:56:41.368 | INFO     | image_generator:run:1442 - Pipeline completed successfully for video_id=O0Y-oLarao4: asset=D:\\Afsar\\app development\\thumbnail-ai\\data\\generated_thumbnails\\O0Y-oLarao4\\O0Y-oLarao4.png"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 28344,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:56:41.368 | INFO     | image_generator:run:1442 - Pipeline completed successfully for video_id=O0Y-oLarao4: asset=D:\\Afsar\\app development\\thumbnail-ai\\data\\generated_thumbnails\\O0Y-oLarao4\\O0Y-oLarao4.png",
+          "raw_line": "2026-08-02 14:56:41.368 | INFO     | image_generator:run:1442 - Pipeline completed successfully for video_id=O0Y-oLarao4: asset=D:\\Afsar\\app development\\thumbnail-ai\\data\\generated_thumbnails\\O0Y-oLarao4\\O0Y-oLarao4.png"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 28345,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:56:41.368 | INFO     | image_generator:run:1442 - Pipeline completed successfully for video_id=O0Y-oLarao4: asset=D:\\Afsar\\app development\\thumbnail-ai\\data\\generated_thumbnails\\O0Y-oLarao4\\O0Y-oLarao4.png",
+          "raw_line": "2026-08-02 14:56:41.368 | INFO     | image_generator:run:1442 - Pipeline completed successfully for video_id=O0Y-oLarao4: asset=D:\\Afsar\\app development\\thumbnail-ai\\data\\generated_thumbnails\\O0Y-oLarao4\\O0Y-oLarao4.png"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 28346,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:56:41.368 | INFO     | image_generator:run:1442 - Pipeline completed successfully for video_id=O0Y-oLarao4: asset=D:\\Afsar\\app development\\thumbnail-ai\\data\\generated_thumbnails\\O0Y-oLarao4\\O0Y-oLarao4.png",
+          "raw_line": "2026-08-02 14:56:41.368 | INFO     | image_generator:run:1442 - Pipeline completed successfully for video_id=O0Y-oLarao4: asset=D:\\Afsar\\app development\\thumbnail-ai\\data\\generated_thumbnails\\O0Y-oLarao4\\O0Y-oLarao4.png"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 28348,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:56:41.368 | INFO     | image_generator:run:1442 - Pipeline completed successfully for video_id=O0Y-oLarao4: asset=D:\\Afsar\\app development\\thumbnail-ai\\data\\generated_thumbnails\\O0Y-oLarao4\\O0Y-oLarao4.png",
+          "raw_line": "2026-08-02 14:56:41.368 | INFO     | image_generator:run:1442 - Pipeline completed successfully for video_id=O0Y-oLarao4: asset=D:\\Afsar\\app development\\thumbnail-ai\\data\\generated_thumbnails\\O0Y-oLarao4\\O0Y-oLarao4.png"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 28350,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:56:41.390 | INFO     | main:_run_pipeline_creators:533 - Generated thumbnail saved for creator_email=trre@gmail.com video_id=O0Y-oLarao4: D:\\Afsar\\app development\\thumbnail-ai\\data\\generated_thumbnails\\O0Y-oLarao4\\O0Y-oLarao4.png",
+          "raw_line": "2026-08-02 14:56:41.390 | INFO     | main:_run_pipeline_creators:533 - Generated thumbnail saved for creator_email=trre@gmail.com video_id=O0Y-oLarao4: D:\\Afsar\\app development\\thumbnail-ai\\data\\generated_thumbnails\\O0Y-oLarao4\\O0Y-oLarao4.png"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 28353,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:56:41.390 | INFO     | main:_run_pipeline_creators:533 - Generated thumbnail saved for creator_email=trre@gmail.com video_id=O0Y-oLarao4: D:\\Afsar\\app development\\thumbnail-ai\\data\\generated_thumbnails\\O0Y-oLarao4\\O0Y-oLarao4.png",
+          "raw_line": "2026-08-02 14:56:41.390 | INFO     | main:_run_pipeline_creators:533 - Generated thumbnail saved for creator_email=trre@gmail.com video_id=O0Y-oLarao4: D:\\Afsar\\app development\\thumbnail-ai\\data\\generated_thumbnails\\O0Y-oLarao4\\O0Y-oLarao4.png"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 28354,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:56:41.390 | INFO     | main:_run_pipeline_creators:533 - Generated thumbnail saved for creator_email=trre@gmail.com video_id=O0Y-oLarao4: D:\\Afsar\\app development\\thumbnail-ai\\data\\generated_thumbnails\\O0Y-oLarao4\\O0Y-oLarao4.png",
+          "raw_line": "2026-08-02 14:56:41.390 | INFO     | main:_run_pipeline_creators:533 - Generated thumbnail saved for creator_email=trre@gmail.com video_id=O0Y-oLarao4: D:\\Afsar\\app development\\thumbnail-ai\\data\\generated_thumbnails\\O0Y-oLarao4\\O0Y-oLarao4.png"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 28355,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:56:41.397 | INFO     | observability.runner:observe:57 - Starting automatic PORCE analysis for video_id=O0Y-oLarao4",
+          "raw_line": "2026-08-02 14:56:41.397 | INFO     | observability.runner:observe:57 - Starting automatic PORCE analysis for video_id=O0Y-oLarao4"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 28356,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:56:41.390 | INFO     | main:_run_pipeline_creators:533 - Generated thumbnail saved for creator_email=trre@gmail.com video_id=O0Y-oLarao4: D:\\Afsar\\app development\\thumbnail-ai\\data\\generated_thumbnails\\O0Y-oLarao4\\O0Y-oLarao4.png",
+          "raw_line": "2026-08-02 14:56:41.390 | INFO     | main:_run_pipeline_creators:533 - Generated thumbnail saved for creator_email=trre@gmail.com video_id=O0Y-oLarao4: D:\\Afsar\\app development\\thumbnail-ai\\data\\generated_thumbnails\\O0Y-oLarao4\\O0Y-oLarao4.png"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 28357,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:56:41.390 | INFO     | main:_run_pipeline_creators:533 - Generated thumbnail saved for creator_email=trre@gmail.com video_id=O0Y-oLarao4: D:\\Afsar\\app development\\thumbnail-ai\\data\\generated_thumbnails\\O0Y-oLarao4\\O0Y-oLarao4.png",
+          "raw_line": "2026-08-02 14:56:41.390 | INFO     | main:_run_pipeline_creators:533 - Generated thumbnail saved for creator_email=trre@gmail.com video_id=O0Y-oLarao4: D:\\Afsar\\app development\\thumbnail-ai\\data\\generated_thumbnails\\O0Y-oLarao4\\O0Y-oLarao4.png"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 28359,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:56:41.397 | INFO     | observability.runner:observe:57 - Starting automatic PORCE analysis for video_id=O0Y-oLarao4",
+          "raw_line": "2026-08-02 14:56:41.397 | INFO     | observability.runner:observe:57 - Starting automatic PORCE analysis for video_id=O0Y-oLarao4"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 28360,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:56:41.390 | INFO     | main:_run_pipeline_creators:533 - Generated thumbnail saved for creator_email=trre@gmail.com video_id=O0Y-oLarao4: D:\\Afsar\\app development\\thumbnail-ai\\data\\generated_thumbnails\\O0Y-oLarao4\\O0Y-oLarao4.png",
+          "raw_line": "2026-08-02 14:56:41.390 | INFO     | main:_run_pipeline_creators:533 - Generated thumbnail saved for creator_email=trre@gmail.com video_id=O0Y-oLarao4: D:\\Afsar\\app development\\thumbnail-ai\\data\\generated_thumbnails\\O0Y-oLarao4\\O0Y-oLarao4.png"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 28361,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:56:41.397 | INFO     | observability.runner:observe:57 - Starting automatic PORCE analysis for video_id=O0Y-oLarao4",
+          "raw_line": "2026-08-02 14:56:41.397 | INFO     | observability.runner:observe:57 - Starting automatic PORCE analysis for video_id=O0Y-oLarao4"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 28362,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:56:41.397 | INFO     | observability.runner:observe:57 - Starting automatic PORCE analysis for video_id=O0Y-oLarao4",
+          "raw_line": "2026-08-02 14:56:41.397 | INFO     | observability.runner:observe:57 - Starting automatic PORCE analysis for video_id=O0Y-oLarao4"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 28364,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:56:41.397 | INFO     | observability.runner:observe:57 - Starting automatic PORCE analysis for video_id=O0Y-oLarao4",
+          "raw_line": "2026-08-02 14:56:41.397 | INFO     | observability.runner:observe:57 - Starting automatic PORCE analysis for video_id=O0Y-oLarao4"
+        },
+        {
+          "file_path": "D:\\Afsar\\app development\\thumbnail-ai\\logs\\module7.log",
+          "line_number": 28365,
+          "timestamp": null,
+          "level": "INFO",
+          "module": "module7",
+          "message": "2026-08-02 14:56:41.397 | INFO     | observability.runner:observe:57 - Starting automatic PORCE analysis for video_id=O0Y-oLarao4",
+          "raw_line": "2026-08-02 14:56:41.397 | INFO     | observability.runner:observe:57 - Starting automatic PORCE analysis for video_id=O0Y-oLarao4"
+        }
+      ],
+      "errors": [],
+      "warnings": []
+    }
+  ],
+  "artifact_index": {
+    "video_id": "O0Y-oLarao4",
+    "refs": [
+      {
+        "module": "module3",
+        "artifact_type": "thumbnail_image",
+        "path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\thumbnails\\O0Y-oLarao4.jpg",
+        "exists": true,
+        "sha256": "c7b650037eebe2b1a62c0c0a7f24ce2c1cbec13ac4b2be04a243dbe35aa9fff0",
+        "size_bytes": 122814
+      },
+      {
+        "module": "module4",
+        "artifact_type": "thumbnail_intelligence",
+        "path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\analysis\\O0Y-oLarao4.json",
+        "exists": true,
+        "sha256": "8a137d37fae686d8b39d07d48bed70f820685f0a3ca957f9fb37a6a5f34c9407",
+        "size_bytes": 3732
+      },
+      {
+        "module": "module8",
+        "artifact_type": "asset_extraction_manifest",
+        "path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\asset_extraction\\O0Y-oLarao4\\asset_manifest.json",
+        "exists": false,
+        "sha256": null,
+        "size_bytes": null
+      },
+      {
+        "module": "module5",
+        "artifact_type": "redesign_specification",
+        "path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\redesign_specs\\O0Y-oLarao4.json",
+        "exists": true,
+        "sha256": "15b6e94ef359ab64414b6527d83e58e6bc3bca8920b6451df0c344d9f56bdbab",
+        "size_bytes": 2278
+      },
+      {
+        "module": "module5.5",
+        "artifact_type": "design_blueprint",
+        "path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\design_blueprints\\O0Y-oLarao4.json",
+        "exists": true,
+        "sha256": "138c7eafdd61de003433de926996917a65ce77d0bb534954d29e8513eb5662e6",
+        "size_bytes": 5282
+      },
+      {
+        "module": "module6",
+        "artifact_type": "prompt_package",
+        "path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\prompt_packages\\O0Y-oLarao4.json",
+        "exists": true,
+        "sha256": "d099933fa6324207584a1a668804e1015567989ca175c4e3f1d801f3c4c7e953",
+        "size_bytes": 3365
+      },
+      {
+        "module": "module9",
+        "artifact_type": "decision_manifest",
+        "path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\decisions\\O0Y-oLarao4\\decision_manifest.json",
+        "exists": false,
+        "sha256": null,
+        "size_bytes": null
+      },
+      {
+        "module": "module10",
+        "artifact_type": "composition_workspace",
+        "path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\composition_workspaces\\O0Y-oLarao4\\workspace_manifest.json",
+        "exists": true,
+        "sha256": "b970973c2933eccc653b953c337f41d8b3207202b615a8f1b997b8f01b96fd5e",
+        "size_bytes": 442
+      },
+      {
+        "module": "module10",
+        "artifact_type": "generation_bundle",
+        "path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\composition_workspaces\\O0Y-oLarao4\\generation_bundle.json",
+        "exists": false,
+        "sha256": null,
+        "size_bytes": null
+      },
+      {
+        "module": "module10.5",
+        "artifact_type": "generation_plan",
+        "path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\generation_plans\\O0Y-oLarao4.json",
+        "exists": false,
+        "sha256": null,
+        "size_bytes": null
+      },
+      {
+        "module": "module10.5",
+        "artifact_type": "strategy_pack",
+        "path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\strategy_packs\\O0Y-oLarao4.json",
+        "exists": false,
+        "sha256": null,
+        "size_bytes": null
+      },
+      {
+        "module": "module7",
+        "artifact_type": "generated_thumbnail",
+        "path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\generated_thumbnails\\O0Y-oLarao4\\O0Y-oLarao4.png",
+        "exists": true,
+        "sha256": "b92171c3b1f0c924ce75feb0a16dadc8a07d0bb3800255bebc23cc5a4a7a96c2",
+        "size_bytes": 1204706
+      },
+      {
+        "module": "module7",
+        "artifact_type": "image_generation_result",
+        "path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\generated_thumbnails\\O0Y-oLarao4\\manifest.json",
+        "exists": false,
+        "sha256": null,
+        "size_bytes": null
+      }
+    ],
+    "built_at": "2026-08-02T09:26:41.469933+00:00"
+  },
+  "generation_trace": {
+    "video_id": "O0Y-oLarao4",
+    "attempt_index": 0,
+    "generation_id": "O0Y-oLarao4_cand_0",
+    "workflow_template": "general",
+    "workflow_hash": "db4e58026d6ec5d0d45fc5cdf0ee912f461f8191bd59b3ca5cf89da4455ab02b",
+    "workflow_fragments": [],
+    "fragments_attached": [],
+    "latent_source": "noise",
+    "denoise": 1.0,
+    "seed": 1606102990,
+    "scheduler": "karras",
+    "sampler": "dpmpp_2m",
+    "steps": 20,
+    "cfg": 6.0,
+    "controlnet_enabled": false,
+    "ipadapter_enabled": true,
+    "edit_mode": "txt2img",
+    "generation_profile": "PROFILE_LOW_VRAM",
+    "controlnet_config": {
+      "enabled": false
+    },
+    "ipadapter_config": {
+      "enabled": true
+    },
+    "conditioning_assets": [
+      "D:\\Afsar\\app development\\thumbnail-ai\\data\\visual_references\\O0Y-oLarao4\\depth_map.png",
+      "D:\\Afsar\\app development\\thumbnail-ai\\data\\visual_references\\O0Y-oLarao4\\canny_map.png"
+    ],
+    "asset_references": [
+      "D:\\Afsar\\app development\\thumbnail-ai\\data\\visual_references\\O0Y-oLarao4\\background.png",
+      "D:\\Afsar\\app development\\thumbnail-ai\\data\\visual_references\\O0Y-oLarao4\\object_crop.png",
+      "D:\\Afsar\\app development\\thumbnail-ai\\data\\visual_references\\O0Y-oLarao4\\object_crop.png"
+    ],
+    "mask_references": [
+      "D:\\Afsar\\app development\\thumbnail-ai\\data\\visual_references\\O0Y-oLarao4\\object_mask.png",
+      "D:\\Afsar\\app development\\thumbnail-ai\\data\\visual_references\\O0Y-oLarao4\\object_mask.png"
+    ],
+    "composition_references": [],
+    "generation_plan_reference": null,
+    "prompt_reference": null,
+    "negative_prompt_reference": null,
+    "source_thumbnail_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\thumbnails\\O0Y-oLarao4.jpg",
+    "edit_mask_paths": [],
+    "execution_timestamps": {
+      "recorded_at": "2026-08-02T09:26:41.278425+00:00",
+      "duration_comfyui_generate": "54.2935s",
+      "duration_identity_preservation": "0.0305s",
+      "duration_face_restoration": "0.1577s",
+      "duration_background_composition": "0.1160s",
+      "duration_upscale": "0.1158s",
+      "duration_quality_assurance": "0.7267s"
+    },
+    "renderer_version": "1.0.0",
+    "model_version": null,
+    "lora_list": [],
+    "vae": null,
+    "output_image_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\generated_thumbnails\\O0Y-oLarao4\\tmp_candidates\\cand_0_final.png",
+    "recorded_at": "2026-08-02T09:26:41.278425+00:00"
+  },
+  "overall_status": "success",
+  "assembled_at": "2026-08-02T09:26:42.812577+00:00"
+}

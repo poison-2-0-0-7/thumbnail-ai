@@ -80,6 +80,8 @@ from observability.models import (
     PipelineTrace,
 )
 
+from observability.runner import PORCEPipelineObserver
+
 __all__ = [
     "PORCEError",
     "ArtifactIndexError",
@@ -139,6 +141,7 @@ __all__ = [
     "RootCausePersistence",
     "RootCauseLoader",
     "RootCauseValidation",
+    "PORCEPipelineObserver",
     "setup_observability_logging",
     "ensure_observability_directories",
 ]

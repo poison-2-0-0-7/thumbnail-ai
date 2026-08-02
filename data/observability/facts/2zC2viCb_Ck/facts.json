@@ -1,0 +1,191 @@
+{
+  "video_id": "2zC2viCb_Ck",
+  "trace_facts": {
+    "video_id": "2zC2viCb_Ck",
+    "extracted_at": "2026-08-02T09:23:53.061305+00:00",
+    "fact_version": "1.0.0",
+    "workflow_selected": "general",
+    "edit_mode": "txt2img",
+    "generation_profile": "PROFILE_LOW_VRAM",
+    "model_used": null,
+    "sampler": "dpmpp_2m",
+    "scheduler": "karras",
+    "seed": 3480315140,
+    "cfg": 6.0,
+    "steps": 20,
+    "denoise": 1.0,
+    "latent_initialization_mode": "EmptyLatentImage",
+    "controlnet_count": 0,
+    "controlnet_configuration": {
+      "enabled": false
+    },
+    "controlnet_enabled": false,
+    "ipadapter_count": 1,
+    "ipadapter_configuration": {
+      "enabled": true
+    },
+    "ipadapter_enabled": true,
+    "mask_count": 0,
+    "edit_mask_paths": [],
+    "conditioning_assets": [
+      "D:\\Afsar\\app development\\thumbnail-ai\\data\\visual_references\\2zC2viCb_Ck\\depth_map.png",
+      "D:\\Afsar\\app development\\thumbnail-ai\\data\\visual_references\\2zC2viCb_Ck\\canny_map.png"
+    ],
+    "background_assets": [
+      "D:\\Afsar\\app development\\thumbnail-ai\\data\\visual_references\\2zC2viCb_Ck\\background.png"
+    ],
+    "foreground_assets": [],
+    "composition_workspace": "D:\\Afsar\\app development\\thumbnail-ai\\data\\composition_workspaces\\2zC2viCb_Ck\\workspace_manifest.json",
+    "has_composition_workspace": true,
+    "generation_plan_reference": null,
+    "prompt_reference": "D:\\Afsar\\app development\\thumbnail-ai\\data\\prompt_packages\\2zC2viCb_Ck.json",
+    "negative_prompt_reference": null,
+    "positive_prompt": null,
+    "negative_prompt": null,
+    "renderer_version": "1.0.0",
+    "execution_timing": {
+      "module1": null,
+      "module2": null,
+      "module3": null,
+      "module4": null,
+      "module8": null,
+      "module5": null,
+      "module5.5": null,
+      "module6": null,
+      "module9": null,
+      "module10": null,
+      "module10.5": null,
+      "module7": 74.30474689999983
+    },
+    "total_execution_time_seconds": 74.30474689999983,
+    "artifact_availability": {
+      "module3_thumbnail_image": true,
+      "module4_thumbnail_intelligence": true,
+      "module8_asset_extraction_manifest": false,
+      "module5_redesign_specification": true,
+      "module5.5_design_blueprint": true,
+      "module6_prompt_package": true,
+      "module9_decision_manifest": false,
+      "module10_composition_workspace": true,
+      "module10_generation_bundle": false,
+      "module10.5_generation_plan": false,
+      "module10.5_strategy_pack": false,
+      "module7_generated_thumbnail": true,
+      "module7_image_generation_result": false
+    },
+    "persisted_outputs": {
+      "module3": "D:\\Afsar\\app development\\thumbnail-ai\\data\\thumbnails\\2zC2viCb_Ck.jpg",
+      "module4": "D:\\Afsar\\app development\\thumbnail-ai\\data\\analysis\\2zC2viCb_Ck.json",
+      "module5": "D:\\Afsar\\app development\\thumbnail-ai\\data\\redesign_specs\\2zC2viCb_Ck.json",
+      "module5.5": "D:\\Afsar\\app development\\thumbnail-ai\\data\\design_blueprints\\2zC2viCb_Ck.json",
+      "module6": "D:\\Afsar\\app development\\thumbnail-ai\\data\\prompt_packages\\2zC2viCb_Ck.json",
+      "module10": "D:\\Afsar\\app development\\thumbnail-ai\\data\\composition_workspaces\\2zC2viCb_Ck\\workspace_manifest.json",
+      "module7": "D:\\Afsar\\app development\\thumbnail-ai\\data\\generated_thumbnails\\2zC2viCb_Ck\\2zC2viCb_Ck.png"
+    },
+    "module_completion_status": {
+      "module1": "success",
+      "module2": "success",
+      "module3": "success",
+      "module4": "success",
+      "module8": "not_run",
+      "module5": "success",
+      "module5.5": "success",
+      "module6": "success",
+      "module9": "not_run",
+      "module10": "success",
+      "module10.5": "not_run",
+      "module7": "success"
+    },
+    "attached_fragment_count": 0,
+    "attached_fragment_names": [],
+    "source_thumbnail_exists": true,
+    "generated_thumbnail_exists": true,
+    "asset_extraction_enabled": false,
+    "decision_engine_enabled": false,
+    "thumbnail_planner_enabled": false
+  },
+  "atomic_facts": [
+    {
+      "fact_key": "workflow_selected",
+      "category": "generation",
+      "name": "Workflow Selected",
+      "value": "general",
+      "data_type": "string",
+      "source_module": "module7"
+    },
+    {
+      "fact_key": "edit_mode",
+      "category": "generation",
+      "name": "Edit Mode",
+      "value": "txt2img",
+      "data_type": "string",
+      "source_module": "module7"
+    },
+    {
+      "fact_key": "generation_profile",
+      "category": "generation",
+      "name": "Generation Profile",
+      "value": "PROFILE_LOW_VRAM",
+      "data_type": "string",
+      "source_module": "module7"
+    },
+    {
+      "fact_key": "latent_initialization_mode",
+      "category": "generation",
+      "name": "Latent Initialization Mode",
+      "value": "EmptyLatentImage",
+      "data_type": "string",
+      "source_module": "module7"
+    },
+    {
+      "fact_key": "controlnet_count",
+      "category": "generation",
+      "name": "ControlNet Count",
+      "value": 0,
+      "data_type": "int",
+      "source_module": "module7"
+    },
+    {
+      "fact_key": "ipadapter_count",
+      "category": "generation",
+      "name": "IPAdapter Count",
+      "value": 1,
+      "data_type": "int",
+      "source_module": "module7"
+    },
+    {
+      "fact_key": "mask_count",
+      "category": "generation",
+      "name": "Mask Count",
+      "value": 0,
+      "data_type": "int",
+      "source_module": "module7"
+    },
+    {
+      "fact_key": "has_composition_workspace",
+      "category": "composition",
+      "name": "Has Composition Workspace",
+      "value": true,
+      "data_type": "bool",
+      "source_module": "module10"
+    },
+    {
+      "fact_key": "source_thumbnail_exists",
+      "category": "artifact",
+      "name": "Source Thumbnail Exists",
+      "value": true,
+      "data_type": "bool",
+      "source_module": "module3"
+    },
+    {
+      "fact_key": "generated_thumbnail_exists",
+      "category": "artifact",
+      "name": "Generated Thumbnail Exists",
+      "value": true,
+      "data_type": "bool",
+      "source_module": "module7"
+    }
+  ],
+  "extracted_at": "2026-08-02T09:23:53.061305+00:00",
+  "fact_version": "1.0.0"
+}

@@ -1,0 +1,110 @@
+{
+  "video_id": "2zC2viCb_Ck",
+  "refs": [
+    {
+      "module": "module3",
+      "artifact_type": "thumbnail_image",
+      "path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\thumbnails\\2zC2viCb_Ck.jpg",
+      "exists": true,
+      "sha256": "c036d91b1223d482161907d1e64a2008363b2788ef5962cbd916a43c598c9169",
+      "size_bytes": 36701
+    },
+    {
+      "module": "module4",
+      "artifact_type": "thumbnail_intelligence",
+      "path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\analysis\\2zC2viCb_Ck.json",
+      "exists": true,
+      "sha256": "d8af6d28407f04a9e453911f1b7c0db973c246cff23591f0bc4d11ada4dbe7b1",
+      "size_bytes": 7686
+    },
+    {
+      "module": "module8",
+      "artifact_type": "asset_extraction_manifest",
+      "path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\asset_extraction\\2zC2viCb_Ck\\asset_manifest.json",
+      "exists": false,
+      "sha256": null,
+      "size_bytes": null
+    },
+    {
+      "module": "module5",
+      "artifact_type": "redesign_specification",
+      "path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\redesign_specs\\2zC2viCb_Ck.json",
+      "exists": true,
+      "sha256": "16bac61c1979d53d0a63bee6d91eb227efb89a71ca5702077884bffc36628f6f",
+      "size_bytes": 2937
+    },
+    {
+      "module": "module5.5",
+      "artifact_type": "design_blueprint",
+      "path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\design_blueprints\\2zC2viCb_Ck.json",
+      "exists": true,
+      "sha256": "343e834c989707b049c2f29acf7b3c945a75a3f977210d9e4da4cc4067665dbe",
+      "size_bytes": 6105
+    },
+    {
+      "module": "module6",
+      "artifact_type": "prompt_package",
+      "path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\prompt_packages\\2zC2viCb_Ck.json",
+      "exists": true,
+      "sha256": "9d4cd4b96e58241b99e8a3cdc641f84363ee58b270aab39b9bdd0ad37763287c",
+      "size_bytes": 3760
+    },
+    {
+      "module": "module9",
+      "artifact_type": "decision_manifest",
+      "path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\decisions\\2zC2viCb_Ck\\decision_manifest.json",
+      "exists": false,
+      "sha256": null,
+      "size_bytes": null
+    },
+    {
+      "module": "module10",
+      "artifact_type": "composition_workspace",
+      "path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\composition_workspaces\\2zC2viCb_Ck\\workspace_manifest.json",
+      "exists": true,
+      "sha256": "c6a176faad2616bb85666a788f9cc193f925798447baadeb5c77bca3e5a17b85",
+      "size_bytes": 442
+    },
+    {
+      "module": "module10",
+      "artifact_type": "generation_bundle",
+      "path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\composition_workspaces\\2zC2viCb_Ck\\generation_bundle.json",
+      "exists": false,
+      "sha256": null,
+      "size_bytes": null
+    },
+    {
+      "module": "module10.5",
+      "artifact_type": "generation_plan",
+      "path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\generation_plans\\2zC2viCb_Ck.json",
+      "exists": false,
+      "sha256": null,
+      "size_bytes": null
+    },
+    {
+      "module": "module10.5",
+      "artifact_type": "strategy_pack",
+      "path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\strategy_packs\\2zC2viCb_Ck.json",
+      "exists": false,
+      "sha256": null,
+      "size_bytes": null
+    },
+    {
+      "module": "module7",
+      "artifact_type": "generated_thumbnail",
+      "path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\generated_thumbnails\\2zC2viCb_Ck\\2zC2viCb_Ck.png",
+      "exists": true,
+      "sha256": "a4d8751293c6bbc29724b8fc3f8dec14aa2b3498e8e5b6b3b2aff2f73364e025",
+      "size_bytes": 1045638
+    },
+    {
+      "module": "module7",
+      "artifact_type": "image_generation_result",
+      "path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\generated_thumbnails\\2zC2viCb_Ck\\manifest.json",
+      "exists": false,
+      "sha256": null,
+      "size_bytes": null
+    }
+  ],
+  "built_at": "2026-08-02T09:23:50.781681+00:00"
+}

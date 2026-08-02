@@ -3,7 +3,7 @@
   "attempt_index": 0,
   "generation_id": "vIWkN-2J0ic_cand_0",
   "workflow_template": "gaming",
-  "workflow_hash": "ee25614d79bdb960801471ee0aab4b35c63cb0acc2061220c0f117475a00c5bb",
+  "workflow_hash": "068f487e97df38c503826949bbd9a30c097f6dcb83de05bb2b5fde6cf5c14e68",
   "workflow_fragments": [],
   "fragments_attached": [],
   "latent_source": "noise",
@@ -43,18 +43,18 @@
   "source_thumbnail_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\thumbnails\\vIWkN-2J0ic.jpg",
   "edit_mask_paths": [],
   "execution_timestamps": {
-    "recorded_at": "2026-08-02T07:53:25.793999+00:00",
-    "duration_comfyui_generate": "54.0418s",
-    "duration_identity_preservation": "0.0222s",
-    "duration_face_restoration": "0.2211s",
-    "duration_background_composition": "0.1481s",
-    "duration_upscale": "0.1541s",
-    "duration_quality_assurance": "0.6543s"
+    "recorded_at": "2026-08-02T09:28:04.864004+00:00",
+    "duration_comfyui_generate": "54.2030s",
+    "duration_identity_preservation": "0.0241s",
+    "duration_face_restoration": "0.2368s",
+    "duration_background_composition": "0.2326s",
+    "duration_upscale": "0.1693s",
+    "duration_quality_assurance": "0.9058s"
   },
   "renderer_version": "1.0.0",
   "model_version": null,
   "lora_list": [],
   "vae": null,
   "output_image_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\generated_thumbnails\\vIWkN-2J0ic\\tmp_candidates\\cand_0_final.png",
-  "recorded_at": "2026-08-02T07:53:25.793999+00:00"
+  "recorded_at": "2026-08-02T09:28:04.864004+00:00"
 }

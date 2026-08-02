@@ -30,6 +30,7 @@ from config import (
     MODULE7_PROFILE_PREFERENCE, MODULE7_QA_WEIGHTS, MODULE7_SAVE_CANDIDATES,
     MODULE7_STRATEGY_PACK, MODULE7_VRAM_HEADROOM_GB, MODULE7_WORKFLOW_GRAPH_CACHE_ENABLED,
     MODULE7_WORKFLOW_VERSION, MODULE7_PARALLEL_CANDIDATES,
+    MODULE7_EDIT_CAPABLE_PROFILES, validate_module7_edit_reachability,
 )
 from models import (
     CandidateManifest, CandidateManifestEntry, CandidateScore, CandidateStrategy,
@@ -192,6 +193,7 @@ class ProfileSelector:
         self.profiles = dict(profiles)
         self.headroom_gb = headroom_gb
         validate_qa_weights(MODULE7_QA_WEIGHTS)
+        validate_module7_edit_reachability()
 
     def select(self, available_vram_gb: float, requested_profile: str = MODULE7_PROFILE) -> GenerationProfile:
         """Choose the richest fitting profile, with logged explicit-request downgrade."""
@@ -1629,6 +1631,6 @@ __all__ = [
     "NoEligibleCandidateError", "ProfileDowngradedWarning", "IdentityPreservationStage",
     "FaceRestorationStage", "BackgroundCompositor", "UpscaleStage", "QualityAssuranceStage",
     "CandidateRanker", "CapabilityProbe", "ImageGeneratorPipeline", "run_image_generation_pipeline",
-    "cosine_similarity",
+    "cosine_similarity", "MODULE7_EDIT_CAPABLE_PROFILES", "validate_module7_edit_reachability",
 ]
 

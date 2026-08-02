@@ -21,6 +21,7 @@ import os
 import sys
 from pathlib import Path
 
+from module7_exceptions import Module7Error
 from models import GenerationProfile
 from vision_stack.config import (
     VISION_STACK_CONFIG_ENV,
@@ -447,6 +448,24 @@ MODULE7_GENERATION_PROFILES: dict[str, GenerationProfile] = {
 MODULE7_PROFILE_PREFERENCE: tuple[str, ...] = (
     "PROFILE_PREMIUM", "PROFILE_STANDARD", "PROFILE_FAST", "PROFILE_LOW_VRAM",
 )
+MODULE7_EDIT_CAPABLE_PROFILES: frozenset[str] = frozenset(
+    name for name, profile in MODULE7_GENERATION_PROFILES.items()
+    if profile.edit_mode_default == "staged_edit"
+)
+
+
+def validate_module7_edit_reachability(
+    preference: tuple[str, ...] | None = None,
+    edit_capable: frozenset[str] | None = None,
+) -> None:
+    """Raise Module7Error if edit-capable profiles are configured but none are reachable via profile preference ordering."""
+    pref = preference if preference is not None else MODULE7_PROFILE_PREFERENCE
+    capable = edit_capable if edit_capable is not None else MODULE7_EDIT_CAPABLE_PROFILES
+    if capable and not (set(pref) & capable):
+        raise Module7Error(
+            f"Configured edit-capable profiles {sorted(capable)} are unreachable via MODULE7_PROFILE_PREFERENCE {pref}"
+        )
+
 MODULE7_QA_WEIGHTS: dict[str, float] = {
     "identity_score": 0.30, "face_quality_score": 0.15,
     "composition_score": 0.15, "text_safe_zone_score": 0.15,

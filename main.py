@@ -539,6 +539,18 @@ def _run_pipeline_creators(
         )
         succeeded += 1
 
+        # ── Automatic PORCE Observability ────────────────────────────────────
+        try:
+            from observability.runner import PORCEPipelineObserver
+            PORCEPipelineObserver().observe(metadata.video_id)
+        except Exception as exc:
+            logger.warning(
+                "Automatic PORCE observer encountered an error for video_id={vid}: {exc}",
+                vid=metadata.video_id,
+                exc=exc,
+            )
+
+
     # ── Summary ──────────────────────────────────────────────────────────
     logger.info(
         "Pipeline complete — {ok}/{total} succeeded, {skip} skipped/failed.",

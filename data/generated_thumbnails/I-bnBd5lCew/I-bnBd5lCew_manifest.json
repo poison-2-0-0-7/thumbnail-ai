@@ -6,13 +6,13 @@
     "path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\generated_thumbnails\\I-bnBd5lCew\\I-bnBd5lCew.png",
     "width": 1280,
     "height": 720,
-    "sha256": "8f7c41206587d4264cf4a7e6cce6d1f9ddb3629ae63cbdfd91e56f4c0170a734",
+    "sha256": "e244b483b71335c8171580553f75d4f69b25f1fd51d01972a0de5ae14fbc3801",
     "candidate_index": 0
   },
   "workflow_version": "workflow_v1",
-  "workflow_hash": "0e9c4d5358303f66b864d7c49682311c4a93ba2f80ea483903743754d8a2a5cd",
-  "prompt_package_hash": "e62b22fa70fd90517226767cf9a6435b15c3d6aa37ea72ebac50290ca7b7df7a",
-  "generation_hash": "b76a4a7ac9794bfdaac3d2f5a79847f595e69f584d2ae29f0aff0b3fcbaf6f1c",
+  "workflow_hash": "4ea896add72e071d4532329a070824aae4d48ff69297878c32026a1994b81d2e",
+  "prompt_package_hash": "e57bab96b08cc52d0240b1bb6e98c76ab82dc1386cf631f6775055159e867982",
+  "generation_hash": "38a175ecd73ccded316dd6e14799ebe66d69a61d1ff2392997e1ee24a63fa768",
   "profile_name": "PROFILE_LOW_VRAM",
   "checkpoint_hash": null,
   "lora_hashes": [],
@@ -24,7 +24,7 @@
   "candidate_scores": [
     {
       "candidate_index": 0,
-      "overall_score": 0.7557410516602641,
+      "overall_score": 0.725163550027821,
       "identity_similarity": 1.0,
       "hard_gate_passed": true,
       "rank": 1,
@@ -34,13 +34,13 @@
   "selected_candidate_index": 0,
   "retry_count": 0,
   "stage_durations_seconds": {
-    "comfyui_generate": 45.06353680000757,
-    "identity_preservation": 0.02485960000194609,
-    "face_restoration": 0.25426419998984784,
-    "background_composition": 0.2007809999922756,
-    "upscale": 0.21555600001011044,
-    "quality_assurance": 0.8865100999828428
+    "comfyui_generate": 51.46586739999475,
+    "identity_preservation": 0.02155579999089241,
+    "face_restoration": 0.19606149999890476,
+    "background_composition": 0.17925929999910295,
+    "upscale": 0.1355113000026904,
+    "quality_assurance": 0.66534840001259
   },
-  "duration_seconds": 46.93451089999871,
-  "generated_at": "2026-08-02T07:47:36.027599+00:00"
+  "duration_seconds": 53.078675400000066,
+  "generated_at": "2026-08-02T09:20:57.410119+00:00"
 }

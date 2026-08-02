@@ -57,7 +57,7 @@
   "elements_to_preserve": [
     "Happy facial expression",
     "Motorcycle and person interaction",
-    "Balanced composition"
+    "Neutral color palette and balanced composition"
   ],
   "overall_rationale": "ctr_potential_score=0.75; curiosity_gap_score=0.65; content_mismatch_detected=False; rules applied: crop_tighter.",
   "source_ctr_potential_score": 0.75,
@@ -65,6 +65,6 @@
   "source_content_mismatch_detected": false,
   "status": "success",
   "error_message": null,
-  "duration_seconds": 0.0013795999984722584,
-  "generated_at": "2026-08-02T07:47:59.703851+00:00"
+  "duration_seconds": 0.0019193999760318547,
+  "generated_at": "2026-08-02T09:21:26.817044+00:00"
 }

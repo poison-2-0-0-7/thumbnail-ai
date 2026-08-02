@@ -1,10 +1,22 @@
 {
   "video_id": "I-bnBd5lCew",
-  "headline": "The Truth About Positive emotional expression",
+  "headline": "The Truth About Transformation journey text",
   "headline_variants": [
     {
-      "text": "The Truth About Positive emotional expression",
+      "text": "The Truth About Transformation journey text",
       "template_id": "controversy_01",
+      "curiosity_score": 0.35,
+      "emotional_impact_score": 0.8,
+      "readability_score": 0.98,
+      "ctr_potential_score": 1.0,
+      "character_count": 43,
+      "mobile_readability_score": 0.85,
+      "brand_consistency_score": 1.0,
+      "composite_score": 0.7795
+    },
+    {
+      "text": "The Secret Behind Transformation journey text",
+      "template_id": "curiosity_01",
       "curiosity_score": 0.35,
       "emotional_impact_score": 0.8,
       "readability_score": 0.96,
@@ -15,103 +27,91 @@
       "composite_score": 0.7665
     },
     {
-      "text": "The Secret Behind Positive emotional expression",
-      "template_id": "curiosity_01",
-      "curiosity_score": 0.35,
-      "emotional_impact_score": 0.8,
-      "readability_score": 0.94,
-      "ctr_potential_score": 1.0,
-      "character_count": 47,
-      "mobile_readability_score": 0.65,
-      "brand_consistency_score": 1.0,
-      "composite_score": 0.7535
-    },
-    {
-      "text": "Why Positive emotional expression Changes Everything",
+      "text": "Why Transformation journey text Changes Everything",
       "template_id": "curiosity_02",
       "curiosity_score": 0.35,
       "emotional_impact_score": 0.8,
-      "readability_score": 0.89,
+      "readability_score": 0.91,
       "ctr_potential_score": 1.0,
-      "character_count": 52,
-      "mobile_readability_score": 0.4,
+      "character_count": 50,
+      "mobile_readability_score": 0.5,
       "brand_consistency_score": 1.0,
-      "composite_score": 0.721
+      "composite_score": 0.734
     },
     {
-      "text": "I Tried Positive emotional expression For 30 Days",
+      "text": "I Tried Transformation journey text For 30 Days",
       "template_id": "shock_01",
       "curiosity_score": 0.15,
       "emotional_impact_score": 0.8,
       "readability_score": 1.0,
       "ctr_potential_score": 1.0,
-      "character_count": 49,
-      "mobile_readability_score": 0.55,
+      "character_count": 47,
+      "mobile_readability_score": 0.65,
       "brand_consistency_score": 1.0,
-      "composite_score": 0.7025
+      "composite_score": 0.7125
     },
     {
-      "text": "Don't Do Positive emotional expression Until You Watch This",
+      "text": "Don't Do Transformation journey text Until You Watch This",
       "template_id": "shock_02",
       "curiosity_score": 0.35,
       "emotional_impact_score": 0.8,
       "readability_score": 0.94,
       "ctr_potential_score": 1.0,
-      "character_count": 59,
-      "mobile_readability_score": 0.05,
-      "brand_consistency_score": 1.0,
-      "composite_score": 0.6935
-    },
-    {
-      "text": "Why Everyone Is Wrong About Positive emotional expression",
-      "template_id": "controversy_02",
-      "curiosity_score": 0.35,
-      "emotional_impact_score": 0.6,
-      "readability_score": 0.985,
-      "ctr_potential_score": 1.0,
       "character_count": 57,
       "mobile_readability_score": 0.15,
       "brand_consistency_score": 1.0,
-      "composite_score": 0.6703
+      "composite_score": 0.7035
     },
     {
-      "text": "Positive emotional expression Is Broken",
+      "text": "Why Everyone Is Wrong About Transformation journey text",
+      "template_id": "controversy_02",
+      "curiosity_score": 0.35,
+      "emotional_impact_score": 0.6,
+      "readability_score": 1.0,
+      "ctr_potential_score": 1.0,
+      "character_count": 55,
+      "mobile_readability_score": 0.25,
+      "brand_consistency_score": 1.0,
+      "composite_score": 0.6825
+    },
+    {
+      "text": "Transformation journey text Is Broken",
       "template_id": "shock_03",
       "curiosity_score": 0.0,
       "emotional_impact_score": 0.6,
-      "readability_score": 0.94,
+      "readability_score": 0.964,
       "ctr_potential_score": 1.0,
-      "character_count": 39,
+      "character_count": 37,
       "mobile_readability_score": 1.0,
       "brand_consistency_score": 1.0,
-      "composite_score": 0.661
+      "composite_score": 0.6646
     },
     {
-      "text": "The Positive emotional expression Nobody Talks About",
+      "text": "The Transformation journey text Nobody Talks About",
       "template_id": "curiosity_03",
       "curiosity_score": 0.0,
       "emotional_impact_score": 0.8,
-      "readability_score": 0.9657,
+      "readability_score": 0.9829,
       "ctr_potential_score": 1.0,
-      "character_count": 52,
-      "mobile_readability_score": 0.4,
+      "character_count": 50,
+      "mobile_readability_score": 0.5,
       "brand_consistency_score": 1.0,
-      "composite_score": 0.6449
+      "composite_score": 0.6574
     },
     {
-      "text": "Lies You Were Told About Positive emotional expression",
+      "text": "Lies You Were Told About Transformation journey text",
       "template_id": "controversy_03",
       "curiosity_score": 0.0,
       "emotional_impact_score": 0.6,
       "readability_score": 1.0,
       "ctr_potential_score": 1.0,
-      "character_count": 54,
-      "mobile_readability_score": 0.3,
+      "character_count": 52,
+      "mobile_readability_score": 0.4,
       "brand_consistency_score": 1.0,
-      "composite_score": 0.6
+      "composite_score": 0.61
     }
   ],
-  "headline_score": 0.7665,
+  "headline_score": 0.7795,
   "hook_type": "curiosity",
   "emotion": "High",
   "face_strategy": "preserve",
@@ -176,15 +176,15 @@
     "background"
   ],
   "branding_constraints": [
-    "Positive emotional expression",
-    "Clear text indicating progression",
-    "Use of faces to convey authenticity",
+    "Transformation journey text",
+    "Emotional impact through visuals",
+    "Clear composition and balance",
     "Do not reproduce copyrighted characters, logos, or branded imagery."
   ],
   "conflicts_resolved": 0,
   "status": "success",
   "partial_failure_reasons": [],
   "error_message": null,
-  "duration_seconds": 0.0014,
-  "generated_at": "2026-08-02T07:46:48.925946+00:00"
+  "duration_seconds": 0.0062,
+  "generated_at": "2026-08-02T09:20:03.924053+00:00"
 }
