@@ -575,6 +575,7 @@ def _run_module7_generation(
         generation_bundle=generation_bundle,
         generation_plan=generation_plan,
         design_blueprint=design_blueprint,
+        edit_mode="auto",
         client=client,
         thumbnail_dir=thumbnail_dir,
         analysis_dir=analysis_dir,

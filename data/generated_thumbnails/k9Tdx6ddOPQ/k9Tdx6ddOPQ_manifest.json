@@ -6,13 +6,13 @@
     "path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\generated_thumbnails\\k9Tdx6ddOPQ\\k9Tdx6ddOPQ.png",
     "width": 1280,
     "height": 720,
-    "sha256": "683ddeeffdeb4775d107b150313739784775372e24b3b250c58381445f3c829d",
+    "sha256": "104332c2d4d7f2d888069cdddac8c091cfb3f6b4f4ed288cf20347f0a5fb63c8",
     "candidate_index": 0
   },
   "workflow_version": "workflow_v1",
   "workflow_hash": "477b50f2493ea5d3e6753309cfdd5d077a38dd8fea9da44ac279823d1b2f5830",
-  "prompt_package_hash": "009c592df7ce7762ff7f8462c2d371611305c72c4d33cdd0e7892fa1894134e0",
-  "generation_hash": "5b518fb7cfde5bb3935386cd626bc8ccf6e641835219bd3a9dd5364f60f9de15",
+  "prompt_package_hash": "7cffb0366f512389fec90fa37d329d86191388e285584c50cdfeb7c06c036c6b",
+  "generation_hash": "e99a8eee03e18a5570525d47f159110229c7069b25f9a429d3dfc163941049f8",
   "profile_name": "PROFILE_LOW_VRAM",
   "checkpoint_hash": null,
   "lora_hashes": [],
@@ -24,7 +24,7 @@
   "candidate_scores": [
     {
       "candidate_index": 0,
-      "overall_score": 0.9850228138669497,
+      "overall_score": 0.769358478127154,
       "identity_similarity": 1.0,
       "hard_gate_passed": true,
       "rank": 1,
@@ -34,13 +34,13 @@
   "selected_candidate_index": 0,
   "retry_count": 0,
   "stage_durations_seconds": {
-    "comfyui_generate": 179.35100480000256,
-    "identity_preservation": 0.013645300001371652,
-    "face_restoration": 0.16654899998684414,
-    "background_composition": 0.11616169998887926,
-    "upscale": 0.12659110000822693,
-    "quality_assurance": 0.05068989997380413
+    "comfyui_generate": 49.6190110000025,
+    "identity_preservation": 0.034179799986304715,
+    "face_restoration": 0.20043530000839382,
+    "background_composition": 0.14439979998860508,
+    "upscale": 0.14258129999507219,
+    "quality_assurance": 0.6264411000011023
   },
-  "duration_seconds": 180.13656759998412,
-  "generated_at": "2026-08-01T16:06:41.248661+00:00"
+  "duration_seconds": 51.39681830001064,
+  "generated_at": "2026-08-02T07:54:43.506511+00:00"
 }

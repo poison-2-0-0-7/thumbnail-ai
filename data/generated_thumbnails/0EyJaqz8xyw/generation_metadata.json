@@ -2,7 +2,7 @@
   "video_id": "0EyJaqz8xyw",
   "profile_name": "PROFILE_LOW_VRAM",
   "workflow_version": "workflow_v1",
-  "workflow_hash": "1842d3f1d713dc59c76087c8fa02c62ecf82e67c0f5056727e8ff2a7f996ac24",
+  "workflow_hash": "ab99850d81699029cd6028ddebbd418a8fe5bdafd6f2fd93d05847dbd6e725f5",
   "conditioning_asset_hashes": {},
   "model_versions": {
     "checkpoint": "juggernautXL.safetensors",
@@ -10,7 +10,7 @@
   },
   "num_candidates_requested": 1,
   "num_candidates_completed": 1,
-  "total_duration_seconds": 65.27083900000434,
+  "total_duration_seconds": 51.54056529997615,
   "parallel_generation_used": false,
   "retry_summary": {
     "identity_retries": 0

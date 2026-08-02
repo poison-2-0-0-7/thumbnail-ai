@@ -439,6 +439,7 @@ MODULE7_NICHE_WORKFLOW_MAP: dict[str, str] = {
 
 MODULE7_GENERATION_PROFILES: dict[str, GenerationProfile] = {
     "PROFILE_STANDARD": GenerationProfile(name="PROFILE_STANDARD", checkpoint="juggernautXL.safetensors", checkpoint_family="sdxl", sampler="dpmpp_2m", scheduler="karras", steps=30, cfg=6.5, controlnet_enabled=True, ipadapter_enabled=True, restoration="codeformer", restoration_fidelity=0.35, upscaler="real_esrgan_x4", expected_vram_gb=7.5, expected_generation_seconds=25.0),
+    "PROFILE_STANDARD_EDIT": GenerationProfile(name="PROFILE_STANDARD_EDIT", checkpoint="juggernautXL.safetensors", checkpoint_family="sdxl", sampler="dpmpp_2m", scheduler="karras", steps=30, cfg=6.5, controlnet_enabled=True, ipadapter_enabled=True, restoration="codeformer", restoration_fidelity=0.35, upscaler="real_esrgan_x4", expected_vram_gb=7.5, expected_generation_seconds=25.0, edit_mode_default="staged_edit"),
     "PROFILE_FAST": GenerationProfile(name="PROFILE_FAST", checkpoint="juggernautXL.safetensors", checkpoint_family="sdxl", sampler="dpmpp_2m", scheduler="karras", steps=16, cfg=6.0, controlnet_enabled=True, ipadapter_enabled=True, restoration="codeformer", restoration_fidelity=0.35, upscaler="lanczos_only", expected_vram_gb=7.0, expected_generation_seconds=9.0),
     "PROFILE_PREMIUM": GenerationProfile(name="PROFILE_PREMIUM", checkpoint="flux1-schnell-q5_k_m.gguf", checkpoint_family="flux", sampler="euler", scheduler="simple", steps=20, cfg=1.0, controlnet_enabled=False, ipadapter_enabled=True, restoration="both", restoration_fidelity=0.35, upscaler="real_esrgan_x4", expected_vram_gb=7.8, expected_generation_seconds=55.0),
     "PROFILE_LOW_VRAM": GenerationProfile(name="PROFILE_LOW_VRAM", checkpoint="juggernautXL.safetensors", checkpoint_family="sdxl", sampler="dpmpp_2m", scheduler="karras", steps=20, cfg=6.0, controlnet_enabled=False, ipadapter_enabled=True, restoration="codeformer", restoration_fidelity=0.4, upscaler="lanczos_only", expected_vram_gb=5.0, expected_generation_seconds=32.0),
@@ -483,6 +484,23 @@ MODULE7_CANDIDATE_VRAM_BUDGET_GB: Optional[float] = None
 MODULE7_CANDIDATE_TIMEOUT_SECONDS: float = COMFYUI_EXECUTION_TIMEOUT_SECONDS
 MODULE7_CANDIDATE_RETRY_ATTEMPTS: int = 0
 MODULE7_WORKFLOW_GRAPH_CACHE_ENABLED: bool = True
+
+# --- Module 7 V2 Editing Engine Constants ---
+MODULE7_V2_DENOISE_BY_DECISION: dict[str, float] = {
+    "keep": 0.0,
+    "enhance": 0.35,
+    "replace": 0.85,
+    "add": 0.90,
+    "remove": 0.85,
+}
+MODULE7_V2_STEPS_BY_DECISION: dict[str, int] = {
+    "keep": 0,
+    "enhance": 16,
+    "replace": 25,
+    "add": 25,
+    "remove": 25,
+}
+MODULE7_V2_MAX_REGION_RETRIES: int = 2
 
 
 
@@ -638,3 +656,13 @@ EVAL_LOG_PATH: Path = LOG_DIR / "evaluation.log"
 EVAL_RUNS_DIR: Path = PROJECT_ROOT / "data" / "evaluation" / "runs"
 EVAL_GOLDEN_DIR: Path = PROJECT_ROOT / "data" / "evaluation" / "golden"
 EVAL_HISTORY_PATH: Path = PROJECT_ROOT / "data" / "evaluation" / "history" / "benchmark_history.jsonl"
+
+# ---------------------------------------------------------------------------
+# Pipeline Observability & Root Cause Engine (PORCE)
+# ---------------------------------------------------------------------------
+
+OBS_LOG_PATH: Path = LOG_DIR / "observability.log"
+OBS_TRACES_DIR: Path = PROJECT_ROOT / "data" / "observability" / "traces"
+OBS_REPORTS_DIR: Path = PROJECT_ROOT / "data" / "observability" / "reports"
+OBS_GENERATION_TRACES_DIR: Path = PROJECT_ROOT / "data" / "observability" / "generation_traces"
+

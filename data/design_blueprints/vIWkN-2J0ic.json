@@ -1,10 +1,46 @@
 {
   "video_id": "vIWkN-2J0ic",
-  "headline": "The Truth About Dynamic pose of the person",
+  "headline": "The Truth About Dynamic pose",
   "headline_variants": [
     {
-      "text": "The Truth About Dynamic pose of the person",
+      "text": "The Truth About Dynamic pose",
       "template_id": "controversy_01",
+      "curiosity_score": 0.35,
+      "emotional_impact_score": 0.8,
+      "readability_score": 1.0,
+      "ctr_potential_score": 1.0,
+      "character_count": 28,
+      "mobile_readability_score": 1.0,
+      "brand_consistency_score": 1.0,
+      "composite_score": 0.7975
+    },
+    {
+      "text": "The Secret Behind Dynamic pose",
+      "template_id": "curiosity_01",
+      "curiosity_score": 0.35,
+      "emotional_impact_score": 0.8,
+      "readability_score": 1.0,
+      "ctr_potential_score": 1.0,
+      "character_count": 30,
+      "mobile_readability_score": 1.0,
+      "brand_consistency_score": 1.0,
+      "composite_score": 0.7975
+    },
+    {
+      "text": "Why Dynamic pose Changes Everything",
+      "template_id": "curiosity_02",
+      "curiosity_score": 0.35,
+      "emotional_impact_score": 0.8,
+      "readability_score": 0.988,
+      "ctr_potential_score": 1.0,
+      "character_count": 35,
+      "mobile_readability_score": 1.0,
+      "brand_consistency_score": 1.0,
+      "composite_score": 0.7957
+    },
+    {
+      "text": "Don't Do Dynamic pose Until You Watch This",
+      "template_id": "shock_02",
       "curiosity_score": 0.35,
       "emotional_impact_score": 0.8,
       "readability_score": 1.0,
@@ -15,103 +51,67 @@
       "composite_score": 0.7867
     },
     {
-      "text": "The Secret Behind Dynamic pose of the person",
-      "template_id": "curiosity_01",
+      "text": "Why Everyone Is Wrong About Dynamic pose",
+      "template_id": "controversy_02",
       "curiosity_score": 0.35,
-      "emotional_impact_score": 0.8,
+      "emotional_impact_score": 0.6,
       "readability_score": 1.0,
-      "ctr_potential_score": 0.986,
-      "character_count": 44,
-      "mobile_readability_score": 0.8,
+      "ctr_potential_score": 0.99,
+      "character_count": 40,
+      "mobile_readability_score": 1.0,
       "brand_consistency_score": 1.0,
-      "composite_score": 0.7747
+      "composite_score": 0.7555
     },
     {
-      "text": "Why Dynamic pose of the person Changes Everything",
-      "template_id": "curiosity_02",
-      "curiosity_score": 0.35,
-      "emotional_impact_score": 0.8,
-      "readability_score": 1.0,
-      "ctr_potential_score": 0.961,
-      "character_count": 49,
-      "mobile_readability_score": 0.55,
-      "brand_consistency_score": 1.0,
-      "composite_score": 0.7447
-    },
-    {
-      "text": "I Tried Dynamic pose of the person For 30 Days",
+      "text": "I Tried Dynamic pose For 30 Days",
       "template_id": "shock_01",
       "curiosity_score": 0.15,
       "emotional_impact_score": 0.8,
-      "readability_score": 0.88,
-      "ctr_potential_score": 0.952,
-      "character_count": 46,
-      "mobile_readability_score": 0.7,
+      "readability_score": 1.0,
+      "ctr_potential_score": 0.982,
+      "character_count": 32,
+      "mobile_readability_score": 1.0,
       "brand_consistency_score": 1.0,
-      "composite_score": 0.6899
+      "composite_score": 0.7439
     },
     {
-      "text": "Don't Do Dynamic pose of the person Until You Watch This",
-      "template_id": "shock_02",
-      "curiosity_score": 0.35,
+      "text": "The Dynamic pose Nobody Talks About",
+      "template_id": "curiosity_03",
+      "curiosity_score": 0.0,
       "emotional_impact_score": 0.8,
-      "readability_score": 0.82,
-      "ctr_potential_score": 0.926,
-      "character_count": 56,
-      "mobile_readability_score": 0.2,
+      "readability_score": 1.0,
+      "ctr_potential_score": 0.964,
+      "character_count": 35,
+      "mobile_readability_score": 1.0,
       "brand_consistency_score": 1.0,
-      "composite_score": 0.6757
+      "composite_score": 0.7028
     },
     {
-      "text": "Dynamic pose of the person Is Broken",
+      "text": "Dynamic pose Is Broken",
       "template_id": "shock_03",
       "curiosity_score": 0.0,
       "emotional_impact_score": 0.6,
       "readability_score": 1.0,
       "ctr_potential_score": 0.948,
-      "character_count": 36,
+      "character_count": 22,
       "mobile_readability_score": 1.0,
       "brand_consistency_score": 1.0,
       "composite_score": 0.6596
     },
     {
-      "text": "Why Everyone Is Wrong About Dynamic pose of the person",
-      "template_id": "controversy_02",
-      "curiosity_score": 0.35,
-      "emotional_impact_score": 0.6,
-      "readability_score": 0.88,
-      "ctr_potential_score": 0.92,
-      "character_count": 54,
-      "mobile_readability_score": 0.3,
-      "brand_consistency_score": 1.0,
-      "composite_score": 0.6535
-    },
-    {
-      "text": "The Dynamic pose of the person Nobody Talks About",
-      "template_id": "curiosity_03",
-      "curiosity_score": 0.0,
-      "emotional_impact_score": 0.8,
-      "readability_score": 0.94,
-      "ctr_potential_score": 0.919,
-      "character_count": 49,
-      "mobile_readability_score": 0.55,
-      "brand_consistency_score": 1.0,
-      "composite_score": 0.6398
-    },
-    {
-      "text": "Lies You Were Told About Dynamic pose of the person",
+      "text": "Lies You Were Told About Dynamic pose",
       "template_id": "controversy_03",
       "curiosity_score": 0.0,
       "emotional_impact_score": 0.6,
-      "readability_score": 0.88,
-      "ctr_potential_score": 0.893,
-      "character_count": 51,
-      "mobile_readability_score": 0.45,
+      "readability_score": 1.0,
+      "ctr_potential_score": 0.948,
+      "character_count": 37,
+      "mobile_readability_score": 1.0,
       "brand_consistency_score": 1.0,
-      "composite_score": 0.5756
+      "composite_score": 0.6596
     }
   ],
-  "headline_score": 0.7867,
+  "headline_score": 0.7975,
   "hook_type": "curiosity",
   "emotion": "high",
   "face_strategy": "preserve",
@@ -157,7 +157,7 @@
     "background"
   ],
   "branding_constraints": [
-    "Dynamic pose of the person",
+    "Dynamic pose",
     "Warm color palette",
     "Do not reproduce copyrighted characters, logos, or branded imagery."
   ],
@@ -165,6 +165,6 @@
   "status": "success",
   "partial_failure_reasons": [],
   "error_message": null,
-  "duration_seconds": 0.0004,
-  "generated_at": "2026-08-01T16:02:21.792211+00:00"
+  "duration_seconds": 0.0065,
+  "generated_at": "2026-08-02T07:52:30.016004+00:00"
 }

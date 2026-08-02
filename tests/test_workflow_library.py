@@ -54,3 +54,44 @@ def test_all_templates_contain_save_image_node() -> None:
         )
         assert has_save_node, f"Template {path.name} must contain a SaveImage node"
 
+
+def test_resolve_legacy_mode_returns_legacy_template() -> None:
+    library = WorkflowLibrary()
+    profile = MODULE7_GENERATION_PROFILES["PROFILE_STANDARD"]
+    ref = library.resolve("gaming", profile, edit_mode="legacy_txt2img")
+
+    assert Path(ref.template_path).name == "gaming.json"
+
+
+def test_resolve_staged_edit_mode_returns_edit_template() -> None:
+    library = WorkflowLibrary()
+    profile = MODULE7_GENERATION_PROFILES["PROFILE_STANDARD"]
+    ref_gaming = library.resolve("gaming", profile, edit_mode="staged_edit")
+    ref_general = library.resolve("general", profile, edit_mode="staged_edit")
+
+    assert Path(ref_gaming.template_path).name == "gaming_edit.json"
+    assert Path(ref_general.template_path).name == "general_edit.json"
+
+
+def test_builder_attaches_inpaint_fragments_for_edit_workflow() -> None:
+    from image_generator import WorkflowBuilder
+    from generation_components import GenerationConditioningContext
+
+    library = WorkflowLibrary()
+    profile = MODULE7_GENERATION_PROFILES["PROFILE_STANDARD"]
+    ref_edit = library.resolve("gaming", profile, edit_mode="staged_edit")
+
+    builder = WorkflowBuilder()
+    dummy_ctx = GenerationConditioningContext(
+        source_thumbnail_path=Path("source.png"),
+        role_mask_paths={"edit_mask": Path("mask.png")},
+    )
+
+    base_graph = builder.build_base(profile, ref_edit, library=library, conditioning=dummy_ctx)
+
+    # Must contain nodes from inpaint_base (VAEEncodeForInpaint) and edit_region_mask (SetLatentNoiseMask)
+    node_types = [node.get("class_type") for node in base_graph.values() if isinstance(node, dict)]
+    assert "VAEEncodeForInpaint" in node_types
+    assert "SetLatentNoiseMask" in node_types
+
+

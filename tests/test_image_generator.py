@@ -19,6 +19,8 @@ from image_generator import (  # noqa: E402
     PromptPackageLoader, QualityAssuranceStage, ReferenceAssetResolver,
     ReferenceAssets, UpscaleStage, WorkflowBuilder, cosine_similarity,
     generation_hash, prompt_package_hash, run_image_generation_pipeline,
+    _calculate_text_safe_zone_score, _calculate_object_preservation_score,
+    _calculate_color_compliance_score, _calculate_composition_score,
 )
 from models import (  # noqa: E402
     CandidateScore, FaceMatchResult, GeneratedAsset, GenerationMetrics,
@@ -410,6 +412,106 @@ def test_multi_candidate_generation_with_strategy_pack(tmp_path: Path, monkeypat
     gen_meta = GenerationRunMetadata.model_validate_json(gen_meta_path.read_text(encoding="utf-8"))
     assert gen_meta.num_candidates_requested == 3
     assert gen_meta.num_candidates_completed == 3
+
+
+def test_text_safe_zone_score_evaluates_clutter(tmp_path: Path) -> None:
+    pkg = _package()
+    clean_img = _create_test_image(tmp_path / "clean.png", color="blue")
+    score_clean = _calculate_text_safe_zone_score(clean_img, pkg)
+    assert 0.0 <= score_clean <= 1.0
+    assert score_clean > 0.8
+
+    # Create image with heavy noise/clutter in bottom-right safe zone
+    cluttered_path = tmp_path / "cluttered.png"
+    img = Image.new("RGB", (1280, 720), color="blue")
+    draw = ImageDraw.Draw(img)
+    for x in range(1080, 1280, 10):
+        for y in range(576, 720, 10):
+            draw.point((x, y), fill="white" if (x + y) % 20 == 0 else "black")
+    img.save(cluttered_path)
+
+    score_cluttered = _calculate_text_safe_zone_score(cluttered_path, pkg)
+    assert 0.0 <= score_cluttered <= 1.0
+    assert score_cluttered < score_clean
+
+
+def test_object_preservation_score_evaluates_objects(tmp_path: Path) -> None:
+    pkg = _package()
+    src_img = _create_test_image(tmp_path / "src.jpg", color="green")
+    cand_img = _create_test_image(tmp_path / "cand.png", color="green")
+    analysis_path = tmp_path / "analysis.json"
+    analysis_path.write_text(json.dumps({"objects": [{"label": "cup", "confidence": 0.9}]}), encoding="utf-8")
+
+    ref_assets = ReferenceAssets(source_thumbnail_path=src_img, analysis_path=analysis_path)
+    score = _calculate_object_preservation_score(cand_img, pkg, ref_assets)
+    assert 0.0 <= score <= 1.0
+
+
+def test_color_compliance_score_calculates_lab_distance(tmp_path: Path) -> None:
+    pkg = _package().model_copy(update={"color_instructions": "vibrant blue"})
+    blue_src = _create_test_image(tmp_path / "blue_src.jpg", color="blue")
+    blue_cand = _create_test_image(tmp_path / "blue_cand.png", color="blue")
+    red_cand = _create_test_image(tmp_path / "red_cand.png", color="red")
+
+    ref_assets = ReferenceAssets(source_thumbnail_path=blue_src)
+
+    score_match = _calculate_color_compliance_score(blue_cand, pkg, ref_assets)
+    score_mismatch = _calculate_color_compliance_score(red_cand, pkg, ref_assets)
+
+    assert 0.0 <= score_match <= 1.0
+    assert 0.0 <= score_mismatch <= 1.0
+    assert score_match > score_mismatch
+
+
+def test_composition_score_evaluates_grid_balance(tmp_path: Path) -> None:
+    pkg = _package()
+    src_img = _create_test_image(tmp_path / "src.jpg", color="navy")
+    cand_img = _create_test_image(tmp_path / "cand.png", color="navy")
+    ref_assets = ReferenceAssets(source_thumbnail_path=src_img)
+
+    score = _calculate_composition_score(cand_img, pkg, ref_assets)
+    assert 0.0 <= score <= 1.0
+    assert score > 0.5
+
+
+def test_backward_compatibility_legacy_txt2img_default(tmp_path: Path) -> None:
+    pkg_dir = tmp_path / "prompt_packages"
+    thumb_dir = tmp_path / "thumbnails"
+    analysis_dir = tmp_path / "analysis"
+    out_dir = tmp_path / "generated_thumbnails"
+    pkg_dir.mkdir()
+    thumb_dir.mkdir()
+    analysis_dir.mkdir()
+
+    pkg = _package()
+    (pkg_dir / f"{VIDEO_ID}.json").write_text(pkg.model_dump_json(), encoding="utf-8")
+    ref_img = _create_test_image(thumb_dir / f"{VIDEO_ID}.jpg")
+    mock_png_bytes = ref_img.read_bytes()
+
+    class MockClient:
+        def generate(self, built_wf, video_id, num_candidates_requested=1, **kwargs):
+            from comfyui_client import _OutputResult
+            return _OutputResult(
+                prompt_id="mock-prompt-id", output_node_id="7", filename="output.png",
+                subfolder="", image_type="output", format="png", content=mock_png_bytes,
+                width=1280, height=720,
+            )
+
+    pipeline = ImageGeneratorPipeline(
+        client=MockClient(),
+        package_loader=PromptPackageLoader(pkg_dir),
+        asset_resolver=ReferenceAssetResolver(thumb_dir, analysis_dir),
+        artifact_writer=ArtifactWriter(out_dir),
+    )
+
+    result_default = pipeline.run(VIDEO_ID, niche="gaming", prompt_package=pkg)
+    result_legacy = pipeline.run(VIDEO_ID, niche="gaming", prompt_package=pkg, edit_mode="legacy_txt2img")
+
+    assert result_default.status == "success"
+    assert result_legacy.status == "success"
+    assert result_default.workflow_hash == result_legacy.workflow_hash
+
+
 
 
 

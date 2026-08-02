@@ -49,3 +49,13 @@ def test_load_invalid_schema_raises(tmp_path: Path):
     lib = NodeFragmentLibrary(fragment_dir=tmp_path)
     with pytest.raises(WorkflowBuildError, match="missing valid '_attach.point'"):
         lib.load("invalid_frag")
+
+
+def test_load_v2_fragments():
+    lib = NodeFragmentLibrary()
+    inpaint_base = lib.load("inpaint_base")
+    edit_mask = lib.load("edit_region_mask")
+
+    assert inpaint_base["_attach"]["point"] == "latent_source"
+    assert edit_mask["_attach"]["point"] == "latent_source"
+

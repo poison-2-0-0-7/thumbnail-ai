@@ -1,9 +1,9 @@
 {
   "video_id": "O0Y-oLarao4",
-  "created_at": "2026-08-01T15:59:56.156927+00:00",
+  "created_at": "2026-08-02T07:51:32.830359+00:00",
   "vre_source_hash": "c7b650037eebe2b1a62c0c0a7f24ce2c1cbec13ac4b2be04a243dbe35aa9fff0",
-  "redesign_spec_hash": "55ba30b706143a8c696df06de3f645a55e2eea910ffaf231293cb1f4745cb545",
-  "prompt_package_hash": "009a1398f57417a6d3bfce53452015e0501d0a10c6adf0ebf7767f42bd6fc582",
+  "redesign_spec_hash": "1642e232c833623b882f3ae244890f391e5f202fde75064f71b8af8c95a59a56",
+  "prompt_package_hash": "d92964abc4f29136bf4024de1a2160e5cb7f7a5278d628db7bbcd82b3572ae0a",
   "engine_version": "1.0.0",
   "validated": true,
   "layers_written": true

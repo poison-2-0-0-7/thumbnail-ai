@@ -1,10 +1,10 @@
 {
   "video_id": "I-bnBd5lCew",
-  "positive_prompt": "Place the primary subject in the top-right of the frame, matching the source position label 'right-third'. Crop tighter around the subject so it occupies a larger share of the frame. Maintain approximately 25% negative space in the background. Keep the background moderately simple with limited competing elements. Anchor the composition's focal point in the top-right of the frame, targeting a clutter score of 0.60 and a negative-space ratio of 0.25. Use balanced lighting with a high-contrast look (target brightness=0.57, target contrast=0.77). Render muted, desaturated colors with a warm color temperature (target saturation=0.30). Render text overlay: 'The Truth About Transformation journey text' on the thumbnail. Reserve the designated text placement region for the headline overlay. Preserve: Transformation journey text, Emotional impact through visuals, Clear and concise composition.",
+  "positive_prompt": "Place the primary subject in the top-right of the frame, matching the source position label 'right-third'. Crop tighter around the subject so it occupies a larger share of the frame. Maintain approximately 25% negative space in the background. Keep the background moderately simple with limited competing elements. Anchor the composition's focal point in the top-right of the frame, targeting a clutter score of 0.60 and a negative-space ratio of 0.25. Use balanced lighting with a high-contrast look (target brightness=0.57, target contrast=0.77). Render muted, desaturated colors with a warm color temperature (target saturation=0.30). Render text overlay: 'The Truth About Positive emotional expression' on the thumbnail. Reserve the designated text placement region for the headline overlay. Preserve: Positive emotional expression, Clear text indicating progression, Use of faces to convey authenticity.",
   "negative_prompt": "blurry, low resolution, watermark, distorted anatomy, extra limbs, text artifacts, jpeg compression artifacts",
   "subject_instructions": "Place the primary subject in the top-right of the frame, matching the source position label 'right-third'. Crop tighter around the subject so it occupies a larger share of the frame.",
   "background_instructions": "Maintain approximately 25% negative space in the background. Keep the background moderately simple with limited competing elements.",
-  "typography_instructions": "Render text overlay: 'The Truth About Transformation journey text' on the thumbnail. Reserve the designated text placement region for the headline overlay.",
+  "typography_instructions": "Render text overlay: 'The Truth About Positive emotional expression' on the thumbnail. Reserve the designated text placement region for the headline overlay.",
   "composition_instructions": "Anchor the composition's focal point in the top-right of the frame, targeting a clutter score of 0.60 and a negative-space ratio of 0.25.",
   "lighting_instructions": "Use balanced lighting with a high-contrast look (target brightness=0.57, target contrast=0.77).",
   "color_instructions": "Render muted, desaturated colors with a warm color temperature (target saturation=0.30).",
@@ -15,7 +15,7 @@
   "rendering_constraints": [
     "Render at the exact target resolution; do not crop after generation.",
     "Do not add any watermark, logo, or signature.",
-    "Preserve the following elements exactly: Transformation journey text, Emotional impact through visuals, Clear and concise composition."
+    "Preserve the following elements exactly: Positive emotional expression, Clear text indicating progression, Use of faces to convey authenticity."
   ],
   "safety_constraints": [
     "Do not depict real, identifiable people; use a generic or anonymized figure.",
@@ -50,6 +50,6 @@
   },
   "status": "success",
   "error_message": null,
-  "duration_seconds": 0.00120449997484684,
-  "generated_at": "2026-08-01T15:50:06.944940+00:00"
+  "duration_seconds": 0.0001270999782718718,
+  "generated_at": "2026-08-02T07:46:48.937330+00:00"
 }

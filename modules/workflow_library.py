@@ -79,23 +79,54 @@ class WorkflowLibrary:
             if not isinstance(node.get("class_type"), str) or not isinstance(node.get("inputs"), dict):
                 raise WorkflowTemplateError(f"{label} node '{node_id}' requires class_type and inputs")
 
-    def resolve(self, niche: str, profile: GenerationProfile) -> WorkflowTemplateRef:
-        """Resolve ``(niche, profile)`` deterministically, falling back to general."""
+    def resolve(
+        self,
+        niche: str,
+        profile: GenerationProfile,
+        edit_mode: str = "legacy_txt2img",
+    ) -> WorkflowTemplateRef:
+        """Resolve ``(niche, profile)`` deterministically, supporting staged edit templates and fallback to general."""
         normalized = niche.strip().lower() if niche else ""
-        filename = MODULE7_NICHE_WORKFLOW_MAP.get(normalized, "general.json")
-        path = self.library_dir / filename
-        if filename != "general.json" and not path.exists():
+        effective_edit_mode = edit_mode
+        if effective_edit_mode == "auto":
+            effective_edit_mode = getattr(profile, "edit_mode_default", "legacy_txt2img") or "legacy_txt2img"
+
+        if effective_edit_mode == "staged_edit":
+            edit_filename = f"{normalized}_edit.json" if normalized in MODULE7_NICHE_WORKFLOW_MAP else "general_edit.json"
+            edit_path = self.library_dir / edit_filename
+            if edit_path.exists():
+                path = edit_path
+            else:
+                fallback_path = self.library_dir / "general_edit.json"
+                if fallback_path.exists():
+                    path = fallback_path
+                else:
+                    filename = MODULE7_NICHE_WORKFLOW_MAP.get(normalized, "general.json")
+                    path = self.library_dir / filename
+        else:
+            filename = MODULE7_NICHE_WORKFLOW_MAP.get(normalized, "general.json")
+            path = self.library_dir / filename
+
+        if not path.exists():
             logger.warning("Workflow template missing for niche={niche}; falling back to general.json", niche=normalized)
             path = self.library_dir / "general.json"
-        if filename == "general.json" and normalized not in MODULE7_NICHE_WORKFLOW_MAP:
-            logger.info("Workflow fallback selected for unmapped niche={niche}", niche=normalized or "<empty>")
+
         template = self.load(path)
         meta = template["_meta"]
-        ref = WorkflowTemplateRef(niche=normalized or "general", profile_name=profile.name,
-                                  template_path=str(path), workflow_version=meta["workflow_version"],
-                                  template_name=meta["name"])
-        logger.info("Workflow resolved: niche={niche}, profile={profile}, template={template}",
-                    niche=ref.niche, profile=profile.name, template=path.name)
+        ref = WorkflowTemplateRef(
+            niche=normalized or "general",
+            profile_name=profile.name,
+            template_path=str(path),
+            workflow_version=meta["workflow_version"],
+            template_name=meta["name"],
+        )
+        logger.info(
+            "Workflow resolved: niche={niche}, profile={profile}, template={template}, edit_mode={mode}",
+            niche=ref.niche,
+            profile=profile.name,
+            template=path.name,
+            mode=effective_edit_mode,
+        )
         return ref
 
 

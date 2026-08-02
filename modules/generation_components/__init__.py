@@ -27,6 +27,15 @@ from generation_components.capability_probe import CapabilityProbe
 from generation_components.strategy_pack_resolver import StrategyPackLibrary, StrategyPackResolver
 from generation_components.candidate_strategy_planner import CandidateStrategyPlanner
 from generation_components.workflow_graph_cache import WorkflowGraphCache
+from generation_components.region_plan_validator import RegionPlanValidator
+from generation_components.staged_edit_stages import (
+    BackgroundEditStage,
+    BaseLatentStage,
+    HarmonizationStage,
+    MaskedCompositeStage,
+    ObjectEditStage,
+    TypographyStage,
+)
 
 
 __all__ = [
@@ -42,6 +51,13 @@ __all__ = [
     "StrategyPackResolver",
     "CandidateStrategyPlanner",
     "WorkflowGraphCache",
+    "RegionPlanValidator",
+    "BaseLatentStage",
+    "MaskedCompositeStage",
+    "BackgroundEditStage",
+    "ObjectEditStage",
+    "TypographyStage",
+    "HarmonizationStage",
     "IGenerationBundleLoader",
     "ICompositionWorkspaceLoader",
     "IConditioningAssetResolver",

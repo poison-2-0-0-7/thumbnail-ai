@@ -18,6 +18,7 @@ from __future__ import annotations
 from enum import Enum
 from typing import Any, Literal, Optional
 
+from pathlib import Path
 from pydantic import BaseModel, ConfigDict, Field, field_validator
 
 
@@ -870,6 +871,7 @@ class GenerationProfile(BaseModel):
     upscaler: Literal["real_esrgan_x4", "lanczos_only"]
     expected_vram_gb: float
     expected_generation_seconds: float
+    edit_mode_default: Literal["legacy_txt2img", "staged_edit"] | None = None
 
 
 class WorkflowTemplateRef(BaseModel):
@@ -1991,6 +1993,41 @@ class GenerationPlan(BaseModel):
         if len(v) != 64 or any(char not in "0123456789abcdef" for char in v.lower()):
             raise ValueError("optional hashes must be SHA-256 hex digests")
         return v.lower()
+
+
+# ---------------------------------------------------------------------------
+# Module 7 V2 — Editing Engine Models
+# ---------------------------------------------------------------------------
+
+
+class EditRegion(BaseModel):
+    """Specific element region targeted for localized staged editing in Module 7 V2."""
+
+    model_config = ConfigDict(frozen=True)
+
+    element_id: str
+    decision_type: Literal["keep", "remove", "replace", "enhance", "add"]
+    mask_path: Optional[Path] = None
+    denoise_strength: float = Field(default=0.85, ge=0.0, le=1.0)
+    steps: int = Field(default=25, ge=0)
+    stage: Literal["background", "object"]
+
+
+class EditPlan(BaseModel):
+    """Concrete, frozen execution plan mapping element decisions to localized edit passes."""
+
+    model_config = ConfigDict(frozen=True)
+
+    video_id: str
+    edit_scope: Literal["none", "background_only", "object_only", "heavy_redesign"]
+    regions: list[EditRegion] = Field(default_factory=list)
+    fallback_elements: list[dict[str, str]] = Field(default_factory=list)
+    created_at: str
+
+
+EditRegion.model_rebuild()
+EditPlan.model_rebuild()
+
 
 
 

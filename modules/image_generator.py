@@ -56,6 +56,13 @@ from generation_components import (
     StrategyPackResolver,
     WorkflowGraphAssembler,
     WorkflowGraphCache,
+    RegionPlanValidator,
+    BaseLatentStage,
+    MaskedCompositeStage,
+    BackgroundEditStage,
+    ObjectEditStage,
+    TypographyStage,
+    HarmonizationStage,
 )
 
 from module7_exceptions import (
@@ -65,6 +72,7 @@ from module7_exceptions import (
     QualityAssuranceError, ReferenceAssetError, StrategyPackError, VRAMExhaustedError,
     WorkflowBuildError, WorkflowTemplateError,
 )
+from observability.generation_trace import GenerationTraceRecorder
 from workflow_library import WorkflowLibrary
 
 
@@ -255,7 +263,7 @@ class WorkflowBuilder:
         raw_graph = template.get("graph", {})
 
         if conditioning is not None:
-            fragment_ids = self._select_fragments(profile, conditioning)
+            fragment_ids = self._select_fragments(profile, conditioning, workflow_ref=workflow_ref)
             fragment_dicts = []
             for fid in fragment_ids:
                 frag_data = self.fragment_library.load(fid)
@@ -291,13 +299,11 @@ class WorkflowBuilder:
         cond_hash = _conditioning_context_hash(conditioning)
         key = (workflow_ref.template_path, workflow_ref.workflow_version, profile.name, cond_hash)
 
-
         base_unsubstituted = cache.get(key) if cache is not None else None
         if base_unsubstituted is None:
             base_unsubstituted = self.build_base(profile, workflow_ref, library=library, conditioning=conditioning)
             if cache is not None:
                 cache.put(key, base_unsubstituted)
-
 
         slots = self._slots(package, profile, reference_assets, conditioning, plan)
         try:
@@ -318,13 +324,23 @@ class WorkflowBuilder:
         logger.info("Built workflow template={template}, version={version}, workflow_hash={hash}", template=workflow_ref.template_name, version=workflow_ref.workflow_version, hash=workflow_hash)
         return BuiltWorkflow(graph=final_graph, workflow_ref=workflow_ref, workflow_hash=workflow_hash)
 
-
     def _select_fragments(
-        self, profile: GenerationProfile, conditioning: GenerationConditioningContext | None
+        self,
+        profile: GenerationProfile,
+        conditioning: GenerationConditioningContext | None,
+        workflow_ref: WorkflowTemplateRef | None = None,
     ) -> list[str]:
         if conditioning is None:
             return []
         fragments: list[str] = []
+
+        is_edit_workflow = workflow_ref is not None and (
+            workflow_ref.template_name.endswith("_edit") or "_edit" in workflow_ref.template_path
+        )
+        if is_edit_workflow:
+            fragments.append("inpaint_base")
+            fragments.append("edit_region_mask")
+
         if profile.controlnet_enabled and conditioning.depth_path is not None:
             fragments.append("controlnet_depth")
         if profile.controlnet_enabled and conditioning.canny_path is not None:
@@ -351,7 +367,7 @@ class WorkflowBuilder:
     ) -> dict[str, Any]:
         positive = " ".join((package.positive_prompt, package.subject_instructions,
                              package.lighting_instructions, package.color_instructions))
-        
+
         neg_parts = [package.negative_prompt, *package.rendering_constraints, *package.safety_constraints]
         if plan and plan.negative_constraints:
             for nc in plan.negative_constraints:
@@ -371,6 +387,12 @@ class WorkflowBuilder:
         elif references and references.source_thumbnail_path:
             thumb_path = str(references.source_thumbnail_path)
 
+        edit_mask = ""
+        if conditioning and hasattr(conditioning, "role_mask_paths") and conditioning.role_mask_paths and "edit_mask" in conditioning.role_mask_paths:
+            edit_mask = str(conditioning.role_mask_paths["edit_mask"])
+        elif conditioning and conditioning.text_exclusion_mask_path:
+            edit_mask = str(conditioning.text_exclusion_mask_path)
+
         return {
             "checkpoint": profile.checkpoint, "positive_prompt": positive,
             "negative_prompt": negative, "background_prompt": package.background_instructions,
@@ -382,6 +404,8 @@ class WorkflowBuilder:
             "upscaler": profile.upscaler,
             "output_filename_prefix": WorkflowBuilder._output_filename_prefix(package),
             "source_thumbnail_path": thumb_path,
+            "edit_mask_path": edit_mask,
+            "denoise_strength": 0.75,
             "foreground_image_path": str(conditioning.role_image_paths.get("foreground", "")) if conditioning else "",
             "background_image_path": str(conditioning.role_image_paths.get("background", "")) if conditioning else "",
             "person_mask_path": str(conditioning.role_mask_paths.get("person", "")) if conditioning else "",
@@ -589,24 +613,250 @@ def _calculate_face_quality_score(image_path: Path) -> float:
         return 0.5
 
 
-def _calculate_text_safe_zone_score(image_path: Path, package: PromptPackage) -> float:
-    """Calculate safe-zone collision score in [0.0, 1.0]."""
+def _rgb_to_lab_mean_std(img: Image) -> tuple[np.ndarray, np.ndarray]:
+    """Compute approximate CIELAB color space mean and stddev vectors from RGB image."""
+    rgb = np.array(img.convert("RGB"), dtype=float) / 255.0
+    mask = rgb > 0.04045
+    rgb[mask] = ((rgb[mask] + 0.055) / 1.055) ** 2.4
+    rgb[~mask] = rgb[~mask] / 12.92
+
+    matrix = np.array([
+        [0.4124564, 0.3575761, 0.1804375],
+        [0.2126729, 0.7151522, 0.0721750],
+        [0.0193339, 0.1191920, 0.9503041],
+    ])
+    xyz = np.dot(rgb, matrix.T)
+
+    xyz_ref = np.array([0.95047, 1.00000, 1.08883])
+    xyz_scaled = xyz / xyz_ref
+
+    mask_lab = xyz_scaled > 0.008856
+    f_xyz = np.zeros_like(xyz_scaled)
+    f_xyz[mask_lab] = xyz_scaled[mask_lab] ** (1 / 3)
+    f_xyz[~mask_lab] = (7.787 * xyz_scaled[~mask_lab]) + (16 / 116)
+
+    L = (116.0 * f_xyz[:, :, 1]) - 16.0
+    a = 500.0 * (f_xyz[:, :, 0] - f_xyz[:, :, 1])
+    b = 200.0 * (f_xyz[:, :, 1] - f_xyz[:, :, 2])
+
+    lab_stack = np.stack([L, a, b], axis=-1)
+    means = np.mean(lab_stack, axis=(0, 1))
+    stddevs = np.std(lab_stack, axis=(0, 1))
+    return means, stddevs
+
+
+def _calculate_text_safe_zone_score(
+    image_path: Path,
+    package: PromptPackage,
+    reference_assets: ReferenceAssets | None = None,
+) -> float:
+    """Calculate safe-zone collision score in [0.0, 1.0].
+
+    Phase 0 Implementation:
+    Evaluates edge/contrast clutter in the standard YouTube duration badge area
+    (bottom-right: [85%..100% width, 80%..100% height]).
+    In Phase 5, this is superseded by headline_placement_zone mask overlap checks.
+    """
+    if not image_path.is_file():
+        return 0.5
+
+    try:
+        with Image.open(image_path) as img:
+            w, h = img.size
+            if w <= 0 or h <= 0:
+                return 0.5
+
+            bx0, by0 = int(w * 0.85), int(h * 0.80)
+            crop_zone = img.crop((bx0, by0, w, h)).convert("L")
+            arr = np.array(crop_zone, dtype=float)
+
+            if arr.size == 0:
+                return 1.0
+
+            std_dev = float(np.std(arr))
+            clutter_penalty = min(0.6, std_dev / 100.0)
+            score = 1.0 - clutter_penalty
+            return max(0.0, min(1.0, float(score)))
+    except Exception as exc:
+        logger.debug("Failed calculating text safe zone score for {path}: {exc}", path=image_path, exc=exc)
+        return 0.5
+
+
+def _calculate_object_preservation_score(
+    image_path: Path,
+    package: PromptPackage,
+    reference_assets: ReferenceAssets | None = None,
+) -> float:
+    """Calculate object-directive preservation score in [0.0, 1.0].
+
+    Phase 0 Implementation:
+    Runs YOLO object detection over candidate image and compares detected objects against
+    Module 4 analysis report if available (reference_assets.analysis_path) or structural
+    variance. In Phase 4, this is updated to evaluate against Module 8 ObjectAsset records.
+    """
+    if not image_path.is_file():
+        return 0.5
+
+    ref_objects: list[dict[str, Any]] = []
+    if reference_assets and reference_assets.analysis_path and reference_assets.analysis_path.is_file():
+        try:
+            data = json.loads(reference_assets.analysis_path.read_text(encoding="utf-8"))
+            detected = data.get("objects", data.get("detected_objects", []))
+            if isinstance(detected, list):
+                ref_objects = detected
+        except Exception as exc:
+            logger.debug("Could not read reference analysis for object preservation: {exc}", exc=exc)
+
+    try:
+        from thumbnail_intelligence import _get_yolo_model
+        model = _get_yolo_model()
+        results = model(str(image_path), verbose=False)
+        cand_classes: set[str] = set()
+        if results and len(results) > 0 and hasattr(results[0], "boxes"):
+            boxes = results[0].boxes
+            names = getattr(results[0], "names", {})
+            for b in boxes:
+                cls_id = int(b.cls[0].item()) if hasattr(b.cls[0], "item") else int(b.cls[0])
+                cls_name = names.get(cls_id, str(cls_id)).lower()
+                cand_classes.add(cls_name)
+
+        if ref_objects:
+            ref_classes = {
+                (obj.get("label") or obj.get("class_name") or "").lower()
+                for obj in ref_objects if isinstance(obj, dict)
+            }
+            ref_classes.discard("")
+            if ref_classes:
+                matched = ref_classes.intersection(cand_classes)
+                score = len(matched) / len(ref_classes)
+                return max(0.0, min(1.0, float(score)))
+
+        return 1.0 if len(cand_classes) > 0 else 0.8
+    except Exception as exc:
+        logger.debug("YOLO model not available for object preservation check: {exc}", exc=exc)
+
+    if reference_assets and reference_assets.source_thumbnail_path and reference_assets.source_thumbnail_path.is_file():
+        try:
+            with Image.open(image_path) as cand_img, Image.open(reference_assets.source_thumbnail_path) as src_img:
+                c_gray = cand_img.convert("L").resize((64, 64))
+                s_gray = src_img.convert("L").resize((64, 64))
+                c_arr = np.array(c_gray, dtype=float)
+                s_arr = np.array(s_gray, dtype=float)
+                diff = float(np.mean(np.abs(c_arr - s_arr)))
+                score = 1.0 - (diff / 200.0)
+                return max(0.0, min(1.0, float(score)))
+        except Exception:
+            pass
+
     return 1.0
 
 
-def _calculate_object_preservation_score(image_path: Path, package: PromptPackage) -> float:
-    """Calculate object-directive preservation score in [0.0, 1.0]."""
-    return 1.0
+def _calculate_color_compliance_score(
+    image_path: Path,
+    package: PromptPackage,
+    reference_assets: ReferenceAssets | None = None,
+) -> float:
+    """Calculate color direction compliance score in [0.0, 1.0].
+
+    Phase 0 Implementation:
+    Measures Lab-space color distance against reference thumbnail when available,
+    or checks HSV brightness/saturation against package color instructions.
+    """
+    if not image_path.is_file():
+        return 0.5
+
+    try:
+        with Image.open(image_path) as cand_img:
+            if reference_assets and reference_assets.source_thumbnail_path and reference_assets.source_thumbnail_path.is_file():
+                with Image.open(reference_assets.source_thumbnail_path) as src_img:
+                    cand_means, _ = _rgb_to_lab_mean_std(cand_img.resize((128, 128)))
+                    src_means, _ = _rgb_to_lab_mean_std(src_img.resize((128, 128)))
+
+                    delta_e = float(np.linalg.norm(cand_means - src_means))
+                    score = 1.0 - (delta_e / 100.0)
+                    return max(0.0, min(1.0, float(score)))
+
+            hsv = cand_img.convert("HSV")
+            arr = np.array(hsv, dtype=float)
+            sat_mean = float(np.mean(arr[:, :, 1])) / 255.0
+            val_mean = float(np.mean(arr[:, :, 2])) / 255.0
+
+            score = 1.0
+            if sat_mean < 0.15:
+                score -= 0.2
+            if val_mean < 0.2 or val_mean > 0.95:
+                score -= 0.2
+
+            color_instr = (package.color_instructions or "").lower()
+            if "vibrant" in color_instr or "saturated" in color_instr:
+                if sat_mean < 0.3:
+                    score -= 0.2
+            elif "dark" in color_instr or "moody" in color_instr:
+                if val_mean > 0.6:
+                    score -= 0.2
+
+            return max(0.0, min(1.0, float(score)))
+    except Exception as exc:
+        logger.debug("Failed calculating color compliance score for {path}: {exc}", path=image_path, exc=exc)
+        return 0.5
 
 
-def _calculate_color_compliance_score(image_path: Path, package: PromptPackage) -> float:
-    """Calculate color direction compliance score in [0.0, 1.0]."""
-    return 1.0
+def _calculate_composition_score(
+    image_path: Path,
+    package: PromptPackage,
+    reference_assets: ReferenceAssets | None = None,
+) -> float:
+    """Calculate composition adherence score in [0.0, 1.0].
 
+    Phase 0 Implementation:
+    Evaluates spatial energy distribution across 3x3 grid (Rule of Thirds) and structural
+    gradient correlation against reference thumbnail if present.
+    """
+    if not image_path.is_file():
+        return 0.5
 
-def _calculate_composition_score(image_path: Path, package: PromptPackage) -> float:
-    """Calculate composition adherence score in [0.0, 1.0]."""
-    return 1.0
+    try:
+        with Image.open(image_path) as cand_img:
+            gray = cand_img.convert("L").resize((90, 90))
+            arr = np.array(gray, dtype=float)
+
+            sections = [
+                arr[r * 30:(r + 1) * 30, c * 30:(c + 1) * 30]
+                for r in range(3) for c in range(3)
+            ]
+            variances = [float(np.var(sec)) for sec in sections]
+            total_var = sum(variances) + 1e-6
+
+            props = [v / total_var for v in variances]
+            max_prop = max(props)
+            balance_penalty = max(0.0, (max_prop - 0.5) * 1.5)
+            score = 1.0 - balance_penalty
+
+            if reference_assets and reference_assets.source_thumbnail_path and reference_assets.source_thumbnail_path.is_file():
+                try:
+                    with Image.open(reference_assets.source_thumbnail_path) as src_img:
+                        src_gray = src_img.convert("L").resize((90, 90))
+                        src_arr = np.array(src_gray, dtype=float)
+                        src_sections = [
+                            src_arr[r * 30:(r + 1) * 30, c * 30:(c + 1) * 30]
+                            for r in range(3) for c in range(3)
+                        ]
+                        src_vars = [float(np.var(sec)) for sec in src_sections]
+                        src_total = sum(src_vars) + 1e-6
+                        src_props = [v / src_total for v in src_vars]
+
+                        norm_cand = np.linalg.norm(props)
+                        norm_src = np.linalg.norm(src_props)
+                        if norm_cand > 0 and norm_src > 0:
+                            energy_sim = float(np.dot(props, src_props) / (norm_cand * norm_src))
+                            score = 0.5 * score + 0.5 * energy_sim
+                except Exception:
+                    pass
+
+            return max(0.0, min(1.0, float(score)))
+    except Exception as exc:
+        logger.debug("Failed calculating composition score for {path}: {exc}", path=image_path, exc=exc)
+        return 0.5
 
 
 class IdentityPreservationStage:
@@ -793,10 +1043,10 @@ class QualityAssuranceStage:
 
         identity_score = 1.0 if face_match.skipped else face_match.similarity
         face_quality_score = _calculate_face_quality_score(image_path)
-        text_safe_zone_score = _calculate_text_safe_zone_score(image_path, package)
-        object_preservation_score = _calculate_object_preservation_score(image_path, package)
-        color_compliance_score = _calculate_color_compliance_score(image_path, package)
-        composition_score = _calculate_composition_score(image_path, package)
+        text_safe_zone_score = _calculate_text_safe_zone_score(image_path, package, reference_assets)
+        object_preservation_score = _calculate_object_preservation_score(image_path, package, reference_assets)
+        color_compliance_score = _calculate_color_compliance_score(image_path, package, reference_assets)
+        composition_score = _calculate_composition_score(image_path, package, reference_assets)
 
         overall = (
             self.weights["identity_score"] * identity_score +
@@ -907,6 +1157,14 @@ class ImageGeneratorPipeline:
         strategy_pack_resolver: StrategyPackResolver | None = None,
         strategy_planner: CandidateStrategyPlanner | None = None,
         capability_probe: ICapabilityProbe | None = None,
+        region_plan_validator: RegionPlanValidator | None = None,
+        base_latent_stage: BaseLatentStage | None = None,
+        masked_composite_stage: MaskedCompositeStage | None = None,
+        background_edit_stage: BackgroundEditStage | None = None,
+        object_edit_stage: ObjectEditStage | None = None,
+        typography_stage: TypographyStage | None = None,
+        harmonization_stage: HarmonizationStage | None = None,
+        trace_recorder: GenerationTraceRecorder | None = None,
     ) -> None:
         self.client = client
         self.capability_probe = capability_probe or (CapabilityProbe(client=client) if client else None)
@@ -923,11 +1181,19 @@ class ImageGeneratorPipeline:
         self.ranker = ranker or CandidateRanker()
         self.artifact_writer = artifact_writer or ArtifactWriter()
         self.metrics_collector = metrics_collector or MetricsCollector()
+        self.trace_recorder = trace_recorder or GenerationTraceRecorder()
         self.bundle_loader = bundle_loader or GenerationBundleLoader()
         self.workspace_loader = workspace_loader or CompositionWorkspaceLoader()
         self.conditioning_resolver = conditioning_resolver or ConditioningAssetResolver()
         self.strategy_pack_resolver = strategy_pack_resolver or StrategyPackResolver()
         self.strategy_planner = strategy_planner or CandidateStrategyPlanner()
+        self.region_plan_validator = region_plan_validator or RegionPlanValidator()
+        self.base_latent_stage = base_latent_stage or BaseLatentStage()
+        self.masked_composite_stage = masked_composite_stage or MaskedCompositeStage()
+        self.background_edit_stage = background_edit_stage or BackgroundEditStage()
+        self.object_edit_stage = object_edit_stage or ObjectEditStage()
+        self.typography_stage = typography_stage or TypographyStage()
+        self.harmonization_stage = harmonization_stage or HarmonizationStage()
 
     def run(
         self,
@@ -939,12 +1205,17 @@ class ImageGeneratorPipeline:
         composition_workspace: CompositionWorkspace | None = None,
         generation_plan: GenerationPlan | None = None,
         design_blueprint: DesignBlueprint | None = None,
+        edit_mode: Literal["legacy_txt2img", "staged_edit", "auto"] = "legacy_txt2img",
     ) -> ImageGenerationResult:
         start_time = time.monotonic()
         package = prompt_package or self.package_loader.load(video_id)
         pkg_hash = prompt_package_hash(package)
         references = self.asset_resolver.resolve(package)
         profile = self.profile_selector.select(available_vram_gb, MODULE7_PROFILE)
+
+        effective_edit_mode = edit_mode
+        if effective_edit_mode == "auto":
+            effective_edit_mode = getattr(profile, "edit_mode_default", "legacy_txt2img") or "legacy_txt2img"
 
         conditioning_ctx = self.conditioning_resolver.resolve(
             bundle=generation_bundle,
@@ -1285,6 +1556,27 @@ class ImageGeneratorPipeline:
         qa_report = self.qa_stage.evaluate(final_cand_path, package, face_match, references)
         cand_stage_durations["quality_assurance"] = time.monotonic() - t0
 
+        try:
+            meta_frags = (
+                built_wf.graph.get("_meta", {}).get("attached_fragments", [])
+                if hasattr(built_wf, "graph") and isinstance(built_wf.graph, dict)
+                else []
+            )
+            self.trace_recorder.record(
+                video_id=video_id,
+                attempt_index=cand_idx,
+                package=cand_package,
+                profile=profile,
+                built_wf=built_wf,
+                conditioning_ctx=conditioning_ctx,
+                generation_plan=generation_plan,
+                output_image_path=final_cand_path,
+                stage_durations=cand_stage_durations,
+                fragments_attached=meta_frags,
+            )
+        except Exception as exc:
+            logger.warning("Trace recording skipped for video_id={vid}: {exc}", vid=video_id, exc=exc)
+
         return (cand_idx, final_cand_path, qa_report, face_match, strategy, cand_package, built_wf.workflow_hash, cand_stage_durations, identity_retries)
 
 
@@ -1298,6 +1590,7 @@ def run_image_generation_pipeline(
     composition_workspace: CompositionWorkspace | None = None,
     generation_plan: GenerationPlan | None = None,
     design_blueprint: DesignBlueprint | None = None,
+    edit_mode: Literal["legacy_txt2img", "staged_edit", "auto"] = "legacy_txt2img",
     client: Any | None = None,
     thumbnail_dir: Path = DEFAULT_THUMBNAIL_DIR,
     analysis_dir: Path = DEFAULT_ANALYSIS_DIR,
@@ -1318,6 +1611,7 @@ def run_image_generation_pipeline(
         composition_workspace=composition_workspace,
         generation_plan=generation_plan,
         design_blueprint=design_blueprint,
+        edit_mode=edit_mode,
     )
     if result.generated_asset is None:
         raise ArtifactWriteError(f"No asset produced for {video_id}")

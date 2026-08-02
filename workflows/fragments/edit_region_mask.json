@@ -1,0 +1,27 @@
+{
+  "_meta": {
+    "name": "edit_region_mask",
+    "description": "Masked region inpainting noise mask fragment for localized editing",
+    "required_node_types": ["LoadImage", "SetLatentNoiseMask"]
+  },
+  "_attach": {
+    "point": "latent_source",
+    "output_node": "20",
+    "output_slot": 0
+  },
+  "graph": {
+    "10": {
+      "class_type": "LoadImage",
+      "inputs": {
+        "image": "{{edit_mask_path}}"
+      }
+    },
+    "20": {
+      "class_type": "SetLatentNoiseMask",
+      "inputs": {
+        "samples": ["ATTACHMENT_PREVIOUS", 0],
+        "mask": ["10", 1]
+      }
+    }
+  }
+}

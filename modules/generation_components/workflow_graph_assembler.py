@@ -66,9 +66,12 @@ class WorkflowGraphAssembler(IWorkflowGraphAssembler):
         meta: dict[str, Any] = assembled.get("_meta", {})
         attachment_points: dict[str, Any] = meta.get("attachment_points", {})
 
+        attached_records: list[dict[str, Any]] = []
         for idx, fragment in enumerate(fragments):
             attach_info = fragment.get("_attach", {})
             point_name = attach_info.get("point")
+            frag_meta = fragment.get("_meta", {})
+            frag_name = frag_meta.get("name", f"fragment_{idx}")
 
             if not point_name or point_name not in attachment_points:
                 raise FragmentAttachmentError(
@@ -115,6 +118,13 @@ class WorkflowGraphAssembler(IWorkflowGraphAssembler):
             # Update the base graph node input to consume the fragment output
             graph_nodes[target_node_id]["inputs"][input_key] = new_output_ref
 
+            attached_records.append({
+                "fragment_name": frag_name,
+                "attach_point": point_name,
+            })
+
+        meta["attached_fragments"] = attached_records
+        assembled["_meta"] = meta
         assembled["graph"] = graph_nodes
         logger.info(
             "Assembled workflow graph with {n_fragments} fragment(s) attached; final node count={count}",

@@ -1,0 +1,50 @@
+{
+  "video_id": "abcdEFGH123",
+  "attempt_index": 2,
+  "generation_id": "abcdEFGH123_cand_2",
+  "workflow_template": "gaming",
+  "workflow_hash": "533b7ebec0169a6558859b0e103d0b8876105d991bbd8aa525af186704229367",
+  "workflow_fragments": [],
+  "fragments_attached": [],
+  "latent_source": "noise",
+  "denoise": 1.0,
+  "seed": 125,
+  "scheduler": "simple",
+  "sampler": "euler",
+  "steps": 20,
+  "cfg": 1.0,
+  "controlnet_enabled": false,
+  "ipadapter_enabled": true,
+  "edit_mode": "txt2img",
+  "generation_profile": "PROFILE_PREMIUM",
+  "controlnet_config": {
+    "enabled": false
+  },
+  "ipadapter_config": {
+    "enabled": true
+  },
+  "conditioning_assets": [],
+  "asset_references": [],
+  "mask_references": [],
+  "composition_references": [],
+  "generation_plan_reference": null,
+  "prompt_reference": null,
+  "negative_prompt_reference": null,
+  "source_thumbnail_path": "C:\\Users\\iafsa\\AppData\\Local\\Temp\\pytest-of-iafsa\\pytest-213\\test_multi_candidate_generatio0\\thumbnails\\abcdEFGH123.jpg",
+  "edit_mask_paths": [],
+  "execution_timestamps": {
+    "recorded_at": "2026-08-02T06:36:37.873507+00:00",
+    "duration_comfyui_generate": "0.0000s",
+    "duration_identity_preservation": "0.1647s",
+    "duration_face_restoration": "0.0621s",
+    "duration_background_composition": "0.0199s",
+    "duration_upscale": "0.0233s",
+    "duration_quality_assurance": "0.1826s"
+  },
+  "renderer_version": "1.0.0",
+  "model_version": null,
+  "lora_list": [],
+  "vae": null,
+  "output_image_path": "C:\\Users\\iafsa\\AppData\\Local\\Temp\\pytest-of-iafsa\\pytest-213\\test_multi_candidate_generatio0\\generated_thumbnails\\abcdEFGH123\\tmp_candidates\\cand_2_final.png",
+  "recorded_at": "2026-08-02T06:36:37.873507+00:00"
+}

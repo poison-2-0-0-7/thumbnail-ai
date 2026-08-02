@@ -1,0 +1,35 @@
+{
+  "_meta": {
+    "name": "inpaint_base",
+    "description": "VAE encode base thumbnail and set up inpaint conditioning",
+    "required_node_types": ["LoadImage", "VAEEncodeForInpaint"]
+  },
+  "_attach": {
+    "point": "latent_source",
+    "output_node": "30",
+    "output_slot": 0
+  },
+  "graph": {
+    "10": {
+      "class_type": "LoadImage",
+      "inputs": {
+        "image": "{{source_thumbnail_path}}"
+      }
+    },
+    "20": {
+      "class_type": "LoadImage",
+      "inputs": {
+        "image": "{{edit_mask_path}}"
+      }
+    },
+    "30": {
+      "class_type": "VAEEncodeForInpaint",
+      "inputs": {
+        "pixels": ["10", 0],
+        "vae": ["1", 2],
+        "mask": ["20", 1],
+        "grow_mask_by": 6
+      }
+    }
+  }
+}

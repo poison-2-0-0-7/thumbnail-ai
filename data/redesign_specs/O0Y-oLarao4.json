@@ -50,9 +50,8 @@
     }
   ],
   "elements_to_preserve": [
-    "Bold text for the main topic",
-    "Warm color palette",
-    "Composition that draws attention to the text"
+    "Bold text for clarity",
+    "Warm color palette for visual appeal"
   ],
   "overall_rationale": "ctr_potential_score=0.85; curiosity_gap_score=0.78; content_mismatch_detected=False; rules applied: minimum_negative_space.",
   "source_ctr_potential_score": 0.85,
@@ -60,6 +59,6 @@
   "source_content_mismatch_detected": false,
   "status": "success",
   "error_message": null,
-  "duration_seconds": 0.0008130999922286719,
-  "generated_at": "2026-08-01T15:59:55.970522+00:00"
+  "duration_seconds": 0.0008985000022221357,
+  "generated_at": "2026-08-02T07:51:32.634983+00:00"
 }

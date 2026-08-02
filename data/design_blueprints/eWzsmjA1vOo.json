@@ -211,14 +211,14 @@
   ],
   "branding_constraints": [
     "Warm color palette",
-    "Symmetrical composition",
-    "Emotional expressions of the subjects",
+    "Dynamic emotional expressions",
+    "Rule of thirds composition",
     "Do not reproduce copyrighted characters, logos, or branded imagery."
   ],
   "conflicts_resolved": 0,
   "status": "success",
   "partial_failure_reasons": [],
   "error_message": null,
-  "duration_seconds": 0.0007,
-  "generated_at": "2026-08-01T15:48:40.540531+00:00"
+  "duration_seconds": 0.0016,
+  "generated_at": "2026-08-02T07:45:35.343404+00:00"
 }
