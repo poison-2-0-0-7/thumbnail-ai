@@ -24,6 +24,9 @@ from observability.diagnostics.rules.decision_honoring_rules import (
     EditMaskIgnoredRule,
     RendererIgnoredEditPlanRule,
 )
+from observability.diagnostics.rules.edit_mode_resolution_rules import (
+    EditCapabilityReachabilityRule,
+)
 from observability.diagnostics.rules.latent_initialization_rules import (
     SourceNeverEncodedRule,
 )
@@ -45,6 +48,7 @@ DEFAULT_RULE_CLASSES = [
     CompositionMismatchRule,
     MaskOverlapProblemRule,
     IdentityDriftRule,
+    EditCapabilityReachabilityRule,
 ]
 
 __all__ = [
@@ -61,5 +65,6 @@ __all__ = [
     "CompositionMismatchRule",
     "MaskOverlapProblemRule",
     "IdentityDriftRule",
+    "EditCapabilityReachabilityRule",
     "DEFAULT_RULE_CLASSES",
 ]
