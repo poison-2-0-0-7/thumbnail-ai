@@ -30,21 +30,21 @@
   "generation_plan_reference": null,
   "prompt_reference": null,
   "negative_prompt_reference": null,
-  "source_thumbnail_path": "C:\\Users\\iafsa\\AppData\\Local\\Temp\\pytest-of-iafsa\\pytest-237\\test_module7_generation_helper0\\thumbnails\\abcdEFGH123.jpg",
+  "source_thumbnail_path": "C:\\Users\\iafsa\\AppData\\Local\\Temp\\pytest-of-iafsa\\pytest-261\\test_module7_generation_helper0\\thumbnails\\abcdEFGH123.jpg",
   "edit_mask_paths": [],
   "execution_timestamps": {
-    "recorded_at": "2026-08-02T11:08:51.184315+00:00",
+    "recorded_at": "2026-08-02T11:49:15.745322+00:00",
     "duration_comfyui_generate": "0.0000s",
-    "duration_identity_preservation": "0.1739s",
-    "duration_face_restoration": "0.1088s",
-    "duration_background_composition": "0.0447s",
-    "duration_upscale": "0.0336s",
-    "duration_quality_assurance": "0.4328s"
+    "duration_identity_preservation": "0.0786s",
+    "duration_face_restoration": "0.0676s",
+    "duration_background_composition": "0.0209s",
+    "duration_upscale": "0.0206s",
+    "duration_quality_assurance": "0.1166s"
   },
   "renderer_version": "1.0.0",
   "model_version": null,
   "lora_list": [],
   "vae": null,
-  "output_image_path": "C:\\Users\\iafsa\\AppData\\Local\\Temp\\pytest-of-iafsa\\pytest-237\\test_module7_generation_helper0\\generated\\abcdEFGH123\\tmp_candidates\\cand_0_final.png",
-  "recorded_at": "2026-08-02T11:08:51.184315+00:00"
+  "output_image_path": "C:\\Users\\iafsa\\AppData\\Local\\Temp\\pytest-of-iafsa\\pytest-261\\test_module7_generation_helper0\\generated\\abcdEFGH123\\tmp_candidates\\cand_0_final.png",
+  "recorded_at": "2026-08-02T11:49:15.745322+00:00"
 }

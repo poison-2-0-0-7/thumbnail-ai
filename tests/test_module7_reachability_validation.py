@@ -60,14 +60,16 @@ def test_module7_edit_capable_profiles_derivation() -> None:
     assert derived == frozenset({"P2_EDIT"})
 
 
-def test_profile_selector_startup_validation_triggers(monkeypatch: pytest.MonkeyPatch) -> None:
-    """ProfileSelector.__init__ must run validate_module7_edit_reachability and raise on pre-fix config."""
-    # Pre-fix state: ProfileSelector() with default preference tuple should raise Module7Error
-    with pytest.raises(Module7Error, match="unreachable via MODULE7_PROFILE_PREFERENCE"):
-        ProfileSelector()
-
-    # When preference tuple is patched to be valid, ProfileSelector() must succeed
-    monkeypatch.setattr("config.MODULE7_PROFILE_PREFERENCE", ("PROFILE_PREMIUM", "PROFILE_STANDARD_EDIT", "PROFILE_STANDARD", "PROFILE_FAST", "PROFILE_LOW_VRAM"))
-    monkeypatch.setattr("image_generator.MODULE7_PROFILE_PREFERENCE", ("PROFILE_PREMIUM", "PROFILE_STANDARD_EDIT", "PROFILE_STANDARD", "PROFILE_FAST", "PROFILE_LOW_VRAM"))
+def test_profile_selector_startup_validation_passes_on_production_config() -> None:
+    """ProfileSelector.__init__ must succeed with default MODULE7_PROFILE_PREFERENCE."""
     selector = ProfileSelector()
     assert selector is not None
+
+
+def test_profile_selector_startup_validation_raises_on_unreachable_override(monkeypatch: pytest.MonkeyPatch) -> None:
+    """ProfileSelector.__init__ must raise Module7Error if config is patched to an unreachable tuple."""
+    unreachable = ("PROFILE_PREMIUM", "PROFILE_STANDARD", "PROFILE_FAST", "PROFILE_LOW_VRAM")
+    monkeypatch.setattr("config.MODULE7_PROFILE_PREFERENCE", unreachable)
+    monkeypatch.setattr("image_generator.MODULE7_PROFILE_PREFERENCE", unreachable)
+    with pytest.raises(Module7Error, match="unreachable via MODULE7_PROFILE_PREFERENCE"):
+        ProfileSelector()

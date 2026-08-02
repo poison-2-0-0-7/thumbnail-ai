@@ -73,7 +73,7 @@ def test_reference_resolver_finds_thumbnail_and_optional_analysis(tmp_path: Path
     assert resolved.analysis_path is not None
 
 
-@pytest.mark.parametrize(("vram", "expected"), [(8.4, "PROFILE_PREMIUM"), (8.0, "PROFILE_STANDARD"), (7.5, "PROFILE_FAST"), (5.5, "PROFILE_LOW_VRAM")])
+@pytest.mark.parametrize(("vram", "expected"), [(8.4, "PROFILE_PREMIUM"), (8.0, "PROFILE_STANDARD_EDIT"), (7.5, "PROFILE_FAST"), (5.5, "PROFILE_LOW_VRAM")])
 def test_profile_selector_uses_documented_fallback_ladder(vram: float, expected: str) -> None:
     assert ProfileSelector().select(vram).name == expected
 

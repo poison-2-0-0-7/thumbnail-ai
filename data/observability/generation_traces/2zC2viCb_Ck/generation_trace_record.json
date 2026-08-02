@@ -2,8 +2,8 @@
   "video_id": "2zC2viCb_Ck",
   "attempt_index": 0,
   "generation_id": "2zC2viCb_Ck_cand_0",
-  "workflow_template": "general",
-  "workflow_hash": "fd347b9e9c8a231cacd8c54347ef9ac9ce4421fafacb5c0336c0e7eebb000334",
+  "workflow_template": "general_edit",
+  "workflow_hash": "efc98f62698f1dfde96d32fa63ae570cb556662cfd0429b01b418ba65ef57fcd",
   "workflow_fragments": [],
   "fragments_attached": [],
   "latent_source": "noise",
@@ -11,25 +11,20 @@
   "seed": 3480315140,
   "scheduler": "karras",
   "sampler": "dpmpp_2m",
-  "steps": 20,
-  "cfg": 6.0,
-  "controlnet_enabled": false,
+  "steps": 30,
+  "cfg": 6.5,
+  "controlnet_enabled": true,
   "ipadapter_enabled": true,
   "edit_mode": "txt2img",
-  "generation_profile": "PROFILE_LOW_VRAM",
+  "generation_profile": "PROFILE_STANDARD_EDIT",
   "controlnet_config": {
-    "enabled": false
+    "enabled": true
   },
   "ipadapter_config": {
     "enabled": true
   },
-  "conditioning_assets": [
-    "D:\\Afsar\\app development\\thumbnail-ai\\data\\visual_references\\2zC2viCb_Ck\\depth_map.png",
-    "D:\\Afsar\\app development\\thumbnail-ai\\data\\visual_references\\2zC2viCb_Ck\\canny_map.png"
-  ],
-  "asset_references": [
-    "D:\\Afsar\\app development\\thumbnail-ai\\data\\visual_references\\2zC2viCb_Ck\\background.png"
-  ],
+  "conditioning_assets": [],
+  "asset_references": [],
   "mask_references": [],
   "composition_references": [],
   "generation_plan_reference": null,
@@ -38,18 +33,18 @@
   "source_thumbnail_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\thumbnails\\2zC2viCb_Ck.jpg",
   "edit_mask_paths": [],
   "execution_timestamps": {
-    "recorded_at": "2026-08-02T09:23:50.543514+00:00",
-    "duration_comfyui_generate": "59.3403s",
-    "duration_identity_preservation": "0.0318s",
-    "duration_face_restoration": "0.1759s",
-    "duration_background_composition": "0.1872s",
-    "duration_upscale": "0.1710s",
-    "duration_quality_assurance": "0.7003s"
+    "recorded_at": "2026-08-02T11:46:51.869678+00:00",
+    "duration_comfyui_generate": "0.0063s",
+    "duration_identity_preservation": "0.0000s",
+    "duration_face_restoration": "0.0018s",
+    "duration_background_composition": "0.0017s",
+    "duration_upscale": "0.0013s",
+    "duration_quality_assurance": "0.0000s"
   },
   "renderer_version": "1.0.0",
   "model_version": null,
   "lora_list": [],
   "vae": null,
-  "output_image_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\generated_thumbnails\\2zC2viCb_Ck\\tmp_candidates\\cand_0_final.png",
-  "recorded_at": "2026-08-02T09:23:50.543514+00:00"
+  "output_image_path": "D:\\Afsar\\app development\\thumbnail-ai\\output\\phase3_verification\\2zC2viCb_Ck\\tmp_candidates\\cand_0_final.png",
+  "recorded_at": "2026-08-02T11:46:51.869678+00:00"
 }

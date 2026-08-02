@@ -445,8 +445,14 @@ MODULE7_GENERATION_PROFILES: dict[str, GenerationProfile] = {
     "PROFILE_PREMIUM": GenerationProfile(name="PROFILE_PREMIUM", checkpoint="flux1-schnell-q5_k_m.gguf", checkpoint_family="flux", sampler="euler", scheduler="simple", steps=20, cfg=1.0, controlnet_enabled=False, ipadapter_enabled=True, restoration="both", restoration_fidelity=0.35, upscaler="real_esrgan_x4", expected_vram_gb=7.8, expected_generation_seconds=55.0),
     "PROFILE_LOW_VRAM": GenerationProfile(name="PROFILE_LOW_VRAM", checkpoint="juggernautXL.safetensors", checkpoint_family="sdxl", sampler="dpmpp_2m", scheduler="karras", steps=20, cfg=6.0, controlnet_enabled=False, ipadapter_enabled=True, restoration="codeformer", restoration_fidelity=0.4, upscaler="lanczos_only", expected_vram_gb=5.0, expected_generation_seconds=32.0),
 }
+# When adding a new edit-capable profile (`edit_mode_default="staged_edit"`), insert its name into this tuple
+# immediately adjacent to the non-edit profile it is a variant of, on the side (before = preferred, after = fallback)
+# matching whether editing should be the default outcome at that VRAM tier. Never add an edit-capable profile's
+# `GenerationProfile` entry to `MODULE7_GENERATION_PROFILES` without also placing it in this tuple (or explicitly,
+# deliberately, leaving it reachable only via explicit `MODULE7_PROFILE` request) — an edit-capable profile absent
+# from both is unreachable via `"auto"` by construction, which is precisely Cause A.
 MODULE7_PROFILE_PREFERENCE: tuple[str, ...] = (
-    "PROFILE_PREMIUM", "PROFILE_STANDARD", "PROFILE_FAST", "PROFILE_LOW_VRAM",
+    "PROFILE_PREMIUM", "PROFILE_STANDARD_EDIT", "PROFILE_STANDARD", "PROFILE_FAST", "PROFILE_LOW_VRAM",
 )
 MODULE7_EDIT_CAPABLE_PROFILES: frozenset[str] = frozenset(
     name for name, profile in MODULE7_GENERATION_PROFILES.items()

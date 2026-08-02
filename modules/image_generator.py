@@ -1281,6 +1281,7 @@ class ImageGeneratorPipeline:
                         client_obj,
                         cand_work_dir,
                         wf_cache,
+                        effective_edit_mode=effective_edit_mode,
                     )
                     for cand_idx, strategy in enumerate(strategies)
                 ]
@@ -1309,6 +1310,7 @@ class ImageGeneratorPipeline:
                     client_obj,
                     cand_work_dir,
                     wf_cache,
+                    effective_edit_mode=effective_edit_mode,
                 )
                 c_idx, c_path, c_qa, c_fm, c_strat, c_pkg, c_wf_hash, c_durations, id_retries = res
                 total_identity_retries += id_retries
@@ -1460,12 +1462,13 @@ class ImageGeneratorPipeline:
         client_obj: Any,
         cand_work_dir: Path,
         wf_cache: WorkflowGraphCache,
+        effective_edit_mode: str = "legacy_txt2img",
     ) -> tuple[int, Path, QualityAssuranceReport, FaceMatchResult, CandidateStrategy, PromptPackage, str, dict[str, float], int]:
         cand_stage_durations: dict[str, float] = {}
         cand_package = self.strategy_planner.derive_package(
             package, design_blueprint, strategy, cand_idx
         )
-        workflow_ref = self.workflow_library.resolve(niche, profile)
+        workflow_ref = self.workflow_library.resolve(niche, profile, edit_mode=effective_edit_mode)
         built_wf = self.workflow_builder.build(
             cand_package,
             profile,
@@ -1487,7 +1490,7 @@ class ImageGeneratorPipeline:
         except VRAMExhaustedError:
             logger.warning("VRAMExhaustedError encountered during generation for video_id={vid}; attempting profile fallback", vid=video_id)
             fallback_profile = self.profile_selector.select(profile.expected_vram_gb - 1.0, MODULE7_PROFILE)
-            workflow_ref = self.workflow_library.resolve(niche, fallback_profile)
+            workflow_ref = self.workflow_library.resolve(niche, fallback_profile, edit_mode=effective_edit_mode)
             built_wf = self.workflow_builder.build(
                 cand_package,
                 fallback_profile,

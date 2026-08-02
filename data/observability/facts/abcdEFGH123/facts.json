@@ -2,7 +2,7 @@
   "video_id": "abcdEFGH123",
   "trace_facts": {
     "video_id": "abcdEFGH123",
-    "extracted_at": "2026-08-02T11:08:50.038518+00:00",
+    "extracted_at": "2026-08-02T11:49:15.307905+00:00",
     "fact_version": "1.0.0",
     "workflow_selected": "gaming",
     "edit_mode": "txt2img",
@@ -173,6 +173,6 @@
       "source_module": "module7"
     }
   ],
-  "extracted_at": "2026-08-02T11:08:50.038518+00:00",
+  "extracted_at": "2026-08-02T11:49:15.307905+00:00",
   "fact_version": "1.0.0"
 }
