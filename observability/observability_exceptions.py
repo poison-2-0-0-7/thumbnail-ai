@@ -22,9 +22,22 @@ class TraceAssemblyError(PORCEError):
     """Raised when assembling a PipelineTrace fails."""
 
 
+class FactExtractionError(PORCEError):
+    """Raised when extracting facts from a trace fails."""
+
+
+class FactPersistenceError(PORCEError):
+    """Raised when saving or loading facts fails."""
+
+
+class FactValidationError(PORCEError):
+    """Raised when fact schema validation fails."""
+
+
 class RuleEngineError(PORCEError):
     """Base exception for rule engine evaluation failures."""
 
 
 class ReportRenderingError(PORCEError):
     """Raised when generating human or machine reports fails."""
+

@@ -665,4 +665,6 @@ OBS_LOG_PATH: Path = LOG_DIR / "observability.log"
 OBS_TRACES_DIR: Path = PROJECT_ROOT / "data" / "observability" / "traces"
 OBS_REPORTS_DIR: Path = PROJECT_ROOT / "data" / "observability" / "reports"
 OBS_GENERATION_TRACES_DIR: Path = PROJECT_ROOT / "data" / "observability" / "generation_traces"
+OBS_FACTS_DIR: Path = PROJECT_ROOT / "data" / "observability" / "facts"
+
 

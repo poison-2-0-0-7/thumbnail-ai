@@ -7,6 +7,9 @@ Re-exports for PORCE exception hierarchy.
 
 from observability.observability_exceptions import (
     ArtifactIndexError,
+    FactExtractionError,
+    FactPersistenceError,
+    FactValidationError,
     LogCorrelationError,
     PORCEError,
     ReportRenderingError,
@@ -19,6 +22,10 @@ __all__ = [
     "ArtifactIndexError",
     "LogCorrelationError",
     "TraceAssemblyError",
+    "FactExtractionError",
+    "FactPersistenceError",
+    "FactValidationError",
     "RuleEngineError",
     "ReportRenderingError",
 ]
+
