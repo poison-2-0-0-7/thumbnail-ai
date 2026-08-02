@@ -41,3 +41,16 @@ class RuleEngineError(PORCEError):
 class ReportRenderingError(PORCEError):
     """Raised when generating human or machine reports fails."""
 
+
+class RootCauseAssemblyError(PORCEError):
+    """Raised when assembling a RootCauseReport fails."""
+
+
+class RootCausePersistenceError(PORCEError):
+    """Raised when saving or loading a RootCauseReport fails."""
+
+
+class RootCauseValidationError(PORCEError):
+    """Raised when RootCauseReport schema validation fails."""
+
+

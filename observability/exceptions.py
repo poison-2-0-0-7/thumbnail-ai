@@ -13,6 +13,9 @@ from observability.observability_exceptions import (
     LogCorrelationError,
     PORCEError,
     ReportRenderingError,
+    RootCauseAssemblyError,
+    RootCausePersistenceError,
+    RootCauseValidationError,
     RuleEngineError,
     TraceAssemblyError,
 )
@@ -27,5 +30,9 @@ __all__ = [
     "FactValidationError",
     "RuleEngineError",
     "ReportRenderingError",
+    "RootCauseAssemblyError",
+    "RootCausePersistenceError",
+    "RootCauseValidationError",
 ]
+
 
