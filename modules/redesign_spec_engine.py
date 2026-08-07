@@ -255,22 +255,26 @@ def _derive_object_directives(
     ]
 
 
-def _build_overall_rationale(reasoning: GeminiReasoning, fired_rules: list[str]) -> str:
+def _build_overall_rationale(reasoning: Optional[GeminiReasoning], fired_rules: list[str]) -> str:
     """Build the fixed-format, non-generative overall rationale."""
     rules = ", ".join(fired_rules) if fired_rules else "none"
+    ctr = f"{reasoning.ctr_potential_score:.2f}" if reasoning else "N/A"
+    curiosity = f"{reasoning.curiosity_gap_score:.2f}" if reasoning else "N/A"
+    mismatch = str(reasoning.content_mismatch_detected) if reasoning else "False"
     return (
-        f"ctr_potential_score={reasoning.ctr_potential_score:.2f}; "
-        f"curiosity_gap_score={reasoning.curiosity_gap_score:.2f}; "
-        f"content_mismatch_detected={reasoning.content_mismatch_detected}; "
+        f"ctr_potential_score={ctr}; "
+        f"curiosity_gap_score={curiosity}; "
+        f"content_mismatch_detected={mismatch}; "
         f"rules applied: {rules}."
     )
 
 
 def build_redesign_specification(
     intelligence: ThumbnailIntelligence,
+    understanding: Optional[Any] = None,
 ) -> RedesignSpecification:
-    """Deterministically derive a redesign specification from Module 4 output."""
-    if intelligence.status == "error" or intelligence.reasoning is None:
+    """Deterministically derive a redesign specification from Module 4 & V2 Understanding."""
+    if intelligence.status == "error" or (intelligence.reasoning is None and understanding is None):
         raise InvalidIntelligenceError(
             "ThumbnailIntelligence must have non-error status and reasoning to build "
             "a redesign specification"
@@ -278,12 +282,22 @@ def build_redesign_specification(
 
     started_at = time.monotonic()
     reasoning = intelligence.reasoning
-    color_direction = _derive_color_direction(intelligence.colors, reasoning.weaknesses)
+    weaknesses_list = understanding.weaknesses.findings if understanding else (reasoning.weaknesses if reasoning else [])
+    weakness_texts = [w.evidence if hasattr(w, "evidence") else str(w) for w in weaknesses_list]
+
+    color_direction = _derive_color_direction(intelligence.colors, weakness_texts)
     subject_treatment = _derive_subject_treatment(intelligence.faces, intelligence.composition)
+
+    preserve_elements = (
+        understanding.director_plan.elements_to_keep
+        if understanding and hasattr(understanding, "director_plan")
+        else (reasoning.elements_to_preserve if reasoning else [])
+    )
+
     text_overlay = _derive_text_overlay(
         intelligence.ocr,
         subject_treatment,
-        tuple(reasoning.elements_to_preserve),
+        tuple(preserve_elements),
     )
     layout_direction = _derive_layout_direction(
         intelligence.composition, subject_treatment, intelligence.objects
@@ -305,7 +319,7 @@ def build_redesign_specification(
     if subject_treatment.crop_tighter:
         fired_rules.append("crop_tighter")
     if any(
-        keyword in " ".join(reasoning.weaknesses).lower()
+        keyword in " ".join(weakness_texts).lower()
         for keyword in COLOR_TEMPERATURE_FLIP_KEYWORDS
     ):
         fired_rules.append("color_temperature_flip")
@@ -318,11 +332,11 @@ def build_redesign_specification(
         text_overlay=text_overlay,
         layout_direction=layout_direction,
         object_directives=object_directives,
-        elements_to_preserve=reasoning.elements_to_preserve,
+        elements_to_preserve=preserve_elements,
         overall_rationale=_build_overall_rationale(reasoning, fired_rules),
-        source_ctr_potential_score=reasoning.ctr_potential_score,
-        source_curiosity_gap_score=reasoning.curiosity_gap_score,
-        source_content_mismatch_detected=reasoning.content_mismatch_detected,
+        source_ctr_potential_score=reasoning.ctr_potential_score if reasoning else 0.5,
+        source_curiosity_gap_score=reasoning.curiosity_gap_score if reasoning else 0.5,
+        source_content_mismatch_detected=reasoning.content_mismatch_detected if reasoning else False,
         duration_seconds=time.monotonic() - started_at,
         generated_at=datetime.now(timezone.utc).isoformat(),
     )

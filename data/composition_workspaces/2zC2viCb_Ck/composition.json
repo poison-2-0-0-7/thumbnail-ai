@@ -7,9 +7,9 @@
   },
   "layers": [
     {
-      "layer_id": "layer_background",
+      "layer_id": "layer_global_background",
       "placement": {
-        "asset_id": "background",
+        "asset_id": "global_background",
         "role": "background",
         "decision": "replace",
         "source_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\visual_references\\2zC2viCb_Ck\\background.png",
@@ -22,43 +22,17 @@
           "crop_box": null
         },
         "z_index": 0,
-        "rationale": "Real background pixels are replaced by AI-generated background while structure is preserved via conditioning maps."
+        "rationale": "Color temperature shift required (neutral)"
       },
       "depth_hint_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\visual_references\\2zC2viCb_Ck\\depth_map.png",
       "canny_hint_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\visual_references\\2zC2viCb_Ck\\canny_map.png"
     },
     {
-      "layer_id": "layer_person",
+      "layer_id": "layer_global_saturation",
       "placement": {
-        "asset_id": "person",
-        "role": "person",
+        "asset_id": "global_saturation",
+        "role": "object",
         "decision": "enhance",
-        "source_path": null,
-        "mask": null,
-        "transform": {
-          "translate_x": 490,
-          "translate_y": 366,
-          "scale_x": 1.15,
-          "scale_y": 1.15,
-          "crop_box": {
-            "x": 490,
-            "y": 366,
-            "width": 93,
-            "height": 89
-          }
-        },
-        "z_index": 10,
-        "rationale": "Largest detected face selected; crop tighter because subject area is below the minimum."
-      },
-      "depth_hint_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\visual_references\\2zC2viCb_Ck\\depth_map.png",
-      "canny_hint_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\visual_references\\2zC2viCb_Ck\\canny_map.png"
-    },
-    {
-      "layer_id": "layer_object_0_person",
-      "placement": {
-        "asset_id": "object_0_person",
-        "role": "object",
-        "decision": "remove",
         "source_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\visual_references\\2zC2viCb_Ck\\object_crop.png",
         "mask": {
           "mask_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\visual_references\\2zC2viCb_Ck\\object_mask.png",
@@ -74,17 +48,17 @@
           "crop_box": null
         },
         "z_index": 20,
-        "rationale": "High clutter requires simplifying detected objects."
+        "rationale": "Image saturation (0.20) below threshold 0.35"
       },
       "depth_hint_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\visual_references\\2zC2viCb_Ck\\depth_map.png",
       "canny_hint_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\visual_references\\2zC2viCb_Ck\\canny_map.png"
     },
     {
-      "layer_id": "layer_object_1_person",
+      "layer_id": "layer_m4_face_0",
       "placement": {
-        "asset_id": "object_1_person",
+        "asset_id": "m4_face_0",
         "role": "object",
-        "decision": "remove",
+        "decision": "keep",
         "source_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\visual_references\\2zC2viCb_Ck\\object_crop.png",
         "mask": {
           "mask_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\visual_references\\2zC2viCb_Ck\\object_mask.png",
@@ -100,17 +74,17 @@
           "crop_box": null
         },
         "z_index": 20,
-        "rationale": "High clutter requires simplifying detected objects."
+        "rationale": "Primary creator face detected in ThumbnailIntelligence"
       },
       "depth_hint_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\visual_references\\2zC2viCb_Ck\\depth_map.png",
       "canny_hint_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\visual_references\\2zC2viCb_Ck\\canny_map.png"
     },
     {
-      "layer_id": "layer_object_2_person",
+      "layer_id": "layer_m4_obj_0",
       "placement": {
-        "asset_id": "object_2_person",
+        "asset_id": "m4_obj_0",
         "role": "object",
-        "decision": "remove",
+        "decision": "keep",
         "source_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\visual_references\\2zC2viCb_Ck\\object_crop.png",
         "mask": {
           "mask_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\visual_references\\2zC2viCb_Ck\\object_mask.png",
@@ -126,17 +100,17 @@
           "crop_box": null
         },
         "z_index": 20,
-        "rationale": "High clutter requires simplifying detected objects."
+        "rationale": "Matches explicit elements_to_preserve entry 'elem_face_person_face_5bdfd412'"
       },
       "depth_hint_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\visual_references\\2zC2viCb_Ck\\depth_map.png",
       "canny_hint_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\visual_references\\2zC2viCb_Ck\\canny_map.png"
     },
     {
-      "layer_id": "layer_object_3_person",
+      "layer_id": "layer_m4_obj_1",
       "placement": {
-        "asset_id": "object_3_person",
+        "asset_id": "m4_obj_1",
         "role": "object",
-        "decision": "remove",
+        "decision": "keep",
         "source_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\visual_references\\2zC2viCb_Ck\\object_crop.png",
         "mask": {
           "mask_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\visual_references\\2zC2viCb_Ck\\object_mask.png",
@@ -152,17 +126,17 @@
           "crop_box": null
         },
         "z_index": 20,
-        "rationale": "High clutter requires simplifying detected objects."
+        "rationale": "Matches explicit elements_to_preserve entry 'elem_face_person_face_5bdfd412'"
       },
       "depth_hint_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\visual_references\\2zC2viCb_Ck\\depth_map.png",
       "canny_hint_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\visual_references\\2zC2viCb_Ck\\canny_map.png"
     },
     {
-      "layer_id": "layer_object_4_person",
+      "layer_id": "layer_m4_obj_2",
       "placement": {
-        "asset_id": "object_4_person",
+        "asset_id": "m4_obj_2",
         "role": "object",
-        "decision": "remove",
+        "decision": "keep",
         "source_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\visual_references\\2zC2viCb_Ck\\object_crop.png",
         "mask": {
           "mask_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\visual_references\\2zC2viCb_Ck\\object_mask.png",
@@ -178,17 +152,17 @@
           "crop_box": null
         },
         "z_index": 20,
-        "rationale": "High clutter requires simplifying detected objects."
+        "rationale": "Matches explicit elements_to_preserve entry 'elem_face_person_face_5bdfd412'"
       },
       "depth_hint_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\visual_references\\2zC2viCb_Ck\\depth_map.png",
       "canny_hint_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\visual_references\\2zC2viCb_Ck\\canny_map.png"
     },
     {
-      "layer_id": "layer_object_5_person",
+      "layer_id": "layer_m4_obj_3",
       "placement": {
-        "asset_id": "object_5_person",
+        "asset_id": "m4_obj_3",
         "role": "object",
-        "decision": "remove",
+        "decision": "keep",
         "source_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\visual_references\\2zC2viCb_Ck\\object_crop.png",
         "mask": {
           "mask_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\visual_references\\2zC2viCb_Ck\\object_mask.png",
@@ -204,7 +178,59 @@
           "crop_box": null
         },
         "z_index": 20,
-        "rationale": "High clutter requires simplifying detected objects."
+        "rationale": "Matches explicit elements_to_preserve entry 'elem_face_person_face_5bdfd412'"
+      },
+      "depth_hint_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\visual_references\\2zC2viCb_Ck\\depth_map.png",
+      "canny_hint_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\visual_references\\2zC2viCb_Ck\\canny_map.png"
+    },
+    {
+      "layer_id": "layer_m4_obj_4",
+      "placement": {
+        "asset_id": "m4_obj_4",
+        "role": "object",
+        "decision": "keep",
+        "source_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\visual_references\\2zC2viCb_Ck\\object_crop.png",
+        "mask": {
+          "mask_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\visual_references\\2zC2viCb_Ck\\object_mask.png",
+          "mask_checksum": "d073e2a2853536ebb10afce5a3034e4f91b335d30b78422b08ce1820e28fc11a",
+          "feather_px": 0,
+          "source": "vre"
+        },
+        "transform": {
+          "translate_x": 0,
+          "translate_y": 0,
+          "scale_x": 1.0,
+          "scale_y": 1.0,
+          "crop_box": null
+        },
+        "z_index": 20,
+        "rationale": "Matches explicit elements_to_preserve entry 'elem_face_person_face_5bdfd412'"
+      },
+      "depth_hint_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\visual_references\\2zC2viCb_Ck\\depth_map.png",
+      "canny_hint_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\visual_references\\2zC2viCb_Ck\\canny_map.png"
+    },
+    {
+      "layer_id": "layer_m4_obj_5",
+      "placement": {
+        "asset_id": "m4_obj_5",
+        "role": "object",
+        "decision": "keep",
+        "source_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\visual_references\\2zC2viCb_Ck\\object_crop.png",
+        "mask": {
+          "mask_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\visual_references\\2zC2viCb_Ck\\object_mask.png",
+          "mask_checksum": "d073e2a2853536ebb10afce5a3034e4f91b335d30b78422b08ce1820e28fc11a",
+          "feather_px": 0,
+          "source": "vre"
+        },
+        "transform": {
+          "translate_x": 0,
+          "translate_y": 0,
+          "scale_x": 1.0,
+          "scale_y": 1.0,
+          "crop_box": null
+        },
+        "z_index": 20,
+        "rationale": "Matches explicit elements_to_preserve entry 'elem_face_person_face_5bdfd412'"
       },
       "depth_hint_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\visual_references\\2zC2viCb_Ck\\depth_map.png",
       "canny_hint_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\visual_references\\2zC2viCb_Ck\\canny_map.png"
@@ -215,26 +241,21 @@
       "group_id": "group_background",
       "role": "background",
       "layer_ids": [
-        "layer_background"
-      ]
-    },
-    {
-      "group_id": "group_person",
-      "role": "person",
-      "layer_ids": [
-        "layer_person"
+        "layer_global_background"
       ]
     },
     {
       "group_id": "group_object",
       "role": "object",
       "layer_ids": [
-        "layer_object_0_person",
-        "layer_object_1_person",
-        "layer_object_2_person",
-        "layer_object_3_person",
-        "layer_object_4_person",
-        "layer_object_5_person"
+        "layer_global_saturation",
+        "layer_m4_face_0",
+        "layer_m4_obj_0",
+        "layer_m4_obj_1",
+        "layer_m4_obj_2",
+        "layer_m4_obj_3",
+        "layer_m4_obj_4",
+        "layer_m4_obj_5"
       ]
     }
   ],
@@ -260,22 +281,22 @@
     }
   },
   "statistics": {
-    "total_layers": 8,
-    "kept": 0,
-    "removed": 6,
+    "total_layers": 9,
+    "kept": 7,
+    "removed": 0,
     "replaced": 1,
     "enhanced": 1,
     "added": 0
   },
   "metadata": {
     "video_id": "2zC2viCb_Ck",
-    "created_at": "2026-08-02T20:34:36.765560+00:00",
+    "created_at": "2026-08-06T17:22:56.851478+00:00",
     "vre_source_hash": "c036d91b1223d482161907d1e64a2008363b2788ef5962cbd916a43c598c9169",
-    "redesign_spec_hash": "0595f718953b352c0efe18a3a54177fd38560f7c65f2075dd96919f0d5117f48",
-    "prompt_package_hash": "a69b97c37252a283379ad078481fb483738c97f54c26c0296a8033d7bd597600",
+    "redesign_spec_hash": "edaf673d07de4fea0d54668c2294f3bd46eb18acb51564eb536cf80f06491bf8",
+    "prompt_package_hash": "66f34ad8f7cbe73028be26792d53cad5f0847bce705fc76116d3e26177edc36c",
     "engine_version": "1.0.0"
   },
   "status": "success",
   "error_message": null,
-  "duration_seconds": 0.05855069999961415
+  "duration_seconds": 0.156229499996698
 }

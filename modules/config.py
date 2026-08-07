@@ -839,7 +839,7 @@ PLANNER_CACHE_ENABLED: bool = True
 ASSET_EXTRACTION_ENABLED: bool = False
 ASSET_EXTRACTION_ENGINE_ENABLED: bool = ASSET_EXTRACTION_ENABLED
 ASSET_EXTRACTION_REQUIRED: bool = False
-DECISION_ENGINE_ENABLED: bool = False
+DECISION_ENGINE_ENABLED: bool = True
 
 # ---------------------------------------------------------------------------
 

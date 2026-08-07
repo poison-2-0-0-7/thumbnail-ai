@@ -7,9 +7,9 @@
   },
   "layers": [
     {
-      "layer_id": "layer_background",
+      "layer_id": "layer_global_background",
       "placement": {
-        "asset_id": "background",
+        "asset_id": "global_background",
         "role": "background",
         "decision": "replace",
         "source_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\visual_references\\0EyJaqz8xyw\\background.png",
@@ -22,15 +22,41 @@
           "crop_box": null
         },
         "z_index": 0,
-        "rationale": "Real background pixels are replaced by AI-generated background while structure is preserved via conditioning maps."
+        "rationale": "Color temperature shift required (warm)"
       },
       "depth_hint_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\visual_references\\0EyJaqz8xyw\\depth_map.png",
       "canny_hint_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\visual_references\\0EyJaqz8xyw\\canny_map.png"
     },
     {
-      "layer_id": "layer_object_0_car",
+      "layer_id": "layer_global_saturation",
       "placement": {
-        "asset_id": "object_0_car",
+        "asset_id": "global_saturation",
+        "role": "object",
+        "decision": "enhance",
+        "source_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\visual_references\\0EyJaqz8xyw\\object_crop.png",
+        "mask": {
+          "mask_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\visual_references\\0EyJaqz8xyw\\object_mask.png",
+          "mask_checksum": "6fe038ba124678527ee342dc47ee8daa4978ea3616a20c2eabbd37516735e11c",
+          "feather_px": 0,
+          "source": "vre"
+        },
+        "transform": {
+          "translate_x": 0,
+          "translate_y": 0,
+          "scale_x": 1.0,
+          "scale_y": 1.0,
+          "crop_box": null
+        },
+        "z_index": 20,
+        "rationale": "Image saturation (0.15) below threshold 0.35"
+      },
+      "depth_hint_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\visual_references\\0EyJaqz8xyw\\depth_map.png",
+      "canny_hint_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\visual_references\\0EyJaqz8xyw\\canny_map.png"
+    },
+    {
+      "layer_id": "layer_m4_obj_0",
+      "placement": {
+        "asset_id": "m4_obj_0",
         "role": "object",
         "decision": "keep",
         "source_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\visual_references\\0EyJaqz8xyw\\object_crop.png",
@@ -48,15 +74,15 @@
           "crop_box": null
         },
         "z_index": 20,
-        "rationale": "Clutter is within the acceptable range; preserve detected objects."
+        "rationale": "Matches explicit elements_to_preserve entry 'elem_obj_car_805db846'"
       },
       "depth_hint_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\visual_references\\0EyJaqz8xyw\\depth_map.png",
       "canny_hint_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\visual_references\\0EyJaqz8xyw\\canny_map.png"
     },
     {
-      "layer_id": "layer_object_1_car",
+      "layer_id": "layer_m4_obj_1",
       "placement": {
-        "asset_id": "object_1_car",
+        "asset_id": "m4_obj_1",
         "role": "object",
         "decision": "keep",
         "source_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\visual_references\\0EyJaqz8xyw\\object_crop.png",
@@ -74,15 +100,15 @@
           "crop_box": null
         },
         "z_index": 20,
-        "rationale": "Clutter is within the acceptable range; preserve detected objects."
+        "rationale": "Matches explicit elements_to_preserve entry 'elem_obj_car_805db846'"
       },
       "depth_hint_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\visual_references\\0EyJaqz8xyw\\depth_map.png",
       "canny_hint_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\visual_references\\0EyJaqz8xyw\\canny_map.png"
     },
     {
-      "layer_id": "layer_object_2_car",
+      "layer_id": "layer_m4_obj_2",
       "placement": {
-        "asset_id": "object_2_car",
+        "asset_id": "m4_obj_2",
         "role": "object",
         "decision": "keep",
         "source_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\visual_references\\0EyJaqz8xyw\\object_crop.png",
@@ -100,15 +126,15 @@
           "crop_box": null
         },
         "z_index": 20,
-        "rationale": "Clutter is within the acceptable range; preserve detected objects."
+        "rationale": "Matches explicit elements_to_preserve entry 'elem_obj_car_805db846'"
       },
       "depth_hint_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\visual_references\\0EyJaqz8xyw\\depth_map.png",
       "canny_hint_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\visual_references\\0EyJaqz8xyw\\canny_map.png"
     },
     {
-      "layer_id": "layer_object_3_car",
+      "layer_id": "layer_m4_obj_3",
       "placement": {
-        "asset_id": "object_3_car",
+        "asset_id": "m4_obj_3",
         "role": "object",
         "decision": "keep",
         "source_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\visual_references\\0EyJaqz8xyw\\object_crop.png",
@@ -126,7 +152,7 @@
           "crop_box": null
         },
         "z_index": 20,
-        "rationale": "Clutter is within the acceptable range; preserve detected objects."
+        "rationale": "Matches explicit elements_to_preserve entry 'elem_obj_car_805db846'"
       },
       "depth_hint_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\visual_references\\0EyJaqz8xyw\\depth_map.png",
       "canny_hint_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\visual_references\\0EyJaqz8xyw\\canny_map.png"
@@ -137,17 +163,18 @@
       "group_id": "group_background",
       "role": "background",
       "layer_ids": [
-        "layer_background"
+        "layer_global_background"
       ]
     },
     {
       "group_id": "group_object",
       "role": "object",
       "layer_ids": [
-        "layer_object_0_car",
-        "layer_object_1_car",
-        "layer_object_2_car",
-        "layer_object_3_car"
+        "layer_global_saturation",
+        "layer_m4_obj_0",
+        "layer_m4_obj_1",
+        "layer_m4_obj_2",
+        "layer_m4_obj_3"
       ]
     }
   ],
@@ -173,22 +200,22 @@
     }
   },
   "statistics": {
-    "total_layers": 5,
+    "total_layers": 6,
     "kept": 4,
     "removed": 0,
     "replaced": 1,
-    "enhanced": 0,
+    "enhanced": 1,
     "added": 0
   },
   "metadata": {
     "video_id": "0EyJaqz8xyw",
-    "created_at": "2026-08-02T20:34:50.467149+00:00",
+    "created_at": "2026-08-06T17:27:53.207442+00:00",
     "vre_source_hash": "4ff640bc0819d4051d1e7161282ff4702de6cba2b52e47d526837c46f0232189",
-    "redesign_spec_hash": "722df8c6abcb40d780b5c6ff2fe45743e28187f7a160e0cc71be437690bee655",
-    "prompt_package_hash": "2f788c44535bbfb7bf43bf1ef1c30761949265dbadd114c20b798d29ab2b6873",
+    "redesign_spec_hash": "3dc71dfef1ab1d5b26081c6d38bcc70ea783f4fdc494577fc6b8a654e1068608",
+    "prompt_package_hash": "8f197521eb7d825f3ace94e02b890a82aca0d59ca241feeb44a2a5794f00a657",
     "engine_version": "1.0.0"
   },
   "status": "success",
   "error_message": null,
-  "duration_seconds": 0.07184570000390522
+  "duration_seconds": 0.3149991000027512
 }

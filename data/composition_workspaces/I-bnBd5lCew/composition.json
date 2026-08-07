@@ -7,9 +7,9 @@
   },
   "layers": [
     {
-      "layer_id": "layer_background",
+      "layer_id": "layer_global_background",
       "placement": {
-        "asset_id": "background",
+        "asset_id": "global_background",
         "role": "background",
         "decision": "replace",
         "source_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\visual_references\\I-bnBd5lCew\\background.png",
@@ -22,41 +22,41 @@
           "crop_box": null
         },
         "z_index": 0,
-        "rationale": "Real background pixels are replaced by AI-generated background while structure is preserved via conditioning maps."
+        "rationale": "Color temperature shift required (warm)"
       },
       "depth_hint_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\visual_references\\I-bnBd5lCew\\depth_map.png",
       "canny_hint_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\visual_references\\I-bnBd5lCew\\canny_map.png"
     },
     {
-      "layer_id": "layer_person",
+      "layer_id": "layer_global_saturation",
       "placement": {
-        "asset_id": "person",
-        "role": "person",
+        "asset_id": "global_saturation",
+        "role": "object",
         "decision": "enhance",
-        "source_path": null,
-        "mask": null,
-        "transform": {
-          "translate_x": 900,
-          "translate_y": 120,
-          "scale_x": 1.15,
-          "scale_y": 1.15,
-          "crop_box": {
-            "x": 900,
-            "y": 120,
-            "width": 135,
-            "height": 185
-          }
+        "source_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\visual_references\\I-bnBd5lCew\\object_crop.png",
+        "mask": {
+          "mask_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\visual_references\\I-bnBd5lCew\\object_mask.png",
+          "mask_checksum": "d28b9fe346d5c0c6b7cfd22fa6d538f10e86b49bd5ce6df3456d30af3ea75508",
+          "feather_px": 0,
+          "source": "vre"
         },
-        "z_index": 10,
-        "rationale": "Largest detected face selected; crop tighter because subject area is below the minimum."
+        "transform": {
+          "translate_x": 0,
+          "translate_y": 0,
+          "scale_x": 1.0,
+          "scale_y": 1.0,
+          "crop_box": null
+        },
+        "z_index": 20,
+        "rationale": "Image saturation (0.13) below threshold 0.35"
       },
       "depth_hint_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\visual_references\\I-bnBd5lCew\\depth_map.png",
       "canny_hint_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\visual_references\\I-bnBd5lCew\\canny_map.png"
     },
     {
-      "layer_id": "layer_object_0_person",
+      "layer_id": "layer_m4_face_0",
       "placement": {
-        "asset_id": "object_0_person",
+        "asset_id": "m4_face_0",
         "role": "object",
         "decision": "keep",
         "source_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\visual_references\\I-bnBd5lCew\\object_crop.png",
@@ -74,15 +74,15 @@
           "crop_box": null
         },
         "z_index": 20,
-        "rationale": "Clutter is within the acceptable range; preserve detected objects."
+        "rationale": "Primary creator face detected in ThumbnailIntelligence"
       },
       "depth_hint_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\visual_references\\I-bnBd5lCew\\depth_map.png",
       "canny_hint_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\visual_references\\I-bnBd5lCew\\canny_map.png"
     },
     {
-      "layer_id": "layer_object_1_person",
+      "layer_id": "layer_m4_obj_0",
       "placement": {
-        "asset_id": "object_1_person",
+        "asset_id": "m4_obj_0",
         "role": "object",
         "decision": "keep",
         "source_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\visual_references\\I-bnBd5lCew\\object_crop.png",
@@ -100,15 +100,41 @@
           "crop_box": null
         },
         "z_index": 20,
-        "rationale": "Clutter is within the acceptable range; preserve detected objects."
+        "rationale": "Matches explicit elements_to_preserve entry 'elem_obj_person_d85547db'"
       },
       "depth_hint_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\visual_references\\I-bnBd5lCew\\depth_map.png",
       "canny_hint_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\visual_references\\I-bnBd5lCew\\canny_map.png"
     },
     {
-      "layer_id": "layer_text",
+      "layer_id": "layer_m4_obj_1",
       "placement": {
-        "asset_id": "text",
+        "asset_id": "m4_obj_1",
+        "role": "object",
+        "decision": "keep",
+        "source_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\visual_references\\I-bnBd5lCew\\object_crop.png",
+        "mask": {
+          "mask_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\visual_references\\I-bnBd5lCew\\object_mask.png",
+          "mask_checksum": "d28b9fe346d5c0c6b7cfd22fa6d538f10e86b49bd5ce6df3456d30af3ea75508",
+          "feather_px": 0,
+          "source": "vre"
+        },
+        "transform": {
+          "translate_x": 0,
+          "translate_y": 0,
+          "scale_x": 1.0,
+          "scale_y": 1.0,
+          "crop_box": null
+        },
+        "z_index": 20,
+        "rationale": "Matches explicit elements_to_preserve entry 'elem_obj_person_d85547db'"
+      },
+      "depth_hint_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\visual_references\\I-bnBd5lCew\\depth_map.png",
+      "canny_hint_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\visual_references\\I-bnBd5lCew\\canny_map.png"
+    },
+    {
+      "layer_id": "layer_add_text_overlay_0",
+      "placement": {
+        "asset_id": "add_text_overlay_0",
         "role": "text",
         "decision": "add",
         "source_path": null,
@@ -121,7 +147,7 @@
           "crop_box": null
         },
         "z_index": 30,
-        "rationale": "Existing OCR text is preserved as placement-only guidance."
+        "rationale": "Explicit text overlay requested in redesign specification"
       },
       "depth_hint_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\visual_references\\I-bnBd5lCew\\depth_map.png",
       "canny_hint_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\visual_references\\I-bnBd5lCew\\canny_map.png"
@@ -132,29 +158,24 @@
       "group_id": "group_background",
       "role": "background",
       "layer_ids": [
-        "layer_background"
-      ]
-    },
-    {
-      "group_id": "group_person",
-      "role": "person",
-      "layer_ids": [
-        "layer_person"
+        "layer_global_background"
       ]
     },
     {
       "group_id": "group_object",
       "role": "object",
       "layer_ids": [
-        "layer_object_0_person",
-        "layer_object_1_person"
+        "layer_global_saturation",
+        "layer_m4_face_0",
+        "layer_m4_obj_0",
+        "layer_m4_obj_1"
       ]
     },
     {
       "group_id": "group_text",
       "role": "text",
       "layer_ids": [
-        "layer_text"
+        "layer_add_text_overlay_0"
       ]
     }
   ],
@@ -199,8 +220,8 @@
     }
   },
   "statistics": {
-    "total_layers": 5,
-    "kept": 2,
+    "total_layers": 6,
+    "kept": 3,
     "removed": 0,
     "replaced": 1,
     "enhanced": 1,
@@ -208,13 +229,13 @@
   },
   "metadata": {
     "video_id": "I-bnBd5lCew",
-    "created_at": "2026-08-02T20:34:06.769462+00:00",
+    "created_at": "2026-08-06T17:16:55.051458+00:00",
     "vre_source_hash": "5ddd8f60de56950b9867f7cf78d029eacf50fdece74bca5c9d31fe7fc2297f7b",
-    "redesign_spec_hash": "1c8c2b88569070a97e4e6f9e29debbdcc4ae8b3ab69d5f37ab071bd7c34df8c9",
-    "prompt_package_hash": "d39776acd33567b632df16b31ef65d2da8775907da010084568f48641e4a15fc",
+    "redesign_spec_hash": "f7ab1e62dc8e18865ac44f4cda6d0f2d997e8fc71bc295b656e6acd7a4f661a0",
+    "prompt_package_hash": "a2dcfc5469c153bd8836e42f661ece2bd006235db75eb9f13ec149f4dee4b3f0",
     "engine_version": "1.0.0"
   },
   "status": "success",
   "error_message": null,
-  "duration_seconds": 0.05644639999809442
+  "duration_seconds": 0.2659311999959755
 }

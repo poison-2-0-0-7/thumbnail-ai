@@ -1,0 +1,138 @@
+{
+  "prompt": {
+    "1": {
+      "class_type": "CheckpointLoaderSimple",
+      "inputs": {
+        "ckpt_name": "juggernautXL.safetensors"
+      }
+    },
+    "2": {
+      "class_type": "CLIPTextEncode",
+      "inputs": {
+        "text": "Place the primary subject in the top of the frame, matching the source position label 'center'. Crop tighter around the subject so it occupies a larger share of the frame. Maintain approximately 34% negative space in the background. Keep the background minimal and uncluttered. Anchor the composition's focal point in the top of the frame, targeting a clutter score of 0.30 and a negative-space ratio of 0.34. Use moody, low-key lighting with a moderate-contrast look (target brightness=0.35, target contrast=0.44). Render muted, desaturated colors with a warm color temperature (target saturation=0.30). Render text overlay: 'How to Master Happy emotion Fast' on the thumbnail. Reserve the designated text placement region for the headline overlay. Preserve: elem_obj_person_2855edcd, elem_text_ocr_text_90a4eea6.",
+        "clip": [
+          "1",
+          1
+        ]
+      }
+    },
+    "3": {
+      "class_type": "CLIPTextEncode",
+      "inputs": {
+        "text": "blurry, low resolution, watermark, distorted anatomy, extra limbs, text artifacts, jpeg compression artifacts, Render at the exact target resolution; do not crop after generation., Do not add any watermark, logo, or signature., Do not depict real, identifiable people; use a generic or anonymized figure., Do not reproduce copyrighted characters, logos, or branded imagery., Do not include graphic violence, gore, or sexual content., Do not include misleading medical, financial, or safety claims in any rendered text.",
+        "clip": [
+          "1",
+          1
+        ]
+      }
+    },
+    "4": {
+      "class_type": "EmptyLatentImage",
+      "inputs": {
+        "width": 1280,
+        "height": 720,
+        "batch_size": 1
+      }
+    },
+    "5": {
+      "class_type": "KSampler",
+      "inputs": {
+        "seed": 3206005206,
+        "steps": 30,
+        "cfg": 6.5,
+        "sampler_name": "dpmpp_2m",
+        "scheduler": "karras",
+        "denoise": 0.75,
+        "model": [
+          "1",
+          0
+        ],
+        "positive": [
+          "2",
+          0
+        ],
+        "negative": [
+          "3",
+          0
+        ],
+        "latent_image": [
+          "frag_1_latent_source_20",
+          0
+        ]
+      }
+    },
+    "6": {
+      "class_type": "VAEDecode",
+      "inputs": {
+        "samples": [
+          "5",
+          0
+        ],
+        "vae": [
+          "1",
+          2
+        ]
+      }
+    },
+    "7": {
+      "class_type": "SaveImage",
+      "inputs": {
+        "filename_prefix": "module7_k9Tdx6ddOPQ",
+        "images": [
+          "6",
+          0
+        ]
+      }
+    },
+    "frag_0_latent_source_10": {
+      "class_type": "LoadImage",
+      "inputs": {
+        "image": "k9Tdx6ddOPQ.jpg"
+      }
+    },
+    "frag_0_latent_source_20": {
+      "class_type": "LoadImage",
+      "inputs": {
+        "image": "k9Tdx6ddOPQ_object_mask.png"
+      }
+    },
+    "frag_0_latent_source_30": {
+      "class_type": "VAEEncodeForInpaint",
+      "inputs": {
+        "pixels": [
+          "frag_0_latent_source_10",
+          0
+        ],
+        "vae": [
+          "1",
+          2
+        ],
+        "mask": [
+          "frag_0_latent_source_20",
+          1
+        ],
+        "grow_mask_by": 6
+      }
+    },
+    "frag_1_latent_source_10": {
+      "class_type": "LoadImage",
+      "inputs": {
+        "image": "k9Tdx6ddOPQ_object_mask.png"
+      }
+    },
+    "frag_1_latent_source_20": {
+      "class_type": "SetLatentNoiseMask",
+      "inputs": {
+        "samples": [
+          "frag_0_latent_source_30",
+          0
+        ],
+        "mask": [
+          "frag_1_latent_source_10",
+          1
+        ]
+      }
+    }
+  },
+  "client_id": "47e05ff2-92d7-4acd-b184-bc77c512612e"
+}

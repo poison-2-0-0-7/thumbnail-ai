@@ -87,16 +87,18 @@
     }
   ],
   "elements_to_preserve": [
-    "Positive emotional expressions",
-    "Balanced composition",
-    "Subject placement in the left-third"
+    "elem_face_person_face_c942cf4b",
+    "elem_text_ocr_text_8b393d55",
+    "elem_text_ocr_text_c1df5bf0",
+    "elem_text_ocr_text_90ea5449",
+    "elem_text_ocr_text_e53e9ca2"
   ],
-  "overall_rationale": "ctr_potential_score=0.75; curiosity_gap_score=0.65; content_mismatch_detected=False; rules applied: clutter_reduction, crop_tighter.",
+  "overall_rationale": "ctr_potential_score=0.75; curiosity_gap_score=0.68; content_mismatch_detected=False; rules applied: clutter_reduction, crop_tighter.",
   "source_ctr_potential_score": 0.75,
-  "source_curiosity_gap_score": 0.65,
+  "source_curiosity_gap_score": 0.68,
   "source_content_mismatch_detected": false,
   "status": "success",
   "error_message": null,
-  "duration_seconds": 0.0002210000020568259,
-  "generated_at": "2026-08-02T20:33:49.550838+00:00"
+  "duration_seconds": 0.00009590000263415277,
+  "generated_at": "2026-08-06T17:14:47.450210+00:00"
 }

@@ -557,6 +557,40 @@ def test_workflow_builder_slots_stages_image_paths(monkeypatch: pytest.MonkeyPat
     assert not Path(slots["depth_map_path"]).is_absolute()
 
 
+def test_workflow_builder_edit_workflow_has_non_empty_load_image_inputs(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    from image_generator import WorkflowBuilder, WorkflowTemplateRef
+    from generation_components import GenerationConditioningContext
+
+    comfy_dir = tmp_path / "comfyui"
+    comfy_dir.mkdir()
+    monkeypatch.setattr("image_generator.COMFYUI_WORKING_DIRECTORY", comfy_dir)
+
+    pkg = _package()
+    profile = MODULE7_GENERATION_PROFILES["PROFILE_STANDARD_EDIT"]
+    builder = WorkflowBuilder()
+    ref = WorkflowTemplateRef(
+        niche="general",
+        profile_name=profile.name,
+        template_path="workflows/general_edit.json",
+        workflow_version="v2_editing",
+        template_name="general_edit",
+    )
+    conditioning = GenerationConditioningContext()
+
+    built_wf = builder.build(package=pkg, profile=profile, workflow_ref=ref, conditioning=conditioning)
+
+    load_image_nodes = [
+        node for node in built_wf.graph.values()
+        if isinstance(node, dict) and node.get("class_type") == "LoadImage"
+    ]
+    assert len(load_image_nodes) > 0
+    for node in load_image_nodes:
+        img_val = node["inputs"]["image"]
+        assert isinstance(img_val, str)
+        assert len(img_val.strip()) > 0
+
+
+
 
 
 

@@ -1,0 +1,26 @@
+{
+  "layer_id": "layer_m4_obj_0",
+  "placement": {
+    "asset_id": "m4_obj_0",
+    "role": "object",
+    "decision": "keep",
+    "source_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\visual_references\\k9Tdx6ddOPQ\\object_crop.png",
+    "mask": {
+      "mask_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\visual_references\\k9Tdx6ddOPQ\\object_mask.png",
+      "mask_checksum": "41e3cd35286e95707aeaa66ba4a46e37e1e12f7338275bc5c538a080c37b40dc",
+      "feather_px": 0,
+      "source": "vre"
+    },
+    "transform": {
+      "translate_x": 0,
+      "translate_y": 0,
+      "scale_x": 1.0,
+      "scale_y": 1.0,
+      "crop_box": null
+    },
+    "z_index": 20,
+    "rationale": "Matches explicit elements_to_preserve entry 'elem_obj_person_2855edcd'"
+  },
+  "depth_hint_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\visual_references\\k9Tdx6ddOPQ\\depth_map.png",
+  "canny_hint_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\visual_references\\k9Tdx6ddOPQ\\canny_map.png"
+}

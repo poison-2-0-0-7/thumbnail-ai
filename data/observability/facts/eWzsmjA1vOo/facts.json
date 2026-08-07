@@ -2,30 +2,30 @@
   "video_id": "eWzsmjA1vOo",
   "trace_facts": {
     "video_id": "eWzsmjA1vOo",
-    "extracted_at": "2026-08-02T16:37:31.344117+00:00",
+    "extracted_at": "2026-08-06T17:16:32.702573+00:00",
     "fact_version": "1.0.0",
-    "workflow_selected": "general",
+    "workflow_selected": null,
     "edit_mode": "txt2img",
-    "generation_profile": "PROFILE_LOW_VRAM",
+    "generation_profile": "PROFILE_STANDARD_EDIT",
     "model_used": null,
     "sampler": "dpmpp_2m",
     "scheduler": "karras",
     "seed": 255403169,
-    "cfg": 6.0,
-    "steps": 20,
+    "cfg": 6.5,
+    "steps": 30,
     "denoise": 1.0,
     "latent_initialization_mode": "EmptyLatentImage",
-    "controlnet_count": 0,
+    "controlnet_count": 1,
     "controlnet_configuration": {
-      "enabled": false
+      "enabled": true
     },
-    "controlnet_enabled": false,
+    "controlnet_enabled": true,
     "ipadapter_count": 1,
     "ipadapter_configuration": {
       "enabled": true
     },
     "ipadapter_enabled": true,
-    "mask_count": 0,
+    "mask_count": 1,
     "edit_mask_paths": [],
     "conditioning_assets": [
       "D:\\Afsar\\app development\\thumbnail-ai\\data\\visual_references\\eWzsmjA1vOo\\depth_map.png",
@@ -34,7 +34,13 @@
     "background_assets": [
       "D:\\Afsar\\app development\\thumbnail-ai\\data\\visual_references\\eWzsmjA1vOo\\background.png"
     ],
-    "foreground_assets": [],
+    "foreground_assets": [
+      "D:\\Afsar\\app development\\thumbnail-ai\\data\\visual_references\\eWzsmjA1vOo\\object_crop.png",
+      "D:\\Afsar\\app development\\thumbnail-ai\\data\\visual_references\\eWzsmjA1vOo\\object_crop.png",
+      "D:\\Afsar\\app development\\thumbnail-ai\\data\\visual_references\\eWzsmjA1vOo\\object_crop.png",
+      "D:\\Afsar\\app development\\thumbnail-ai\\data\\visual_references\\eWzsmjA1vOo\\object_crop.png",
+      "D:\\Afsar\\app development\\thumbnail-ai\\data\\visual_references\\eWzsmjA1vOo\\object_crop.png"
+    ],
     "composition_workspace": "D:\\Afsar\\app development\\thumbnail-ai\\data\\composition_workspaces\\eWzsmjA1vOo\\workspace_manifest.json",
     "has_composition_workspace": true,
     "generation_plan_reference": null,
@@ -44,7 +50,7 @@
     "negative_prompt": null,
     "renderer_version": "1.0.0",
     "execution_timing": {
-      "module1": null,
+      "module1": 0.0,
       "module2": null,
       "module3": null,
       "module4": null,
@@ -65,7 +71,7 @@
       "module5_redesign_specification": true,
       "module5.5_design_blueprint": true,
       "module6_prompt_package": true,
-      "module9_decision_manifest": false,
+      "module9_decision_manifest": true,
       "module10_composition_workspace": true,
       "module10_generation_bundle": false,
       "module10.5_generation_plan": false,
@@ -79,6 +85,7 @@
       "module5": "D:\\Afsar\\app development\\thumbnail-ai\\data\\redesign_specs\\eWzsmjA1vOo.json",
       "module5.5": "D:\\Afsar\\app development\\thumbnail-ai\\data\\design_blueprints\\eWzsmjA1vOo.json",
       "module6": "D:\\Afsar\\app development\\thumbnail-ai\\data\\prompt_packages\\eWzsmjA1vOo.json",
+      "module9": "D:\\Afsar\\app development\\thumbnail-ai\\data\\decisions\\eWzsmjA1vOo\\decision_manifest.json",
       "module10": "D:\\Afsar\\app development\\thumbnail-ai\\data\\composition_workspaces\\eWzsmjA1vOo\\workspace_manifest.json",
       "module7": "D:\\Afsar\\app development\\thumbnail-ai\\data\\generated_thumbnails\\eWzsmjA1vOo\\eWzsmjA1vOo.png"
     },
@@ -91,7 +98,7 @@
       "module5": "success",
       "module5.5": "success",
       "module6": "success",
-      "module9": "not_run",
+      "module9": "success",
       "module10": "success",
       "module10.5": "not_run",
       "module7": "success"
@@ -101,15 +108,22 @@
     "source_thumbnail_exists": true,
     "generated_thumbnail_exists": true,
     "asset_extraction_enabled": false,
-    "decision_engine_enabled": false,
-    "thumbnail_planner_enabled": false
+    "decision_engine_enabled": true,
+    "thumbnail_planner_enabled": false,
+    "beats_original": null,
+    "over_edited": null,
+    "selection_agreed": null,
+    "baseline_score": null,
+    "winning_candidate_index": null,
+    "module7_selected_index": null,
+    "edit_magnitude": null
   },
   "atomic_facts": [
     {
       "fact_key": "workflow_selected",
       "category": "generation",
       "name": "Workflow Selected",
-      "value": "general",
+      "value": null,
       "data_type": "string",
       "source_module": "module7"
     },
@@ -125,7 +139,7 @@
       "fact_key": "generation_profile",
       "category": "generation",
       "name": "Generation Profile",
-      "value": "PROFILE_LOW_VRAM",
+      "value": "PROFILE_STANDARD_EDIT",
       "data_type": "string",
       "source_module": "module7"
     },
@@ -141,7 +155,7 @@
       "fact_key": "controlnet_count",
       "category": "generation",
       "name": "ControlNet Count",
-      "value": 0,
+      "value": 1,
       "data_type": "int",
       "source_module": "module7"
     },
@@ -157,7 +171,7 @@
       "fact_key": "mask_count",
       "category": "generation",
       "name": "Mask Count",
-      "value": 0,
+      "value": 1,
       "data_type": "int",
       "source_module": "module7"
     },
@@ -186,6 +200,6 @@
       "source_module": "module7"
     }
   ],
-  "extracted_at": "2026-08-02T16:37:31.344117+00:00",
+  "extracted_at": "2026-08-06T17:16:32.702573+00:00",
   "fact_version": "1.0.0"
 }

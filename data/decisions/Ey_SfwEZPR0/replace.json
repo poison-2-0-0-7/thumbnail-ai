@@ -1,0 +1,27 @@
+[
+  {
+    "decision_id": "dec_cand_replace_bg_color",
+    "target": {
+      "element_id": "global_background",
+      "element_type": "background",
+      "label": "background environment",
+      "bbox": null
+    },
+    "action": "replace",
+    "confidence": 0.75,
+    "source": "rule",
+    "rationale": "Color temperature shift required (neutral)",
+    "priority_rank": 2,
+    "superseded_candidate_ids": [],
+    "machine_reasoning": {
+      "rule_ids": [
+        "rule_replace_background_color_flip"
+      ],
+      "priority_rank": 2,
+      "superseded_count": 0
+    },
+    "expected_ctr_gain": 0.15,
+    "risk": "medium",
+    "depends_on_decision_ids": []
+  }
+]

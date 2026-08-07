@@ -189,10 +189,8 @@ def _compile_object_placement(directives: list[ObjectDirective]) -> list[str]:
 
 
 def _compile_rendering_constraints(spec: RedesignSpecification) -> list[str]:
-    """Return fixed constraints plus direct preservation instructions."""
+    """Return fixed rendering constraints without placing positive preservation sentences into negative prompts."""
     constraints = list(BASE_RENDERING_CONSTRAINTS)
-    if spec.elements_to_preserve:
-        constraints.append("Preserve the following elements exactly: " + ", ".join(spec.elements_to_preserve) + ".")
     if not spec.text_overlay.include_text:
         constraints.append("Do not add any text to the rendered image.")
     return constraints
@@ -206,6 +204,7 @@ def _compile_positive_prompt(
     color_instructions: str,
     typography_instructions: str,
     elements_to_preserve: list[str],
+    style_guidance_str: str = "",
 ) -> str:
     """Assemble instruction segments in a fixed order."""
     compiled = [
@@ -216,6 +215,8 @@ def _compile_positive_prompt(
         color_instructions,
         typography_instructions,
     ]
+    if style_guidance_str:
+        compiled.append(style_guidance_str)
     if elements_to_preserve:
         compiled.append("Preserve: " + ", ".join(elements_to_preserve) + ".")
     return " ".join(compiled)
@@ -261,6 +262,7 @@ def compile_prompt_package(
     spec: RedesignSpecification,
     *,
     design_blueprint: Optional[DesignBlueprint] = None,
+    style_guidance: Optional[Any] = None,
 ) -> PromptPackage:
     """Compile one usable Module 5 specification without external calls.
 
@@ -284,11 +286,24 @@ def compile_prompt_package(
     composition = _compile_composition_instructions(spec.layout_direction)
     lighting = _compile_lighting_instructions(spec.color_direction)
     color = _compile_color_instructions(spec.color_direction)
+
+    style_guidance_str = ""
+    if style_guidance is not None and getattr(style_guidance, "applied", False):
+        parts = []
+        if getattr(style_guidance, "color_guidance", None):
+            parts.append(style_guidance.color_guidance)
+        if getattr(style_guidance, "composition_guidance", None):
+            parts.append(style_guidance.composition_guidance)
+        if getattr(style_guidance, "face_scale_guidance", None):
+            parts.append(style_guidance.face_scale_guidance)
+        style_guidance_str = " ".join(parts)
+
     package = PromptPackage(
         video_id=spec.video_id,
         positive_prompt=_compile_positive_prompt(
             subject, background, composition, lighting, color, typography,
             spec.elements_to_preserve,
+            style_guidance_str=style_guidance_str,
         ),
         negative_prompt=_compile_negative_prompt(spec.object_directives),
         subject_instructions=subject, background_instructions=background,

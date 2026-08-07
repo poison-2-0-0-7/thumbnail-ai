@@ -1,0 +1,35 @@
+{
+  "_meta": {
+    "name": "instantid_face",
+    "description": "InstantID facial identity preservation conditioning fragment",
+    "required_node_types": ["LoadImage", "InstantIDModelLoader", "InstantIDApply"]
+  },
+  "_attach": {
+    "point": "model",
+    "output_node": "30",
+    "output_slot": 0
+  },
+  "graph": {
+    "10": {
+      "class_type": "LoadImage",
+      "inputs": {
+        "image": "{{foreground_image_path}}"
+      }
+    },
+    "20": {
+      "class_type": "InstantIDModelLoader",
+      "inputs": {
+        "instantid_file": "instantid_sdxl.safetensors"
+      }
+    },
+    "30": {
+      "class_type": "InstantIDApply",
+      "inputs": {
+        "model": ["ATTACHMENT_PREVIOUS", 0],
+        "instantid": ["20", 0],
+        "image": ["10", 0],
+        "weight": "{{ipadapter_weight}}"
+      }
+    }
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "video_id": "0EyJaqz8xyw",
+  "channel_id": "UCDRje3B54Cdy0uFvJRuMjeA",
+  "dominant_colors": [
+    "#9c9c96",
+    "#72736c",
+    "#3d3f3c",
+    "#cecdc6",
+    "#f9d640"
+  ],
+  "brightness": 0.5420765280723572,
+  "contrast": 0.41215476393699646,
+  "saturation": 0.1454632431268692,
+  "warm_or_cool": "warm",
+  "color_harmony_score": 0.9499050279634008,
+  "subject_placement": "center",
+  "negative_space_ratio": 0.6081285026674859,
+  "balance_score": 0.9345886847149576,
+  "symmetry_score": 0.7871648073196411,
+  "face_scale_ratio": null,
+  "text_coverage_ratio": 0.0,
+  "text_region_count": 0,
+  "object_classes_present": [
+    "car"
+  ],
+  "extracted_at": "2026-08-06T17:27:52.734427+00:00"
+}

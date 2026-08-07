@@ -1,10 +1,10 @@
 {
   "video_id": "0EyJaqz8xyw",
-  "positive_prompt": "No primary subject was specified; compose the thumbnail without inventing a dominant foreground figure. Maintain approximately 61% negative space in the background. Keep the background moderately simple with limited competing elements. Anchor the composition's focal point in the center of the frame, targeting a clutter score of 0.40 and a negative-space ratio of 0.61. Use balanced lighting with a moderate-contrast look (target brightness=0.54, target contrast=0.41). Render muted, desaturated colors with a warm color temperature (target saturation=0.30). Render text overlay: 'The Secret Behind Multiple car objects' on the thumbnail. Preserve: Multiple car objects, Warm color palette, Composition that suggests a parking lot setting.",
+  "positive_prompt": "No primary subject was specified; compose the thumbnail without inventing a dominant foreground figure. Maintain approximately 61% negative space in the background. Keep the background moderately simple with limited competing elements. Anchor the composition's focal point in the center of the frame, targeting a clutter score of 0.40 and a negative-space ratio of 0.61. Use balanced lighting with a moderate-contrast look (target brightness=0.54, target contrast=0.41). Render muted, desaturated colors with a warm color temperature (target saturation=0.30). Render text overlay: 'The Secret Behind Warm color palette' on the thumbnail. Preserve: elem_obj_car_805db846.",
   "negative_prompt": "blurry, low resolution, watermark, distorted anatomy, extra limbs, text artifacts, jpeg compression artifacts",
   "subject_instructions": "No primary subject was specified; compose the thumbnail without inventing a dominant foreground figure.",
   "background_instructions": "Maintain approximately 61% negative space in the background. Keep the background moderately simple with limited competing elements.",
-  "typography_instructions": "Render text overlay: 'The Secret Behind Multiple car objects' on the thumbnail.",
+  "typography_instructions": "Render text overlay: 'The Secret Behind Warm color palette' on the thumbnail.",
   "composition_instructions": "Anchor the composition's focal point in the center of the frame, targeting a clutter score of 0.40 and a negative-space ratio of 0.61.",
   "lighting_instructions": "Use balanced lighting with a moderate-contrast look (target brightness=0.54, target contrast=0.41).",
   "color_instructions": "Render muted, desaturated colors with a warm color temperature (target saturation=0.30).",
@@ -17,7 +17,6 @@
   "rendering_constraints": [
     "Render at the exact target resolution; do not crop after generation.",
     "Do not add any watermark, logo, or signature.",
-    "Preserve the following elements exactly: Multiple car objects, Warm color palette, Composition that suggests a parking lot setting.",
     "Do not add any text to the rendered image."
   ],
   "safety_constraints": [
@@ -53,6 +52,6 @@
   },
   "status": "success",
   "error_message": null,
-  "duration_seconds": 0.00007959999493323267,
-  "generated_at": "2026-08-02T20:34:50.369021+00:00"
+  "duration_seconds": 0.00068450000253506,
+  "generated_at": "2026-08-06T17:27:52.813488+00:00"
 }

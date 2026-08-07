@@ -1,117 +1,117 @@
 {
   "video_id": "I-bnBd5lCew",
-  "headline": "The Truth About Positive emotional expression",
+  "headline": "The Truth About Emotional impact through faces and expressions",
   "headline_variants": [
     {
-      "text": "The Truth About Positive emotional expression",
+      "text": "The Truth About Emotional impact through faces and expressions",
       "template_id": "controversy_01",
       "curiosity_score": 0.35,
       "emotional_impact_score": 0.8,
-      "readability_score": 0.96,
+      "readability_score": 0.94,
       "ctr_potential_score": 1.0,
-      "character_count": 45,
-      "mobile_readability_score": 0.75,
+      "character_count": 62,
+      "mobile_readability_score": 0.0,
       "brand_consistency_score": 1.0,
-      "composite_score": 0.7665
+      "composite_score": 0.6885
     },
     {
-      "text": "The Secret Behind Positive emotional expression",
+      "text": "The Secret Behind Emotional impact through faces and expressions",
       "template_id": "curiosity_01",
       "curiosity_score": 0.35,
       "emotional_impact_score": 0.8,
-      "readability_score": 0.94,
+      "readability_score": 0.9267,
       "ctr_potential_score": 1.0,
-      "character_count": 47,
-      "mobile_readability_score": 0.65,
+      "character_count": 64,
+      "mobile_readability_score": 0.0,
       "brand_consistency_score": 1.0,
-      "composite_score": 0.7535
+      "composite_score": 0.6865
     },
     {
-      "text": "Why Positive emotional expression Changes Everything",
+      "text": "Why Emotional impact through faces and expressions Changes Everything",
       "template_id": "curiosity_02",
       "curiosity_score": 0.35,
       "emotional_impact_score": 0.8,
-      "readability_score": 0.89,
+      "readability_score": 0.8933,
       "ctr_potential_score": 1.0,
-      "character_count": 52,
-      "mobile_readability_score": 0.4,
+      "character_count": 69,
+      "mobile_readability_score": 0.0,
       "brand_consistency_score": 1.0,
-      "composite_score": 0.721
+      "composite_score": 0.6815
     },
     {
-      "text": "I Tried Positive emotional expression For 30 Days",
-      "template_id": "shock_01",
-      "curiosity_score": 0.15,
-      "emotional_impact_score": 0.8,
-      "readability_score": 1.0,
-      "ctr_potential_score": 1.0,
-      "character_count": 49,
-      "mobile_readability_score": 0.55,
-      "brand_consistency_score": 1.0,
-      "composite_score": 0.7025
-    },
-    {
-      "text": "Don't Do Positive emotional expression Until You Watch This",
+      "text": "Don't Do Emotional impact through faces and expressions Until You Watch This",
       "template_id": "shock_02",
       "curiosity_score": 0.35,
       "emotional_impact_score": 0.8,
-      "readability_score": 0.94,
+      "readability_score": 0.76,
       "ctr_potential_score": 1.0,
-      "character_count": 59,
-      "mobile_readability_score": 0.05,
+      "character_count": 76,
+      "mobile_readability_score": 0.0,
       "brand_consistency_score": 1.0,
-      "composite_score": 0.6935
+      "composite_score": 0.6615
     },
     {
-      "text": "Why Everyone Is Wrong About Positive emotional expression",
+      "text": "Why Everyone Is Wrong About Emotional impact through faces and expressions",
       "template_id": "controversy_02",
       "curiosity_score": 0.35,
       "emotional_impact_score": 0.6,
-      "readability_score": 0.985,
+      "readability_score": 0.82,
       "ctr_potential_score": 1.0,
-      "character_count": 57,
-      "mobile_readability_score": 0.15,
+      "character_count": 74,
+      "mobile_readability_score": 0.0,
       "brand_consistency_score": 1.0,
-      "composite_score": 0.6703
+      "composite_score": 0.6305
     },
     {
-      "text": "Positive emotional expression Is Broken",
-      "template_id": "shock_03",
-      "curiosity_score": 0.0,
-      "emotional_impact_score": 0.6,
-      "readability_score": 0.94,
+      "text": "I Tried Emotional impact through faces and expressions For 30 Days",
+      "template_id": "shock_01",
+      "curiosity_score": 0.15,
+      "emotional_impact_score": 0.8,
+      "readability_score": 0.82,
       "ctr_potential_score": 1.0,
-      "character_count": 39,
-      "mobile_readability_score": 1.0,
+      "character_count": 66,
+      "mobile_readability_score": 0.0,
       "brand_consistency_score": 1.0,
-      "composite_score": 0.661
+      "composite_score": 0.6205
     },
     {
-      "text": "The Positive emotional expression Nobody Talks About",
+      "text": "The Emotional impact through faces and expressions Nobody Talks About",
       "template_id": "curiosity_03",
       "curiosity_score": 0.0,
       "emotional_impact_score": 0.8,
-      "readability_score": 0.9657,
+      "readability_score": 0.88,
       "ctr_potential_score": 1.0,
-      "character_count": 52,
-      "mobile_readability_score": 0.4,
+      "character_count": 69,
+      "mobile_readability_score": 0.0,
       "brand_consistency_score": 1.0,
-      "composite_score": 0.6449
+      "composite_score": 0.592
     },
     {
-      "text": "Lies You Were Told About Positive emotional expression",
+      "text": "Emotional impact through faces and expressions Is Broken",
+      "template_id": "shock_03",
+      "curiosity_score": 0.0,
+      "emotional_impact_score": 0.6,
+      "readability_score": 0.9925,
+      "ctr_potential_score": 1.0,
+      "character_count": 56,
+      "mobile_readability_score": 0.2,
+      "brand_consistency_score": 1.0,
+      "composite_score": 0.5889
+    },
+    {
+      "text": "Lies You Were Told About Emotional impact through faces and expressions",
       "template_id": "controversy_03",
       "curiosity_score": 0.0,
       "emotional_impact_score": 0.6,
-      "readability_score": 1.0,
+      "readability_score": 0.82,
       "ctr_potential_score": 1.0,
-      "character_count": 54,
-      "mobile_readability_score": 0.3,
+      "character_count": 71,
+      "mobile_readability_score": 0.0,
       "brand_consistency_score": 1.0,
-      "composite_score": 0.6
+      "composite_score": 0.543
     }
   ],
-  "headline_score": 0.7665,
+  "headline_score": 0.6885,
   "hook_type": "curiosity",
   "emotion": "High",
   "face_strategy": "preserve",
@@ -176,15 +176,15 @@
     "background"
   ],
   "branding_constraints": [
-    "Positive emotional expression",
-    "Transformation journey text",
-    "Clear subject placement",
+    "elem_obj_person_d85547db",
+    "elem_text_ocr_text_f43ac384",
+    "elem_text_ocr_text_af5dc847",
     "Do not reproduce copyrighted characters, logos, or branded imagery."
   ],
   "conflicts_resolved": 0,
   "status": "success",
   "partial_failure_reasons": [],
   "error_message": null,
-  "duration_seconds": 0.0003,
-  "generated_at": "2026-08-02T20:34:06.678854+00:00"
+  "duration_seconds": 0.0006,
+  "generated_at": "2026-08-06T17:16:54.699283+00:00"
 }

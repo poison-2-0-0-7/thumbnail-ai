@@ -1,0 +1,200 @@
+{
+  "video_id": "0EyJaqz8xyw",
+  "source_generated_image_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\thumbnails\\0EyJaqz8xyw.jpg",
+  "source_generated_image_hash": "0000000000000000000000000000000000000000000000000000000000000000",
+  "decisions": [
+    {
+      "decision_id": "dec_cand_keep_preserve_m4_obj_0",
+      "target": {
+        "element_id": "m4_obj_0",
+        "element_type": "object",
+        "label": "car",
+        "bbox": {
+          "x_min": 0.37150576114654543,
+          "y_min": 0.3047981262207031,
+          "x_max": 0.8448280334472656,
+          "y_max": 0.8275466918945312
+        }
+      },
+      "action": "keep",
+      "confidence": 0.95,
+      "source": "rule",
+      "rationale": "Matches explicit elements_to_preserve entry 'elem_obj_car_805db846'",
+      "priority_rank": 0,
+      "superseded_candidate_ids": [],
+      "machine_reasoning": {
+        "rule_ids": [
+          "rule_keep_explicit_preserve"
+        ],
+        "priority_rank": 0,
+        "superseded_count": 0
+      },
+      "expected_ctr_gain": 0.02,
+      "risk": "low",
+      "depends_on_decision_ids": [
+        "dec_cand_replace_bg_color"
+      ]
+    },
+    {
+      "decision_id": "dec_cand_keep_preserve_m4_obj_1",
+      "target": {
+        "element_id": "m4_obj_1",
+        "element_type": "object",
+        "label": "car",
+        "bbox": {
+          "x_min": 0.6303674697875976,
+          "y_min": 0.031081951989067925,
+          "x_max": 0.695126724243164,
+          "y_max": 0.11534174813164605
+        }
+      },
+      "action": "keep",
+      "confidence": 0.95,
+      "source": "rule",
+      "rationale": "Matches explicit elements_to_preserve entry 'elem_obj_car_805db846'",
+      "priority_rank": 0,
+      "superseded_candidate_ids": [],
+      "machine_reasoning": {
+        "rule_ids": [
+          "rule_keep_explicit_preserve"
+        ],
+        "priority_rank": 0,
+        "superseded_count": 0
+      },
+      "expected_ctr_gain": 0.02,
+      "risk": "low",
+      "depends_on_decision_ids": [
+        "dec_cand_replace_bg_color"
+      ]
+    },
+    {
+      "decision_id": "dec_cand_keep_preserve_m4_obj_2",
+      "target": {
+        "element_id": "m4_obj_2",
+        "element_type": "object",
+        "label": "car",
+        "bbox": {
+          "x_min": 0.5614737033843994,
+          "y_min": 0.038015789455837674,
+          "x_max": 0.6200233936309815,
+          "y_max": 0.12691574096679686
+        }
+      },
+      "action": "keep",
+      "confidence": 0.95,
+      "source": "rule",
+      "rationale": "Matches explicit elements_to_preserve entry 'elem_obj_car_805db846'",
+      "priority_rank": 0,
+      "superseded_candidate_ids": [],
+      "machine_reasoning": {
+        "rule_ids": [
+          "rule_keep_explicit_preserve"
+        ],
+        "priority_rank": 0,
+        "superseded_count": 0
+      },
+      "expected_ctr_gain": 0.02,
+      "risk": "low",
+      "depends_on_decision_ids": [
+        "dec_cand_replace_bg_color"
+      ]
+    },
+    {
+      "decision_id": "dec_cand_keep_preserve_m4_obj_3",
+      "target": {
+        "element_id": "m4_obj_3",
+        "element_type": "object",
+        "label": "car",
+        "bbox": {
+          "x_min": 0.021368408203125,
+          "y_min": 0.3009261237250434,
+          "x_max": 0.433651065826416,
+          "y_max": 0.6254153781467013
+        }
+      },
+      "action": "keep",
+      "confidence": 0.95,
+      "source": "rule",
+      "rationale": "Matches explicit elements_to_preserve entry 'elem_obj_car_805db846'",
+      "priority_rank": 0,
+      "superseded_candidate_ids": [],
+      "machine_reasoning": {
+        "rule_ids": [
+          "rule_keep_explicit_preserve"
+        ],
+        "priority_rank": 0,
+        "superseded_count": 0
+      },
+      "expected_ctr_gain": 0.02,
+      "risk": "low",
+      "depends_on_decision_ids": [
+        "dec_cand_replace_bg_color"
+      ]
+    },
+    {
+      "decision_id": "dec_cand_replace_bg_color",
+      "target": {
+        "element_id": "global_background",
+        "element_type": "background",
+        "label": "background environment",
+        "bbox": null
+      },
+      "action": "replace",
+      "confidence": 0.75,
+      "source": "rule",
+      "rationale": "Color temperature shift required (warm)",
+      "priority_rank": 2,
+      "superseded_candidate_ids": [],
+      "machine_reasoning": {
+        "rule_ids": [
+          "rule_replace_background_color_flip"
+        ],
+        "priority_rank": 2,
+        "superseded_count": 0
+      },
+      "expected_ctr_gain": 0.15,
+      "risk": "medium",
+      "depends_on_decision_ids": []
+    },
+    {
+      "decision_id": "dec_cand_enhance_saturation",
+      "target": {
+        "element_id": "global_saturation",
+        "element_type": "color",
+        "label": "global color saturation",
+        "bbox": null
+      },
+      "action": "enhance",
+      "confidence": 0.78,
+      "source": "rule",
+      "rationale": "Image saturation (0.15) below threshold 0.35",
+      "priority_rank": 3,
+      "superseded_candidate_ids": [],
+      "machine_reasoning": {
+        "rule_ids": [
+          "rule_enhance_global_saturation"
+        ],
+        "priority_rank": 3,
+        "superseded_count": 0
+      },
+      "expected_ctr_gain": 0.1,
+      "risk": "low",
+      "depends_on_decision_ids": [
+        "dec_cand_replace_bg_color"
+      ]
+    }
+  ],
+  "keep_count": 4,
+  "remove_count": 0,
+  "replace_count": 1,
+  "enhance_count": 1,
+  "add_count": 0,
+  "overall_confidence": 0.8883,
+  "conflicts_resolved": 0,
+  "llm_adjudications": 0,
+  "status": "success",
+  "partial_failure_reasons": [],
+  "error_message": null,
+  "total_duration_seconds": 0.0453,
+  "decided_at": "2026-08-06T17:27:52.872460+00:00"
+}

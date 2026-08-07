@@ -52,11 +52,12 @@ from creator_style import (
 
 from models import (
     CandidateManifest, CandidateManifestEntry, CandidateScore, CandidateStrategy,
-    CompositionWorkspace, DesignBlueprint, FaceMatchResult, GeneratedAsset,
+    CompositionWorkspace, DecisionManifest, DesignBlueprint, EditPlan, FaceMatchResult, GeneratedAsset,
     GenerationBundle, GenerationMetrics, GenerationPlan, GenerationProfile,
     GenerationRunMetadata, ImageGenerationResult, PromptPackage, QualityAssuranceReport,
     StrategyPack, WorkflowTemplateRef,
 )
+from generation_components.staged_edit_stages import BaseLatentAnchor
 from generation_components import (
     CandidateStrategyPlanner,
     CapabilityProbe,
@@ -321,6 +322,46 @@ def stage_image_for_comfyui(raw_path: str | Path | None, video_id: str = "") -> 
     return staged_filename
 
 
+def ensure_default_mask_for_comfyui(video_id: str = "", width: int = 1280, height: int = 720) -> str:
+    """Generate and stage a default mask PNG image in ComfyUI's input directory and return its relative filename."""
+    if COMFYUI_WORKING_DIRECTORY and COMFYUI_WORKING_DIRECTORY.exists():
+        input_dir = COMFYUI_WORKING_DIRECTORY / "input"
+    else:
+        input_dir = PROJECT_ROOT / "data" / "comfyui_input"
+    input_dir.mkdir(parents=True, exist_ok=True)
+
+    clean_vid = "".join(c if c.isalnum() or c in ("-", "_") else "_" for c in (video_id or "")).strip("_")
+    filename = f"{clean_vid}_default_mask.png" if clean_vid else "default_mask.png"
+    file_path = input_dir / filename
+
+    if not file_path.exists():
+        img = Image.new("L", (width, height), 255)
+        img.save(file_path, format="PNG")
+        logger.info("Generated default mask image for ComfyUI: {path}", path=file_path)
+
+    return filename
+
+
+def ensure_default_image_for_comfyui(video_id: str = "", width: int = 1280, height: int = 720) -> str:
+    """Generate and stage a default RGB image in ComfyUI's input directory and return its relative filename."""
+    if COMFYUI_WORKING_DIRECTORY and COMFYUI_WORKING_DIRECTORY.exists():
+        input_dir = COMFYUI_WORKING_DIRECTORY / "input"
+    else:
+        input_dir = PROJECT_ROOT / "data" / "comfyui_input"
+    input_dir.mkdir(parents=True, exist_ok=True)
+
+    clean_vid = "".join(c if c.isalnum() or c in ("-", "_") else "_" for c in (video_id or "")).strip("_")
+    filename = f"{clean_vid}_default_image.png" if clean_vid else "default_image.png"
+    file_path = input_dir / filename
+
+    if not file_path.exists():
+        img = Image.new("RGB", (width, height), (128, 128, 128))
+        img.save(file_path, format="PNG")
+        logger.info("Generated default RGB image for ComfyUI: {path}", path=file_path)
+
+    return filename
+
+
 class WorkflowBuilder:
     """Fills named template slots and materializes executable ComfyUI graphs."""
 
@@ -429,6 +470,22 @@ class WorkflowBuilder:
                 raise_on_missing=True,
             )
 
+        width = package.generation_parameters.width if package else 1280
+        height = package.generation_parameters.height if package else 720
+        video_id = package.video_id if package else ""
+        default_mask_file = None
+        for node in final_graph.values():
+            if isinstance(node, dict) and node.get("class_type") == "LoadImage":
+                inputs = node.get("inputs")
+                if isinstance(inputs, dict) and not inputs.get("image"):
+                    if default_mask_file is None:
+                        default_mask_file = ensure_default_mask_for_comfyui(video_id, width, height)
+                    inputs["image"] = default_mask_file
+                    logger.warning(
+                        "LoadImage node given empty image placeholder; assigned default mask asset '{file}'",
+                        file=default_mask_file,
+                    )
+
         workflow_hash = canonical_json_hash(final_graph)
         logger.info("Built workflow template={template}, version={version}, workflow_hash={hash}", template=workflow_ref.template_name, version=workflow_ref.workflow_version, hash=workflow_hash)
         return BuiltWorkflow(graph=final_graph, workflow_ref=workflow_ref, workflow_hash=workflow_hash)
@@ -478,6 +535,8 @@ class WorkflowBuilder:
                 fragments.append("controlnet_segmentation")
         if profile.ipadapter_enabled and conditioning.ip_adapter_reference_paths:
             fragments.append("ipadapter_reference")
+        if profile.ipadapter_enabled and conditioning.role_image_paths and ("creator_face" in conditioning.role_image_paths or "person" in conditioning.role_image_paths):
+            fragments.append("ipadapter_faceid")
         if profile.ipadapter_enabled and len(conditioning.role_image_paths) > 1 and any(k.startswith("object_") for k in conditioning.role_image_paths):
             fragments.append("multi_object_reference")
         if conditioning.text_exclusion_mask_path is not None:
@@ -496,14 +555,30 @@ class WorkflowBuilder:
         controlnet_resolver: Any | None = None,
     ) -> dict[str, Any]:
         video_id = package.video_id if package else ""
-        positive = " ".join((package.positive_prompt, package.subject_instructions,
-                             package.lighting_instructions, package.color_instructions))
+        positive = package.positive_prompt if package else ""
 
-        neg_parts = [package.negative_prompt, *package.rendering_constraints, *package.safety_constraints]
+        raw_neg_parts = [
+            package.negative_prompt if package else "",
+            *(package.rendering_constraints if package else []),
+            *(package.safety_constraints if package else []),
+        ]
         if plan and plan.negative_constraints:
             for nc in plan.negative_constraints:
-                if nc not in neg_parts:
-                    neg_parts.append(nc)
+                if nc not in raw_neg_parts:
+                    raw_neg_parts.append(nc)
+
+        neg_parts = []
+        for part in raw_neg_parts:
+            part_str = str(part).strip()
+            if not part_str:
+                continue
+            # Exclude positive preservation directives that were mistakenly passed
+            lower_part = part_str.lower()
+            if lower_part.startswith("preserve") or "elements exactly" in lower_part:
+                continue
+            if part_str not in neg_parts:
+                neg_parts.append(part_str)
+
         negative = ", ".join(neg_parts)
 
         headline_text = plan.headline if plan else ""
@@ -512,21 +587,42 @@ class WorkflowBuilder:
         headline_zone_w = plan.headline_placement_zone.width if (plan and plan.headline_placement_zone) else 0
         headline_zone_h = plan.headline_placement_zone.height if (plan and plan.headline_placement_zone) else 0
 
+        width = package.generation_parameters.width if package else 1280
+        height = package.generation_parameters.height if package else 720
+
         raw_thumb = None
         if conditioning and conditioning.source_thumbnail_path:
             raw_thumb = conditioning.source_thumbnail_path
         elif references and references.source_thumbnail_path:
             raw_thumb = references.source_thumbnail_path
         thumb_path = stage_image_for_comfyui(raw_thumb, video_id) if raw_thumb else ""
+        if not thumb_path:
+            thumb_path = ensure_default_image_for_comfyui(video_id, width, height)
 
         raw_edit_mask = None
-        if conditioning and hasattr(conditioning, "role_mask_paths") and conditioning.role_mask_paths and "edit_mask" in conditioning.role_mask_paths:
-            raw_edit_mask = conditioning.role_mask_paths["edit_mask"]
-        elif conditioning and conditioning.text_exclusion_mask_path:
+        if conditioning and hasattr(conditioning, "role_mask_paths") and conditioning.role_mask_paths:
+            for mask_key in ("edit_mask", "background", "object", "person", "creator_face"):
+                if mask_key in conditioning.role_mask_paths and conditioning.role_mask_paths[mask_key]:
+                    raw_edit_mask = conditioning.role_mask_paths[mask_key]
+                    break
+            if raw_edit_mask is None:
+                first_mask = next((p for p in conditioning.role_mask_paths.values() if p), None)
+                if first_mask:
+                    raw_edit_mask = first_mask
+        if raw_edit_mask is None and conditioning and conditioning.text_exclusion_mask_path:
             raw_edit_mask = conditioning.text_exclusion_mask_path
         edit_mask = stage_image_for_comfyui(raw_edit_mask, video_id) if raw_edit_mask else ""
+        if not edit_mask:
+            edit_mask = ensure_default_mask_for_comfyui(video_id, width, height)
 
-        raw_fg = conditioning.role_image_paths.get("foreground") if (conditioning and conditioning.role_image_paths) else None
+        raw_fg = None
+        if conditioning and hasattr(conditioning, "role_image_paths") and conditioning.role_image_paths:
+            raw_fg = (
+                conditioning.role_image_paths.get("foreground")
+                or conditioning.role_image_paths.get("creator_face")
+                or conditioning.role_image_paths.get("person")
+                or conditioning.role_image_paths.get("object")
+            )
         raw_bg = conditioning.role_image_paths.get("background") if (conditioning and conditioning.role_image_paths) else None
         raw_person_mask = conditioning.role_mask_paths.get("person") if (conditioning and conditioning.role_mask_paths) else None
         raw_object_mask = conditioning.role_mask_paths.get("object") if (conditioning and conditioning.role_mask_paths) else None
@@ -1078,15 +1174,37 @@ class FaceRestorationStage:
                 shutil.copyfile(image_path, target)
             return target
 
-        with Image.open(image_path) as img:
-            img_format = img.format or "PNG"
-            enhanced = img.filter(ImageFilter.SMOOTH_MORE).filter(ImageFilter.SHARPEN)
-            temp_target = target.with_suffix(".tmp")
-            target.parent.mkdir(parents=True, exist_ok=True)
-            enhanced.save(temp_target, format=img_format)
-            temp_target.replace(target)
+        restored_via_neural = False
+        if profile.restoration in ("codeformer", "gfpgan"):
+            try:
+                import torch
+                # Check for installed CodeFormer / GFPGAN inference modules
+                if profile.restoration == "gfpgan":
+                    from gfpgan import GFPGANer
+                    restorer = GFPGANer(model_path="gfpgan/weights/GFPGANv1.4.pth", upscale=1, arch="clean", channel_multiplier=2)
+                    img_cv = cv2.imread(str(image_path))
+                    if img_cv is not None:
+                        _, _, restored_img = restorer.enhance(img_cv, has_aligned=False, only_center_face=False, paste_back=True)
+                        cv2.imwrite(str(target), restored_img)
+                        restored_via_neural = True
+            except Exception as exc:
+                logger.debug("Neural face restoration ({mode}) unavailable: {exc}", mode=profile.restoration, exc=exc)
 
-        logger.info("Face restoration completed for {path} using restoration={mode}", path=target, mode=profile.restoration)
+        if not restored_via_neural:
+            with Image.open(image_path) as img:
+                img_format = img.format or "PNG"
+                enhanced = img.filter(ImageFilter.SMOOTH_MORE).filter(ImageFilter.SHARPEN)
+                temp_target = target.with_suffix(".tmp")
+                target.parent.mkdir(parents=True, exist_ok=True)
+                enhanced.save(temp_target, format=img_format)
+                temp_target.replace(target)
+
+        logger.info(
+            "Face restoration completed for {path} using restoration={mode} (neural={neural})",
+            path=target,
+            mode=profile.restoration,
+            neural=restored_via_neural,
+        )
         return target
 
 
@@ -1379,8 +1497,9 @@ class ImageGeneratorPipeline:
         composition_workspace: CompositionWorkspace | None = None,
         generation_plan: GenerationPlan | None = None,
         design_blueprint: DesignBlueprint | None = None,
-        edit_mode: Literal["legacy_txt2img", "staged_edit", "auto"] = "legacy_txt2img",
+        edit_mode: Literal["legacy_txt2img", "staged_edit", "auto"] = "auto",
         channel_id: Optional[str] = None,
+        decision_manifest: DecisionManifest | None = None,
     ) -> ImageGenerationResult:
         start_time = time.monotonic()
         package = prompt_package or self.package_loader.load(video_id)
@@ -1400,6 +1519,30 @@ class ImageGeneratorPipeline:
             profile=profile,
             plan=generation_plan,
         )
+
+        dec_manifest = decision_manifest
+        if dec_manifest is None:
+            try:
+                from config import DEFAULT_DECISION_DIR, DECISION_MANIFEST_FILENAME
+                dec_path = DEFAULT_DECISION_DIR / video_id / DECISION_MANIFEST_FILENAME
+                if dec_path.is_file():
+                    dec_manifest = DecisionManifest.model_validate_json(dec_path.read_text(encoding="utf-8"))
+            except Exception as dec_exc:
+                logger.debug("Could not auto-load decision manifest for {vid}: {exc}", vid=video_id, exc=dec_exc)
+
+        edit_plan = self.region_plan_validator.classify(
+            video_id=video_id,
+            decision_manifest=dec_manifest,
+            workspace=composition_workspace,
+            generation_plan=generation_plan,
+        )
+
+        base_anchor: BaseLatentAnchor | None = None
+        if references and references.source_thumbnail_path and references.source_thumbnail_path.is_file():
+            try:
+                base_anchor = self.base_latent_stage.prepare(references.source_thumbnail_path)
+            except Exception as exc:
+                logger.warning("BaseLatentStage: Could not prepare base anchor for {path}: {exc}", path=references.source_thumbnail_path, exc=exc)
 
         pack_name = package.generation_parameters.strategy_pack or MODULE7_STRATEGY_PACK
         requested_num = getattr(package.generation_parameters, "num_candidates", 1)
@@ -1456,6 +1599,9 @@ class ImageGeneratorPipeline:
                         cand_work_dir,
                         wf_cache,
                         effective_edit_mode=effective_edit_mode,
+                        decision_manifest=dec_manifest,
+                        edit_plan=edit_plan,
+                        base_anchor=base_anchor,
                     )
                     for cand_idx, strategy in enumerate(strategies)
                 ]
@@ -1485,6 +1631,9 @@ class ImageGeneratorPipeline:
                     cand_work_dir,
                     wf_cache,
                     effective_edit_mode=effective_edit_mode,
+                    decision_manifest=dec_manifest,
+                    edit_plan=edit_plan,
+                    base_anchor=base_anchor,
                 )
                 c_idx, c_path, c_qa, c_fm, c_strat, c_pkg, c_wf_hash, c_durations, id_retries = res
                 total_identity_retries += id_retries
@@ -1688,6 +1837,9 @@ class ImageGeneratorPipeline:
         cand_work_dir: Path,
         wf_cache: WorkflowGraphCache,
         effective_edit_mode: str = "legacy_txt2img",
+        decision_manifest: DecisionManifest | None = None,
+        edit_plan: EditPlan | None = None,
+        base_anchor: BaseLatentAnchor | None = None,
     ) -> tuple[int, Path, QualityAssuranceReport, FaceMatchResult, CandidateStrategy, PromptPackage, str, dict[str, float], int]:
         cand_stage_durations: dict[str, float] = {}
         cand_package = self.strategy_planner.derive_package(
@@ -1760,30 +1912,111 @@ class ImageGeneratorPipeline:
 
         cand_stage_durations["identity_preservation"] = time.monotonic() - t0
 
+        # Stage 2 & Stage 3: Background & Object Staged Editing Passes
+        t0 = time.monotonic()
+        if base_anchor is not None and edit_plan and edit_plan.regions:
+            for region in edit_plan.regions:
+                if region.stage == "background":
+                    res = self.background_edit_stage.execute(base_anchor, region, cand_work_dir, current_image_path=curr_path)
+                    if isinstance(res, (str, Path)):
+                        curr_path = Path(res)
+                elif region.stage == "object":
+                    res = self.object_edit_stage.execute_region(base_anchor, region, cand_work_dir, current_image_path=curr_path)
+                    if isinstance(res, (str, Path)):
+                        curr_path = Path(res)
+        cand_stage_durations["staged_region_edits"] = time.monotonic() - t0
+
+        # Stage 3.5: Masked Composite Stage (Paste-back guarantee)
+        t0 = time.monotonic()
+        sampled_mask_paths: list[Path] = []
+        if edit_plan and edit_plan.regions:
+            sampled_mask_paths = [r.mask_path for r in edit_plan.regions if r.mask_path and r.mask_path.is_file()]
+        elif conditioning_ctx and conditioning_ctx.role_mask_paths:
+            sampled_mask_paths = [p for p in conditioning_ctx.role_mask_paths.values() if p and p.is_file()]
+
+        if references and references.source_thumbnail_path and references.source_thumbnail_path.is_file():
+            if sampled_mask_paths or effective_edit_mode == "staged_edit":
+                comp_masked_path = cand_work_dir / f"cand_{cand_idx}_masked_comp.png"
+                res = self.masked_composite_stage.composite(
+                    source_path=references.source_thumbnail_path,
+                    generated_path=curr_path,
+                    sampled_mask_paths=sampled_mask_paths,
+                    output_path=comp_masked_path,
+                )
+                if isinstance(res, (str, Path)):
+                    curr_path = Path(res)
+        cand_stage_durations["masked_composite"] = time.monotonic() - t0
+
+        # Stage 4: Typography Stage (Headline text rendering)
+        t0 = time.monotonic()
+        headline_text = (generation_plan.headline if generation_plan else None) or getattr(cand_package, "typography_instructions", "") or ""
+        headline_zone = generation_plan.headline_placement_zone if generation_plan else None
+        if headline_text and headline_text.strip():
+            typo_path = cand_work_dir / f"cand_{cand_idx}_typo.png"
+            res = self.typography_stage.render_headline(
+                image_path=curr_path,
+                headline_text=headline_text,
+                placement_zone=headline_zone,
+                output_path=typo_path,
+            )
+            if isinstance(res, (str, Path)):
+                curr_path = Path(res)
+        cand_stage_durations["typography"] = time.monotonic() - t0
+
+        # Stage 5: Harmonization Stage (Color/luminance seam correction)
+        t0 = time.monotonic()
+        if sampled_mask_paths and references and references.source_thumbnail_path and references.source_thumbnail_path.is_file():
+            harm_path = cand_work_dir / f"cand_{cand_idx}_harm.png"
+            res = self.harmonization_stage.harmonize(
+                image_path=curr_path,
+                reference_path=references.source_thumbnail_path,
+                sampled_mask_paths=sampled_mask_paths,
+                output_path=harm_path,
+            )
+            if isinstance(res, (str, Path)):
+                curr_path = Path(res)
+        cand_stage_durations["harmonization"] = time.monotonic() - t0
+
+        # Stage 6: Face Restoration Stage
         t0 = time.monotonic()
         restored_path = cand_work_dir / f"cand_{cand_idx}_restored.png"
-        self.restoration_stage.restore(curr_path, profile, output_path=restored_path)
+        res = self.restoration_stage.restore(curr_path, profile, output_path=restored_path)
+        if isinstance(res, (str, Path)):
+            curr_path = Path(res)
+        elif restored_path.is_file():
+            curr_path = restored_path
         cand_stage_durations["face_restoration"] = time.monotonic() - t0
 
+        # Stage 6.5: Background Composition Pass
         t0 = time.monotonic()
         comp_path = cand_work_dir / f"cand_{cand_idx}_comp.png"
-        self.background_compositor.composite(restored_path, references, package, output_path=comp_path)
+        res = self.background_compositor.composite(curr_path, references, package, output_path=comp_path)
+        if isinstance(res, (str, Path)):
+            curr_path = Path(res)
+        elif comp_path.is_file():
+            curr_path = comp_path
         cand_stage_durations["background_composition"] = time.monotonic() - t0
 
+        # Stage 7: Upscale Stage
         t0 = time.monotonic()
         final_cand_path = cand_work_dir / f"cand_{cand_idx}_final.png"
-        self.upscale_stage.upscale(
-            comp_path,
+        res = self.upscale_stage.upscale(
+            curr_path,
             profile,
             target_width=package.generation_parameters.width,
             target_height=package.generation_parameters.height,
             upscale_requested=getattr(package.quality_parameters, "upscale_requested", True),
             output_path=final_cand_path,
         )
+        if isinstance(res, (str, Path)):
+            curr_path = Path(res)
+        elif final_cand_path.is_file():
+            curr_path = final_cand_path
         cand_stage_durations["upscale"] = time.monotonic() - t0
 
+        # Quality Assurance Stage
         t0 = time.monotonic()
-        qa_report = self.qa_stage.evaluate(final_cand_path, package, face_match, references)
+        qa_report = self.qa_stage.evaluate(curr_path, package, face_match, references)
         cand_stage_durations["quality_assurance"] = time.monotonic() - t0
 
         try:
@@ -1800,14 +2033,14 @@ class ImageGeneratorPipeline:
                 built_wf=built_wf,
                 conditioning_ctx=conditioning_ctx,
                 generation_plan=generation_plan,
-                output_image_path=final_cand_path,
+                output_image_path=curr_path,
                 stage_durations=cand_stage_durations,
                 fragments_attached=meta_frags,
             )
         except Exception as exc:
             logger.warning("Trace recording skipped for video_id={vid}: {exc}", vid=video_id, exc=exc)
 
-        return (cand_idx, final_cand_path, qa_report, face_match, strategy, cand_package, built_wf.workflow_hash, cand_stage_durations, identity_retries)
+        return (cand_idx, curr_path, qa_report, face_match, strategy, cand_package, built_wf.workflow_hash, cand_stage_durations, identity_retries)
 
 
 
@@ -1820,11 +2053,12 @@ def run_image_generation_pipeline(
     composition_workspace: CompositionWorkspace | None = None,
     generation_plan: GenerationPlan | None = None,
     design_blueprint: DesignBlueprint | None = None,
-    edit_mode: Literal["legacy_txt2img", "staged_edit", "auto"] = "legacy_txt2img",
+    edit_mode: Literal["legacy_txt2img", "staged_edit", "auto"] = "auto",
     client: Any | None = None,
     thumbnail_dir: Path = DEFAULT_THUMBNAIL_DIR,
     analysis_dir: Path = DEFAULT_ANALYSIS_DIR,
     output_dir: Path = MODULE7_OUTPUT_DIR,
+    decision_manifest: DecisionManifest | None = None,
 ) -> Path:
     """Top-level helper function to run Phase 4 image generation pipeline and return thumbnail path."""
     pipeline = ImageGeneratorPipeline(
@@ -1842,6 +2076,7 @@ def run_image_generation_pipeline(
         generation_plan=generation_plan,
         design_blueprint=design_blueprint,
         edit_mode=edit_mode,
+        decision_manifest=decision_manifest,
     )
     if result.generated_asset is None:
         raise ArtifactWriteError(f"No asset produced for {video_id}")

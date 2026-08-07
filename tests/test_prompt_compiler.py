@@ -156,12 +156,13 @@ def test_compilers_preserve_module_five_order_and_targets() -> None:
 
 def test_positive_prompt_order_and_rendering_constraints_are_fixed() -> None:
     assert _compile_positive_prompt("A", "B", "C", "D", "E", "F", []) == "A B C D E F"
+    pos = _compile_positive_prompt("A", "B", "C", "D", "E", "F", ["existing text"])
+    assert "Preserve: existing text." in pos
     spec = _spec(
         elements_to_preserve=["existing text"],
         text_overlay=TextOverlaySpec(include_text=False),
     )
     constraints = _compile_rendering_constraints(spec)
-    assert any("existing text" in constraint for constraint in constraints)
     assert "Do not add any text to the rendered image." in constraints
 
 

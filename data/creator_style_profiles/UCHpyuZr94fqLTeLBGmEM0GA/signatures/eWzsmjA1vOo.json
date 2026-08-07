@@ -1,0 +1,29 @@
+{
+  "video_id": "eWzsmjA1vOo",
+  "channel_id": "UCHpyuZr94fqLTeLBGmEM0GA",
+  "dominant_colors": [
+    "#060707",
+    "#ccbdb2",
+    "#a57462",
+    "#4a3b32",
+    "#f7dd30"
+  ],
+  "brightness": 0.37234267592430115,
+  "contrast": 0.6578394770622253,
+  "saturation": 0.3608553111553192,
+  "warm_or_cool": "warm",
+  "color_harmony_score": 0.6098107899296605,
+  "subject_placement": "left-third",
+  "negative_space_ratio": 0.589932849335793,
+  "balance_score": 0.8407626545870297,
+  "symmetry_score": 0.7561776638031006,
+  "face_scale_ratio": 0.010165487968861278,
+  "text_coverage_ratio": 0.09009099660115641,
+  "text_region_count": 4,
+  "object_classes_present": [
+    "person",
+    "refrigerator",
+    "bowl"
+  ],
+  "extracted_at": "2026-08-06T17:14:47.293736+00:00"
+}

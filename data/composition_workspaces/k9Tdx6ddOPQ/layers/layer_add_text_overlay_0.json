@@ -1,0 +1,21 @@
+{
+  "layer_id": "layer_add_text_overlay_0",
+  "placement": {
+    "asset_id": "add_text_overlay_0",
+    "role": "text",
+    "decision": "add",
+    "source_path": null,
+    "mask": null,
+    "transform": {
+      "translate_x": 0,
+      "translate_y": 0,
+      "scale_x": 1.0,
+      "scale_y": 1.0,
+      "crop_box": null
+    },
+    "z_index": 30,
+    "rationale": "Explicit text overlay requested in redesign specification"
+  },
+  "depth_hint_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\visual_references\\k9Tdx6ddOPQ\\depth_map.png",
+  "canny_hint_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\visual_references\\k9Tdx6ddOPQ\\canny_map.png"
+}

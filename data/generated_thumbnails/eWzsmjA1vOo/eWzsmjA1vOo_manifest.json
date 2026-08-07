@@ -6,14 +6,14 @@
     "path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\generated_thumbnails\\eWzsmjA1vOo\\eWzsmjA1vOo.png",
     "width": 1280,
     "height": 720,
-    "sha256": "196017b9d22c318d4f233bf753738688c13f0ac701e62526344326a25c3f94a5",
+    "sha256": "5ce3c24d8fa267c301c26dd99d605e0c59e5d7dee589dca62c677fd723c29830",
     "candidate_index": 0
   },
   "workflow_version": "workflow_v1",
-  "workflow_hash": "76ce39a8ed7199e7c6d5236d9c3e52004477708b09ca38ea600d20876a0d1b31",
-  "prompt_package_hash": "e4c698cdb1918b5a1739c8a61bb3e20ce7e5e1a1fe02dd5cdf5935e1b84ba60a",
-  "generation_hash": "f487dd0fe3d0e2c5c10cbbeecd5ec84b8a9b00cf8ccd68ead63b410855a42be5",
-  "profile_name": "PROFILE_LOW_VRAM",
+  "workflow_hash": "0b75a46dd94ac523c19dcaf53f5b4e6b3526e26f4108a82fa3786393c025260f",
+  "prompt_package_hash": "38924762d89faacdc19fa6aebd34ab02f71bedbeb70d366e8d3342fe02b23964",
+  "generation_hash": "1f1022fba1cc71cde6c7c6b734fe5c152825e22abc6e77993e6cdf9292b1483b",
+  "profile_name": "PROFILE_STANDARD_EDIT",
   "checkpoint_hash": null,
   "lora_hashes": [],
   "controlnet_hashes": [],
@@ -24,7 +24,7 @@
   "candidate_scores": [
     {
       "candidate_index": 0,
-      "overall_score": 0.7592424809870248,
+      "overall_score": 0.7645,
       "identity_similarity": 1.0,
       "hard_gate_passed": true,
       "rank": 1,
@@ -34,13 +34,17 @@
   "selected_candidate_index": 0,
   "retry_count": 0,
   "stage_durations_seconds": {
-    "comfyui_generate": 48.3170867000008,
-    "identity_preservation": 0.01531529999920167,
-    "face_restoration": 0.15739360000225133,
-    "background_composition": 0.11104220000197529,
-    "upscale": 0.1203812999992806,
-    "quality_assurance": 0.29819229999702657
+    "comfyui_generate": 45.19443400000455,
+    "identity_preservation": 0.004633199998352211,
+    "staged_region_edits": 2.5999979698099196e-6,
+    "masked_composite": 0.0830740999954287,
+    "typography": 0.06532919999881415,
+    "harmonization": 0.07955750000110129,
+    "face_restoration": 0.06365669999649981,
+    "background_composition": 0.048944300004222896,
+    "upscale": 0.18197320000035688,
+    "quality_assurance": 0.2017215000014403
   },
-  "duration_seconds": 49.22474510000029,
-  "generated_at": "2026-08-02T16:37:30.120210+00:00"
+  "duration_seconds": 46.19443540000066,
+  "generated_at": "2026-08-06T17:16:31.127053+00:00"
 }

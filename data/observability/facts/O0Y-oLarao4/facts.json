@@ -2,24 +2,24 @@
   "video_id": "O0Y-oLarao4",
   "trace_facts": {
     "video_id": "O0Y-oLarao4",
-    "extracted_at": "2026-08-02T16:43:19.232671+00:00",
+    "extracted_at": "2026-08-06T17:35:40.882829+00:00",
     "fact_version": "1.0.0",
-    "workflow_selected": "general",
+    "workflow_selected": null,
     "edit_mode": "txt2img",
-    "generation_profile": "PROFILE_LOW_VRAM",
+    "generation_profile": "PROFILE_STANDARD_EDIT",
     "model_used": null,
     "sampler": "dpmpp_2m",
     "scheduler": "karras",
     "seed": 1606102990,
-    "cfg": 6.0,
-    "steps": 20,
+    "cfg": 6.5,
+    "steps": 30,
     "denoise": 1.0,
     "latent_initialization_mode": "EmptyLatentImage",
-    "controlnet_count": 0,
+    "controlnet_count": 1,
     "controlnet_configuration": {
-      "enabled": false
+      "enabled": true
     },
-    "controlnet_enabled": false,
+    "controlnet_enabled": true,
     "ipadapter_count": 1,
     "ipadapter_configuration": {
       "enabled": true
@@ -68,7 +68,7 @@
       "module5_redesign_specification": true,
       "module5.5_design_blueprint": true,
       "module6_prompt_package": true,
-      "module9_decision_manifest": false,
+      "module9_decision_manifest": true,
       "module10_composition_workspace": true,
       "module10_generation_bundle": false,
       "module10.5_generation_plan": false,
@@ -82,6 +82,7 @@
       "module5": "D:\\Afsar\\app development\\thumbnail-ai\\data\\redesign_specs\\O0Y-oLarao4.json",
       "module5.5": "D:\\Afsar\\app development\\thumbnail-ai\\data\\design_blueprints\\O0Y-oLarao4.json",
       "module6": "D:\\Afsar\\app development\\thumbnail-ai\\data\\prompt_packages\\O0Y-oLarao4.json",
+      "module9": "D:\\Afsar\\app development\\thumbnail-ai\\data\\decisions\\O0Y-oLarao4\\decision_manifest.json",
       "module10": "D:\\Afsar\\app development\\thumbnail-ai\\data\\composition_workspaces\\O0Y-oLarao4\\workspace_manifest.json",
       "module7": "D:\\Afsar\\app development\\thumbnail-ai\\data\\generated_thumbnails\\O0Y-oLarao4\\O0Y-oLarao4.png"
     },
@@ -94,7 +95,7 @@
       "module5": "success",
       "module5.5": "success",
       "module6": "success",
-      "module9": "not_run",
+      "module9": "success",
       "module10": "success",
       "module10.5": "not_run",
       "module7": "success"
@@ -104,15 +105,22 @@
     "source_thumbnail_exists": true,
     "generated_thumbnail_exists": true,
     "asset_extraction_enabled": false,
-    "decision_engine_enabled": false,
-    "thumbnail_planner_enabled": false
+    "decision_engine_enabled": true,
+    "thumbnail_planner_enabled": false,
+    "beats_original": null,
+    "over_edited": null,
+    "selection_agreed": null,
+    "baseline_score": null,
+    "winning_candidate_index": null,
+    "module7_selected_index": null,
+    "edit_magnitude": null
   },
   "atomic_facts": [
     {
       "fact_key": "workflow_selected",
       "category": "generation",
       "name": "Workflow Selected",
-      "value": "general",
+      "value": null,
       "data_type": "string",
       "source_module": "module7"
     },
@@ -128,7 +136,7 @@
       "fact_key": "generation_profile",
       "category": "generation",
       "name": "Generation Profile",
-      "value": "PROFILE_LOW_VRAM",
+      "value": "PROFILE_STANDARD_EDIT",
       "data_type": "string",
       "source_module": "module7"
     },
@@ -144,7 +152,7 @@
       "fact_key": "controlnet_count",
       "category": "generation",
       "name": "ControlNet Count",
-      "value": 0,
+      "value": 1,
       "data_type": "int",
       "source_module": "module7"
     },
@@ -189,6 +197,6 @@
       "source_module": "module7"
     }
   ],
-  "extracted_at": "2026-08-02T16:43:19.232671+00:00",
+  "extracted_at": "2026-08-06T17:35:40.882829+00:00",
   "fact_version": "1.0.0"
 }

@@ -169,16 +169,14 @@
     "background"
   ],
   "branding_constraints": [
-    "Happy emotion",
-    "Warm color palette",
-    "Balanced composition",
-    "Central subject placement",
+    "elem_obj_person_2855edcd",
+    "elem_text_ocr_text_90a4eea6",
     "Do not reproduce copyrighted characters, logos, or branded imagery."
   ],
   "conflicts_resolved": 0,
   "status": "success",
   "partial_failure_reasons": [],
   "error_message": null,
-  "duration_seconds": 0.0005,
-  "generated_at": "2026-08-02T20:35:33.803361+00:00"
+  "duration_seconds": 0.0004,
+  "generated_at": "2026-08-06T17:38:01.751869+00:00"
 }

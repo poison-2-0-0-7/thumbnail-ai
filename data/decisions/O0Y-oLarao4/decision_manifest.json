@@ -1,0 +1,141 @@
+{
+  "video_id": "O0Y-oLarao4",
+  "source_generated_image_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\thumbnails\\O0Y-oLarao4.jpg",
+  "source_generated_image_hash": "0000000000000000000000000000000000000000000000000000000000000000",
+  "decisions": [
+    {
+      "decision_id": "dec_cand_keep_preserve_m4_obj_0",
+      "target": {
+        "element_id": "m4_obj_0",
+        "element_type": "object",
+        "label": "person",
+        "bbox": {
+          "x_min": 0.5083493232727051,
+          "y_min": 0.004598405626085069,
+          "x_max": 0.9874322891235352,
+          "y_max": 0.9751436869303386
+        }
+      },
+      "action": "keep",
+      "confidence": 0.95,
+      "source": "rule",
+      "rationale": "Matches explicit elements_to_preserve entry 'elem_obj_person_e8e1a3d1'",
+      "priority_rank": 0,
+      "superseded_candidate_ids": [],
+      "machine_reasoning": {
+        "rule_ids": [
+          "rule_keep_explicit_preserve"
+        ],
+        "priority_rank": 0,
+        "superseded_count": 0
+      },
+      "expected_ctr_gain": 0.02,
+      "risk": "low",
+      "depends_on_decision_ids": [
+        "dec_cand_replace_bg_color"
+      ]
+    },
+    {
+      "decision_id": "dec_cand_keep_preserve_m4_obj_1",
+      "target": {
+        "element_id": "m4_obj_1",
+        "element_type": "object",
+        "label": "person",
+        "bbox": {
+          "x_min": 0.006478691101074218,
+          "y_min": 0.004897477891710069,
+          "x_max": 0.9714803695678711,
+          "y_max": 0.98458251953125
+        }
+      },
+      "action": "keep",
+      "confidence": 0.95,
+      "source": "rule",
+      "rationale": "Matches explicit elements_to_preserve entry 'elem_obj_person_e8e1a3d1'",
+      "priority_rank": 0,
+      "superseded_candidate_ids": [],
+      "machine_reasoning": {
+        "rule_ids": [
+          "rule_keep_explicit_preserve"
+        ],
+        "priority_rank": 0,
+        "superseded_count": 0
+      },
+      "expected_ctr_gain": 0.02,
+      "risk": "low",
+      "depends_on_decision_ids": [
+        "dec_cand_replace_bg_color"
+      ]
+    },
+    {
+      "decision_id": "dec_cand_replace_bg_color",
+      "target": {
+        "element_id": "global_background",
+        "element_type": "background",
+        "label": "background environment",
+        "bbox": null
+      },
+      "action": "replace",
+      "confidence": 0.75,
+      "source": "rule",
+      "rationale": "Color temperature shift required (warm)",
+      "priority_rank": 2,
+      "superseded_candidate_ids": [],
+      "machine_reasoning": {
+        "rule_ids": [
+          "rule_replace_background_color_flip"
+        ],
+        "priority_rank": 2,
+        "superseded_count": 0
+      },
+      "expected_ctr_gain": 0.15,
+      "risk": "medium",
+      "depends_on_decision_ids": []
+    },
+    {
+      "decision_id": "dec_cand_add_text_overlay",
+      "target": {
+        "element_id": "add_text_overlay_0",
+        "element_type": "text",
+        "label": "text overlay",
+        "bbox": {
+          "x_min": 0.240625,
+          "y_min": 0.7208333333333333,
+          "x_max": 0.765625,
+          "y_max": 0.9583333333333334
+        }
+      },
+      "action": "add",
+      "confidence": 0.85,
+      "source": "rule",
+      "rationale": "Explicit text overlay requested in redesign specification",
+      "priority_rank": 4,
+      "superseded_candidate_ids": [],
+      "machine_reasoning": {
+        "rule_ids": [
+          "rule_add_text_overlay"
+        ],
+        "priority_rank": 4,
+        "superseded_count": 0
+      },
+      "expected_ctr_gain": 0.05,
+      "risk": "low",
+      "depends_on_decision_ids": [
+        "dec_cand_replace_bg_color"
+      ]
+    }
+  ],
+  "keep_count": 2,
+  "remove_count": 0,
+  "replace_count": 1,
+  "enhance_count": 0,
+  "add_count": 1,
+  "overall_confidence": 0.875,
+  "conflicts_resolved": 0,
+  "llm_adjudications": 0,
+  "status": "success",
+  "partial_failure_reasons": [],
+  "error_message": null,
+  "total_duration_seconds": 0.0403,
+  "decided_at": "2026-08-06T17:29:21.493638+00:00"
+}

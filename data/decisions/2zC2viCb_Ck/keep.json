@@ -1,0 +1,226 @@
+[
+  {
+    "decision_id": "dec_cand_keep_preserve_m4_obj_0",
+    "target": {
+      "element_id": "m4_obj_0",
+      "element_type": "object",
+      "label": "person",
+      "bbox": {
+        "x_min": 0.2075489044189453,
+        "y_min": 0.46929073333740234,
+        "x_max": 0.46452674865722654,
+        "y_max": 0.8697790145874024
+      }
+    },
+    "action": "keep",
+    "confidence": 0.95,
+    "source": "rule",
+    "rationale": "Matches explicit elements_to_preserve entry 'elem_face_person_face_5bdfd412'",
+    "priority_rank": 0,
+    "superseded_candidate_ids": [],
+    "machine_reasoning": {
+      "rule_ids": [
+        "rule_keep_explicit_preserve"
+      ],
+      "priority_rank": 0,
+      "superseded_count": 0
+    },
+    "expected_ctr_gain": 0.02,
+    "risk": "low",
+    "depends_on_decision_ids": [
+      "dec_cand_replace_bg_color"
+    ]
+  },
+  {
+    "decision_id": "dec_cand_keep_preserve_m4_obj_1",
+    "target": {
+      "element_id": "m4_obj_1",
+      "element_type": "object",
+      "label": "person",
+      "bbox": {
+        "x_min": 0.14062907695770263,
+        "y_min": 0.1289745330810547,
+        "x_max": 0.3617335081100464,
+        "y_max": 0.8353808720906576
+      }
+    },
+    "action": "keep",
+    "confidence": 0.95,
+    "source": "rule",
+    "rationale": "Matches explicit elements_to_preserve entry 'elem_face_person_face_5bdfd412'",
+    "priority_rank": 0,
+    "superseded_candidate_ids": [],
+    "machine_reasoning": {
+      "rule_ids": [
+        "rule_keep_explicit_preserve"
+      ],
+      "priority_rank": 0,
+      "superseded_count": 0
+    },
+    "expected_ctr_gain": 0.02,
+    "risk": "low",
+    "depends_on_decision_ids": [
+      "dec_cand_replace_bg_color"
+    ]
+  },
+  {
+    "decision_id": "dec_cand_keep_preserve_m4_obj_2",
+    "target": {
+      "element_id": "m4_obj_2",
+      "element_type": "object",
+      "label": "person",
+      "bbox": {
+        "x_min": 0.4409742832183838,
+        "y_min": 0.6109374364217123,
+        "x_max": 0.6169416904449463,
+        "y_max": 0.8742120742797852
+      }
+    },
+    "action": "keep",
+    "confidence": 0.95,
+    "source": "rule",
+    "rationale": "Matches explicit elements_to_preserve entry 'elem_face_person_face_5bdfd412'",
+    "priority_rank": 0,
+    "superseded_candidate_ids": [],
+    "machine_reasoning": {
+      "rule_ids": [
+        "rule_keep_explicit_preserve"
+      ],
+      "priority_rank": 0,
+      "superseded_count": 0
+    },
+    "expected_ctr_gain": 0.02,
+    "risk": "low",
+    "depends_on_decision_ids": [
+      "dec_cand_replace_bg_color"
+    ]
+  },
+  {
+    "decision_id": "dec_cand_keep_preserve_m4_obj_3",
+    "target": {
+      "element_id": "m4_obj_3",
+      "element_type": "object",
+      "label": "person",
+      "bbox": {
+        "x_min": 0.6092600345611572,
+        "y_min": 0.3379190444946289,
+        "x_max": 0.7617166996002197,
+        "y_max": 0.837641716003418
+      }
+    },
+    "action": "keep",
+    "confidence": 0.95,
+    "source": "rule",
+    "rationale": "Matches explicit elements_to_preserve entry 'elem_face_person_face_5bdfd412'",
+    "priority_rank": 0,
+    "superseded_candidate_ids": [],
+    "machine_reasoning": {
+      "rule_ids": [
+        "rule_keep_explicit_preserve"
+      ],
+      "priority_rank": 0,
+      "superseded_count": 0
+    },
+    "expected_ctr_gain": 0.02,
+    "risk": "low",
+    "depends_on_decision_ids": [
+      "dec_cand_replace_bg_color"
+    ]
+  },
+  {
+    "decision_id": "dec_cand_keep_preserve_m4_obj_4",
+    "target": {
+      "element_id": "m4_obj_4",
+      "element_type": "object",
+      "label": "person",
+      "bbox": {
+        "x_min": 0.4812164306640625,
+        "y_min": 0.29365692138671873,
+        "x_max": 0.6281452178955078,
+        "y_max": 0.7869116465250651
+      }
+    },
+    "action": "keep",
+    "confidence": 0.95,
+    "source": "rule",
+    "rationale": "Matches explicit elements_to_preserve entry 'elem_face_person_face_5bdfd412'",
+    "priority_rank": 0,
+    "superseded_candidate_ids": [],
+    "machine_reasoning": {
+      "rule_ids": [
+        "rule_keep_explicit_preserve"
+      ],
+      "priority_rank": 0,
+      "superseded_count": 0
+    },
+    "expected_ctr_gain": 0.02,
+    "risk": "low",
+    "depends_on_decision_ids": [
+      "dec_cand_replace_bg_color"
+    ]
+  },
+  {
+    "decision_id": "dec_cand_keep_preserve_m4_obj_5",
+    "target": {
+      "element_id": "m4_obj_5",
+      "element_type": "object",
+      "label": "person",
+      "bbox": {
+        "x_min": 0.35137786865234377,
+        "y_min": 0.26779244740804037,
+        "x_max": 0.491014289855957,
+        "y_max": 0.6063219706217448
+      }
+    },
+    "action": "keep",
+    "confidence": 0.95,
+    "source": "rule",
+    "rationale": "Matches explicit elements_to_preserve entry 'elem_face_person_face_5bdfd412'",
+    "priority_rank": 0,
+    "superseded_candidate_ids": [],
+    "machine_reasoning": {
+      "rule_ids": [
+        "rule_keep_explicit_preserve"
+      ],
+      "priority_rank": 0,
+      "superseded_count": 0
+    },
+    "expected_ctr_gain": 0.02,
+    "risk": "low",
+    "depends_on_decision_ids": [
+      "dec_cand_replace_bg_color"
+    ]
+  },
+  {
+    "decision_id": "dec_cand_keep_face_m4_face_0",
+    "target": {
+      "element_id": "m4_face_0",
+      "element_type": "face",
+      "label": "creator face",
+      "bbox": {
+        "x_min": 0.383146858215332,
+        "y_min": 0.5079363187154134,
+        "x_max": 0.45616517066955564,
+        "y_max": 0.6311800638834636
+      }
+    },
+    "action": "keep",
+    "confidence": 0.9,
+    "source": "rule",
+    "rationale": "Primary creator face detected in ThumbnailIntelligence",
+    "priority_rank": 0,
+    "superseded_candidate_ids": [],
+    "machine_reasoning": {
+      "rule_ids": [
+        "rule_keep_primary_face"
+      ],
+      "priority_rank": 0,
+      "superseded_count": 0
+    },
+    "expected_ctr_gain": 0.02,
+    "risk": "low",
+    "depends_on_decision_ids": [
+      "dec_cand_replace_bg_color"
+    ]
+  }
+]

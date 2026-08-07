@@ -1,0 +1,28 @@
+{
+  "video_id": "Ey_SfwEZPR0",
+  "channel_id": "UCf3qvN5XqGRDRip_SBCjdGg",
+  "dominant_colors": [
+    "#bcb5ae",
+    "#000100",
+    "#9f9693",
+    "#6d6b60",
+    "#3f4035"
+  ],
+  "brightness": 0.42859455943107605,
+  "contrast": 0.5817113518714905,
+  "saturation": 0.10802531242370605,
+  "warm_or_cool": "neutral",
+  "color_harmony_score": 0.8151937951764076,
+  "subject_placement": "left-third",
+  "negative_space_ratio": 0.8258163412646354,
+  "balance_score": 0.9909580865430703,
+  "symmetry_score": 0.8344392776489258,
+  "face_scale_ratio": 0.0019888017243526214,
+  "text_coverage_ratio": 0.0,
+  "text_region_count": 0,
+  "object_classes_present": [
+    "motorcycle",
+    "person"
+  ],
+  "extracted_at": "2026-08-06T17:19:12.941926+00:00"
+}

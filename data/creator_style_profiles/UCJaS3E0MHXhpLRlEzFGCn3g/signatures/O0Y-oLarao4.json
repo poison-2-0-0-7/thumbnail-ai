@@ -1,0 +1,27 @@
+{
+  "video_id": "O0Y-oLarao4",
+  "channel_id": "UCJaS3E0MHXhpLRlEzFGCn3g",
+  "dominant_colors": [
+    "#634738",
+    "#9c6c56",
+    "#be9b84",
+    "#e3d8cb",
+    "#0d090b"
+  ],
+  "brightness": 0.457196980714798,
+  "contrast": 0.41664445400238037,
+  "saturation": 0.3786100745201111,
+  "warm_or_cool": "warm",
+  "color_harmony_score": 0.9284389915558922,
+  "subject_placement": "right-third",
+  "negative_space_ratio": 0.0,
+  "balance_score": 0.8685103061935886,
+  "symmetry_score": 0.797483503818512,
+  "face_scale_ratio": null,
+  "text_coverage_ratio": 0.11284505208333334,
+  "text_region_count": 2,
+  "object_classes_present": [
+    "person"
+  ],
+  "extracted_at": "2026-08-06T17:29:21.375566+00:00"
+}

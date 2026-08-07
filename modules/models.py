@@ -1254,6 +1254,9 @@ class ObjectAsset(BaseModel):
     parent_object_index: Optional[int] = None
     child_object_indices: list[int] = Field(default_factory=list)
     source_detected_object_index: int
+    depth_layer: Optional[float] = None
+    priority: Optional[int] = None
+    scene_element_ref: Optional[str] = None
 
     @field_validator("label")
     @classmethod
@@ -1451,6 +1454,9 @@ class ResolvedDecision(BaseModel):
     priority_rank: int
     superseded_candidate_ids: list[str] = Field(default_factory=list)
     machine_reasoning: dict[str, Any] = Field(default_factory=dict)
+    expected_ctr_gain: Optional[float] = None
+    risk: Literal["low", "medium", "high"] = "low"
+    depends_on_decision_ids: list[str] = Field(default_factory=list)
 
     @field_validator("confidence")
     @classmethod
@@ -1970,6 +1976,7 @@ class GenerationPlan(BaseModel):
     conditioning_assets: list[PlanConditioningAsset] = Field(default_factory=list)
     decision_manifest_hash: Optional[str] = None
     asset_extraction_manifest_hash: Optional[str] = None
+    scene_graph_reference: Optional[str] = None
     prompt_package_hash: str
     workspace_hash: str
     status: Literal["success", "partial", "error"] = "success"
@@ -2144,6 +2151,7 @@ StyleSimilarityResult.model_rebuild()
 StylePromptGuidance.model_rebuild()
 StyleAwareScore.model_rebuild()
 StyleDriftAssessment.model_rebuild()
+
 
 
 

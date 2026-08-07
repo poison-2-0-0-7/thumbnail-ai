@@ -244,17 +244,21 @@ def test_module7_generation_helper_calls_generate_and_persists_output(
     monkeypatch: pytest.MonkeyPatch,
     tmp_path: Path,
 ) -> None:
+    from io import BytesIO
+    from PIL import Image, ImageDraw
+
     thumbnails = tmp_path / "thumbnails"
     analysis = tmp_path / "analysis"
     thumbnails.mkdir()
     analysis.mkdir()
-    (thumbnails / f"{VIDEO_ID}.jpg").write_bytes(b"source-thumbnail")
+
+    img_jpg = Image.new("RGB", (1280, 720), color="green")
+    jpg_buf = BytesIO()
+    img_jpg.save(jpg_buf, format="JPEG")
+    (thumbnails / f"{VIDEO_ID}.jpg").write_bytes(jpg_buf.getvalue())
     monkeypatch.setattr(main, "MODULE7_OUTPUT_DIR", tmp_path / "generated")
 
     calls: list[dict[str, object]] = []
-
-    from io import BytesIO
-    from PIL import Image, ImageDraw
 
     img = Image.new("RGB", (1280, 720), color="blue")
     draw = ImageDraw.Draw(img)

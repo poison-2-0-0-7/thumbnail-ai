@@ -6,14 +6,14 @@
     "path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\generated_thumbnails\\O0Y-oLarao4\\O0Y-oLarao4.png",
     "width": 1280,
     "height": 720,
-    "sha256": "f26446e8f08ee7f9e61c2efea8ca42c81e5c7a3e3f8153d755f333f535237f53",
+    "sha256": "80513d53162b5d7f5b0290b0e2f33cf3a09ea6972893a0eac0639dcc8702716d",
     "candidate_index": 0
   },
   "workflow_version": "workflow_v1",
-  "workflow_hash": "db4e58026d6ec5d0d45fc5cdf0ee912f461f8191bd59b3ca5cf89da4455ab02b",
-  "prompt_package_hash": "720e52df3565d207648cc635f250919f6686fad4673001c506ea06aba852499f",
-  "generation_hash": "93de10b3716399beba43afb7bdec787382a8fa0c50973507b407405264dace6e",
-  "profile_name": "PROFILE_LOW_VRAM",
+  "workflow_hash": "05e63fd581f35aa3df39aafee7919c68e70f421ea0c17a051194cdf754b69d63",
+  "prompt_package_hash": "e09cb062d1496ad1b3f4469bbd51b4495b24b142b54f28ba5a84d69b69887d14",
+  "generation_hash": "db04af48a7d41ca56fcd76ebff36ec3d05ef6d997c2130f0821368760c14b329",
+  "profile_name": "PROFILE_STANDARD_EDIT",
   "checkpoint_hash": null,
   "lora_hashes": [],
   "controlnet_hashes": [],
@@ -24,7 +24,7 @@
   "candidate_scores": [
     {
       "candidate_index": 0,
-      "overall_score": 0.7715616580301392,
+      "overall_score": 0.7209,
       "identity_similarity": 1.0,
       "hard_gate_passed": true,
       "rank": 1,
@@ -34,13 +34,17 @@
   "selected_candidate_index": 0,
   "retry_count": 0,
   "stage_durations_seconds": {
-    "comfyui_generate": 48.87357189999966,
-    "identity_preservation": 0.013461599999573082,
-    "face_restoration": 0.16103889999794774,
-    "background_composition": 0.13681260000157636,
-    "upscale": 0.1403004999992845,
-    "quality_assurance": 0.34935829999812995
+    "comfyui_generate": 75.51918139999907,
+    "identity_preservation": 0.004382099999929778,
+    "staged_region_edits": 2.9999500839039683e-7,
+    "masked_composite": 0.24464920000173151,
+    "typography": 0.14607519999844953,
+    "harmonization": 0.327553999995871,
+    "face_restoration": 0.17579140000452753,
+    "background_composition": 0.1335118999995757,
+    "upscale": 0.1441966999991564,
+    "quality_assurance": 0.2074637999976403
   },
-  "duration_seconds": 49.93172350000168,
-  "generated_at": "2026-08-02T16:43:18.174329+00:00"
+  "duration_seconds": 77.2325592000052,
+  "generated_at": "2026-08-06T17:35:39.565925+00:00"
 }

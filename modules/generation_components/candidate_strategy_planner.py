@@ -99,10 +99,9 @@ class CandidateStrategyPlanner:
             color_inst,
             typo_inst,
         ]
-        if base_package.rendering_constraints:
-            preserves = [c for c in base_package.rendering_constraints if c.startswith("Preserve")]
-            if preserves:
-                compiled_parts.extend(preserves)
+        if "Preserve: " in base_package.positive_prompt:
+            preserve_part = base_package.positive_prompt.split("Preserve: ")[-1]
+            compiled_parts.append("Preserve: " + preserve_part)
 
         positive_prompt = " ".join(compiled_parts)
 

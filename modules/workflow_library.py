@@ -83,7 +83,7 @@ class WorkflowLibrary:
         self,
         niche: str,
         profile: GenerationProfile,
-        edit_mode: str = "legacy_txt2img",
+        edit_mode: str = "auto",
     ) -> WorkflowTemplateRef:
         """Resolve ``(niche, profile)`` deterministically, supporting staged edit templates and fallback to general."""
         normalized = niche.strip().lower() if niche else ""

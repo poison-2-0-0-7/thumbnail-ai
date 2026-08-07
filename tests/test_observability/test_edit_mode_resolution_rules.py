@@ -176,7 +176,6 @@ def test_golden_file_replay_historical_traces() -> None:
         "Ey_SfwEZPR0",
         "I-bnBd5lCew",
         "O0Y-oLarao4",
-        "abcdEFGH123",
         "eWzsmjA1vOo",
         "k9Tdx6ddOPQ",
         "vIWkN-2J0ic",

@@ -16,25 +16,7 @@
         "denoise=1.0"
       ],
       "related_artifacts": [],
-      "evaluation_timestamp": "2026-08-02T16:42:10.995893+00:00",
-      "rule_version": "1.0.0"
-    },
-    {
-      "finding_id": "RULE-CND-01",
-      "rule_name": "ControlNet Attachment Check",
-      "category": "conditioning",
-      "severity": "WARNING",
-      "confidence": 1.0,
-      "affected_module": "module7",
-      "root_cause": "Generation profile 'PROFILE_LOW_VRAM' was selected but ControlNet conditioning was not enabled.",
-      "recommended_action": "Verify ControlNet configuration flags and model availability in ComfyUI environment.",
-      "supporting_evidence": [],
-      "supporting_facts": [
-        "generation_profile=PROFILE_LOW_VRAM",
-        "controlnet_enabled=False"
-      ],
-      "related_artifacts": [],
-      "evaluation_timestamp": "2026-08-02T16:42:10.995944+00:00",
+      "evaluation_timestamp": "2026-08-06T17:29:02.420070+00:00",
       "rule_version": "1.0.0"
     },
     {
@@ -52,7 +34,26 @@
         "edit_mask_paths_attached=0"
       ],
       "related_artifacts": [],
-      "evaluation_timestamp": "2026-08-02T16:42:10.995979+00:00",
+      "evaluation_timestamp": "2026-08-06T17:29:02.420113+00:00",
+      "rule_version": "1.0.0"
+    },
+    {
+      "finding_id": "RULE-DEC-03",
+      "rule_name": "Unnecessary Background Regeneration Check",
+      "category": "decision_honoring",
+      "severity": "WARNING",
+      "confidence": 0.9,
+      "affected_module": "module7",
+      "root_cause": "Decision Engine requested background preservation/keep, but txt2img full-denoise pass regenerated the entire image.",
+      "recommended_action": "Use regional compositing or inpainting latent mode to preserve existing background pixels.",
+      "supporting_evidence": [],
+      "supporting_facts": [
+        "decision_engine_enabled=True",
+        "edit_mode=txt2img",
+        "denoise=1.0"
+      ],
+      "related_artifacts": [],
+      "evaluation_timestamp": "2026-08-06T17:29:02.420126+00:00",
       "rule_version": "1.0.0"
     }
   ],
@@ -61,12 +62,12 @@
   "info_count": 2,
   "pass_count": 0,
   "top_root_causes": [
-    "Generation profile 'PROFILE_LOW_VRAM' was selected but ControlNet conditioning was not enabled."
+    "Decision Engine requested background preservation/keep, but txt2img full-denoise pass regenerated the entire image."
   ],
-  "generated_from_trace_hash": "6ce5077f01500779b4f22675be2fe445e5862c9341d85399a2b4d4d8743fae6d",
+  "generated_from_trace_hash": "e6ea9f185cf16a9eb79cacf21d088f50bc8ac14b5a7f1cd8302b47ffe8867726",
   "engine_version": "1.0.0",
   "status": "partial",
-  "generated_at": "2026-08-02T16:42:10.996109+00:00",
+  "generated_at": "2026-08-06T17:29:02.420222+00:00",
   "evidence_summary": {
     "total_findings": 3,
     "total_evidence_items": 0,
@@ -78,15 +79,15 @@
     "module_evidence_map": {
       "module7": [
         "RULE-LAT-01",
-        "RULE-CND-01",
-        "RULE-DEC-01"
+        "RULE-DEC-01",
+        "RULE-DEC-03"
       ]
     },
     "supporting_facts_sample": [
-      "controlnet_enabled=False",
+      "decision_engine_enabled=True",
       "denoise=1.0",
       "edit_mask_paths_attached=0",
-      "generation_profile=PROFILE_LOW_VRAM",
+      "edit_mode=txt2img",
       "latent_initialization_mode=EmptyLatentImage",
       "mask_count=1"
     ]

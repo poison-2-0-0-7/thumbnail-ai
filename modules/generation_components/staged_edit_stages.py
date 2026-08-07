@@ -82,29 +82,35 @@ class MaskedCompositeStage:
             shutil.copyfile(source_path, target)
             return target
 
-        with Image.open(source_path) as src_img, Image.open(generated_path) as gen_img:
-            w, h = src_img.size
-            src_rgb = np.array(src_img.convert("RGB").resize((w, h)), dtype=float)
-            gen_rgb = np.array(gen_img.convert("RGB").resize((w, h)), dtype=float)
+        try:
+            with Image.open(source_path) as src_img, Image.open(generated_path) as gen_img:
+                w, h = src_img.size
+                src_rgb = np.array(src_img.convert("RGB").resize((w, h)), dtype=float)
+                gen_rgb = np.array(gen_img.convert("RGB").resize((w, h)), dtype=float)
 
-            # Build union alpha mask from all sampled edit regions
-            union_mask = np.zeros((h, w), dtype=float)
-            for m_path in valid_masks:
-                with Image.open(m_path) as m_img:
-                    m_arr = np.array(m_img.convert("L").resize((w, h)), dtype=float) / 255.0
-                    union_mask = np.maximum(union_mask, m_arr)
+                # Build union alpha mask from all sampled edit regions
+                union_mask = np.zeros((h, w), dtype=float)
+                for m_path in valid_masks:
+                    with Image.open(m_path) as m_img:
+                        m_arr = np.array(m_img.convert("L").resize((w, h)), dtype=float) / 255.0
+                        union_mask = np.maximum(union_mask, m_arr)
 
-            # Expand mask dimensions for RGB broadcasting
-            alpha = np.expand_dims(union_mask, axis=-1)
+                # Expand mask dimensions for RGB broadcasting
+                alpha = np.expand_dims(union_mask, axis=-1)
 
-            # Paste-back formula: original source pixels everywhere outside mask, generated inside mask
-            comp_rgb = np.clip(src_rgb * (1.0 - alpha) + gen_rgb * alpha, 0, 255).astype(np.uint8)
+                # Paste-back formula: original source pixels everywhere outside mask, generated inside mask
+                comp_rgb = np.clip(src_rgb * (1.0 - alpha) + gen_rgb * alpha, 0, 255).astype(np.uint8)
 
-            comp_img = Image.fromarray(comp_rgb, mode="RGB")
-            temp_target = target.with_suffix(".tmp")
-            target.parent.mkdir(parents=True, exist_ok=True)
-            comp_img.save(temp_target, format="PNG")
-            temp_target.replace(target)
+                comp_img = Image.fromarray(comp_rgb, mode="RGB")
+                temp_target = target.with_suffix(".tmp")
+                target.parent.mkdir(parents=True, exist_ok=True)
+                comp_img.save(temp_target, format="PNG")
+                temp_target.replace(target)
+        except Exception as exc:
+            logger.warning("MaskedCompositeStage: Exception processing image files: {exc}", exc=exc)
+            if target != generated_path and generated_path.is_file():
+                shutil.copyfile(generated_path, target)
+            return target
 
         logger.info(
             "MaskedCompositeStage: Composited {n_masks} region mask(s) onto source base {path}",
@@ -122,14 +128,17 @@ class BackgroundEditStage:
         base_anchor: BaseLatentAnchor,
         background_region: EditRegion,
         output_dir: Path,
+        current_image_path: Path | None = None,
     ) -> Path:
         """Execute localized background inpaint pass."""
         target = output_dir / f"bg_edit_{background_region.element_id}.png"
-        shutil.copyfile(base_anchor.source_path, target)
+        source_to_use = current_image_path if (current_image_path and current_image_path.is_file()) else base_anchor.source_path
+        shutil.copyfile(source_to_use, target)
         logger.info(
-            "BackgroundEditStage: Executed background edit for element={elem} with denoise={denoise}",
+            "BackgroundEditStage: Executed background edit for element={elem} with denoise={denoise} using source={src}",
             elem=background_region.element_id,
             denoise=background_region.denoise_strength,
+            src=source_to_use.name,
         )
         return target
 
@@ -142,15 +151,18 @@ class ObjectEditStage:
         base_anchor: BaseLatentAnchor,
         object_region: EditRegion,
         output_dir: Path,
+        current_image_path: Path | None = None,
     ) -> Path:
         """Execute per-object localized inpaint pass for one target region."""
         target = output_dir / f"obj_edit_{object_region.element_id}.png"
-        shutil.copyfile(base_anchor.source_path, target)
+        source_to_use = current_image_path if (current_image_path and current_image_path.is_file()) else base_anchor.source_path
+        shutil.copyfile(source_to_use, target)
         logger.info(
-            "ObjectEditStage: Executed object edit decision={action} on element={elem} with denoise={denoise}",
+            "ObjectEditStage: Executed object edit decision={action} on element={elem} with denoise={denoise} using source={src}",
             action=object_region.decision_type,
             elem=object_region.element_id,
             denoise=object_region.denoise_strength,
+            src=source_to_use.name,
         )
         return target
 
@@ -172,41 +184,47 @@ class TypographyStage:
                 shutil.copyfile(image_path, target)
             return target
 
-        with Image.open(image_path) as img:
-            w, h = img.size
-            canvas = img.convert("RGBA")
-            from PIL import ImageDraw, ImageFont
+        try:
+            with Image.open(image_path) as img:
+                w, h = img.size
+                canvas = img.convert("RGBA")
+                from PIL import ImageDraw, ImageFont
 
-            draw = ImageDraw.Draw(canvas)
+                draw = ImageDraw.Draw(canvas)
 
-            # Determine bbox placement
-            if placement_zone and hasattr(placement_zone, "x_min"):
-                zx = int(placement_zone.x_min * w)
-                zy = int(placement_zone.y_min * h)
-                zw = int(placement_zone.width * w)
-                zh = int(placement_zone.height * h)
-            else:
-                zx, zy, zw, zh = int(w * 0.05), int(h * 0.10), int(w * 0.90), int(h * 0.25)
+                # Determine bbox placement
+                if placement_zone and hasattr(placement_zone, "x_min"):
+                    zx = int(placement_zone.x_min * w)
+                    zy = int(placement_zone.y_min * h)
+                    zw = int(placement_zone.width * w)
+                    zh = int(placement_zone.height * h)
+                else:
+                    zx, zy, zw, zh = int(w * 0.05), int(h * 0.10), int(w * 0.90), int(h * 0.25)
 
-            # Use default load font with proportional size
-            font_size = max(24, int(zh * 0.6))
-            try:
-                font = ImageFont.truetype("arial.ttf", font_size)
-            except Exception:
-                font = ImageFont.load_default()
+                # Use default load font with proportional size
+                font_size = max(24, int(zh * 0.6))
+                try:
+                    font = ImageFont.truetype("arial.ttf", font_size)
+                except Exception:
+                    font = ImageFont.load_default()
 
-            # Shadow / outline offset for contrast
-            shadow_color = (0, 0, 0, 220)
-            text_color = (255, 255, 255, 255)
+                # Shadow / outline offset for contrast
+                shadow_color = (0, 0, 0, 220)
+                text_color = (255, 255, 255, 255)
 
-            draw.text((zx + 3, zy + 3), headline_text.strip(), fill=shadow_color, font=font)
-            draw.text((zx, zy), headline_text.strip(), fill=text_color, font=font)
+                draw.text((zx + 3, zy + 3), headline_text.strip(), fill=shadow_color, font=font)
+                draw.text((zx, zy), headline_text.strip(), fill=text_color, font=font)
 
-            out_rgb = canvas.convert("RGB")
-            temp_target = target.with_suffix(".tmp")
-            target.parent.mkdir(parents=True, exist_ok=True)
-            out_rgb.save(temp_target, format="PNG")
-            temp_target.replace(target)
+                out_rgb = canvas.convert("RGB")
+                temp_target = target.with_suffix(".tmp")
+                target.parent.mkdir(parents=True, exist_ok=True)
+                out_rgb.save(temp_target, format="PNG")
+                temp_target.replace(target)
+        except Exception as exc:
+            logger.warning("TypographyStage: Exception rendering text on {path}: {exc}", path=image_path, exc=exc)
+            if target != image_path and image_path.is_file():
+                shutil.copyfile(image_path, target)
+            return target
 
         logger.info("TypographyStage: Rendered headline '{text}' on {path}", text=headline_text, path=target)
         return target
@@ -235,43 +253,49 @@ class HarmonizationStage:
                 shutil.copyfile(image_path, target)
             return target
 
-        with Image.open(image_path) as cand_img, Image.open(reference_path) as ref_img:
-            w, h = cand_img.size
-            cand_rgb = np.array(cand_img.convert("RGB").resize((w, h)), dtype=float)
-            ref_rgb = np.array(ref_img.convert("RGB").resize((w, h)), dtype=float)
+        try:
+            with Image.open(image_path) as cand_img, Image.open(reference_path) as ref_img:
+                w, h = cand_img.size
+                cand_rgb = np.array(cand_img.convert("RGB").resize((w, h)), dtype=float)
+                ref_rgb = np.array(ref_img.convert("RGB").resize((w, h)), dtype=float)
 
-            union_mask = np.zeros((h, w), dtype=float)
-            for m_path in valid_masks:
-                with Image.open(m_path) as m_img:
-                    m_arr = np.array(m_img.convert("L").resize((w, h)), dtype=float) / 255.0
-                    union_mask = np.maximum(union_mask, m_arr)
+                union_mask = np.zeros((h, w), dtype=float)
+                for m_path in valid_masks:
+                    with Image.open(m_path) as m_img:
+                        m_arr = np.array(m_img.convert("L").resize((w, h)), dtype=float) / 255.0
+                        union_mask = np.maximum(union_mask, m_arr)
 
-            unmasked = union_mask < 0.1
-            if not np.any(unmasked):
-                if target != image_path:
-                    shutil.copyfile(image_path, target)
-                return target
+                unmasked = union_mask < 0.1
+                if not np.any(unmasked):
+                    if target != image_path:
+                        shutil.copyfile(image_path, target)
+                    return target
 
-            # Compute channel-wise mean and std for preserved region
-            ref_mean = np.mean(ref_rgb[unmasked], axis=0)
-            ref_std = np.std(ref_rgb[unmasked], axis=0) + 1e-6
+                # Compute channel-wise mean and std for preserved region
+                ref_mean = np.mean(ref_rgb[unmasked], axis=0)
+                ref_std = np.std(ref_rgb[unmasked], axis=0) + 1e-6
 
-            cand_mean = np.mean(cand_rgb, axis=0)
-            cand_std = np.std(cand_rgb, axis=0) + 1e-6
+                cand_mean = np.mean(cand_rgb, axis=0)
+                cand_std = np.std(cand_rgb, axis=0) + 1e-6
 
-            # Apply gain & bias harmonization to edited regions
-            norm_rgb = (cand_rgb - cand_mean) / cand_std
-            harm_rgb = norm_rgb * ref_std + ref_mean
-            harm_rgb = np.clip(harm_rgb, 0, 255)
+                # Apply gain & bias harmonization to edited regions
+                norm_rgb = (cand_rgb - cand_mean) / cand_std
+                harm_rgb = norm_rgb * ref_std + ref_mean
+                harm_rgb = np.clip(harm_rgb, 0, 255)
 
-            alpha = np.expand_dims(union_mask, axis=-1)
-            final_rgb = np.clip(cand_rgb * (1.0 - alpha * 0.3) + harm_rgb * (alpha * 0.3), 0, 255).astype(np.uint8)
+                alpha = np.expand_dims(union_mask, axis=-1)
+                final_rgb = np.clip(cand_rgb * (1.0 - alpha * 0.3) + harm_rgb * (alpha * 0.3), 0, 255).astype(np.uint8)
 
-            out_img = Image.fromarray(final_rgb, mode="RGB")
-            temp_target = target.with_suffix(".tmp")
-            target.parent.mkdir(parents=True, exist_ok=True)
-            out_img.save(temp_target, format="PNG")
-            temp_target.replace(target)
+                out_img = Image.fromarray(final_rgb, mode="RGB")
+                temp_target = target.with_suffix(".tmp")
+                target.parent.mkdir(parents=True, exist_ok=True)
+                out_img.save(temp_target, format="PNG")
+                temp_target.replace(target)
+        except Exception as exc:
+            logger.warning("HarmonizationStage: Exception harmonizing image {path}: {exc}", path=image_path, exc=exc)
+            if target != image_path and image_path.is_file():
+                shutil.copyfile(image_path, target)
+            return target
 
         logger.info("HarmonizationStage: Harmonized color/luminance seams on {path}", path=target)
         return target

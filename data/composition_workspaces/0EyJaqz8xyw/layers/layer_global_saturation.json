@@ -1,0 +1,26 @@
+{
+  "layer_id": "layer_global_saturation",
+  "placement": {
+    "asset_id": "global_saturation",
+    "role": "object",
+    "decision": "enhance",
+    "source_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\visual_references\\0EyJaqz8xyw\\object_crop.png",
+    "mask": {
+      "mask_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\visual_references\\0EyJaqz8xyw\\object_mask.png",
+      "mask_checksum": "6fe038ba124678527ee342dc47ee8daa4978ea3616a20c2eabbd37516735e11c",
+      "feather_px": 0,
+      "source": "vre"
+    },
+    "transform": {
+      "translate_x": 0,
+      "translate_y": 0,
+      "scale_x": 1.0,
+      "scale_y": 1.0,
+      "crop_box": null
+    },
+    "z_index": 20,
+    "rationale": "Image saturation (0.15) below threshold 0.35"
+  },
+  "depth_hint_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\visual_references\\0EyJaqz8xyw\\depth_map.png",
+  "canny_hint_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\visual_references\\0EyJaqz8xyw\\canny_map.png"
+}

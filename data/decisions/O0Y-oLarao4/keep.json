@@ -1,0 +1,66 @@
+[
+  {
+    "decision_id": "dec_cand_keep_preserve_m4_obj_0",
+    "target": {
+      "element_id": "m4_obj_0",
+      "element_type": "object",
+      "label": "person",
+      "bbox": {
+        "x_min": 0.5083493232727051,
+        "y_min": 0.004598405626085069,
+        "x_max": 0.9874322891235352,
+        "y_max": 0.9751436869303386
+      }
+    },
+    "action": "keep",
+    "confidence": 0.95,
+    "source": "rule",
+    "rationale": "Matches explicit elements_to_preserve entry 'elem_obj_person_e8e1a3d1'",
+    "priority_rank": 0,
+    "superseded_candidate_ids": [],
+    "machine_reasoning": {
+      "rule_ids": [
+        "rule_keep_explicit_preserve"
+      ],
+      "priority_rank": 0,
+      "superseded_count": 0
+    },
+    "expected_ctr_gain": 0.02,
+    "risk": "low",
+    "depends_on_decision_ids": [
+      "dec_cand_replace_bg_color"
+    ]
+  },
+  {
+    "decision_id": "dec_cand_keep_preserve_m4_obj_1",
+    "target": {
+      "element_id": "m4_obj_1",
+      "element_type": "object",
+      "label": "person",
+      "bbox": {
+        "x_min": 0.006478691101074218,
+        "y_min": 0.004897477891710069,
+        "x_max": 0.9714803695678711,
+        "y_max": 0.98458251953125
+      }
+    },
+    "action": "keep",
+    "confidence": 0.95,
+    "source": "rule",
+    "rationale": "Matches explicit elements_to_preserve entry 'elem_obj_person_e8e1a3d1'",
+    "priority_rank": 0,
+    "superseded_candidate_ids": [],
+    "machine_reasoning": {
+      "rule_ids": [
+        "rule_keep_explicit_preserve"
+      ],
+      "priority_rank": 0,
+      "superseded_count": 0
+    },
+    "expected_ctr_gain": 0.02,
+    "risk": "low",
+    "depends_on_decision_ids": [
+      "dec_cand_replace_bg_color"
+    ]
+  }
+]

@@ -1,0 +1,34 @@
+[
+  {
+    "decision_id": "dec_cand_add_text_overlay",
+    "target": {
+      "element_id": "add_text_overlay_0",
+      "element_type": "text",
+      "label": "text overlay",
+      "bbox": {
+        "x_min": 0.240625,
+        "y_min": 0.7208333333333333,
+        "x_max": 0.765625,
+        "y_max": 0.9583333333333334
+      }
+    },
+    "action": "add",
+    "confidence": 0.85,
+    "source": "rule",
+    "rationale": "Explicit text overlay requested in redesign specification",
+    "priority_rank": 4,
+    "superseded_candidate_ids": [],
+    "machine_reasoning": {
+      "rule_ids": [
+        "rule_add_text_overlay"
+      ],
+      "priority_rank": 4,
+      "superseded_count": 0
+    },
+    "expected_ctr_gain": 0.05,
+    "risk": "low",
+    "depends_on_decision_ids": [
+      "dec_cand_replace_bg_color"
+    ]
+  }
+]

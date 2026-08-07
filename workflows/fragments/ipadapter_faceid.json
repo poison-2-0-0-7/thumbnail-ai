@@ -1,0 +1,35 @@
+{
+  "_meta": {
+    "name": "ipadapter_faceid",
+    "description": "IP-Adapter FaceID facial identity conditioning fragment",
+    "required_node_types": ["LoadImage", "IPAdapterFaceIDModelLoader", "IPAdapterFaceIDApply"]
+  },
+  "_attach": {
+    "point": "model",
+    "output_node": "30",
+    "output_slot": 0
+  },
+  "graph": {
+    "10": {
+      "class_type": "LoadImage",
+      "inputs": {
+        "image": "{{foreground_image_path}}"
+      }
+    },
+    "20": {
+      "class_type": "IPAdapterFaceIDModelLoader",
+      "inputs": {
+        "ipadapter_file": "ipadapter_faceid_sdxl.bin"
+      }
+    },
+    "30": {
+      "class_type": "IPAdapterFaceIDApply",
+      "inputs": {
+        "model": ["ATTACHMENT_PREVIOUS", 0],
+        "ipadapter": ["20", 0],
+        "image": ["10", 0],
+        "weight": "{{ipadapter_weight}}"
+      }
+    }
+  }
+}

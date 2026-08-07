@@ -1,0 +1,26 @@
+{
+  "layer_id": "layer_m4_face_0",
+  "placement": {
+    "asset_id": "m4_face_0",
+    "role": "object",
+    "decision": "keep",
+    "source_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\visual_references\\I-bnBd5lCew\\object_crop.png",
+    "mask": {
+      "mask_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\visual_references\\I-bnBd5lCew\\object_mask.png",
+      "mask_checksum": "d28b9fe346d5c0c6b7cfd22fa6d538f10e86b49bd5ce6df3456d30af3ea75508",
+      "feather_px": 0,
+      "source": "vre"
+    },
+    "transform": {
+      "translate_x": 0,
+      "translate_y": 0,
+      "scale_x": 1.0,
+      "scale_y": 1.0,
+      "crop_box": null
+    },
+    "z_index": 20,
+    "rationale": "Primary creator face detected in ThumbnailIntelligence"
+  },
+  "depth_hint_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\visual_references\\I-bnBd5lCew\\depth_map.png",
+  "canny_hint_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\visual_references\\I-bnBd5lCew\\canny_map.png"
+}

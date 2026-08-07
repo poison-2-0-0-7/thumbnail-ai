@@ -44,6 +44,21 @@ class ConflictResolver(IConflictResolver):
             winner, superseded_ids = self._resolve_single_element_group(cand_group)
             priority_rank = self._priority_map.get(winner.action.value, 99)
 
+            # Determine risk and expected_ctr_gain
+            risk_level = "low"
+            if winner.target.element_type in ("hero", "person") or winner.action == DecisionAction.REPLACE:
+                risk_level = "medium"
+            if winner.target.element_id.startswith("hero") or "hero" in winner.target.label.lower():
+                risk_level = "high"
+
+            ctr_gain = 0.05
+            if winner.action == DecisionAction.REPLACE:
+                ctr_gain = 0.15
+            elif winner.action == DecisionAction.ENHANCE:
+                ctr_gain = 0.10
+            elif winner.action == DecisionAction.KEEP:
+                ctr_gain = 0.02
+
             resolved = ResolvedDecision(
                 decision_id=f"dec_{winner.candidate_id}",
                 target=winner.target,
@@ -53,6 +68,9 @@ class ConflictResolver(IConflictResolver):
                 rationale=winner.rationale,
                 priority_rank=priority_rank,
                 superseded_candidate_ids=superseded_ids,
+                expected_ctr_gain=ctr_gain,
+                risk=risk_level,
+                depends_on_decision_ids=[],
                 machine_reasoning={
                     "rule_ids": winner.rule_ids,
                     "priority_rank": priority_rank,
@@ -60,6 +78,16 @@ class ConflictResolver(IConflictResolver):
                 },
             )
             resolved_list.append(resolved)
+
+        # Inter-decision dependencies (e.g., replace background decision is dependency for subject enhancement)
+        bg_dec = next((r.decision_id for r in resolved_list if r.target.element_type == "background"), None)
+        if bg_dec:
+            updated_list = []
+            for r in resolved_list:
+                if r.decision_id != bg_dec:
+                    r = r.model_copy(update={"depends_on_decision_ids": [bg_dec]})
+                updated_list.append(r)
+            resolved_list = updated_list
 
         # Step 2: Global deduplication for ADD candidates based on IoU overlap
         final_resolved = self._deduplicate_add_decisions(resolved_list)

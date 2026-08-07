@@ -1,0 +1,202 @@
+{
+  "video_id": "I-bnBd5lCew",
+  "source_generated_image_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\thumbnails\\I-bnBd5lCew.jpg",
+  "source_generated_image_hash": "0000000000000000000000000000000000000000000000000000000000000000",
+  "decisions": [
+    {
+      "decision_id": "dec_cand_keep_preserve_m4_obj_0",
+      "target": {
+        "element_id": "m4_obj_0",
+        "element_type": "object",
+        "label": "person",
+        "bbox": {
+          "x_min": 0.5532917976379395,
+          "y_min": 0.04581883748372396,
+          "x_max": 0.9940766334533692,
+          "y_max": 0.9898451063368056
+        }
+      },
+      "action": "keep",
+      "confidence": 0.95,
+      "source": "rule",
+      "rationale": "Matches explicit elements_to_preserve entry 'elem_obj_person_d85547db'",
+      "priority_rank": 0,
+      "superseded_candidate_ids": [],
+      "machine_reasoning": {
+        "rule_ids": [
+          "rule_keep_explicit_preserve"
+        ],
+        "priority_rank": 0,
+        "superseded_count": 0
+      },
+      "expected_ctr_gain": 0.02,
+      "risk": "low",
+      "depends_on_decision_ids": [
+        "dec_cand_replace_bg_color"
+      ]
+    },
+    {
+      "decision_id": "dec_cand_keep_preserve_m4_obj_1",
+      "target": {
+        "element_id": "m4_obj_1",
+        "element_type": "object",
+        "label": "person",
+        "bbox": {
+          "x_min": 0.019730615615844726,
+          "y_min": 0.04101901584201389,
+          "x_max": 0.4205596446990967,
+          "y_max": 0.9893115573459201
+        }
+      },
+      "action": "keep",
+      "confidence": 0.95,
+      "source": "rule",
+      "rationale": "Matches explicit elements_to_preserve entry 'elem_obj_person_d85547db'",
+      "priority_rank": 0,
+      "superseded_candidate_ids": [],
+      "machine_reasoning": {
+        "rule_ids": [
+          "rule_keep_explicit_preserve"
+        ],
+        "priority_rank": 0,
+        "superseded_count": 0
+      },
+      "expected_ctr_gain": 0.02,
+      "risk": "low",
+      "depends_on_decision_ids": [
+        "dec_cand_replace_bg_color"
+      ]
+    },
+    {
+      "decision_id": "dec_cand_keep_face_m4_face_0",
+      "target": {
+        "element_id": "m4_face_0",
+        "element_type": "face",
+        "label": "creator face",
+        "bbox": {
+          "x_min": 0.7030036449432373,
+          "y_min": 0.16663836373223198,
+          "x_max": 0.808597183227539,
+          "y_max": 0.423225106133355
+        }
+      },
+      "action": "keep",
+      "confidence": 0.9,
+      "source": "rule",
+      "rationale": "Primary creator face detected in ThumbnailIntelligence",
+      "priority_rank": 0,
+      "superseded_candidate_ids": [],
+      "machine_reasoning": {
+        "rule_ids": [
+          "rule_keep_primary_face"
+        ],
+        "priority_rank": 0,
+        "superseded_count": 0
+      },
+      "expected_ctr_gain": 0.02,
+      "risk": "low",
+      "depends_on_decision_ids": [
+        "dec_cand_replace_bg_color"
+      ]
+    },
+    {
+      "decision_id": "dec_cand_replace_bg_color",
+      "target": {
+        "element_id": "global_background",
+        "element_type": "background",
+        "label": "background environment",
+        "bbox": null
+      },
+      "action": "replace",
+      "confidence": 0.75,
+      "source": "rule",
+      "rationale": "Color temperature shift required (warm)",
+      "priority_rank": 2,
+      "superseded_candidate_ids": [],
+      "machine_reasoning": {
+        "rule_ids": [
+          "rule_replace_background_color_flip"
+        ],
+        "priority_rank": 2,
+        "superseded_count": 0
+      },
+      "expected_ctr_gain": 0.15,
+      "risk": "medium",
+      "depends_on_decision_ids": []
+    },
+    {
+      "decision_id": "dec_cand_enhance_saturation",
+      "target": {
+        "element_id": "global_saturation",
+        "element_type": "color",
+        "label": "global color saturation",
+        "bbox": null
+      },
+      "action": "enhance",
+      "confidence": 0.78,
+      "source": "rule",
+      "rationale": "Image saturation (0.13) below threshold 0.35",
+      "priority_rank": 3,
+      "superseded_candidate_ids": [],
+      "machine_reasoning": {
+        "rule_ids": [
+          "rule_enhance_global_saturation"
+        ],
+        "priority_rank": 3,
+        "superseded_count": 0
+      },
+      "expected_ctr_gain": 0.1,
+      "risk": "low",
+      "depends_on_decision_ids": [
+        "dec_cand_replace_bg_color"
+      ]
+    },
+    {
+      "decision_id": "dec_cand_add_text_overlay",
+      "target": {
+        "element_id": "add_text_overlay_0",
+        "element_type": "text",
+        "label": "text overlay",
+        "bbox": {
+          "x_min": 0.296875,
+          "y_min": 0.09166666666666666,
+          "x_max": 0.6453125,
+          "y_max": 0.35
+        }
+      },
+      "action": "add",
+      "confidence": 0.85,
+      "source": "rule",
+      "rationale": "Explicit text overlay requested in redesign specification",
+      "priority_rank": 4,
+      "superseded_candidate_ids": [],
+      "machine_reasoning": {
+        "rule_ids": [
+          "rule_add_text_overlay"
+        ],
+        "priority_rank": 4,
+        "superseded_count": 0
+      },
+      "expected_ctr_gain": 0.05,
+      "risk": "low",
+      "depends_on_decision_ids": [
+        "dec_cand_replace_bg_color"
+      ]
+    }
+  ],
+  "keep_count": 3,
+  "remove_count": 0,
+  "replace_count": 1,
+  "enhance_count": 1,
+  "add_count": 1,
+  "overall_confidence": 0.8202,
+  "conflicts_resolved": 0,
+  "llm_adjudications": 0,
+  "status": "partial",
+  "partial_failure_reasons": [
+    "Detected face element 'm4_face_1' (face 2) has no explicit decision"
+  ],
+  "error_message": null,
+  "total_duration_seconds": 0.051,
+  "decided_at": "2026-08-06T17:16:54.768815+00:00"
+}

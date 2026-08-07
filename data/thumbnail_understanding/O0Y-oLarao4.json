@@ -1,0 +1,716 @@
+{
+  "video_id": "O0Y-oLarao4",
+  "source_thumbnail_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\thumbnails\\O0Y-oLarao4.jpg",
+  "scene_graph": {
+    "elements": [
+      {
+        "element_id": "elem_obj_person_e8e1a3d1",
+        "element_type": "person",
+        "category": "person",
+        "label": "Person (2)",
+        "semantic_description": "Detected person with confidence 0.54",
+        "bbox": {
+          "x_min": 0.006478691101074218,
+          "y_min": 0.004897477891710069,
+          "x_max": 0.9714803695678711,
+          "y_max": 0.98458251953125
+        },
+        "polygon": [],
+        "mask_path": null,
+        "cutout_path": null,
+        "confidence": 0.5397481918334961,
+        "importance_rank": 1,
+        "role": "hero",
+        "preserve_score": 0.7,
+        "replace_score": 0.3,
+        "edit_priority": 1,
+        "depth_level": 0.1,
+        "occlusion_ratio": 0.0,
+        "parent_id": null,
+        "children_ids": [],
+        "identity_relevance": 0.7,
+        "story_relevance": 0.6,
+        "visual_relevance": 0.6,
+        "editability": "editable",
+        "source_detector": "yolo_grounding_dino",
+        "provenance": "object_detection_stage",
+        "emotion": null,
+        "emotion_confidence": null,
+        "expression_intensity": 0.5,
+        "head_pose": null,
+        "eye_direction": null,
+        "sharpness": 1.0,
+        "lighting_quality": 0.5,
+        "is_creator": false
+      },
+      {
+        "element_id": "elem_obj_person_f27aba90",
+        "element_type": "person",
+        "category": "person",
+        "label": "Person (1)",
+        "semantic_description": "Detected person with confidence 0.67",
+        "bbox": {
+          "x_min": 0.5083493232727051,
+          "y_min": 0.004598405626085069,
+          "x_max": 0.9874322891235352,
+          "y_max": 0.9751436869303386
+        },
+        "polygon": [],
+        "mask_path": null,
+        "cutout_path": null,
+        "confidence": 0.6706131100654602,
+        "importance_rank": 2,
+        "role": "primary",
+        "preserve_score": 0.7,
+        "replace_score": 0.3,
+        "edit_priority": 1,
+        "depth_level": 0.2,
+        "occlusion_ratio": 0.0,
+        "parent_id": null,
+        "children_ids": [],
+        "identity_relevance": 0.7,
+        "story_relevance": 0.6,
+        "visual_relevance": 0.6,
+        "editability": "editable",
+        "source_detector": "yolo_grounding_dino",
+        "provenance": "object_detection_stage",
+        "emotion": null,
+        "emotion_confidence": null,
+        "expression_intensity": 0.5,
+        "head_pose": null,
+        "eye_direction": null,
+        "sharpness": 1.0,
+        "lighting_quality": 0.5,
+        "is_creator": false
+      },
+      {
+        "element_id": "elem_text_ocr_text_8dc21bca",
+        "element_type": "text",
+        "category": "text",
+        "label": "Text Region: 'V-TAPER BoDY'",
+        "semantic_description": "OCR Text reading 'V-TAPER BoDY'",
+        "bbox": {
+          "x_min": 0.240625,
+          "y_min": 0.7208333333333333,
+          "x_max": 0.765625,
+          "y_max": 0.8569444444444444
+        },
+        "polygon": [],
+        "mask_path": null,
+        "cutout_path": null,
+        "confidence": 0.695525004494418,
+        "importance_rank": 3,
+        "role": "secondary",
+        "preserve_score": 0.8,
+        "replace_score": 0.2,
+        "edit_priority": 2,
+        "depth_level": 0.4,
+        "occlusion_ratio": 0.0,
+        "parent_id": null,
+        "children_ids": [],
+        "identity_relevance": 0.1,
+        "story_relevance": 0.85,
+        "visual_relevance": 0.85,
+        "editability": "editable",
+        "source_detector": "easyocr",
+        "provenance": "ocr_stage",
+        "emotion": null,
+        "emotion_confidence": null,
+        "expression_intensity": 0.5,
+        "head_pose": null,
+        "eye_direction": null,
+        "sharpness": 1.0,
+        "lighting_quality": 0.5,
+        "is_creator": false
+      },
+      {
+        "element_id": "elem_text_ocr_text_ee1cb2cd",
+        "element_type": "text",
+        "category": "text",
+        "label": "Text Region: 'home workout'",
+        "semantic_description": "OCR Text reading 'home workout'",
+        "bbox": {
+          "x_min": 0.31171875,
+          "y_min": 0.85,
+          "x_max": 0.69375,
+          "y_max": 0.9583333333333334
+        },
+        "polygon": [],
+        "mask_path": null,
+        "cutout_path": null,
+        "confidence": 0.7160707466114934,
+        "importance_rank": 4,
+        "role": "secondary",
+        "preserve_score": 0.8,
+        "replace_score": 0.2,
+        "edit_priority": 2,
+        "depth_level": 0.4,
+        "occlusion_ratio": 0.0,
+        "parent_id": null,
+        "children_ids": [],
+        "identity_relevance": 0.1,
+        "story_relevance": 0.85,
+        "visual_relevance": 0.85,
+        "editability": "editable",
+        "source_detector": "easyocr",
+        "provenance": "ocr_stage",
+        "emotion": null,
+        "emotion_confidence": null,
+        "expression_intensity": 0.5,
+        "head_pose": null,
+        "eye_direction": null,
+        "sharpness": 1.0,
+        "lighting_quality": 0.5,
+        "is_creator": false
+      },
+      {
+        "element_id": "elem_bg_plate_00",
+        "element_type": "background",
+        "category": "background",
+        "label": "Background Plate",
+        "semantic_description": "Overall background environment (warm temperature)",
+        "bbox": {
+          "x_min": 0.0,
+          "y_min": 0.0,
+          "x_max": 1.0,
+          "y_max": 1.0
+        },
+        "polygon": [],
+        "mask_path": null,
+        "cutout_path": null,
+        "confidence": 1.0,
+        "importance_rank": 999,
+        "role": "background",
+        "preserve_score": 0.1,
+        "replace_score": 0.9,
+        "edit_priority": 5,
+        "depth_level": 1.0,
+        "occlusion_ratio": 0.0,
+        "parent_id": null,
+        "children_ids": [],
+        "identity_relevance": 0.0,
+        "story_relevance": 0.5,
+        "visual_relevance": 0.5,
+        "editability": "editable",
+        "source_detector": "color_profile",
+        "provenance": "deterministic_grounder",
+        "emotion": null,
+        "emotion_confidence": null,
+        "expression_intensity": 0.5,
+        "head_pose": null,
+        "eye_direction": null,
+        "sharpness": 1.0,
+        "lighting_quality": 0.5,
+        "is_creator": false
+      }
+    ],
+    "relationships": [
+      {
+        "subject_element_id": "elem_obj_person_e8e1a3d1",
+        "relation": "in_front_of",
+        "object_element_id": "elem_bg_plate_00",
+        "confidence": 1.0,
+        "spatial_direction": "foreground",
+        "provenance": "deterministic_spatial_engine"
+      },
+      {
+        "subject_element_id": "elem_obj_person_f27aba90",
+        "relation": "in_front_of",
+        "object_element_id": "elem_bg_plate_00",
+        "confidence": 1.0,
+        "spatial_direction": "foreground",
+        "provenance": "deterministic_spatial_engine"
+      },
+      {
+        "subject_element_id": "elem_text_ocr_text_8dc21bca",
+        "relation": "in_front_of",
+        "object_element_id": "elem_bg_plate_00",
+        "confidence": 1.0,
+        "spatial_direction": "foreground",
+        "provenance": "deterministic_spatial_engine"
+      },
+      {
+        "subject_element_id": "elem_text_ocr_text_ee1cb2cd",
+        "relation": "in_front_of",
+        "object_element_id": "elem_bg_plate_00",
+        "confidence": 1.0,
+        "spatial_direction": "foreground",
+        "provenance": "deterministic_spatial_engine"
+      },
+      {
+        "subject_element_id": "elem_obj_person_f27aba90",
+        "relation": "inside",
+        "object_element_id": "elem_obj_person_e8e1a3d1",
+        "confidence": 0.97,
+        "spatial_direction": "contained",
+        "provenance": "deterministic_spatial_engine"
+      },
+      {
+        "subject_element_id": "elem_obj_person_e8e1a3d1",
+        "relation": "left_of",
+        "object_element_id": "elem_obj_person_f27aba90",
+        "confidence": 0.95,
+        "spatial_direction": "left_of",
+        "provenance": "deterministic_spatial_engine"
+      },
+      {
+        "subject_element_id": "elem_text_ocr_text_8dc21bca",
+        "relation": "inside",
+        "object_element_id": "elem_obj_person_e8e1a3d1",
+        "confidence": 1.0,
+        "spatial_direction": "contained",
+        "provenance": "deterministic_spatial_engine"
+      },
+      {
+        "subject_element_id": "elem_text_ocr_text_8dc21bca",
+        "relation": "text_relative_to",
+        "object_element_id": "elem_obj_person_e8e1a3d1",
+        "confidence": 0.9,
+        "spatial_direction": "overlapping",
+        "provenance": "text_spatial_engine"
+      },
+      {
+        "subject_element_id": "elem_obj_person_e8e1a3d1",
+        "relation": "above",
+        "object_element_id": "elem_text_ocr_text_8dc21bca",
+        "confidence": 0.95,
+        "spatial_direction": "above",
+        "provenance": "deterministic_spatial_engine"
+      },
+      {
+        "subject_element_id": "elem_text_ocr_text_ee1cb2cd",
+        "relation": "inside",
+        "object_element_id": "elem_obj_person_e8e1a3d1",
+        "confidence": 1.0,
+        "spatial_direction": "contained",
+        "provenance": "deterministic_spatial_engine"
+      },
+      {
+        "subject_element_id": "elem_text_ocr_text_ee1cb2cd",
+        "relation": "text_relative_to",
+        "object_element_id": "elem_obj_person_e8e1a3d1",
+        "confidence": 0.9,
+        "spatial_direction": "overlapping",
+        "provenance": "text_spatial_engine"
+      },
+      {
+        "subject_element_id": "elem_obj_person_e8e1a3d1",
+        "relation": "above",
+        "object_element_id": "elem_text_ocr_text_ee1cb2cd",
+        "confidence": 0.95,
+        "spatial_direction": "above",
+        "provenance": "deterministic_spatial_engine"
+      },
+      {
+        "subject_element_id": "elem_text_ocr_text_8dc21bca",
+        "relation": "text_relative_to",
+        "object_element_id": "elem_obj_person_f27aba90",
+        "confidence": 0.9,
+        "spatial_direction": "overlapping",
+        "provenance": "text_spatial_engine"
+      },
+      {
+        "subject_element_id": "elem_obj_person_f27aba90",
+        "relation": "above",
+        "object_element_id": "elem_text_ocr_text_8dc21bca",
+        "confidence": 0.95,
+        "spatial_direction": "above",
+        "provenance": "deterministic_spatial_engine"
+      },
+      {
+        "subject_element_id": "elem_text_ocr_text_ee1cb2cd",
+        "relation": "text_relative_to",
+        "object_element_id": "elem_obj_person_f27aba90",
+        "confidence": 0.9,
+        "spatial_direction": "overlapping",
+        "provenance": "text_spatial_engine"
+      },
+      {
+        "subject_element_id": "elem_obj_person_f27aba90",
+        "relation": "above",
+        "object_element_id": "elem_text_ocr_text_ee1cb2cd",
+        "confidence": 0.95,
+        "spatial_direction": "above",
+        "provenance": "deterministic_spatial_engine"
+      },
+      {
+        "subject_element_id": "elem_text_ocr_text_8dc21bca",
+        "relation": "above",
+        "object_element_id": "elem_text_ocr_text_ee1cb2cd",
+        "confidence": 0.95,
+        "spatial_direction": "above",
+        "provenance": "deterministic_spatial_engine"
+      }
+    ],
+    "hero_element_id": "elem_obj_person_e8e1a3d1",
+    "primary_subject_ids": [
+      "elem_obj_person_e8e1a3d1",
+      "elem_obj_person_f27aba90"
+    ],
+    "secondary_subject_ids": [
+      "elem_text_ocr_text_8dc21bca",
+      "elem_text_ocr_text_ee1cb2cd"
+    ]
+  },
+  "hierarchy": {
+    "reading_order": [
+      "elem_obj_person_e8e1a3d1",
+      "elem_obj_person_f27aba90",
+      "elem_text_ocr_text_8dc21bca",
+      "elem_text_ocr_text_ee1cb2cd"
+    ],
+    "first_attention_target": "elem_obj_person_e8e1a3d1",
+    "second_attention_target": "elem_obj_person_f27aba90",
+    "dominant_subject_id": "elem_obj_person_e8e1a3d1",
+    "visual_anchors": [
+      "elem_obj_person_e8e1a3d1",
+      "elem_obj_person_f27aba90"
+    ],
+    "attention_competition_score": 0.96,
+    "eye_flow_description": "Eye flows from elem_obj_person_e8e1a3d1 to elem_obj_person_f27aba90",
+    "negative_space_ratio": 0.0,
+    "text_safe_areas": [],
+    "visual_clutter_score": 0.4,
+    "subject_separation_score": 0.6,
+    "balance_score": 0.8685103061935886,
+    "focal_strength_score": 0.04,
+    "hierarchy_basis": "size_face_text_position_scoring"
+  },
+  "composition": {
+    "rule_of_thirds_score": 0.6472881265585848,
+    "subject_placement": "right-third",
+    "cropping_quality": 0.8,
+    "balance": 0.8685103061935886,
+    "symmetry_asymmetry": "symmetric",
+    "negative_space": 0.0,
+    "depth_layers_count": 5,
+    "camera_perspective": "medium_shot",
+    "subject_background_separation": 0.6,
+    "contrast_distribution": 0.7,
+    "lighting_distribution": 0.7,
+    "visual_density": 0.4,
+    "actionable_findings": []
+  },
+  "psychology": {
+    "ctr_potential_score": 0.85,
+    "curiosity_gap_score": 0.78,
+    "drivers": [
+      {
+        "driver": "curiosity",
+        "strength": 0.78,
+        "confidence": 0.85,
+        "supporting_evidence": "Headline/visual composition creates an unresolved question",
+        "potential_improvement": "Tighten copy and increase focal subject contrast",
+        "associated_element_ids": [
+          "elem_text_ocr_text_8dc21bca",
+          "elem_text_ocr_text_ee1cb2cd"
+        ]
+      },
+      {
+        "driver": "story_clarity",
+        "strength": 0.6,
+        "confidence": 0.8,
+        "supporting_evidence": "Thumbnail contains 5 grounded elements telling the narrative",
+        "potential_improvement": "Eliminate non-essential background clutter",
+        "associated_element_ids": [
+          "elem_obj_person_e8e1a3d1",
+          "elem_obj_person_f27aba90"
+        ]
+      }
+    ],
+    "content_mismatch_detected": false,
+    "mismatch_explanation": null,
+    "overall_psychology_summary": "Thumbnail leverages 2 active click drivers with estimated CTR potential 0.85"
+  },
+  "weaknesses": {
+    "findings": [
+      {
+        "weakness_type": "weak_focal_point",
+        "severity": "high",
+        "confidence": 0.85,
+        "evidence": "Low focal strength score (0.04); visual attention is split",
+        "affected_element_ids": [
+          "elem_obj_person_e8e1a3d1",
+          "elem_obj_person_f27aba90"
+        ],
+        "recommended_correction": "Enlarge primary hero subject and increase local contrast against background"
+      },
+      {
+        "weakness_type": "text_overlap",
+        "severity": "high",
+        "confidence": 0.95,
+        "evidence": "OCR text region directly overlaps primary subject bounding box",
+        "affected_element_ids": [
+          "elem_text_ocr_text_8dc21bca",
+          "elem_text_ocr_text_ee1cb2cd"
+        ],
+        "recommended_correction": "Relocate typography into reserved negative space away from creator face"
+      }
+    ],
+    "overall_risk_level": "high"
+  },
+  "decomposed_scene": {
+    "layers": [
+      {
+        "layer_id": "layer_00_background",
+        "category": "background",
+        "element_ref_id": null,
+        "image_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\thumbnails\\O0Y-oLarao4.jpg",
+        "mask_path": null,
+        "bounding_region": null,
+        "polygon": [],
+        "depth_priority": 0,
+        "relationships": [],
+        "preservation_requirement": "replaceable",
+        "editability": "editable",
+        "source_provenance": "background_plate_builder"
+      },
+      {
+        "layer_id": "layer_elem_text_ocr_text_ee1cb2cd",
+        "category": "text",
+        "element_ref_id": "elem_text_ocr_text_ee1cb2cd",
+        "image_path": null,
+        "mask_path": null,
+        "bounding_region": {
+          "x_min": 0.31171875,
+          "y_min": 0.85,
+          "x_max": 0.69375,
+          "y_max": 0.9583333333333334
+        },
+        "polygon": [],
+        "depth_priority": 6,
+        "relationships": [
+          "elem_bg_plate_00",
+          "elem_obj_person_e8e1a3d1",
+          "elem_obj_person_e8e1a3d1",
+          "elem_obj_person_f27aba90"
+        ],
+        "preservation_requirement": "preserve_if_possible",
+        "editability": "editable",
+        "source_provenance": "easyocr"
+      },
+      {
+        "layer_id": "layer_elem_text_ocr_text_8dc21bca",
+        "category": "text",
+        "element_ref_id": "elem_text_ocr_text_8dc21bca",
+        "image_path": null,
+        "mask_path": null,
+        "bounding_region": {
+          "x_min": 0.240625,
+          "y_min": 0.7208333333333333,
+          "x_max": 0.765625,
+          "y_max": 0.8569444444444444
+        },
+        "polygon": [],
+        "depth_priority": 7,
+        "relationships": [
+          "elem_bg_plate_00",
+          "elem_obj_person_e8e1a3d1",
+          "elem_obj_person_e8e1a3d1",
+          "elem_obj_person_f27aba90",
+          "elem_text_ocr_text_ee1cb2cd"
+        ],
+        "preservation_requirement": "preserve_if_possible",
+        "editability": "editable",
+        "source_provenance": "easyocr"
+      },
+      {
+        "layer_id": "layer_elem_obj_person_f27aba90",
+        "category": "primary_subject",
+        "element_ref_id": "elem_obj_person_f27aba90",
+        "image_path": null,
+        "mask_path": null,
+        "bounding_region": {
+          "x_min": 0.5083493232727051,
+          "y_min": 0.004598405626085069,
+          "x_max": 0.9874322891235352,
+          "y_max": 0.9751436869303386
+        },
+        "polygon": [],
+        "depth_priority": 8,
+        "relationships": [
+          "elem_bg_plate_00",
+          "elem_obj_person_e8e1a3d1",
+          "elem_text_ocr_text_8dc21bca",
+          "elem_text_ocr_text_ee1cb2cd"
+        ],
+        "preservation_requirement": "preserve_if_possible",
+        "editability": "editable",
+        "source_provenance": "yolo_grounding_dino"
+      },
+      {
+        "layer_id": "layer_elem_obj_person_e8e1a3d1",
+        "category": "primary_subject",
+        "element_ref_id": "elem_obj_person_e8e1a3d1",
+        "image_path": null,
+        "mask_path": null,
+        "bounding_region": {
+          "x_min": 0.006478691101074218,
+          "y_min": 0.004897477891710069,
+          "x_max": 0.9714803695678711,
+          "y_max": 0.98458251953125
+        },
+        "polygon": [],
+        "depth_priority": 9,
+        "relationships": [
+          "elem_bg_plate_00",
+          "elem_obj_person_f27aba90",
+          "elem_text_ocr_text_8dc21bca",
+          "elem_text_ocr_text_ee1cb2cd"
+        ],
+        "preservation_requirement": "must_preserve",
+        "editability": "editable",
+        "source_provenance": "yolo_grounding_dino"
+      }
+    ],
+    "background_plate_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\thumbnails\\O0Y-oLarao4.jpg",
+    "background_reconstructed": false,
+    "layer_count": 5
+  },
+  "director_plan": {
+    "creative_direction": "Redesign thumbnail for video by preserving creator identity (3 elements), replacing background clutter (1 elements), and focusing visual hierarchy.",
+    "story_analysis": "Thumbnail leverages 2 active click drivers with estimated CTR potential 0.85",
+    "elements_to_keep": [
+      "elem_obj_person_e8e1a3d1",
+      "elem_text_ocr_text_8dc21bca",
+      "elem_text_ocr_text_ee1cb2cd"
+    ],
+    "elements_to_change": [
+      "layer_00_background"
+    ],
+    "elements_to_remove": [
+      "elem_bg_plate_00"
+    ],
+    "elements_to_emphasize": [
+      "elem_obj_person_e8e1a3d1"
+    ],
+    "composition_strategy": "Dominant subject 'elem_obj_person_e8e1a3d1' with clean high-contrast backdrop",
+    "redesign_aggressiveness": "moderate",
+    "expected_ctr_improvement": "+52.0% estimated CTR potential gain"
+  },
+  "improvement_plan": {
+    "actions": [
+      {
+        "action_id": "act_01_preserve_hero",
+        "action": "keep",
+        "target_element_id": "elem_obj_person_e8e1a3d1",
+        "reason": "Preserve creator face identity 'Person (2)' as main emotional hook",
+        "priority": 1,
+        "confidence": 0.95,
+        "expected_impact": "High identity preservation and viewer connection",
+        "expected_ctr_gain": 0.08,
+        "identity_risk": "low",
+        "visual_risk": "low",
+        "dependencies": [],
+        "preserve_requirements": [
+          "face_pixels",
+          "facial_expression"
+        ],
+        "edit_method": "mask_protection",
+        "fallback_action": "keep"
+      },
+      {
+        "action_id": "act_02_replace_background",
+        "action": "replace",
+        "target_element_id": "layer_00_background",
+        "reason": "Replace noisy room background with high-contrast, vibrant, de-cluttered backdrop",
+        "priority": 2,
+        "confidence": 0.88,
+        "expected_impact": "Eliminates visual noise and amplifies hero subject prominence",
+        "expected_ctr_gain": 0.15,
+        "identity_risk": "low",
+        "visual_risk": "medium",
+        "dependencies": [
+          "act_01_preserve_hero"
+        ],
+        "preserve_requirements": [
+          "subject_silhouette"
+        ],
+        "edit_method": "regional_inpainting_or_controlnet_bg",
+        "fallback_action": "enhance"
+      },
+      {
+        "action_id": "act_03_remove_background",
+        "action": "remove",
+        "target_element_id": "elem_bg_plate_00",
+        "reason": "Remove distracting low-value object 'Background Plate'",
+        "priority": 3,
+        "confidence": 0.85,
+        "expected_impact": "Cleans up composition and focuses attention",
+        "expected_ctr_gain": 0.05,
+        "identity_risk": "low",
+        "visual_risk": "low",
+        "dependencies": [],
+        "preserve_requirements": [],
+        "edit_method": "object_removal_inpaint",
+        "fallback_action": "keep"
+      },
+      {
+        "action_id": "act_04_reposition_text",
+        "action": "reposition",
+        "target_element_id": "elem_text_ocr_text_8dc21bca",
+        "reason": "Reposition text 'Text Region: 'V-TAPER BoDY'' to clean negative space away from hero face",
+        "priority": 1,
+        "confidence": 0.92,
+        "expected_impact": "Resolves text/subject occlusion and improves legibility",
+        "expected_ctr_gain": 0.12,
+        "identity_risk": "low",
+        "visual_risk": "low",
+        "dependencies": [],
+        "preserve_requirements": [
+          "text_content"
+        ],
+        "edit_method": "layout_reposition",
+        "fallback_action": "keep"
+      },
+      {
+        "action_id": "act_05_reposition_text",
+        "action": "reposition",
+        "target_element_id": "elem_text_ocr_text_ee1cb2cd",
+        "reason": "Reposition text 'Text Region: 'home workout'' to clean negative space away from hero face",
+        "priority": 1,
+        "confidence": 0.92,
+        "expected_impact": "Resolves text/subject occlusion and improves legibility",
+        "expected_ctr_gain": 0.12,
+        "identity_risk": "low",
+        "visual_risk": "low",
+        "dependencies": [],
+        "preserve_requirements": [
+          "text_content"
+        ],
+        "edit_method": "layout_reposition",
+        "fallback_action": "keep"
+      }
+    ],
+    "primary_goal": "Maximize thumbnail CTR through hero preservation and visual hierarchy optimization"
+  },
+  "legacy_reasoning": {
+    "ctr_potential_score": 0.85,
+    "curiosity_gap_score": 0.78,
+    "emotional_impact": "High",
+    "visual_storytelling_notes": "The thumbnail effectively communicates the main topic of building a V-taper at home with a clear and bold text overlay. The warm color palette and composition elements contribute to a visually appealing and inviting thumbnail.",
+    "content_mismatch_detected": false,
+    "mismatch_explanation": null,
+    "strengths": [
+      "Clear and bold text that highlights the main topic",
+      "Warm color palette that is visually appealing",
+      "Good composition with a focus on the subject"
+    ],
+    "weaknesses": [
+      "Text overlaps with the subject, which may reduce readability",
+      "Limited use of negative space"
+    ],
+    "redesign_recommendations": [
+      "Adjust text placement to avoid overlapping with the subject",
+      "Increase negative space to improve visual balance"
+    ],
+    "elements_to_preserve": [
+      "Bold text for clarity",
+      "Warm color palette for visual appeal"
+    ],
+    "duration_seconds": 13.063991800001531
+  },
+  "status": "success",
+  "error_message": null,
+  "analyzed_at": "2026-08-06T17:29:21.413509+00:00"
+}

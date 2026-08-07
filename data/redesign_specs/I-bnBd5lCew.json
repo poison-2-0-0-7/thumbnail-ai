@@ -62,9 +62,9 @@
     }
   ],
   "elements_to_preserve": [
-    "Positive emotional expression",
-    "Transformation journey text",
-    "Clear subject placement"
+    "elem_obj_person_d85547db",
+    "elem_text_ocr_text_f43ac384",
+    "elem_text_ocr_text_af5dc847"
   ],
   "overall_rationale": "ctr_potential_score=8.20; curiosity_gap_score=7.50; content_mismatch_detected=False; rules applied: minimum_negative_space, crop_tighter.",
   "source_ctr_potential_score": 8.2,
@@ -72,6 +72,6 @@
   "source_content_mismatch_detected": false,
   "status": "success",
   "error_message": null,
-  "duration_seconds": 0.0001123000038205646,
-  "generated_at": "2026-08-02T20:34:06.670486+00:00"
+  "duration_seconds": 0.00032479999936185777,
+  "generated_at": "2026-08-06T17:16:54.692158+00:00"
 }

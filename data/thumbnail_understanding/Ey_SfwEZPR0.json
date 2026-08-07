@@ -1,0 +1,640 @@
+{
+  "video_id": "Ey_SfwEZPR0",
+  "source_thumbnail_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\thumbnails\\Ey_SfwEZPR0.jpg",
+  "scene_graph": {
+    "elements": [
+      {
+        "element_id": "elem_face_person_face_23ac64cf",
+        "element_type": "person",
+        "category": "person",
+        "label": "Person Face 1 (Hero)",
+        "semantic_description": "Human face with emotion=happy, position=left-third",
+        "bbox": {
+          "x_min": 0.23319263458251954,
+          "y_min": 0.27876497904459635,
+          "x_max": 0.2702004432678223,
+          "y_max": 0.3325050354003906
+        },
+        "polygon": [],
+        "mask_path": null,
+        "cutout_path": null,
+        "confidence": 0.8701809048652649,
+        "importance_rank": 1,
+        "role": "hero",
+        "preserve_score": 0.95,
+        "replace_score": 0.05,
+        "edit_priority": 1,
+        "depth_level": 0.1,
+        "occlusion_ratio": 0.0,
+        "parent_id": null,
+        "children_ids": [],
+        "identity_relevance": 0.95,
+        "story_relevance": 0.9,
+        "visual_relevance": 0.9,
+        "editability": "preserve",
+        "source_detector": "insightface_multi",
+        "provenance": "face_analysis_stage",
+        "emotion": "happy",
+        "emotion_confidence": 0.7220607757568359,
+        "expression_intensity": 0.5,
+        "head_pose": "turned",
+        "eye_direction": "left",
+        "sharpness": 1.0,
+        "lighting_quality": 0.5,
+        "is_creator": true
+      },
+      {
+        "element_id": "elem_obj_person_d2deb755",
+        "element_type": "person",
+        "category": "person",
+        "label": "Person (2)",
+        "semantic_description": "Detected person with confidence 0.66",
+        "bbox": {
+          "x_min": 0.1801312208175659,
+          "y_min": 0.2312916119893392,
+          "x_max": 0.27661406993865967,
+          "y_max": 0.46765292485555016
+        },
+        "polygon": [],
+        "mask_path": null,
+        "cutout_path": null,
+        "confidence": 0.6593812108039856,
+        "importance_rank": 2,
+        "role": "primary",
+        "preserve_score": 0.7,
+        "replace_score": 0.3,
+        "edit_priority": 1,
+        "depth_level": 0.2,
+        "occlusion_ratio": 0.0,
+        "parent_id": null,
+        "children_ids": [],
+        "identity_relevance": 0.7,
+        "story_relevance": 0.6,
+        "visual_relevance": 0.6,
+        "editability": "editable",
+        "source_detector": "yolo_grounding_dino",
+        "provenance": "object_detection_stage",
+        "emotion": null,
+        "emotion_confidence": null,
+        "expression_intensity": 0.5,
+        "head_pose": null,
+        "eye_direction": null,
+        "sharpness": 1.0,
+        "lighting_quality": 0.5,
+        "is_creator": false
+      },
+      {
+        "element_id": "elem_obj_person_c25bd0fc",
+        "element_type": "person",
+        "category": "person",
+        "label": "Person (3)",
+        "semantic_description": "Detected person with confidence 0.58",
+        "bbox": {
+          "x_min": 0.5393744468688965,
+          "y_min": 0.1282475471496582,
+          "x_max": 0.5770426750183105,
+          "y_max": 0.2294527053833008
+        },
+        "polygon": [],
+        "mask_path": null,
+        "cutout_path": null,
+        "confidence": 0.5766200423240662,
+        "importance_rank": 3,
+        "role": "secondary",
+        "preserve_score": 0.7,
+        "replace_score": 0.3,
+        "edit_priority": 2,
+        "depth_level": 0.4,
+        "occlusion_ratio": 0.0,
+        "parent_id": null,
+        "children_ids": [],
+        "identity_relevance": 0.7,
+        "story_relevance": 0.6,
+        "visual_relevance": 0.6,
+        "editability": "editable",
+        "source_detector": "yolo_grounding_dino",
+        "provenance": "object_detection_stage",
+        "emotion": null,
+        "emotion_confidence": null,
+        "expression_intensity": 0.5,
+        "head_pose": null,
+        "eye_direction": null,
+        "sharpness": 1.0,
+        "lighting_quality": 0.5,
+        "is_creator": false
+      },
+      {
+        "element_id": "elem_obj_motorcycle_82c677c9",
+        "element_type": "object",
+        "category": "motorcycle",
+        "label": "Motorcycle (1)",
+        "semantic_description": "Detected motorcycle with confidence 0.71",
+        "bbox": {
+          "x_min": 0.07993061542510986,
+          "y_min": 0.3880989710489909,
+          "x_max": 0.38181684017181394,
+          "y_max": 0.8703264236450196
+        },
+        "polygon": [],
+        "mask_path": null,
+        "cutout_path": null,
+        "confidence": 0.7125656604766846,
+        "importance_rank": 4,
+        "role": "secondary",
+        "preserve_score": 0.4,
+        "replace_score": 0.6,
+        "edit_priority": 2,
+        "depth_level": 0.4,
+        "occlusion_ratio": 0.0,
+        "parent_id": null,
+        "children_ids": [],
+        "identity_relevance": 0.2,
+        "story_relevance": 0.6,
+        "visual_relevance": 0.6,
+        "editability": "editable",
+        "source_detector": "yolo_grounding_dino",
+        "provenance": "object_detection_stage",
+        "emotion": null,
+        "emotion_confidence": null,
+        "expression_intensity": 0.5,
+        "head_pose": null,
+        "eye_direction": null,
+        "sharpness": 1.0,
+        "lighting_quality": 0.5,
+        "is_creator": false
+      },
+      {
+        "element_id": "elem_bg_plate_00",
+        "element_type": "background",
+        "category": "background",
+        "label": "Background Plate",
+        "semantic_description": "Overall background environment (neutral temperature)",
+        "bbox": {
+          "x_min": 0.0,
+          "y_min": 0.0,
+          "x_max": 1.0,
+          "y_max": 1.0
+        },
+        "polygon": [],
+        "mask_path": null,
+        "cutout_path": null,
+        "confidence": 1.0,
+        "importance_rank": 999,
+        "role": "background",
+        "preserve_score": 0.1,
+        "replace_score": 0.9,
+        "edit_priority": 5,
+        "depth_level": 1.0,
+        "occlusion_ratio": 0.0,
+        "parent_id": null,
+        "children_ids": [],
+        "identity_relevance": 0.0,
+        "story_relevance": 0.5,
+        "visual_relevance": 0.5,
+        "editability": "editable",
+        "source_detector": "color_profile",
+        "provenance": "deterministic_grounder",
+        "emotion": null,
+        "emotion_confidence": null,
+        "expression_intensity": 0.5,
+        "head_pose": null,
+        "eye_direction": null,
+        "sharpness": 1.0,
+        "lighting_quality": 0.5,
+        "is_creator": false
+      }
+    ],
+    "relationships": [
+      {
+        "subject_element_id": "elem_face_person_face_23ac64cf",
+        "relation": "in_front_of",
+        "object_element_id": "elem_bg_plate_00",
+        "confidence": 1.0,
+        "spatial_direction": "foreground",
+        "provenance": "deterministic_spatial_engine"
+      },
+      {
+        "subject_element_id": "elem_obj_person_d2deb755",
+        "relation": "in_front_of",
+        "object_element_id": "elem_bg_plate_00",
+        "confidence": 1.0,
+        "spatial_direction": "foreground",
+        "provenance": "deterministic_spatial_engine"
+      },
+      {
+        "subject_element_id": "elem_obj_person_c25bd0fc",
+        "relation": "in_front_of",
+        "object_element_id": "elem_bg_plate_00",
+        "confidence": 1.0,
+        "spatial_direction": "foreground",
+        "provenance": "deterministic_spatial_engine"
+      },
+      {
+        "subject_element_id": "elem_obj_motorcycle_82c677c9",
+        "relation": "in_front_of",
+        "object_element_id": "elem_bg_plate_00",
+        "confidence": 1.0,
+        "spatial_direction": "foreground",
+        "provenance": "deterministic_spatial_engine"
+      },
+      {
+        "subject_element_id": "elem_face_person_face_23ac64cf",
+        "relation": "inside",
+        "object_element_id": "elem_obj_person_d2deb755",
+        "confidence": 1.0,
+        "spatial_direction": "contained",
+        "provenance": "deterministic_spatial_engine"
+      },
+      {
+        "subject_element_id": "elem_face_person_face_23ac64cf",
+        "relation": "above",
+        "object_element_id": "elem_obj_person_d2deb755",
+        "confidence": 0.95,
+        "spatial_direction": "above",
+        "provenance": "deterministic_spatial_engine"
+      },
+      {
+        "subject_element_id": "elem_face_person_face_23ac64cf",
+        "relation": "left_of",
+        "object_element_id": "elem_obj_person_c25bd0fc",
+        "confidence": 0.95,
+        "spatial_direction": "left_of",
+        "provenance": "deterministic_spatial_engine"
+      },
+      {
+        "subject_element_id": "elem_face_person_face_23ac64cf",
+        "relation": "above",
+        "object_element_id": "elem_obj_motorcycle_82c677c9",
+        "confidence": 0.95,
+        "spatial_direction": "above",
+        "provenance": "deterministic_spatial_engine"
+      },
+      {
+        "subject_element_id": "elem_obj_person_d2deb755",
+        "relation": "left_of",
+        "object_element_id": "elem_obj_person_c25bd0fc",
+        "confidence": 0.95,
+        "spatial_direction": "left_of",
+        "provenance": "deterministic_spatial_engine"
+      },
+      {
+        "subject_element_id": "elem_obj_person_d2deb755",
+        "relation": "holding",
+        "object_element_id": "elem_obj_motorcycle_82c677c9",
+        "confidence": 0.85,
+        "spatial_direction": "interacting",
+        "provenance": "person_prop_engine"
+      },
+      {
+        "subject_element_id": "elem_obj_person_d2deb755",
+        "relation": "above",
+        "object_element_id": "elem_obj_motorcycle_82c677c9",
+        "confidence": 0.95,
+        "spatial_direction": "above",
+        "provenance": "deterministic_spatial_engine"
+      },
+      {
+        "subject_element_id": "elem_obj_person_c25bd0fc",
+        "relation": "above",
+        "object_element_id": "elem_obj_motorcycle_82c677c9",
+        "confidence": 0.95,
+        "spatial_direction": "above",
+        "provenance": "deterministic_spatial_engine"
+      }
+    ],
+    "hero_element_id": "elem_face_person_face_23ac64cf",
+    "primary_subject_ids": [
+      "elem_face_person_face_23ac64cf",
+      "elem_obj_person_d2deb755"
+    ],
+    "secondary_subject_ids": [
+      "elem_obj_person_c25bd0fc",
+      "elem_obj_motorcycle_82c677c9"
+    ]
+  },
+  "hierarchy": {
+    "reading_order": [
+      "elem_face_person_face_23ac64cf",
+      "elem_obj_person_d2deb755",
+      "elem_obj_person_c25bd0fc",
+      "elem_obj_motorcycle_82c677c9"
+    ],
+    "first_attention_target": "elem_face_person_face_23ac64cf",
+    "second_attention_target": "elem_obj_person_d2deb755",
+    "dominant_subject_id": "elem_face_person_face_23ac64cf",
+    "visual_anchors": [
+      "elem_face_person_face_23ac64cf",
+      "elem_obj_person_d2deb755"
+    ],
+    "attention_competition_score": 0.8,
+    "eye_flow_description": "Eye flows from elem_face_person_face_23ac64cf to elem_obj_person_d2deb755",
+    "negative_space_ratio": 0.8258163412646354,
+    "text_safe_areas": [],
+    "visual_clutter_score": 0.4,
+    "subject_separation_score": 0.6,
+    "balance_score": 0.9909580865430703,
+    "focal_strength_score": 0.2,
+    "hierarchy_basis": "size_face_text_position_scoring"
+  },
+  "composition": {
+    "rule_of_thirds_score": 0.8275846471965677,
+    "subject_placement": "left-third",
+    "cropping_quality": 0.8,
+    "balance": 0.9909580865430703,
+    "symmetry_asymmetry": "symmetric",
+    "negative_space": 0.8258163412646354,
+    "depth_layers_count": 5,
+    "camera_perspective": "medium_shot",
+    "subject_background_separation": 0.6,
+    "contrast_distribution": 0.7,
+    "lighting_distribution": 0.7,
+    "visual_density": 0.4,
+    "actionable_findings": []
+  },
+  "psychology": {
+    "ctr_potential_score": 0.75,
+    "curiosity_gap_score": 0.65,
+    "drivers": [
+      {
+        "driver": "emotion",
+        "strength": 0.85,
+        "confidence": 0.7220607757568359,
+        "supporting_evidence": "Primary subject displays 'happy' emotion",
+        "potential_improvement": "Amplify emotion contrast and lighting",
+        "associated_element_ids": [
+          "elem_face_person_face_23ac64cf"
+        ]
+      },
+      {
+        "driver": "curiosity",
+        "strength": 0.65,
+        "confidence": 0.85,
+        "supporting_evidence": "Headline/visual composition creates an unresolved question",
+        "potential_improvement": "Tighten copy and increase focal subject contrast",
+        "associated_element_ids": []
+      },
+      {
+        "driver": "story_clarity",
+        "strength": 0.6,
+        "confidence": 0.8,
+        "supporting_evidence": "Thumbnail contains 5 grounded elements telling the narrative",
+        "potential_improvement": "Eliminate non-essential background clutter",
+        "associated_element_ids": [
+          "elem_face_person_face_23ac64cf",
+          "elem_obj_person_d2deb755"
+        ]
+      }
+    ],
+    "content_mismatch_detected": false,
+    "mismatch_explanation": null,
+    "overall_psychology_summary": "Thumbnail leverages 3 active click drivers with estimated CTR potential 0.75"
+  },
+  "weaknesses": {
+    "findings": [
+      {
+        "weakness_type": "weak_focal_point",
+        "severity": "high",
+        "confidence": 0.85,
+        "evidence": "Low focal strength score (0.20); visual attention is split",
+        "affected_element_ids": [
+          "elem_face_person_face_23ac64cf",
+          "elem_obj_person_d2deb755"
+        ],
+        "recommended_correction": "Enlarge primary hero subject and increase local contrast against background"
+      },
+      {
+        "weakness_type": "small_subjects",
+        "severity": "medium",
+        "confidence": 0.9,
+        "evidence": "Primary hero subject occupies only 0.2% of frame area",
+        "affected_element_ids": [
+          "elem_face_person_face_23ac64cf"
+        ],
+        "recommended_correction": "Crop tighter or scale primary subject up for mobile thumbnail readability"
+      }
+    ],
+    "overall_risk_level": "high"
+  },
+  "decomposed_scene": {
+    "layers": [
+      {
+        "layer_id": "layer_00_background",
+        "category": "background",
+        "element_ref_id": null,
+        "image_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\thumbnails\\Ey_SfwEZPR0.jpg",
+        "mask_path": null,
+        "bounding_region": null,
+        "polygon": [],
+        "depth_priority": 0,
+        "relationships": [],
+        "preservation_requirement": "replaceable",
+        "editability": "editable",
+        "source_provenance": "background_plate_builder"
+      },
+      {
+        "layer_id": "layer_elem_obj_motorcycle_82c677c9",
+        "category": "foreground_object",
+        "element_ref_id": "elem_obj_motorcycle_82c677c9",
+        "image_path": null,
+        "mask_path": null,
+        "bounding_region": {
+          "x_min": 0.07993061542510986,
+          "y_min": 0.3880989710489909,
+          "x_max": 0.38181684017181394,
+          "y_max": 0.8703264236450196
+        },
+        "polygon": [],
+        "depth_priority": 6,
+        "relationships": [
+          "elem_bg_plate_00"
+        ],
+        "preservation_requirement": "replaceable",
+        "editability": "editable",
+        "source_provenance": "yolo_grounding_dino"
+      },
+      {
+        "layer_id": "layer_elem_obj_person_c25bd0fc",
+        "category": "secondary_subject",
+        "element_ref_id": "elem_obj_person_c25bd0fc",
+        "image_path": null,
+        "mask_path": null,
+        "bounding_region": {
+          "x_min": 0.5393744468688965,
+          "y_min": 0.1282475471496582,
+          "x_max": 0.5770426750183105,
+          "y_max": 0.2294527053833008
+        },
+        "polygon": [],
+        "depth_priority": 7,
+        "relationships": [
+          "elem_bg_plate_00",
+          "elem_obj_motorcycle_82c677c9"
+        ],
+        "preservation_requirement": "preserve_if_possible",
+        "editability": "editable",
+        "source_provenance": "yolo_grounding_dino"
+      },
+      {
+        "layer_id": "layer_elem_obj_person_d2deb755",
+        "category": "primary_subject",
+        "element_ref_id": "elem_obj_person_d2deb755",
+        "image_path": null,
+        "mask_path": null,
+        "bounding_region": {
+          "x_min": 0.1801312208175659,
+          "y_min": 0.2312916119893392,
+          "x_max": 0.27661406993865967,
+          "y_max": 0.46765292485555016
+        },
+        "polygon": [],
+        "depth_priority": 8,
+        "relationships": [
+          "elem_bg_plate_00",
+          "elem_obj_person_c25bd0fc",
+          "elem_obj_motorcycle_82c677c9",
+          "elem_obj_motorcycle_82c677c9"
+        ],
+        "preservation_requirement": "preserve_if_possible",
+        "editability": "editable",
+        "source_provenance": "yolo_grounding_dino"
+      },
+      {
+        "layer_id": "layer_elem_face_person_face_23ac64cf",
+        "category": "primary_subject",
+        "element_ref_id": "elem_face_person_face_23ac64cf",
+        "image_path": null,
+        "mask_path": null,
+        "bounding_region": {
+          "x_min": 0.23319263458251954,
+          "y_min": 0.27876497904459635,
+          "x_max": 0.2702004432678223,
+          "y_max": 0.3325050354003906
+        },
+        "polygon": [],
+        "depth_priority": 9,
+        "relationships": [
+          "elem_bg_plate_00",
+          "elem_obj_person_d2deb755",
+          "elem_obj_person_d2deb755",
+          "elem_obj_person_c25bd0fc",
+          "elem_obj_motorcycle_82c677c9"
+        ],
+        "preservation_requirement": "must_preserve",
+        "editability": "editable",
+        "source_provenance": "insightface_multi"
+      }
+    ],
+    "background_plate_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\thumbnails\\Ey_SfwEZPR0.jpg",
+    "background_reconstructed": false,
+    "layer_count": 5
+  },
+  "director_plan": {
+    "creative_direction": "Redesign thumbnail for video by preserving creator identity (1 elements), replacing background clutter (1 elements), and focusing visual hierarchy.",
+    "story_analysis": "Thumbnail leverages 3 active click drivers with estimated CTR potential 0.75",
+    "elements_to_keep": [
+      "elem_face_person_face_23ac64cf"
+    ],
+    "elements_to_change": [
+      "layer_00_background"
+    ],
+    "elements_to_remove": [
+      "elem_bg_plate_00"
+    ],
+    "elements_to_emphasize": [
+      "elem_face_person_face_23ac64cf"
+    ],
+    "composition_strategy": "Dominant subject 'elem_face_person_face_23ac64cf' with clean high-contrast backdrop",
+    "redesign_aggressiveness": "moderate",
+    "expected_ctr_improvement": "+28.0% estimated CTR potential gain"
+  },
+  "improvement_plan": {
+    "actions": [
+      {
+        "action_id": "act_01_preserve_hero",
+        "action": "keep",
+        "target_element_id": "elem_face_person_face_23ac64cf",
+        "reason": "Preserve creator face identity 'Person Face 1 (Hero)' as main emotional hook",
+        "priority": 1,
+        "confidence": 0.95,
+        "expected_impact": "High identity preservation and viewer connection",
+        "expected_ctr_gain": 0.08,
+        "identity_risk": "low",
+        "visual_risk": "low",
+        "dependencies": [],
+        "preserve_requirements": [
+          "face_pixels",
+          "facial_expression"
+        ],
+        "edit_method": "mask_protection",
+        "fallback_action": "keep"
+      },
+      {
+        "action_id": "act_02_replace_background",
+        "action": "replace",
+        "target_element_id": "layer_00_background",
+        "reason": "Replace noisy room background with high-contrast, vibrant, de-cluttered backdrop",
+        "priority": 2,
+        "confidence": 0.88,
+        "expected_impact": "Eliminates visual noise and amplifies hero subject prominence",
+        "expected_ctr_gain": 0.15,
+        "identity_risk": "low",
+        "visual_risk": "medium",
+        "dependencies": [
+          "act_01_preserve_hero"
+        ],
+        "preserve_requirements": [
+          "subject_silhouette"
+        ],
+        "edit_method": "regional_inpainting_or_controlnet_bg",
+        "fallback_action": "enhance"
+      },
+      {
+        "action_id": "act_03_remove_background",
+        "action": "remove",
+        "target_element_id": "elem_bg_plate_00",
+        "reason": "Remove distracting low-value object 'Background Plate'",
+        "priority": 3,
+        "confidence": 0.85,
+        "expected_impact": "Cleans up composition and focuses attention",
+        "expected_ctr_gain": 0.05,
+        "identity_risk": "low",
+        "visual_risk": "low",
+        "dependencies": [],
+        "preserve_requirements": [],
+        "edit_method": "object_removal_inpaint",
+        "fallback_action": "keep"
+      }
+    ],
+    "primary_goal": "Maximize thumbnail CTR through hero preservation and visual hierarchy optimization"
+  },
+  "legacy_reasoning": {
+    "ctr_potential_score": 0.75,
+    "curiosity_gap_score": 0.65,
+    "emotional_impact": "positive",
+    "visual_storytelling_notes": "The thumbnail effectively captures a happy person interacting with a motorcycle, suggesting an engaging and possibly informative content about bike licenses in Nepal. The composition and color balance contribute to a visually appealing and balanced image.",
+    "content_mismatch_detected": false,
+    "mismatch_explanation": null,
+    "strengths": [
+      "Clear and positive emotional expression",
+      "Good composition and balance",
+      "Neutral color palette that is visually appealing"
+    ],
+    "weaknesses": [
+      "Limited text coverage which may reduce click-through rate",
+      "Low visual hierarchy score indicating potential for better visual emphasis"
+    ],
+    "redesign_recommendations": [
+      "Consider adding subtle text elements to enhance clarity and engagement",
+      "Enhance visual hierarchy to guide the viewer's attention more effectively"
+    ],
+    "elements_to_preserve": [
+      "Happy facial expression",
+      "Motorcycle and person interaction",
+      "Balanced composition and color harmony"
+    ],
+    "duration_seconds": 12.259456400002819
+  },
+  "status": "success",
+  "error_message": null,
+  "analyzed_at": "2026-08-06T17:19:12.979637+00:00"
+}

@@ -1,0 +1,162 @@
+[
+  {
+    "decision_id": "dec_cand_keep_preserve_m4_obj_0",
+    "target": {
+      "element_id": "m4_obj_0",
+      "element_type": "object",
+      "label": "person",
+      "bbox": {
+        "x_min": 0.29287014007568357,
+        "y_min": 0.4576671600341797,
+        "x_max": 0.4427327156066895,
+        "y_max": 0.6850485483805339
+      }
+    },
+    "action": "keep",
+    "confidence": 0.95,
+    "source": "rule",
+    "rationale": "Matches explicit elements_to_preserve entry 'elem_face_person_face_c942cf4b'",
+    "priority_rank": 0,
+    "superseded_candidate_ids": [],
+    "machine_reasoning": {
+      "rule_ids": [
+        "rule_keep_explicit_preserve"
+      ],
+      "priority_rank": 0,
+      "superseded_count": 0
+    },
+    "expected_ctr_gain": 0.02,
+    "risk": "low",
+    "depends_on_decision_ids": [
+      "dec_cand_replace_bg_color"
+    ]
+  },
+  {
+    "decision_id": "dec_cand_keep_preserve_m4_obj_1",
+    "target": {
+      "element_id": "m4_obj_1",
+      "element_type": "object",
+      "label": "person",
+      "bbox": {
+        "x_min": 0.5757347106933594,
+        "y_min": 0.4752271016438802,
+        "x_max": 0.7634212493896484,
+        "y_max": 0.8345921834309896
+      }
+    },
+    "action": "keep",
+    "confidence": 0.95,
+    "source": "rule",
+    "rationale": "Matches explicit elements_to_preserve entry 'elem_face_person_face_c942cf4b'",
+    "priority_rank": 0,
+    "superseded_candidate_ids": [],
+    "machine_reasoning": {
+      "rule_ids": [
+        "rule_keep_explicit_preserve"
+      ],
+      "priority_rank": 0,
+      "superseded_count": 0
+    },
+    "expected_ctr_gain": 0.02,
+    "risk": "low",
+    "depends_on_decision_ids": [
+      "dec_cand_replace_bg_color"
+    ]
+  },
+  {
+    "decision_id": "dec_cand_keep_preserve_m4_obj_2",
+    "target": {
+      "element_id": "m4_obj_2",
+      "element_type": "object",
+      "label": "person",
+      "bbox": {
+        "x_min": 0.49212446212768557,
+        "y_min": 0.41730836232503254,
+        "x_max": 0.5979865074157715,
+        "y_max": 0.7202603022257487
+      }
+    },
+    "action": "keep",
+    "confidence": 0.95,
+    "source": "rule",
+    "rationale": "Matches explicit elements_to_preserve entry 'elem_face_person_face_c942cf4b'",
+    "priority_rank": 0,
+    "superseded_candidate_ids": [],
+    "machine_reasoning": {
+      "rule_ids": [
+        "rule_keep_explicit_preserve"
+      ],
+      "priority_rank": 0,
+      "superseded_count": 0
+    },
+    "expected_ctr_gain": 0.02,
+    "risk": "low",
+    "depends_on_decision_ids": [
+      "dec_cand_replace_bg_color"
+    ]
+  },
+  {
+    "decision_id": "dec_cand_keep_preserve_m4_obj_3",
+    "target": {
+      "element_id": "m4_obj_3",
+      "element_type": "object",
+      "label": "person",
+      "bbox": {
+        "x_min": 0.13310714960098266,
+        "y_min": 0.41365690231323243,
+        "x_max": 0.3387599468231201,
+        "y_max": 0.6867561340332031
+      }
+    },
+    "action": "keep",
+    "confidence": 0.95,
+    "source": "rule",
+    "rationale": "Matches explicit elements_to_preserve entry 'elem_face_person_face_c942cf4b'",
+    "priority_rank": 0,
+    "superseded_candidate_ids": [],
+    "machine_reasoning": {
+      "rule_ids": [
+        "rule_keep_explicit_preserve"
+      ],
+      "priority_rank": 0,
+      "superseded_count": 0
+    },
+    "expected_ctr_gain": 0.02,
+    "risk": "low",
+    "depends_on_decision_ids": [
+      "dec_cand_replace_bg_color"
+    ]
+  },
+  {
+    "decision_id": "dec_cand_keep_face_m4_face_0",
+    "target": {
+      "element_id": "m4_face_0",
+      "element_type": "face",
+      "label": "creator face",
+      "bbox": {
+        "x_min": 0.23107120990753174,
+        "y_min": 0.45920448303222655,
+        "x_max": 0.281550669670105,
+        "y_max": 0.5294717470804851
+      }
+    },
+    "action": "keep",
+    "confidence": 0.9,
+    "source": "rule",
+    "rationale": "Primary creator face detected in ThumbnailIntelligence",
+    "priority_rank": 0,
+    "superseded_candidate_ids": [],
+    "machine_reasoning": {
+      "rule_ids": [
+        "rule_keep_primary_face"
+      ],
+      "priority_rank": 0,
+      "superseded_count": 0
+    },
+    "expected_ctr_gain": 0.02,
+    "risk": "low",
+    "depends_on_decision_ids": [
+      "dec_cand_replace_bg_color"
+    ]
+  }
+]

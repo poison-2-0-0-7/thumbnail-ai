@@ -1,0 +1,98 @@
+[
+  {
+    "decision_id": "dec_cand_keep_preserve_m4_obj_1",
+    "target": {
+      "element_id": "m4_obj_1",
+      "element_type": "object",
+      "label": "person",
+      "bbox": {
+        "x_min": 0.1801312208175659,
+        "y_min": 0.2312916119893392,
+        "x_max": 0.27661406993865967,
+        "y_max": 0.46765292485555016
+      }
+    },
+    "action": "keep",
+    "confidence": 0.95,
+    "source": "rule",
+    "rationale": "Matches explicit elements_to_preserve entry 'elem_face_person_face_23ac64cf'",
+    "priority_rank": 0,
+    "superseded_candidate_ids": [],
+    "machine_reasoning": {
+      "rule_ids": [
+        "rule_keep_explicit_preserve"
+      ],
+      "priority_rank": 0,
+      "superseded_count": 0
+    },
+    "expected_ctr_gain": 0.02,
+    "risk": "low",
+    "depends_on_decision_ids": [
+      "dec_cand_replace_bg_color"
+    ]
+  },
+  {
+    "decision_id": "dec_cand_keep_preserve_m4_obj_2",
+    "target": {
+      "element_id": "m4_obj_2",
+      "element_type": "object",
+      "label": "person",
+      "bbox": {
+        "x_min": 0.5393744468688965,
+        "y_min": 0.1282475471496582,
+        "x_max": 0.5770426750183105,
+        "y_max": 0.2294527053833008
+      }
+    },
+    "action": "keep",
+    "confidence": 0.95,
+    "source": "rule",
+    "rationale": "Matches explicit elements_to_preserve entry 'elem_face_person_face_23ac64cf'",
+    "priority_rank": 0,
+    "superseded_candidate_ids": [],
+    "machine_reasoning": {
+      "rule_ids": [
+        "rule_keep_explicit_preserve"
+      ],
+      "priority_rank": 0,
+      "superseded_count": 0
+    },
+    "expected_ctr_gain": 0.02,
+    "risk": "low",
+    "depends_on_decision_ids": [
+      "dec_cand_replace_bg_color"
+    ]
+  },
+  {
+    "decision_id": "dec_cand_keep_face_m4_face_0",
+    "target": {
+      "element_id": "m4_face_0",
+      "element_type": "face",
+      "label": "creator face",
+      "bbox": {
+        "x_min": 0.23319263458251954,
+        "y_min": 0.27876497904459635,
+        "x_max": 0.2702004432678223,
+        "y_max": 0.3325050354003906
+      }
+    },
+    "action": "keep",
+    "confidence": 0.9,
+    "source": "rule",
+    "rationale": "Primary creator face detected in ThumbnailIntelligence",
+    "priority_rank": 0,
+    "superseded_candidate_ids": [],
+    "machine_reasoning": {
+      "rule_ids": [
+        "rule_keep_primary_face"
+      ],
+      "priority_rank": 0,
+      "superseded_count": 0
+    },
+    "expected_ctr_gain": 0.02,
+    "risk": "low",
+    "depends_on_decision_ids": [
+      "dec_cand_replace_bg_color"
+    ]
+  }
+]

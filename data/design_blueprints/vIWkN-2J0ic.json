@@ -1,117 +1,117 @@
 {
   "video_id": "vIWkN-2J0ic",
-  "headline": "The Truth About Warm color palette",
+  "headline": "The Truth About Dynamic pose of the person",
   "headline_variants": [
     {
-      "text": "The Truth About Warm color palette",
+      "text": "The Truth About Dynamic pose of the person",
       "template_id": "controversy_01",
       "curiosity_score": 0.35,
       "emotional_impact_score": 0.8,
       "readability_score": 1.0,
-      "ctr_potential_score": 1.0,
-      "character_count": 34,
-      "mobile_readability_score": 1.0,
+      "ctr_potential_score": 0.996,
+      "character_count": 42,
+      "mobile_readability_score": 0.9,
       "brand_consistency_score": 1.0,
-      "composite_score": 0.7975
+      "composite_score": 0.7867
     },
     {
-      "text": "The Secret Behind Warm color palette",
+      "text": "The Secret Behind Dynamic pose of the person",
       "template_id": "curiosity_01",
       "curiosity_score": 0.35,
       "emotional_impact_score": 0.8,
       "readability_score": 1.0,
-      "ctr_potential_score": 1.0,
-      "character_count": 36,
-      "mobile_readability_score": 1.0,
+      "ctr_potential_score": 0.986,
+      "character_count": 44,
+      "mobile_readability_score": 0.8,
       "brand_consistency_score": 1.0,
-      "composite_score": 0.7975
+      "composite_score": 0.7747
     },
     {
-      "text": "Why Warm color palette Changes Everything",
+      "text": "Why Dynamic pose of the person Changes Everything",
       "template_id": "curiosity_02",
       "curiosity_score": 0.35,
       "emotional_impact_score": 0.8,
       "readability_score": 1.0,
-      "ctr_potential_score": 1.0,
-      "character_count": 41,
-      "mobile_readability_score": 0.95,
+      "ctr_potential_score": 0.961,
+      "character_count": 49,
+      "mobile_readability_score": 0.55,
       "brand_consistency_score": 1.0,
-      "composite_score": 0.7925
+      "composite_score": 0.7447
     },
     {
-      "text": "I Tried Warm color palette For 30 Days",
+      "text": "I Tried Dynamic pose of the person For 30 Days",
       "template_id": "shock_01",
       "curiosity_score": 0.15,
       "emotional_impact_score": 0.8,
-      "readability_score": 1.0,
-      "ctr_potential_score": 0.982,
-      "character_count": 38,
-      "mobile_readability_score": 1.0,
-      "brand_consistency_score": 1.0,
-      "composite_score": 0.7439
-    },
-    {
-      "text": "Don't Do Warm color palette Until You Watch This",
-      "template_id": "shock_02",
-      "curiosity_score": 0.35,
-      "emotional_impact_score": 0.8,
-      "readability_score": 0.94,
-      "ctr_potential_score": 0.966,
-      "character_count": 48,
-      "mobile_readability_score": 0.6,
-      "brand_consistency_score": 1.0,
-      "composite_score": 0.7417
-    },
-    {
-      "text": "Why Everyone Is Wrong About Warm color palette",
-      "template_id": "controversy_02",
-      "curiosity_score": 0.35,
-      "emotional_impact_score": 0.6,
-      "readability_score": 1.0,
-      "ctr_potential_score": 0.96,
+      "readability_score": 0.88,
+      "ctr_potential_score": 0.952,
       "character_count": 46,
       "mobile_readability_score": 0.7,
       "brand_consistency_score": 1.0,
-      "composite_score": 0.7195
+      "composite_score": 0.6899
     },
     {
-      "text": "The Warm color palette Nobody Talks About",
-      "template_id": "curiosity_03",
-      "curiosity_score": 0.0,
+      "text": "Don't Do Dynamic pose of the person Until You Watch This",
+      "template_id": "shock_02",
+      "curiosity_score": 0.35,
       "emotional_impact_score": 0.8,
-      "readability_score": 1.0,
-      "ctr_potential_score": 0.959,
-      "character_count": 41,
-      "mobile_readability_score": 0.95,
+      "readability_score": 0.82,
+      "ctr_potential_score": 0.926,
+      "character_count": 56,
+      "mobile_readability_score": 0.2,
       "brand_consistency_score": 1.0,
-      "composite_score": 0.6968
+      "composite_score": 0.6757
     },
     {
-      "text": "Warm color palette Is Broken",
+      "text": "Dynamic pose of the person Is Broken",
       "template_id": "shock_03",
       "curiosity_score": 0.0,
       "emotional_impact_score": 0.6,
       "readability_score": 1.0,
       "ctr_potential_score": 0.948,
-      "character_count": 28,
+      "character_count": 36,
       "mobile_readability_score": 1.0,
       "brand_consistency_score": 1.0,
       "composite_score": 0.6596
     },
     {
-      "text": "Lies You Were Told About Warm color palette",
+      "text": "Why Everyone Is Wrong About Dynamic pose of the person",
+      "template_id": "controversy_02",
+      "curiosity_score": 0.35,
+      "emotional_impact_score": 0.6,
+      "readability_score": 0.88,
+      "ctr_potential_score": 0.92,
+      "character_count": 54,
+      "mobile_readability_score": 0.3,
+      "brand_consistency_score": 1.0,
+      "composite_score": 0.6535
+    },
+    {
+      "text": "The Dynamic pose of the person Nobody Talks About",
+      "template_id": "curiosity_03",
+      "curiosity_score": 0.0,
+      "emotional_impact_score": 0.8,
+      "readability_score": 0.94,
+      "ctr_potential_score": 0.919,
+      "character_count": 49,
+      "mobile_readability_score": 0.55,
+      "brand_consistency_score": 1.0,
+      "composite_score": 0.6398
+    },
+    {
+      "text": "Lies You Were Told About Dynamic pose of the person",
       "template_id": "controversy_03",
       "curiosity_score": 0.0,
       "emotional_impact_score": 0.6,
-      "readability_score": 1.0,
-      "ctr_potential_score": 0.933,
-      "character_count": 43,
-      "mobile_readability_score": 0.85,
+      "readability_score": 0.88,
+      "ctr_potential_score": 0.893,
+      "character_count": 51,
+      "mobile_readability_score": 0.45,
       "brand_consistency_score": 1.0,
-      "composite_score": 0.6416
+      "composite_score": 0.5756
     }
   ],
-  "headline_score": 0.7975,
+  "headline_score": 0.7867,
   "hook_type": "curiosity",
   "emotion": "high",
   "face_strategy": "preserve",
@@ -157,15 +157,13 @@
     "background"
   ],
   "branding_constraints": [
-    "Warm color palette",
-    "Balanced composition",
-    "Centered face with happy expression",
+    "elem_obj_person_82491c2b",
     "Do not reproduce copyrighted characters, logos, or branded imagery."
   ],
   "conflicts_resolved": 0,
   "status": "success",
   "partial_failure_reasons": [],
   "error_message": null,
-  "duration_seconds": 0.0006,
-  "generated_at": "2026-08-02T20:35:17.662677+00:00"
+  "duration_seconds": 0.0004,
+  "generated_at": "2026-08-06T17:36:03.858505+00:00"
 }

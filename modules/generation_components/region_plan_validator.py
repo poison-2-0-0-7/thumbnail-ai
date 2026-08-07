@@ -83,9 +83,15 @@ class RegionPlanValidator:
                 if mask_path is None and hasattr(workspace, "layers") and workspace.layers:
                     for layer in workspace.layers:
                         layer_id = getattr(layer, "layer_id", "")
-                        if layer_id == elem_id or (is_bg and "background" in layer_id):
+                        placement = getattr(layer, "placement", None)
+                        asset_id = getattr(placement, "asset_id", "") if placement else ""
+                        if layer_id == elem_id or asset_id == elem_id or (is_bg and "background" in layer_id):
                             if getattr(layer, "mask_path", None):
                                 mask_path = Path(layer.mask_path)
+                            elif placement and getattr(placement, "mask", None) and getattr(placement.mask, "mask_path", None):
+                                mask_path = Path(placement.mask.mask_path)
+                            elif is_bg and placement and getattr(placement, "source_path", None):
+                                mask_path = Path(placement.source_path)
                             break
 
             if mask_path is None or not mask_path.is_file():

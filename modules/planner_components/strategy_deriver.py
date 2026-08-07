@@ -96,18 +96,27 @@ class StrategyDeriver(IStrategyDeriver):
             and extraction_manifest.visual_properties.extended_palette
         ):
             color_palette = list(extraction_manifest.visual_properties.extended_palette)
-        elif intelligence and hasattr(intelligence, "color_profile") and intelligence.color_profile:
-            color_palette = [c.hex for c in intelligence.color_profile.dominant_colors]
+        elif intelligence and hasattr(intelligence, "colors") and intelligence.colors:
+            color_palette = list(intelligence.colors.dominant_colors)
         elif spec and hasattr(spec, "color_direction") and spec.color_direction:
-            color_palette = list(spec.color_direction.color_palette or [])
+            color_palette = list(getattr(spec.color_direction, "color_palette", []) or [])
 
         # 8. Negative Constraints
         negative_constraints: list[str] = []
         if prompt_package:
+            raw_constraints = []
             if prompt_package.rendering_constraints:
-                negative_constraints.extend(prompt_package.rendering_constraints)
+                raw_constraints.extend(prompt_package.rendering_constraints)
             if prompt_package.safety_constraints:
-                negative_constraints.extend(prompt_package.safety_constraints)
+                raw_constraints.extend(prompt_package.safety_constraints)
+
+            for rc in raw_constraints:
+                rc_str = str(rc).strip()
+                lower_rc = rc_str.lower()
+                if lower_rc.startswith("preserve") or "elements exactly" in lower_rc:
+                    continue
+                if rc_str and rc_str not in negative_constraints:
+                    negative_constraints.append(rc_str)
 
         # Add explicit negative constraints for REMOVE decisions
         for key, _, decision, _ in resolved_decisions:

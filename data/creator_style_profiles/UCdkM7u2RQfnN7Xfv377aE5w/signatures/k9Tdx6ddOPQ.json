@@ -1,0 +1,27 @@
+{
+  "video_id": "k9Tdx6ddOPQ",
+  "channel_id": "UCdkM7u2RQfnN7Xfv377aE5w",
+  "dominant_colors": [
+    "#020202",
+    "#231b1c",
+    "#a18e81",
+    "#605754",
+    "#4c2311"
+  ],
+  "brightness": 0.2059469223022461,
+  "contrast": 0.43745872378349304,
+  "saturation": 0.221040278673172,
+  "warm_or_cool": "warm",
+  "color_harmony_score": 0.9785854124523828,
+  "subject_placement": "center",
+  "negative_space_ratio": 0.3418226809636944,
+  "balance_score": 0.9894688548068907,
+  "symmetry_score": 0.8192136287689209,
+  "face_scale_ratio": 0.05786097378672819,
+  "text_coverage_ratio": 0.023472222222222207,
+  "text_region_count": 1,
+  "object_classes_present": [
+    "person"
+  ],
+  "extracted_at": "2026-08-06T17:38:01.687819+00:00"
+}

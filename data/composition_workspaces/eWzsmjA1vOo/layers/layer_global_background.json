@@ -1,0 +1,21 @@
+{
+  "layer_id": "layer_global_background",
+  "placement": {
+    "asset_id": "global_background",
+    "role": "background",
+    "decision": "replace",
+    "source_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\visual_references\\eWzsmjA1vOo\\background.png",
+    "mask": null,
+    "transform": {
+      "translate_x": 0,
+      "translate_y": 0,
+      "scale_x": 1.0,
+      "scale_y": 1.0,
+      "crop_box": null
+    },
+    "z_index": 0,
+    "rationale": "Color temperature shift required (warm)"
+  },
+  "depth_hint_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\visual_references\\eWzsmjA1vOo\\depth_map.png",
+  "canny_hint_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\visual_references\\eWzsmjA1vOo\\canny_map.png"
+}

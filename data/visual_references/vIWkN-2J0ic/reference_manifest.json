@@ -2,7 +2,7 @@
   "video_id": "vIWkN-2J0ic",
   "source_image_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\thumbnails\\vIWkN-2J0ic.jpg",
   "source_hash": "3c9b2daa68b41a4fd7a10cc15f7525710263793be61986d62bf54b14b8a9ff66",
-  "created_at": "2026-08-02T09:27:08.579565+00:00",
+  "created_at": "2026-08-06T17:36:04.039783+00:00",
   "assets": {
     "creator_face": null,
     "face_mask": null,
@@ -69,7 +69,7 @@
   },
   "processing_metadata": {
     "engine_version": "1.0.0",
-    "total_duration_ms": 147,
+    "total_duration_ms": 81,
     "processors_executed": [
       "FaceProcessor",
       "SegmentationProcessor",

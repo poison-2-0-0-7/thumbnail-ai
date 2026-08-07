@@ -11,6 +11,7 @@ from io import BytesIO
 from dataclasses import dataclass
 from enum import Enum
 import json
+from pathlib import Path
 import socket
 import time
 from uuid import uuid4
@@ -45,6 +46,7 @@ from config import (
     MODULE7_METRICS_PATH,
     MODULE7_PROGRESS_LOG_GRANULARITY_PERCENT,
     MODULE7_STILL_QUEUED_WARNING_SECONDS,
+    PROJECT_ROOT,
 )
 from image_generator import BuiltWorkflow, MetricsCollector, utc_now
 from module7_exceptions import (
@@ -1526,10 +1528,15 @@ class _ComfyUIHTTPTransport:
 
     def submit_prompt(self, graph: dict[str, Any], client_id: str) -> str:
         """Submit one already-materialized workflow and return its prompt ID."""
+        json_body = {"prompt": graph, "client_id": client_id}
+        dump_path = PROJECT_ROOT / "data" / "debug" / "final_workflow.json"
+        dump_path.parent.mkdir(parents=True, exist_ok=True)
+        dump_path.write_text(json.dumps(json_body, indent=2), encoding="utf-8")
+        logger.info("Dumped final workflow to {path}", path=str(dump_path.resolve()))
         payload = self._request_json(
             "POST",
             "/prompt",
-            json_body={"prompt": graph, "client_id": client_id},
+            json_body=json_body,
         )
         if not isinstance(payload, dict):
             raise _ComfyUIHTTPError("ComfyUI /prompt response must be a JSON object")

@@ -1,0 +1,29 @@
+[
+  {
+    "decision_id": "dec_cand_enhance_saturation",
+    "target": {
+      "element_id": "global_saturation",
+      "element_type": "color",
+      "label": "global color saturation",
+      "bbox": null
+    },
+    "action": "enhance",
+    "confidence": 0.78,
+    "source": "rule",
+    "rationale": "Image saturation (0.15) below threshold 0.35",
+    "priority_rank": 3,
+    "superseded_candidate_ids": [],
+    "machine_reasoning": {
+      "rule_ids": [
+        "rule_enhance_global_saturation"
+      ],
+      "priority_rank": 3,
+      "superseded_count": 0
+    },
+    "expected_ctr_gain": 0.1,
+    "risk": "low",
+    "depends_on_decision_ids": [
+      "dec_cand_replace_bg_color"
+    ]
+  }
+]

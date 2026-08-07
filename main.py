@@ -344,8 +344,10 @@ def _run_pipeline_creators(
         )
 
         # ── Module 10: extract creator style signature & update profile store ──
+        # ── Module 10: extract creator style signature & update profile store ──
+        style_guidance = None
         try:
-            from creator_style import StyleExtractor, StyleProfileStore, StyleSimilarityEngine
+            from creator_style import StyleExtractor, StyleProfileStore, StyleSimilarityEngine, StylePromptGuidanceGenerator
             style_sig = StyleExtractor.extract_signature(
                 video_id=metadata.video_id,
                 channel_id=metadata.channel_id,
@@ -357,6 +359,10 @@ def _run_pipeline_creators(
                 channel_id=metadata.channel_id,
                 signature=style_sig,
                 embedding_vector=cand_vector,
+            )
+            style_guidance = StylePromptGuidanceGenerator.generate_guidance(
+                channel_id=metadata.channel_id,
+                signature=style_sig,
             )
             logger.info(
                 "Creator style profile updated for channel_id={cid} video_id={vid}: sample_count={count} established={est}",
@@ -373,11 +379,11 @@ def _run_pipeline_creators(
                 exc=style_exc,
             )
 
-
         # ── Module 8: extract visual asset manifest ───────────────────────
+        asset_manifest = None
         if ASSET_EXTRACTION_ENABLED:
             try:
-                extract_assets(
+                asset_manifest = extract_assets(
                     metadata.video_id,
                     source_image_path=str(thumbnail.thumbnail_path),
                     intelligence=intelligence,
@@ -400,9 +406,31 @@ def _run_pipeline_creators(
                     skipped += 1
                     continue
 
+        # ── Thumbnail Understanding V2 Engine ────────────────────────────────
+        understanding = None
+        try:
+            from thumbnail_understanding import ThumbnailUnderstandingEngine
+            understanding_engine = ThumbnailUnderstandingEngine()
+            understanding = understanding_engine.understand(
+                intelligence=intelligence,
+                metadata=metadata,
+                asset_manifest=asset_manifest,
+            )
+            logger.info("ThumbnailUnderstanding V2 saved for video_id={vid}", vid=metadata.video_id)
+        except Exception as und_exc:
+            logger.warning(
+                "ThumbnailUnderstanding V2 failed for creator_email={email} video_id={vid}: {exc}",
+                email=creator.email,
+                vid=metadata.video_id,
+                exc=und_exc,
+            )
+
         # ── Module 5: derive deterministic redesign specification ──
         try:
-            redesign_spec = build_redesign_specification(intelligence)
+            if understanding is not None:
+                redesign_spec = build_redesign_specification(intelligence, understanding=understanding)
+            else:
+                redesign_spec = build_redesign_specification(intelligence)
             save_redesign_spec(redesign_spec, spec_dir=redesign_spec_dir)
         except (InvalidIntelligenceError, RedesignSpecCacheError) as exc:
             logger.error(
@@ -440,8 +468,12 @@ def _run_pipeline_creators(
 
         # ── Module 6: compile deterministic image-generation package ──────
         try:
+            compile_kwargs = {"design_blueprint": design_blueprint}
+            if style_guidance is not None:
+                compile_kwargs["style_guidance"] = style_guidance
             prompt_package = compile_prompt_package(
-                redesign_spec, design_blueprint=design_blueprint
+                redesign_spec,
+                **compile_kwargs,
             )
             save_prompt_package(prompt_package, package_dir=prompt_package_dir)
         except (InvalidRedesignSpecError, PromptPackageCacheError) as exc:
@@ -545,6 +577,8 @@ def _run_pipeline_creators(
             }
             if generation_plan is not None:
                 m7_kwargs["generation_plan"] = generation_plan
+            if decision_manifest is not None:
+                m7_kwargs["decision_manifest"] = decision_manifest
 
             generated_path = _run_module7_generation(
                 prompt_package,
@@ -672,6 +706,7 @@ def _run_module7_generation(
     generation_bundle: GenerationBundle | None = None,
     generation_plan: GenerationPlan | None = None,
     design_blueprint: DesignBlueprint | None = None,
+    decision_manifest: DecisionManifest | None = None,
 ) -> Path:
     """Build the existing Module 7 inputs, generate image candidates, and persist output."""
     vram_gb = _probe_available_vram_gb()
@@ -710,6 +745,7 @@ def _run_module7_generation(
                 "design_blueprint": design_blueprint,
                 "edit_mode": "auto",
                 "channel_id": getattr(metadata, "channel_id", "default_channel"),
+                "decision_manifest": decision_manifest,
             }
 
             opt_loop = OptimizationLoop()
@@ -758,6 +794,7 @@ def _run_module7_generation(
         thumbnail_dir=thumbnail_dir,
         analysis_dir=analysis_dir,
         output_dir=MODULE7_OUTPUT_DIR,
+        decision_manifest=decision_manifest,
     )
 
 

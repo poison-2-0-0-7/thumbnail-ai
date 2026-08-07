@@ -45,7 +45,22 @@ class StrategyPackLibrary:
 
         path = path.resolve()
         if not path.is_file():
-            raise StrategyPackError(f"Strategy pack file not found: {path}")
+            if pack_ref == "default_five" or path.name == "default_five.json":
+                self.library_dir.mkdir(parents=True, exist_ok=True)
+                default_pack_data = {
+                    "name": "default_five",
+                    "description": "Standard 5 candidate strategy pack for Module 7",
+                    "strategies": [
+                        {"name": "faithful", "description": "Faithful default strategy"},
+                        {"name": "higher_emotion", "emotion_bias": 0.2, "description": "Higher emotion strategy"},
+                        {"name": "cleaner_composition", "framing_bias": -0.2, "description": "Cleaner composition strategy"},
+                        {"name": "higher_contrast", "color_grade_bias": 0.2, "description": "Higher contrast strategy"},
+                        {"name": "aggressive_ctr", "emotion_bias": 0.3, "color_grade_bias": 0.3, "description": "Aggressive CTR strategy"},
+                    ],
+                }
+                path.write_text(json.dumps(default_pack_data, indent=2), encoding="utf-8")
+            else:
+                raise StrategyPackError(f"Strategy pack file not found: {path}")
 
         try:
             content = path.read_text(encoding="utf-8")
