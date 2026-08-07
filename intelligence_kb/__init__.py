@@ -11,13 +11,16 @@ from thumbnail_intelligence.knowledge_base import *  # noqa: F401, F403
 import thumbnail_intelligence.knowledge_base as knowledge_base
 import thumbnail_intelligence.retrieval as retrieval
 import thumbnail_intelligence.evidence as evidence
+import thumbnail_intelligence.reasoning as reasoning
 from thumbnail_intelligence.retrieval import *  # noqa: F401, F403
 from thumbnail_intelligence.evidence import *  # noqa: F401, F403
+from thumbnail_intelligence.reasoning import *  # noqa: F401, F403
 
 __all__ = [
     "knowledge_base",
     "retrieval",
     "evidence",
+    "reasoning",
     # Config
     "KnowledgeBaseConfig",
     "StorageConfig",

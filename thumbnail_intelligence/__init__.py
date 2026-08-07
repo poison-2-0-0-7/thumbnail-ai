@@ -9,18 +9,68 @@ and design brief generation subsystems for intelligent thumbnail optimization.
 Phase 3.1: Knowledge Base Foundation.
 Phase 3.2: Hybrid Retrieval Engine.
 Phase 3.3: Evidence Normalization Engine.
+Phase 3.4A: Strategic Reasoning Coordinator Foundation.
 """
 
 from __future__ import annotations
 
 import thumbnail_intelligence.evidence as evidence
 import thumbnail_intelligence.knowledge_base as knowledge_base
+import thumbnail_intelligence.reasoning as reasoning
 import thumbnail_intelligence.retrieval as retrieval
 
-__version__ = "0.3.0"
+# Backwards compatibility re-exports from modules.thumbnail_intelligence
+try:
+    from modules.thumbnail_intelligence import (
+        ColorAnalysisError,
+        CompositionAnalysisError,
+        FaceEngineError,
+        ImageLoadError,
+        IntelligenceCacheError,
+        InvalidMetadataError,
+        ObjectDetectionEngineError,
+        OCREngineError,
+        OllamaReasoningError,
+        ThumbnailIntelligenceError,
+        analyze_thumbnail,
+        generate_reasoning,
+        load_and_validate_image,
+        load_cached_intelligence,
+        run_color_analysis,
+        run_composition_analysis,
+        run_face_analysis,
+        run_object_detection,
+        run_ocr,
+        save_intelligence,
+    )
+except ImportError:
+    pass
+
+__version__ = "0.4.0"
 
 __all__ = [
     "knowledge_base",
     "retrieval",
     "evidence",
+    "reasoning",
+    "ColorAnalysisError",
+    "CompositionAnalysisError",
+    "FaceEngineError",
+    "ImageLoadError",
+    "IntelligenceCacheError",
+    "InvalidMetadataError",
+    "ObjectDetectionEngineError",
+    "OCREngineError",
+    "OllamaReasoningError",
+    "ThumbnailIntelligenceError",
+    "analyze_thumbnail",
+    "generate_reasoning",
+    "load_and_validate_image",
+    "load_cached_intelligence",
+    "run_color_analysis",
+    "run_composition_analysis",
+    "run_face_analysis",
+    "run_object_detection",
+    "run_ocr",
+    "save_intelligence",
 ]

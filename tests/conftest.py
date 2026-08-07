@@ -4,9 +4,12 @@ import sys
 from pathlib import Path
 import pytest
 
-_MODULES_DIR = Path(__file__).resolve().parent.parent / "modules"
+_ROOT_DIR = Path(__file__).resolve().parent.parent
+if str(_ROOT_DIR) not in sys.path:
+    sys.path.insert(0, str(_ROOT_DIR))
+_MODULES_DIR = _ROOT_DIR / "modules"
 if str(_MODULES_DIR) not in sys.path:
-    sys.path.insert(0, str(_MODULES_DIR))
+    sys.path.append(str(_MODULES_DIR))
 
 
 @pytest.fixture(autouse=True)
