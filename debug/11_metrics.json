@@ -1,0 +1,84 @@
+{
+  "allocated_vram_gb": 10.1392,
+  "reserved_vram_gb": 11.3066,
+  "gpu_utilization": {
+    "avg": 90.87,
+    "max": 100.0,
+    "samples": 465
+  },
+  "cpu_utilization": {
+    "avg": 125.16,
+    "max": 2739.8,
+    "samples": 465
+  },
+  "total_runtime_seconds": 466.083,
+  "per_stage": {
+    "scene_decomposition": {
+      "runtime_seconds": 17.5312,
+      "allocated_vram_gb": 1.9245,
+      "reserved_vram_gb": 2.3711,
+      "gpu_utilization": {
+        "avg": 10.12,
+        "max": 80.0,
+        "samples": 17
+      },
+      "cpu_utilization": {
+        "avg": 52.96,
+        "max": 156.2,
+        "samples": 17
+      }
+    },
+    "mask_building": {
+      "runtime_seconds": 0.0085,
+      "allocated_vram_gb": 1.1964,
+      "reserved_vram_gb": 1.5059,
+      "gpu_utilization": {
+        "avg": 2.0,
+        "max": 2.0,
+        "samples": 1
+      },
+      "cpu_utilization": {
+        "avg": 80.8,
+        "max": 80.8,
+        "samples": 1
+      }
+    },
+    "background_inpainting": {
+      "runtime_seconds": 446.9064,
+      "allocated_vram_gb": 10.1392,
+      "reserved_vram_gb": 11.3066,
+      "gpu_utilization": {
+        "avg": 94.35,
+        "max": 100.0,
+        "samples": 446
+      },
+      "cpu_utilization": {
+        "avg": 128.31,
+        "max": 2739.8,
+        "samples": 446
+      }
+    },
+    "recomposition": {
+      "runtime_seconds": 0.0864,
+      "allocated_vram_gb": 7.7597,
+      "reserved_vram_gb": 8.0215,
+      "gpu_utilization": {
+        "avg": 1.0,
+        "max": 1.0,
+        "samples": 1
+      },
+      "cpu_utilization": {
+        "avg": 38.7,
+        "max": 38.7,
+        "samples": 1
+      }
+    }
+  },
+  "resolution": "1280x720",
+  "device": "cuda",
+  "gpu_name": "NVIDIA GeForce RTX 4060 Laptop GPU",
+  "gpu_vram_total_gb": 8.0,
+  "torch_version": "2.6.0+cu124",
+  "cuda_version": "12.4",
+  "validation_timestamp": "2026-08-07T10:20:56.046981+00:00"
+}

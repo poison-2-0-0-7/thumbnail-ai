@@ -1,0 +1,7 @@
+Model,Peak_VRAM_GB,Latency_S,Quality_Score
+dino_sam2,0.0,4.653,0.85
+sam3,0.0,0.103,0.88
+birefnet,0.0,0.016,0.04
+guided,0.0,0.012,0.08
+brushnet,0.0,2.237,100.0
+classical,0.0,0.05,38.5

@@ -39,6 +39,15 @@ easyocr>=1.7.1
 onnxruntime-gpu>=1.17.0
 insightface>=0.7.3
 ultralytics>=8.3.0
+
+# ── Renderer V2 Phase 1 (Scene Decomposer + Inpaint) ─────────────────────────
+# HuggingFace Transformers for BiRefNet, Depth-Anything V2, GroundingDINO
+transformers>=4.40.0
+# Diffusers for SDXL Inpainting pipeline (Phase 1 background synthesis)
+diffusers>=0.27.0
+# Accelerate is a required runtime dependency of diffusers for model offloading
+accelerate>=0.28.0
+
 # Reasoning stage runs against a local Ollama server (http://localhost:11434)
 # over its HTTP API using the `requests` dependency already declared under
 # Module 3 above — no additional package is required. Install Ollama itself

@@ -1,0 +1,43 @@
+{
+  "width": 1280,
+  "height": 720,
+  "instance_count": 3,
+  "instances": [
+    {
+      "instance_id": "logo_0",
+      "cls": "logo",
+      "bbox": [
+        369,
+        453,
+        505,
+        591
+      ],
+      "depth_layer": 0.5932366847991943,
+      "locked": true
+    },
+    {
+      "instance_id": "logo_1",
+      "cls": "logo",
+      "bbox": [
+        504,
+        82,
+        623,
+        242
+      ],
+      "depth_layer": 0.6616234183311462,
+      "locked": true
+    },
+    {
+      "instance_id": "product_2",
+      "cls": "product",
+      "bbox": [
+        477,
+        214,
+        1079,
+        596
+      ],
+      "depth_layer": 0.6980082392692566,
+      "locked": true
+    }
+  ]
+}

@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Thumbnail AI - Phase 1 Pipeline Inspection Report</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #0f172a; color: #f8fafc; margin: 0; padding: 20px; }
+        h1, h2 { color: #38bdf8; border-bottom: 1px solid #334155; padding-bottom: 8px; }
+        .metrics-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 24px; }
+        .card { background: #1e293b; border-radius: 8px; padding: 16px; box-shadow: 0 4px 6px rgba(0,0,0,0.3); }
+        .card h3 { margin: 0 0 8px 0; color: #94a3b8; font-size: 0.9rem; text-transform: uppercase; }
+        .card p { margin: 0; font-size: 1.5rem; font-weight: bold; color: #f1f5f9; }
+        .stage-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+        .stage-card { background: #1e293b; border-radius: 8px; overflow: hidden; border: 1px solid #334155; }
+        .stage-card img { width: 100%; height: auto; display: block; background: #000; }
+        .stage-card .title { padding: 12px; font-weight: bold; background: #334155; color: #e2e8f0; }
+        pre { background: #020617; padding: 12px; border-radius: 6px; overflow-x: auto; font-size: 0.85rem; color: #a5f3fc; }
+    </style>
+</head>
+<body>
+    <h1>Thumbnail AI — Phase 1 Inspection Report</h1>
+    
+    <h2>Performance & Execution Metrics</h2>
+    <div class="metrics-grid">
+        <div class="card"><h3>Total Runtime</h3><p>466.083 s</p></div>
+        <div class="card"><h3>Peak VRAM</h3><p>10.1392 GB</p></div>
+        <div class="card"><h3>Resolution</h3><p>1280x720</p></div>
+        <div class="card"><h3>Instances</h3><p>3</p></div>
+    </div>
+
+    <h2>Pipeline Stage Outputs</h2>
+    <div class="stage-grid">
+        <div class="stage-card"><div class="title">01. Original Image</div><img src="01_original.png" alt="Original"></div>
+        <div class="stage-card"><div class="title">02. Detection Overlay</div><img src="02_detection_overlay.png" alt="Detection"></div>
+        <div class="stage-card"><div class="title">05. Depth Map</div><img src="05_depth.png" alt="Depth"></div>
+        <div class="stage-card"><div class="title">06. Locked Regions Mask</div><img src="06_locked_regions.png" alt="Locked"></div>
+        <div class="stage-card"><div class="title">07. Inpaint Background Mask</div><img src="07_background_mask.png" alt="Mask"></div>
+        <div class="stage-card"><div class="title">08. Inpainting Output</div><img src="08_inpaint.png" alt="Inpaint"></div>
+        <div class="stage-card"><div class="title">09. Final Recomposite</div><img src="09_recomposite.png" alt="Recomposite"></div>
+    </div>
+
+    <h2>Scene Graph JSON</h2>
+    <pre>{
+  "width": 1280,
+  "height": 720,
+  "instance_count": 3,
+  "instances": [
+    {
+      "instance_id": "logo_0",
+      "cls": "logo",
+      "bbox": [
+        369,
+        453,
+        505,
+        591
+      ],
+      "depth_layer": 0.5932366847991943,
+      "locked": true
+    },
+    {
+      "instance_id": "logo_1",
+      "cls": "logo",
+      "bbox": [
+        504,
+        82,
+        623,
+        242
+      ],
+      "depth_layer": 0.6616234183311462,
+      "locked": true
+    },
+    {
+      "instance_id": "product_2",
+      "cls": "product",
+      "bbox": [
+        477,
+        214,
+        1079,
+        596
+      ],
+      "depth_layer": 0.6980082392692566,
+      "locked": true
+    }
+  ]
+}</pre>
+</body>
+</html>

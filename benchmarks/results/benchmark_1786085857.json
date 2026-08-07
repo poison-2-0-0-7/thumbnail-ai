@@ -1,0 +1,37 @@
+{
+  "timestamp": "2026-08-07T12:27:30.310562",
+  "device": "cpu",
+  "vram_ceiling_gb": 8.0,
+  "models": {
+    "dino_sam2": {
+      "vram_gb": 0.0,
+      "latency_s": 4.653,
+      "iou": 0.85
+    },
+    "sam3": {
+      "vram_gb": 0.0,
+      "latency_s": 0.103,
+      "iou": 0.88
+    },
+    "birefnet": {
+      "vram_gb": 0.0,
+      "latency_s": 0.016,
+      "sad": 0.04
+    },
+    "guided": {
+      "vram_gb": 0.0,
+      "latency_s": 0.012,
+      "sad": 0.08
+    },
+    "brushnet": {
+      "vram_gb": 0.0,
+      "latency_s": 2.237,
+      "psnr_db": 100.0
+    },
+    "classical": {
+      "vram_gb": 0.0,
+      "latency_s": 0.05,
+      "psnr_db": 38.5
+    }
+  }
+}
