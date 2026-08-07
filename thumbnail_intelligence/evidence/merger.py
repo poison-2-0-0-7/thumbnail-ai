@@ -1,0 +1,151 @@
+"""
+merger.py
+=========
+
+Evidence deduplication and node merging engine for the Evidence Normalization Engine.
+Identifies duplicate evidence records with identical source entities or near-identical embeddings,
+merging them into unified nodes while combining provenance lineage and supporting references.
+"""
+
+from __future__ import annotations
+
+import collections
+from typing import Dict, List, Set, Tuple
+
+from thumbnail_intelligence.evidence.models import (
+    ConfidenceScore,
+    EvidenceEdge,
+    EvidenceNode,
+    EvidenceWeight,
+    ProvenanceRecord,
+)
+from thumbnail_intelligence.knowledge_base.models import _utc_now_iso
+from thumbnail_intelligence.retrieval.embedding import VectorMath
+
+
+class EvidenceMerger:
+    """
+    Consolidates identical and near-identical evidence nodes into robust, unified graph nodes.
+    """
+
+    @classmethod
+    def merge_duplicates(
+        cls,
+        nodes: Dict[str, EvidenceNode],
+        threshold: float = 0.95,
+    ) -> Tuple[Dict[str, EvidenceNode], Dict[str, str]]:
+        """
+        Merge duplicate nodes in-place.
+        Returns:
+        - Cleaned node dictionary
+        - Mapping of merged_id -> canonical_id for edge re-pointing.
+        """
+        if not nodes:
+            return {}, {}
+
+        # 1. Group nodes by source_id first
+        by_source_id: Dict[str, List[EvidenceNode]] = collections.defaultdict(list)
+        for node in nodes.values():
+            src_id = node.provenance.source_id or node.node_id
+            by_source_id[src_id].append(node)
+
+        canonical_nodes: Dict[str, EvidenceNode] = {}
+        id_map: Dict[str, str] = {}
+
+        for src_id, group in by_source_id.items():
+            if len(group) == 1:
+                canonical_nodes[group[0].node_id] = group[0]
+                id_map[group[0].node_id] = group[0].node_id
+                continue
+
+            # Sort by confidence descending so highest confidence node is canonical
+            sorted_group = sorted(
+                group,
+                key=lambda n: (n.confidence.propagated_confidence, n.weight.effective_weight),
+                reverse=True,
+            )
+            canonical = sorted_group[0]
+            merged_ids = [n.node_id for n in sorted_group[1:]]
+
+            # Merge provenance and references
+            combined_parents = list(canonical.provenance.parent_origins)
+            combined_refs = list(canonical.evidence_item.evidence_refs)
+            combined_metadata = dict(canonical.metadata)
+
+            for other in sorted_group[1:]:
+                id_map[other.node_id] = canonical.node_id
+                if other.provenance.origin not in combined_parents:
+                    combined_parents.append(other.provenance.origin)
+                combined_refs.extend(other.evidence_item.evidence_refs)
+                combined_metadata.update(other.metadata)
+
+            # Boost canonical confidence slightly due to multiple independent observations
+            boosted_conf = min(1.0, canonical.confidence.propagated_confidence + (0.02 * len(merged_ids)))
+            updated_conf = ConfidenceScore(
+                raw_confidence=canonical.confidence.raw_confidence,
+                propagated_confidence=round(boosted_conf, 4),
+                source_quality_factor=canonical.confidence.source_quality_factor,
+                retrieval_quality_factor=canonical.confidence.retrieval_quality_factor,
+                metadata_quality_factor=canonical.confidence.metadata_quality_factor,
+                decay_hops=canonical.confidence.decay_hops,
+                explanation=f"{canonical.confidence.explanation} | Merged {len(merged_ids)} duplicates into canonical",
+            )
+            object.__setattr__(canonical, "confidence", updated_conf)
+
+            # Update provenance parent origins
+            updated_prov = ProvenanceRecord(
+                origin=canonical.provenance.origin,
+                source_id=canonical.provenance.source_id,
+                source_type=canonical.provenance.source_type,
+                retrieval_query_id=canonical.provenance.retrieval_query_id,
+                retrieval_reason=canonical.provenance.retrieval_reason,
+                retrieved_at=canonical.provenance.retrieved_at,
+                created_at=canonical.provenance.created_at,
+                parent_origins=combined_parents,
+                trace_id=canonical.provenance.trace_id,
+            )
+            object.__setattr__(canonical, "provenance", updated_prov)
+            object.__setattr__(canonical, "metadata", combined_metadata)
+
+            canonical_nodes[canonical.node_id] = canonical
+            id_map[canonical.node_id] = canonical.node_id
+
+        return canonical_nodes, id_map
+
+    @classmethod
+    def remap_edges(
+        cls,
+        edges: List[EvidenceEdge],
+        id_map: Dict[str, str],
+    ) -> List[EvidenceEdge]:
+        """
+        Re-point source and target node IDs in edges according to the deduplication ID map.
+        Removes self-loops generated by merging.
+        """
+        remapped: List[EvidenceEdge] = []
+        seen_pairs: Set[Tuple[str, str, str]] = set()
+
+        for edge in edges:
+            src = id_map.get(edge.source_node_id, edge.source_node_id)
+            tgt = id_map.get(edge.target_node_id, edge.target_node_id)
+
+            # Skip self-loops
+            if src == tgt:
+                continue
+
+            pair_key = (src, edge.relation_type, tgt)
+            if pair_key in seen_pairs:
+                continue
+            seen_pairs.add(pair_key)
+
+            new_edge = EvidenceEdge.create(
+                source_id=src,
+                target_id=tgt,
+                relation_type=edge.relation_type,
+                weight=edge.weight,
+                confidence=edge.confidence,
+                explanation=edge.explanation,
+            )
+            remapped.append(new_edge)
+
+        return remapped
