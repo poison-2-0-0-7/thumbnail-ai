@@ -14,8 +14,8 @@
       "artifact_type": "thumbnail_intelligence",
       "path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\analysis\\0EyJaqz8xyw.json",
       "exists": true,
-      "sha256": "5985612c1f5c0ed56437a718c81db9f5ab7d69239101494de01931d95ec132a7",
-      "size_bytes": 3739
+      "sha256": "35e987d169ed9512a02a45eb1da39c575f41600eab9c68fdfb4e00a7956de1e3",
+      "size_bytes": 3619
     },
     {
       "module": "module8",
@@ -30,7 +30,7 @@
       "artifact_type": "redesign_specification",
       "path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\redesign_specs\\0EyJaqz8xyw.json",
       "exists": true,
-      "sha256": "d4726eaa009d8fe086edabc9437e9014d2e7d2bce3ef445ffcafd80520bb3298",
+      "sha256": "fe42647048516c9dda092d5258d143eb831ce63aea8aef162dce7915b427c8b1",
       "size_bytes": 2335
     },
     {
@@ -38,16 +38,16 @@
       "artifact_type": "design_blueprint",
       "path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\design_blueprints\\0EyJaqz8xyw.json",
       "exists": true,
-      "sha256": "28d181b3394f5b3cc293313b89e9251404e52ae58a6b0bca8cc7db2e325aa72f",
-      "size_bytes": 5515
+      "sha256": "75b8ae55270d98ad745a6d1404a1f840cf45d1897c42fe8ce7d02f0c1b035e27",
+      "size_bytes": 5601
     },
     {
       "module": "module6",
       "artifact_type": "prompt_package",
       "path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\prompt_packages\\0EyJaqz8xyw.json",
       "exists": true,
-      "sha256": "d12e6d5f28e5a17aead4feeb4fe7453fe34bd54383d90d818a2580da0f0779b4",
-      "size_bytes": 3162
+      "sha256": "be5d87dcc0f7f47a3a92951bfba0fdf9a2959a58d3bb6b9c7315dbca788f3858",
+      "size_bytes": 3181
     },
     {
       "module": "module9",
@@ -62,7 +62,7 @@
       "artifact_type": "composition_workspace",
       "path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\composition_workspaces\\0EyJaqz8xyw\\workspace_manifest.json",
       "exists": true,
-      "sha256": "54b5149191eb3b6cfe716ce17beaaf8bf335ad4bf832a9b1f02d80cfc86dfeba",
+      "sha256": "6c70dbdd42afcf102d37ee7f90025201345603092c6db154c16ac6a21dcee1c0",
       "size_bytes": 442
     },
     {
@@ -106,5 +106,5 @@
       "size_bytes": null
     }
   ],
-  "built_at": "2026-08-06T17:29:00.560781+00:00"
+  "built_at": "2026-08-08T07:25:26.722595+00:00"
 }

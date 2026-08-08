@@ -2,7 +2,7 @@
   "video_id": "k9Tdx6ddOPQ",
   "profile_name": "PROFILE_STANDARD_EDIT",
   "workflow_version": "workflow_v1",
-  "workflow_hash": "adc9a2c0f6054aa2ab68596df3cffee740dcfd284fbac385b24a065539263153",
+  "workflow_hash": "4a9628c5d91df29e43f9a61074af806a1aa3bea94f58e88d5ab41359abc50276",
   "conditioning_asset_hashes": {},
   "model_versions": {
     "checkpoint": "juggernautXL.safetensors",
@@ -10,7 +10,7 @@
   },
   "num_candidates_requested": 1,
   "num_candidates_completed": 1,
-  "total_duration_seconds": 2.367280499995104,
+  "total_duration_seconds": 89.9538184000121,
   "parallel_generation_used": false,
   "retry_summary": {
     "identity_retries": 0

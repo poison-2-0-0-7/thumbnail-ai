@@ -14,7 +14,7 @@
   "warm_or_cool": "neutral",
   "color_harmony_score": 0.8151937951764076,
   "subject_placement": "left-third",
-  "negative_space_ratio": 0.8258163412646354,
+  "negative_space_ratio": 0.8258182990644658,
   "balance_score": 0.9909580865430703,
   "symmetry_score": 0.8344392776489258,
   "face_scale_ratio": 0.0019888017243526214,
@@ -24,5 +24,5 @@
     "motorcycle",
     "person"
   ],
-  "extracted_at": "2026-08-06T17:19:12.941926+00:00"
+  "extracted_at": "2026-08-08T07:19:40.541157+00:00"
 }

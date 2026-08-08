@@ -16,6 +16,18 @@ Provides:
 
 from __future__ import annotations
 
+from thumbnail_intelligence.reasoning.multi_candidate_models import (
+    CandidateDescriptor,
+    CandidateMetadata,
+    CandidateResult,
+    CandidateSet,
+    VariationDimension,
+    VariationProfile,
+)
+from thumbnail_intelligence.reasoning.multi_candidate_generator import (
+    MultiCandidateGenerator,
+    MultiCandidateGeneratorError,
+)
 from thumbnail_intelligence.reasoning.config import ReasoningConfig
 from thumbnail_intelligence.reasoning.context import ReasoningContext
 from thumbnail_intelligence.reasoning.coordinator import ReasoningCoordinator
@@ -391,6 +403,15 @@ __all__ = [
     "RenderPlacementCoordinate",
     "PixelBoundingBox",
     "RenderPackageMetadata",
+    # Phase 5.1 Multi-Candidate Generation & Models
+    "MultiCandidateGenerator",
+    "MultiCandidateGeneratorError",
+    "VariationDimension",
+    "VariationProfile",
+    "CandidateDescriptor",
+    "CandidateMetadata",
+    "CandidateResult",
+    "CandidateSet",
     # Domain Models & Outputs
     "ReasonerType",
     "ReasonerContract",

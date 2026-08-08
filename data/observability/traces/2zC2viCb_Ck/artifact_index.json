@@ -14,8 +14,8 @@
       "artifact_type": "thumbnail_intelligence",
       "path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\analysis\\2zC2viCb_Ck.json",
       "exists": true,
-      "sha256": "effbc205febb819422aca3425a749d763581b878601dc6868e8d25918c83b778",
-      "size_bytes": 7360
+      "sha256": "ab7696264f0ef736560c6e850e28ac2c9ea20ed4dffa623f0457612167bd55a4",
+      "size_bytes": 7409
     },
     {
       "module": "module8",
@@ -30,24 +30,24 @@
       "artifact_type": "redesign_specification",
       "path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\redesign_specs\\2zC2viCb_Ck.json",
       "exists": true,
-      "sha256": "b80e94aeb28eb36cdc8f558cfe172b82d3b72c8ebcc7c3b58874558a633df64e",
-      "size_bytes": 2809
+      "sha256": "b3000ae6210d121d3b7946dce9d3ac9aeda3330b295b3310ce7a5c8bf5a01391",
+      "size_bytes": 2808
     },
     {
       "module": "module5.5",
       "artifact_type": "design_blueprint",
       "path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\design_blueprints\\2zC2viCb_Ck.json",
       "exists": true,
-      "sha256": "4e89d0170739edef8f1b702694ed33d4372f156c49bbd74d4ba8f3c7c1906b3f",
-      "size_bytes": 5897
+      "sha256": "b30f1da1f370754650f4c54400a1300c5389bf36c403c9af0abd77a933d7b103",
+      "size_bytes": 5861
     },
     {
       "module": "module6",
       "artifact_type": "prompt_package",
       "path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\prompt_packages\\2zC2viCb_Ck.json",
       "exists": true,
-      "sha256": "f7d555ec2411b0e7bae22c9cb41e5a7e8f788376f7ed9b09de3bcfa64acb9bad",
-      "size_bytes": 3448
+      "sha256": "700b798720e1490b0df5d5a5b1051cc853cba15a51bb60946757b937d627487c",
+      "size_bytes": 3442
     },
     {
       "module": "module9",
@@ -62,7 +62,7 @@
       "artifact_type": "composition_workspace",
       "path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\composition_workspaces\\2zC2viCb_Ck\\workspace_manifest.json",
       "exists": true,
-      "sha256": "6773daa51aaea6215aba150c71cc1b0ab68652219a3540c08f4377fac54b77bb",
+      "sha256": "34ef9a5b24894140e324a12892ab51b78f414905634d88bfbdd91d7bbd0c299f",
       "size_bytes": 442
     },
     {
@@ -106,5 +106,5 @@
       "size_bytes": null
     }
   ],
-  "built_at": "2026-08-06T17:27:33.778338+00:00"
+  "built_at": "2026-08-08T07:24:02.019712+00:00"
 }

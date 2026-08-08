@@ -14,7 +14,7 @@
   "warm_or_cool": "warm",
   "color_harmony_score": 0.9499050279634008,
   "subject_placement": "center",
-  "negative_space_ratio": 0.6081285026674859,
+  "negative_space_ratio": 0.6082010543806428,
   "balance_score": 0.9345886847149576,
   "symmetry_score": 0.7871648073196411,
   "face_scale_ratio": null,
@@ -23,5 +23,5 @@
   "object_classes_present": [
     "car"
   ],
-  "extracted_at": "2026-08-06T17:27:52.734427+00:00"
+  "extracted_at": "2026-08-08T07:24:19.669092+00:00"
 }

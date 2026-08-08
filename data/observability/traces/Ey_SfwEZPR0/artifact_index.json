@@ -14,8 +14,8 @@
       "artifact_type": "thumbnail_intelligence",
       "path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\analysis\\Ey_SfwEZPR0.json",
       "exists": true,
-      "sha256": "e79a029a429f5a6ae6854af147bd43ce1b2da76cc8132bb75694ba1af03a0d95",
-      "size_bytes": 4092
+      "sha256": "feb89d9f031878d87f63812a5e7e7c4734c0805014af11d66ddd542c46b3619b",
+      "size_bytes": 3879
     },
     {
       "module": "module8",
@@ -30,15 +30,15 @@
       "artifact_type": "redesign_specification",
       "path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\redesign_specs\\Ey_SfwEZPR0.json",
       "exists": true,
-      "sha256": "93005213ea6ae76e71cb3ea474202484adc6b40ab285959967727a7c0ab8c03b",
-      "size_bytes": 2400
+      "sha256": "71a5bc966a566c910bb617d7127b243399b0cd8247605db04e026fd8493d14a8",
+      "size_bytes": 2398
     },
     {
       "module": "module5.5",
       "artifact_type": "design_blueprint",
       "path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\design_blueprints\\Ey_SfwEZPR0.json",
       "exists": true,
-      "sha256": "ddfce6286a8e768bf24e4c98f52930e4a6e4778e398c688faf80d2ca7d40f0e0",
+      "sha256": "3ef5e9c2210e0597d4b11684e383e76a367a39f044895f2347482a1c224d4386",
       "size_bytes": 5404
     },
     {
@@ -46,7 +46,7 @@
       "artifact_type": "prompt_package",
       "path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\prompt_packages\\Ey_SfwEZPR0.json",
       "exists": true,
-      "sha256": "8607d3eea164588d0d497a1c2f7cf32def9a67857827c55c3af44c65fe4df181",
+      "sha256": "8914464da89fefcf3fd892eb2ccd41610057dfb2134d9bb6c42574403f6673c1",
       "size_bytes": 3335
     },
     {
@@ -62,7 +62,7 @@
       "artifact_type": "composition_workspace",
       "path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\composition_workspaces\\Ey_SfwEZPR0\\workspace_manifest.json",
       "exists": true,
-      "sha256": "171a9c303937496a73396b47afbad5e4823bfc940937382f59a32a9eae657495",
+      "sha256": "50f349349df01830694b66f7d74dacfcf2b38ba5eddd45be662ae60bce471cb5",
       "size_bytes": 442
     },
     {
@@ -106,5 +106,5 @@
       "size_bytes": null
     }
   ],
-  "built_at": "2026-08-06T17:22:26.759168+00:00"
+  "built_at": "2026-08-08T07:20:54.225128+00:00"
 }

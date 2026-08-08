@@ -10,9 +10,9 @@
     "candidate_index": 0
   },
   "workflow_version": "workflow_v1",
-  "workflow_hash": "e2a1f82c97961d0e0f7c0c178c134c6650c4b19636fdf6d388b5cda51471490e",
-  "prompt_package_hash": "7a6ffb4722bb7537197e8f8866a82ee465731473baaa74421bea2119a06947a2",
-  "generation_hash": "22f65232b0d0a930d053a0cecaebd022007445f8b0ada315fe705869ed2a6328",
+  "workflow_hash": "8f0f9949da3dbca9b3126cd54bd749cbb7d7bd08f5eab869d3d8032f2941cc0a",
+  "prompt_package_hash": "c324696219a45672b0c0d6030cc7623cda450593d1da67d0d7ed11af9cd52ac6",
+  "generation_hash": "592eff3475d417e7b8ae3ea10079748a80c035bcc206a126907fee69e901b433",
   "profile_name": "PROFILE_STANDARD_EDIT",
   "checkpoint_hash": null,
   "lora_hashes": [],
@@ -24,7 +24,7 @@
   "candidate_scores": [
     {
       "candidate_index": 0,
-      "overall_score": 0.7799,
+      "overall_score": 0.7774,
       "identity_similarity": 1.0,
       "hard_gate_passed": true,
       "rank": 1,
@@ -34,17 +34,17 @@
   "selected_candidate_index": 0,
   "retry_count": 0,
   "stage_durations_seconds": {
-    "comfyui_generate": 0.18108950000168988,
-    "identity_preservation": 0.004539099994872231,
-    "staged_region_edits": 5.999972927384079e-7,
-    "masked_composite": 0.2352513000005274,
-    "typography": 0.1381044000008842,
-    "harmonization": 0.30757980000635143,
-    "face_restoration": 0.17812969999795314,
-    "background_composition": 0.12848540000413777,
-    "upscale": 0.13358169999992242,
-    "quality_assurance": 0.22723039999982575
+    "comfyui_generate": 0.2059700999961933,
+    "identity_preservation": 0.004564999995636754,
+    "staged_region_edits": 6.00004568696022e-7,
+    "masked_composite": 0.2430255999934161,
+    "typography": 0.13640510001278017,
+    "harmonization": 0.3455209000094328,
+    "face_restoration": 0.18234030000166968,
+    "background_composition": 0.1255059999966761,
+    "upscale": 0.12397410000266973,
+    "quality_assurance": 0.20799999999871943
   },
-  "duration_seconds": 1.8702315999980783,
-  "generated_at": "2026-08-06T17:29:00.495850+00:00"
+  "duration_seconds": 1.9934953000047244,
+  "generated_at": "2026-08-08T07:25:26.601508+00:00"
 }

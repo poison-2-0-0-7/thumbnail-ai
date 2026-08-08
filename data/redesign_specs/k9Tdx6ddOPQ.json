@@ -39,7 +39,7 @@
     "rationale": "Existing OCR text is preserved as placement-only guidance."
   },
   "layout_direction": {
-    "target_negative_space_ratio": 0.3418226809636944,
+    "target_negative_space_ratio": 0.34169611787090115,
     "target_clutter_score": 0.3,
     "focal_zone": {
       "x_min": 0.44817614555358887,
@@ -57,7 +57,7 @@
     }
   ],
   "elements_to_preserve": [
-    "elem_obj_person_2855edcd",
+    "elem_obj_person_85e635e9",
     "elem_text_ocr_text_90a4eea6"
   ],
   "overall_rationale": "ctr_potential_score=0.75; curiosity_gap_score=0.65; content_mismatch_detected=False; rules applied: crop_tighter.",
@@ -66,6 +66,6 @@
   "source_content_mismatch_detected": false,
   "status": "success",
   "error_message": null,
-  "duration_seconds": 0.00010320000001229346,
-  "generated_at": "2026-08-06T17:38:01.743028+00:00"
+  "duration_seconds": 0.0033001999981934205,
+  "generated_at": "2026-08-08T07:34:53.499505+00:00"
 }

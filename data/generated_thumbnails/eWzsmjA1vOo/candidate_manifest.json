@@ -5,7 +5,7 @@
       "candidate_index": 0,
       "strategy_name": "faithful",
       "seed": 255403169,
-      "workflow_hash": "0b75a46dd94ac523c19dcaf53f5b4e6b3526e26f4108a82fa3786393c025260f",
+      "workflow_hash": "db2b8288d491d8fe9dc32bccde16ca53ef28b14c00c8ef770754ca45e33adfa4",
       "generation_parameters": {
         "width": 1280,
         "height": 720,
@@ -25,9 +25,9 @@
         "face_quality_score": 0.9790380488735124,
         "composition_score": 0.9982118833415252,
         "text_safe_zone_score": 0.6450960017336311,
-        "object_preservation_score": 1.0,
+        "object_preservation_score": 0.903521728515625,
         "color_compliance_score": 0.9252916579728703,
-        "overall_score": 0.9358810558895874,
+        "overall_score": 0.9214093151669311,
         "hard_gate_passed": true
       },
       "face_match": {
@@ -39,28 +39,28 @@
       },
       "candidate_score": {
         "candidate_index": 0,
-        "overall_score": 0.7645,
+        "overall_score": 0.7596,
         "identity_similarity": 1.0,
         "hard_gate_passed": true,
         "rank": 1,
         "selected": true
       },
       "stage_durations_seconds": {
-        "comfyui_generate": 45.19443400000455,
-        "identity_preservation": 0.004633199998352211,
-        "staged_region_edits": 2.5999979698099196e-6,
-        "masked_composite": 0.0830740999954287,
-        "typography": 0.06532919999881415,
-        "harmonization": 0.07955750000110129,
-        "face_restoration": 0.06365669999649981,
-        "background_composition": 0.048944300004222896,
-        "upscale": 0.18197320000035688,
-        "quality_assurance": 0.2017215000014403
+        "comfyui_generate": 0.21066500000597443,
+        "identity_preservation": 0.006132900001830421,
+        "staged_region_edits": 1.5999976312741637e-6,
+        "masked_composite": 0.11209619999863207,
+        "typography": 0.05781489999208134,
+        "harmonization": 0.1015519999928074,
+        "face_restoration": 0.07201740000164136,
+        "background_composition": 0.05741910000506323,
+        "upscale": 0.1970839999994496,
+        "quality_assurance": 0.14242750000266824
       },
       "output_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\generated_thumbnails\\eWzsmjA1vOo\\tmp_candidates\\cand_0_final.png"
     }
   ],
   "winning_candidate_index": 0,
   "strategy_pack_name": null,
-  "generated_at": "2026-08-06T17:16:31.136261+00:00"
+  "generated_at": "2026-08-08T07:17:31.378958+00:00"
 }

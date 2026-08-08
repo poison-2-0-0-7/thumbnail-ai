@@ -11,8 +11,8 @@
   },
   "workflow_version": "workflow_v1",
   "workflow_hash": "6ea22ddd0b2a4b1ae0ff1d911274db3ffa4eb056bb8fdbf652667912f4610864",
-  "prompt_package_hash": "4d806ccde41be0a143b9a2b8d9ac039d0e07ca4fe4febc74beae5aed2318d205",
-  "generation_hash": "745f7c955132547d59b29249b4b5ce1024c88f9b4d9b6019519e28381dcce55a",
+  "prompt_package_hash": "a063ce3fa5f6de3bfba2ba2265d2437e20ab90e9f813f2cd3fd65ae131ec6d99",
+  "generation_hash": "2c2be69a5f9d732f74c4d2f820961a102bbf097ef43cd70157b4a48f16cf69a9",
   "profile_name": "PROFILE_STANDARD_EDIT",
   "checkpoint_hash": null,
   "lora_hashes": [],
@@ -24,7 +24,7 @@
   "candidate_scores": [
     {
       "candidate_index": 0,
-      "overall_score": 0.7399,
+      "overall_score": 0.7323,
       "identity_similarity": 1.0,
       "hard_gate_passed": true,
       "rank": 1,
@@ -34,17 +34,17 @@
   "selected_candidate_index": 0,
   "retry_count": 0,
   "stage_durations_seconds": {
-    "comfyui_generate": 44.57446609999897,
-    "identity_preservation": 0.004134000002522953,
-    "staged_region_edits": 6.00004568696022e-7,
-    "masked_composite": 0.19016289999854052,
-    "typography": 0.11624619999929564,
-    "harmonization": 0.2594447000010405,
-    "face_restoration": 0.1379538000037428,
-    "background_composition": 0.1073067000033916,
-    "upscale": 0.3429811000023619,
-    "quality_assurance": 0.18799589999980526
+    "comfyui_generate": 0.19631299999309704,
+    "identity_preservation": 0.00470109999878332,
+    "staged_region_edits": 9.00006853044033e-7,
+    "masked_composite": 0.19617329999164212,
+    "typography": 0.12253809999674559,
+    "harmonization": 0.3007672999956412,
+    "face_restoration": 0.15249849999963772,
+    "background_composition": 0.11319649999495596,
+    "upscale": 0.3414773999975296,
+    "quality_assurance": 0.15810879999480676
   },
-  "duration_seconds": 46.21280660000048,
-  "generated_at": "2026-08-06T17:18:53.492644+00:00"
+  "duration_seconds": 1.9813148999965051,
+  "generated_at": "2026-08-08T07:19:13.975482+00:00"
 }

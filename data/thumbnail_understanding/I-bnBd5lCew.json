@@ -10,15 +10,15 @@
         "label": "Person (1)",
         "semantic_description": "Detected person with confidence 0.94",
         "bbox": {
-          "x_min": 0.5532917976379395,
-          "y_min": 0.04581883748372396,
-          "x_max": 0.9940766334533692,
-          "y_max": 0.9898451063368056
+          "x_min": 0.5533102989196778,
+          "y_min": 0.04578196207682292,
+          "x_max": 0.9940834999084472,
+          "y_max": 0.9899610731336805
         },
         "polygon": [],
         "mask_path": null,
         "cutout_path": null,
-        "confidence": 0.9439361095428467,
+        "confidence": 0.9439265131950378,
         "importance_rank": 1,
         "role": "hero",
         "preserve_score": 0.7,
@@ -50,15 +50,15 @@
         "label": "Person (2)",
         "semantic_description": "Detected person with confidence 0.93",
         "bbox": {
-          "x_min": 0.019730615615844726,
-          "y_min": 0.04101901584201389,
-          "x_max": 0.4205596446990967,
-          "y_max": 0.9893115573459201
+          "x_min": 0.019754743576049803,
+          "y_min": 0.04110005696614583,
+          "x_max": 0.4205203056335449,
+          "y_max": 0.9893797132703993
         },
         "polygon": [],
         "mask_path": null,
         "cutout_path": null,
-        "confidence": 0.9322977066040039,
+        "confidence": 0.9322940111160278,
         "importance_rank": 2,
         "role": "primary",
         "preserve_score": 0.7,
@@ -138,7 +138,7 @@
         "polygon": [],
         "mask_path": null,
         "cutout_path": null,
-        "confidence": 0.9140780937687953,
+        "confidence": 0.903880403933541,
         "importance_rank": 4,
         "role": "secondary",
         "preserve_score": 0.8,
@@ -178,7 +178,7 @@
         "polygon": [],
         "mask_path": null,
         "cutout_path": null,
-        "confidence": 0.9952771831162066,
+        "confidence": 0.9956567128422873,
         "importance_rank": 5,
         "role": "supporting",
         "preserve_score": 0.8,
@@ -514,7 +514,7 @@
     ],
     "attention_competition_score": 0.98,
     "eye_flow_description": "Eye flows from elem_obj_person_d85547db to elem_obj_person_346b1fd8",
-    "negative_space_ratio": 0.11359372950091828,
+    "negative_space_ratio": 0.11360269358695219,
     "text_safe_areas": [],
     "visual_clutter_score": 0.6,
     "subject_separation_score": 0.4,
@@ -528,7 +528,7 @@
     "cropping_quality": 0.8,
     "balance": 0.9955700767302057,
     "symmetry_asymmetry": "symmetric",
-    "negative_space": 0.11359372950091828,
+    "negative_space": 0.11360269358695219,
     "depth_layers_count": 7,
     "camera_perspective": "medium_shot",
     "subject_background_separation": 0.4,
@@ -712,10 +712,10 @@
         "image_path": null,
         "mask_path": null,
         "bounding_region": {
-          "x_min": 0.019730615615844726,
-          "y_min": 0.04101901584201389,
-          "x_max": 0.4205596446990967,
-          "y_max": 0.9893115573459201
+          "x_min": 0.019754743576049803,
+          "y_min": 0.04110005696614583,
+          "x_max": 0.4205203056335449,
+          "y_max": 0.9893797132703993
         },
         "polygon": [],
         "depth_priority": 8,
@@ -737,10 +737,10 @@
         "image_path": null,
         "mask_path": null,
         "bounding_region": {
-          "x_min": 0.5532917976379395,
-          "y_min": 0.04581883748372396,
-          "x_max": 0.9940766334533692,
-          "y_max": 0.9898451063368056
+          "x_min": 0.5533102989196778,
+          "y_min": 0.04578196207682292,
+          "x_max": 0.9940834999084472,
+          "y_max": 0.9899610731336805
         },
         "polygon": [],
         "depth_priority": 9,
@@ -886,11 +886,11 @@
     "elements_to_preserve": [
       "Emotional impact through faces and expressions",
       "Rule of thirds composition",
-      "Clear text for visual storytelling"
+      "Clear and motivational text"
     ],
-    "duration_seconds": 12.668715699997847
+    "duration_seconds": 20.942831799999112
   },
   "status": "success",
   "error_message": null,
-  "analyzed_at": "2026-08-06T17:16:54.679666+00:00"
+  "analyzed_at": "2026-08-08T07:18:00.126620+00:00"
 }

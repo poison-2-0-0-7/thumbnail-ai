@@ -14,7 +14,7 @@
   "warm_or_cool": "warm",
   "color_harmony_score": 0.6098107899296605,
   "subject_placement": "left-third",
-  "negative_space_ratio": 0.589932849335793,
+  "negative_space_ratio": 0.5899073301320811,
   "balance_score": 0.8407626545870297,
   "symmetry_score": 0.7561776638031006,
   "face_scale_ratio": 0.010165487968861278,
@@ -25,5 +25,5 @@
     "refrigerator",
     "bowl"
   ],
-  "extracted_at": "2026-08-06T17:14:47.293736+00:00"
+  "extracted_at": "2026-08-08T07:16:14.012419+00:00"
 }

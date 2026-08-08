@@ -39,7 +39,7 @@
     "rationale": "Existing OCR text is preserved as placement-only guidance."
   },
   "layout_direction": {
-    "target_negative_space_ratio": 0.589932849335793,
+    "target_negative_space_ratio": 0.5899073301320811,
     "target_clutter_score": 0.7,
     "focal_zone": {
       "x_min": 0.23107120990753174,
@@ -99,6 +99,6 @@
   "source_content_mismatch_detected": false,
   "status": "success",
   "error_message": null,
-  "duration_seconds": 0.00009590000263415277,
-  "generated_at": "2026-08-06T17:14:47.450210+00:00"
+  "duration_seconds": 0.00012589999823831022,
+  "generated_at": "2026-08-08T07:16:14.155988+00:00"
 }

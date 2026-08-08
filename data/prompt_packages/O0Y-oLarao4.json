@@ -1,6 +1,6 @@
 {
   "video_id": "O0Y-oLarao4",
-  "positive_prompt": "No primary subject was specified; compose the thumbnail without inventing a dominant foreground figure. Maintain approximately 25% negative space in the background. Keep the background moderately simple with limited competing elements. Anchor the composition's focal point in the right of the frame, targeting a clutter score of 0.40 and a negative-space ratio of 0.25. Use balanced lighting with a moderate-contrast look (target brightness=0.46, target contrast=0.42). Render muted, desaturated colors with a warm color temperature (target saturation=0.38). Render text overlay: 'The Truth About Bold text for clarity' on the thumbnail. Reserve the designated text placement region for the headline overlay. Preserve: elem_obj_person_e8e1a3d1, elem_text_ocr_text_8dc21bca, elem_text_ocr_text_ee1cb2cd.",
+  "positive_prompt": "No primary subject was specified; compose the thumbnail without inventing a dominant foreground figure. Maintain approximately 25% negative space in the background. Keep the background moderately simple with limited competing elements. Anchor the composition's focal point in the right of the frame, targeting a clutter score of 0.40 and a negative-space ratio of 0.25. Use balanced lighting with a moderate-contrast look (target brightness=0.46, target contrast=0.42). Render muted, desaturated colors with a warm color temperature (target saturation=0.38). Render text overlay: 'The Truth About Bold text for clarity' on the thumbnail. Reserve the designated text placement region for the headline overlay. Preserve: elem_obj_person_11dc88cb, elem_text_ocr_text_8dc21bca, elem_text_ocr_text_ee1cb2cd.",
   "negative_prompt": "blurry, low resolution, watermark, distorted anatomy, extra limbs, text artifacts, jpeg compression artifacts",
   "subject_instructions": "No primary subject was specified; compose the thumbnail without inventing a dominant foreground figure.",
   "background_instructions": "Maintain approximately 25% negative space in the background. Keep the background moderately simple with limited competing elements.",
@@ -49,6 +49,6 @@
   },
   "status": "success",
   "error_message": null,
-  "duration_seconds": 0.00006539999594679102,
-  "generated_at": "2026-08-06T17:29:21.442736+00:00"
+  "duration_seconds": 0.0010412999981781468,
+  "generated_at": "2026-08-08T07:25:48.331329+00:00"
 }

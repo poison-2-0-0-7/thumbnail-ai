@@ -16,7 +16,7 @@
         "denoise=1.0"
       ],
       "related_artifacts": [],
-      "evaluation_timestamp": "2026-08-07T22:48:59.306111+00:00",
+      "evaluation_timestamp": "2026-08-07T23:33:35.949040+00:00",
       "rule_version": "1.0.0"
     }
   ],
@@ -27,10 +27,10 @@
   "top_root_causes": [
     "Renderer initialized latent space using EmptyLatentImage (noise) rather than VAE encoding a source image."
   ],
-  "generated_from_trace_hash": "910aaf25749596b47ca569e1f974776c2ff73d08643b09b16c276b2c6e0b78e5",
+  "generated_from_trace_hash": "1332dd9b460b385c9c185633c3fa090aaf44fae8d79ee14f82af04c4a0360a49",
   "engine_version": "1.0.0",
   "status": "error",
-  "generated_at": "2026-08-07T22:48:59.306276+00:00",
+  "generated_at": "2026-08-07T23:33:35.949196+00:00",
   "evidence_summary": {
     "total_findings": 1,
     "total_evidence_items": 0,

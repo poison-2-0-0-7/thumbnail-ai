@@ -25,9 +25,9 @@
         "face_quality_score": 0.9844003346263153,
         "composition_score": 0.9703137456281874,
         "text_safe_zone_score": 0.6101783710490367,
-        "object_preservation_score": 1.0,
+        "object_preservation_score": 0.853243408203125,
         "color_compliance_score": 0.8722752174780142,
-        "overall_score": 0.9219613894433324,
+        "overall_score": 0.8999479006738011,
         "hard_gate_passed": true
       },
       "face_match": {
@@ -39,28 +39,28 @@
       },
       "candidate_score": {
         "candidate_index": 0,
-        "overall_score": 0.751,
+        "overall_score": 0.7435,
         "identity_similarity": 1.0,
         "hard_gate_passed": true,
         "rank": 1,
         "selected": true
       },
       "stage_durations_seconds": {
-        "comfyui_generate": 0.15334440000151517,
-        "identity_preservation": 0.003697300002386328,
-        "staged_region_edits": 6.999980541877449e-7,
-        "masked_composite": 0.08881209999526618,
-        "typography": 0.054727599999750964,
-        "harmonization": 0.09675579999748152,
-        "face_restoration": 0.07265349999943282,
-        "background_composition": 0.06067559999792138,
-        "upscale": 0.21400759999960428,
-        "quality_assurance": 0.1972533999942243
+        "comfyui_generate": 56.90213839999342,
+        "identity_preservation": 0.01011859999562148,
+        "staged_region_edits": 0.00014069999451749027,
+        "masked_composite": 0.15813530000741594,
+        "typography": 0.09786590001021978,
+        "harmonization": 0.1123348000110127,
+        "face_restoration": 0.07501549999869894,
+        "background_composition": 0.05315629999677185,
+        "upscale": 0.21358619999955408,
+        "quality_assurance": 1.0600207000097726
       },
       "output_path": "D:\\Afsar\\app development\\thumbnail-ai\\data\\generated_thumbnails\\vIWkN-2J0ic\\tmp_candidates\\cand_0_final.png"
     }
   ],
   "winning_candidate_index": 0,
   "strategy_pack_name": null,
-  "generated_at": "2026-08-06T17:36:59.651384+00:00"
+  "generated_at": "2026-08-08T07:34:28.362704+00:00"
 }

@@ -1,10 +1,10 @@
 {
   "video_id": "eWzsmjA1vOo",
-  "positive_prompt": "Place the primary subject in the left of the frame, matching the source position label 'left-third'. Crop tighter around the subject so it occupies a larger share of the frame. Maintain approximately 59% negative space in the background. Background detail is acceptable within the configured clutter target. Anchor the composition's focal point in the left of the frame, targeting a clutter score of 0.70 and a negative-space ratio of 0.59. Use moody, low-key lighting with a high-contrast look (target brightness=0.37, target contrast=0.66). Render muted, desaturated colors with a warm color temperature (target saturation=0.36). Render text overlay: 'How to Master Warm color palette Fast' on the thumbnail. Reserve the designated text placement region for the headline overlay. Preserve: elem_face_person_face_c942cf4b, elem_text_ocr_text_8b393d55, elem_text_ocr_text_c1df5bf0, elem_text_ocr_text_90ea5449, elem_text_ocr_text_e53e9ca2.",
+  "positive_prompt": "Place the primary subject in the left of the frame, matching the source position label 'left-third'. Crop tighter around the subject so it occupies a larger share of the frame. Maintain approximately 59% negative space in the background. Background detail is acceptable within the configured clutter target. Anchor the composition's focal point in the left of the frame, targeting a clutter score of 0.70 and a negative-space ratio of 0.59. Use moody, low-key lighting with a high-contrast look (target brightness=0.37, target contrast=0.66). Render muted, desaturated colors with a warm color temperature (target saturation=0.36). Render text overlay: 'How to Master Dynamic emotional expressions Fast' on the thumbnail. Reserve the designated text placement region for the headline overlay. Preserve: elem_face_person_face_c942cf4b, elem_text_ocr_text_8b393d55, elem_text_ocr_text_c1df5bf0, elem_text_ocr_text_90ea5449, elem_text_ocr_text_e53e9ca2.",
   "negative_prompt": "blurry, low resolution, watermark, distorted anatomy, extra limbs, text artifacts, jpeg compression artifacts, no person, no person, no person, no person, no refrigerator, no bowl, no bowl",
   "subject_instructions": "Place the primary subject in the left of the frame, matching the source position label 'left-third'. Crop tighter around the subject so it occupies a larger share of the frame.",
   "background_instructions": "Maintain approximately 59% negative space in the background. Background detail is acceptable within the configured clutter target.",
-  "typography_instructions": "Render text overlay: 'How to Master Warm color palette Fast' on the thumbnail. Reserve the designated text placement region for the headline overlay.",
+  "typography_instructions": "Render text overlay: 'How to Master Dynamic emotional expressions Fast' on the thumbnail. Reserve the designated text placement region for the headline overlay.",
   "composition_instructions": "Anchor the composition's focal point in the left of the frame, targeting a clutter score of 0.70 and a negative-space ratio of 0.59.",
   "lighting_instructions": "Use moody, low-key lighting with a high-contrast look (target brightness=0.37, target contrast=0.66).",
   "color_instructions": "Render muted, desaturated colors with a warm color temperature (target saturation=0.36).",
@@ -54,6 +54,6 @@
   },
   "status": "success",
   "error_message": null,
-  "duration_seconds": 0.00007130000449251384,
-  "generated_at": "2026-08-06T17:14:47.470747+00:00"
+  "duration_seconds": 0.00007609999738633633,
+  "generated_at": "2026-08-08T07:16:14.176869+00:00"
 }

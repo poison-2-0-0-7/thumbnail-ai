@@ -157,7 +157,7 @@
     "background"
   ],
   "branding_constraints": [
-    "elem_obj_person_e8e1a3d1",
+    "elem_obj_person_11dc88cb",
     "elem_text_ocr_text_8dc21bca",
     "elem_text_ocr_text_ee1cb2cd",
     "Do not reproduce copyrighted characters, logos, or branded imagery."
@@ -168,6 +168,6 @@
     "No face detected in source thumbnail; defaulted face_strategy to neutral."
   ],
   "error_message": null,
-  "duration_seconds": 0.0003,
-  "generated_at": "2026-08-06T17:29:21.431325+00:00"
+  "duration_seconds": 0.0085,
+  "generated_at": "2026-08-08T07:25:48.313151+00:00"
 }

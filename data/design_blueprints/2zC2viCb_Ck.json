@@ -1,117 +1,117 @@
 {
   "video_id": "2zC2viCb_Ck",
-  "headline": "How to Master Positive expressions Fast",
+  "headline": "How to Master Happy expressions Fast",
   "headline_variants": [
     {
-      "text": "How to Master Positive expressions Fast",
+      "text": "How to Master Happy expressions Fast",
       "template_id": "benefit_01",
       "curiosity_score": 0.35,
       "emotional_impact_score": 0.9,
       "readability_score": 1.0,
-      "ctr_potential_score": 0.944,
-      "character_count": 39,
+      "ctr_potential_score": 0.914,
+      "character_count": 36,
       "mobile_readability_score": 1.0,
       "brand_consistency_score": 1.0,
-      "composite_score": 0.8063
+      "composite_score": 0.8003
     },
     {
-      "text": "The Secret Behind Positive expressions",
+      "text": "The Secret Behind Happy expressions",
       "template_id": "curiosity_01",
       "curiosity_score": 0.35,
       "emotional_impact_score": 0.8,
-      "readability_score": 0.952,
-      "ctr_potential_score": 0.936,
-      "character_count": 38,
+      "readability_score": 0.988,
+      "ctr_potential_score": 0.906,
+      "character_count": 35,
       "mobile_readability_score": 1.0,
       "brand_consistency_score": 1.0,
-      "composite_score": 0.7775
+      "composite_score": 0.7769
     },
     {
-      "text": "Why Positive expressions Changes Everything",
+      "text": "Why Happy expressions Changes Everything",
       "template_id": "curiosity_02",
       "curiosity_score": 0.35,
       "emotional_impact_score": 0.8,
-      "readability_score": 0.892,
-      "ctr_potential_score": 0.921,
-      "character_count": 43,
-      "mobile_readability_score": 0.85,
-      "brand_consistency_score": 1.0,
-      "composite_score": 0.7505
-    },
-    {
-      "text": "I Tried Positive expressions For 30 Days",
-      "template_id": "shock_01",
-      "curiosity_score": 0.15,
-      "emotional_impact_score": 0.8,
-      "readability_score": 1.0,
-      "ctr_potential_score": 0.912,
+      "readability_score": 0.928,
+      "ctr_potential_score": 0.906,
       "character_count": 40,
       "mobile_readability_score": 1.0,
       "brand_consistency_score": 1.0,
-      "composite_score": 0.7299
+      "composite_score": 0.7679
     },
     {
-      "text": "Don't Do Positive expressions Until You Watch This",
+      "text": "Don't Do Happy expressions Until You Watch This",
       "template_id": "shock_02",
       "curiosity_score": 0.35,
       "emotional_impact_score": 0.8,
       "readability_score": 1.0,
-      "ctr_potential_score": 0.886,
-      "character_count": 50,
-      "mobile_readability_score": 0.5,
+      "ctr_potential_score": 0.871,
+      "character_count": 47,
+      "mobile_readability_score": 0.65,
       "brand_consistency_score": 1.0,
-      "composite_score": 0.7247
+      "composite_score": 0.7367
     },
     {
-      "text": "The Ultimate Positive expressions Blueprint",
+      "text": "I Tried Happy expressions For 30 Days",
+      "template_id": "shock_01",
+      "curiosity_score": 0.15,
+      "emotional_impact_score": 0.8,
+      "readability_score": 1.0,
+      "ctr_potential_score": 0.882,
+      "character_count": 37,
+      "mobile_readability_score": 1.0,
+      "brand_consistency_score": 1.0,
+      "composite_score": 0.7239
+    },
+    {
+      "text": "The Ultimate Happy expressions Blueprint",
       "template_id": "benefit_02",
       "curiosity_score": 0.0,
       "emotional_impact_score": 0.9,
-      "readability_score": 0.892,
-      "ctr_potential_score": 0.887,
-      "character_count": 43,
-      "mobile_readability_score": 0.85,
+      "readability_score": 0.928,
+      "ctr_potential_score": 0.872,
+      "character_count": 40,
+      "mobile_readability_score": 1.0,
       "brand_consistency_score": 1.0,
-      "composite_score": 0.6762
+      "composite_score": 0.6936
     },
     {
-      "text": "The Positive expressions Nobody Talks About",
+      "text": "The Happy expressions Nobody Talks About",
       "template_id": "curiosity_03",
       "curiosity_score": 0.0,
       "emotional_impact_score": 0.8,
-      "readability_score": 0.98,
-      "ctr_potential_score": 0.879,
-      "character_count": 43,
-      "mobile_readability_score": 0.85,
+      "readability_score": 1.0,
+      "ctr_potential_score": 0.864,
+      "character_count": 40,
+      "mobile_readability_score": 1.0,
       "brand_consistency_score": 1.0,
-      "composite_score": 0.6678
+      "composite_score": 0.6828
     },
     {
-      "text": "Double Your Results With Positive expressions",
+      "text": "Double Your Results With Happy expressions",
       "template_id": "benefit_03",
       "curiosity_score": 0.0,
       "emotional_impact_score": 0.8,
-      "readability_score": 0.96,
-      "ctr_potential_score": 0.869,
-      "character_count": 45,
-      "mobile_readability_score": 0.75,
+      "readability_score": 0.99,
+      "ctr_potential_score": 0.854,
+      "character_count": 42,
+      "mobile_readability_score": 0.9,
       "brand_consistency_score": 1.0,
-      "composite_score": 0.6528
+      "composite_score": 0.6693
     },
     {
-      "text": "Positive expressions Is Broken",
+      "text": "Happy expressions Is Broken",
       "template_id": "shock_03",
       "curiosity_score": 0.0,
       "emotional_impact_score": 0.6,
-      "readability_score": 0.955,
-      "ctr_potential_score": 0.878,
-      "character_count": 30,
+      "readability_score": 1.0,
+      "ctr_potential_score": 0.848,
+      "character_count": 27,
       "mobile_readability_score": 1.0,
       "brand_consistency_score": 1.0,
-      "composite_score": 0.6388
+      "composite_score": 0.6396
     }
   ],
-  "headline_score": 0.8063,
+  "headline_score": 0.8003,
   "hook_type": "benefit",
   "emotion": "high",
   "face_strategy": "preserve",
@@ -190,6 +190,6 @@
   "status": "success",
   "partial_failure_reasons": [],
   "error_message": null,
-  "duration_seconds": 0.0004,
-  "generated_at": "2026-08-06T17:22:56.604869+00:00"
+  "duration_seconds": 0.0055,
+  "generated_at": "2026-08-08T07:21:30.424183+00:00"
 }

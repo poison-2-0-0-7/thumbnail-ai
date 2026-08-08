@@ -170,6 +170,6 @@
   "status": "success",
   "partial_failure_reasons": [],
   "error_message": null,
-  "duration_seconds": 0.0003,
-  "generated_at": "2026-08-06T17:19:12.995550+00:00"
+  "duration_seconds": 0.0054,
+  "generated_at": "2026-08-08T07:19:40.653528+00:00"
 }

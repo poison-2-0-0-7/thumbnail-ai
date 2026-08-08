@@ -4,21 +4,21 @@
   "scene_graph": {
     "elements": [
       {
-        "element_id": "elem_obj_person_e8e1a3d1",
+        "element_id": "elem_obj_person_11dc88cb",
         "element_type": "person",
         "category": "person",
         "label": "Person (2)",
         "semantic_description": "Detected person with confidence 0.54",
         "bbox": {
-          "x_min": 0.006478691101074218,
-          "y_min": 0.004897477891710069,
-          "x_max": 0.9714803695678711,
-          "y_max": 0.98458251953125
+          "x_min": 0.006578254699707031,
+          "y_min": 0.004985894097222222,
+          "x_max": 0.9716215133666992,
+          "y_max": 0.9846089680989584
         },
         "polygon": [],
         "mask_path": null,
         "cutout_path": null,
-        "confidence": 0.5397481918334961,
+        "confidence": 0.5392521619796753,
         "importance_rank": 1,
         "role": "hero",
         "preserve_score": 0.7,
@@ -50,15 +50,15 @@
         "label": "Person (1)",
         "semantic_description": "Detected person with confidence 0.67",
         "bbox": {
-          "x_min": 0.5083493232727051,
-          "y_min": 0.004598405626085069,
-          "x_max": 0.9874322891235352,
-          "y_max": 0.9751436869303386
+          "x_min": 0.508262825012207,
+          "y_min": 0.004575771755642361,
+          "x_max": 0.9874631881713867,
+          "y_max": 0.9750248379177517
         },
         "polygon": [],
         "mask_path": null,
         "cutout_path": null,
-        "confidence": 0.6706131100654602,
+        "confidence": 0.6697883009910583,
         "importance_rank": 2,
         "role": "primary",
         "preserve_score": 0.7,
@@ -98,7 +98,7 @@
         "polygon": [],
         "mask_path": null,
         "cutout_path": null,
-        "confidence": 0.695525004494418,
+        "confidence": 0.7016427090411939,
         "importance_rank": 3,
         "role": "secondary",
         "preserve_score": 0.8,
@@ -138,7 +138,7 @@
         "polygon": [],
         "mask_path": null,
         "cutout_path": null,
-        "confidence": 0.7160707466114934,
+        "confidence": 0.722168445580304,
         "importance_rank": 4,
         "role": "secondary",
         "preserve_score": 0.8,
@@ -206,7 +206,7 @@
     ],
     "relationships": [
       {
-        "subject_element_id": "elem_obj_person_e8e1a3d1",
+        "subject_element_id": "elem_obj_person_11dc88cb",
         "relation": "in_front_of",
         "object_element_id": "elem_bg_plate_00",
         "confidence": 1.0,
@@ -240,13 +240,13 @@
       {
         "subject_element_id": "elem_obj_person_f27aba90",
         "relation": "inside",
-        "object_element_id": "elem_obj_person_e8e1a3d1",
+        "object_element_id": "elem_obj_person_11dc88cb",
         "confidence": 0.97,
         "spatial_direction": "contained",
         "provenance": "deterministic_spatial_engine"
       },
       {
-        "subject_element_id": "elem_obj_person_e8e1a3d1",
+        "subject_element_id": "elem_obj_person_11dc88cb",
         "relation": "left_of",
         "object_element_id": "elem_obj_person_f27aba90",
         "confidence": 0.95,
@@ -256,7 +256,7 @@
       {
         "subject_element_id": "elem_text_ocr_text_8dc21bca",
         "relation": "inside",
-        "object_element_id": "elem_obj_person_e8e1a3d1",
+        "object_element_id": "elem_obj_person_11dc88cb",
         "confidence": 1.0,
         "spatial_direction": "contained",
         "provenance": "deterministic_spatial_engine"
@@ -264,13 +264,13 @@
       {
         "subject_element_id": "elem_text_ocr_text_8dc21bca",
         "relation": "text_relative_to",
-        "object_element_id": "elem_obj_person_e8e1a3d1",
+        "object_element_id": "elem_obj_person_11dc88cb",
         "confidence": 0.9,
         "spatial_direction": "overlapping",
         "provenance": "text_spatial_engine"
       },
       {
-        "subject_element_id": "elem_obj_person_e8e1a3d1",
+        "subject_element_id": "elem_obj_person_11dc88cb",
         "relation": "above",
         "object_element_id": "elem_text_ocr_text_8dc21bca",
         "confidence": 0.95,
@@ -280,7 +280,7 @@
       {
         "subject_element_id": "elem_text_ocr_text_ee1cb2cd",
         "relation": "inside",
-        "object_element_id": "elem_obj_person_e8e1a3d1",
+        "object_element_id": "elem_obj_person_11dc88cb",
         "confidence": 1.0,
         "spatial_direction": "contained",
         "provenance": "deterministic_spatial_engine"
@@ -288,13 +288,13 @@
       {
         "subject_element_id": "elem_text_ocr_text_ee1cb2cd",
         "relation": "text_relative_to",
-        "object_element_id": "elem_obj_person_e8e1a3d1",
+        "object_element_id": "elem_obj_person_11dc88cb",
         "confidence": 0.9,
         "spatial_direction": "overlapping",
         "provenance": "text_spatial_engine"
       },
       {
-        "subject_element_id": "elem_obj_person_e8e1a3d1",
+        "subject_element_id": "elem_obj_person_11dc88cb",
         "relation": "above",
         "object_element_id": "elem_text_ocr_text_ee1cb2cd",
         "confidence": 0.95,
@@ -342,9 +342,9 @@
         "provenance": "deterministic_spatial_engine"
       }
     ],
-    "hero_element_id": "elem_obj_person_e8e1a3d1",
+    "hero_element_id": "elem_obj_person_11dc88cb",
     "primary_subject_ids": [
-      "elem_obj_person_e8e1a3d1",
+      "elem_obj_person_11dc88cb",
       "elem_obj_person_f27aba90"
     ],
     "secondary_subject_ids": [
@@ -354,20 +354,20 @@
   },
   "hierarchy": {
     "reading_order": [
-      "elem_obj_person_e8e1a3d1",
+      "elem_obj_person_11dc88cb",
       "elem_obj_person_f27aba90",
       "elem_text_ocr_text_8dc21bca",
       "elem_text_ocr_text_ee1cb2cd"
     ],
-    "first_attention_target": "elem_obj_person_e8e1a3d1",
+    "first_attention_target": "elem_obj_person_11dc88cb",
     "second_attention_target": "elem_obj_person_f27aba90",
-    "dominant_subject_id": "elem_obj_person_e8e1a3d1",
+    "dominant_subject_id": "elem_obj_person_11dc88cb",
     "visual_anchors": [
-      "elem_obj_person_e8e1a3d1",
+      "elem_obj_person_11dc88cb",
       "elem_obj_person_f27aba90"
     ],
     "attention_competition_score": 0.96,
-    "eye_flow_description": "Eye flows from elem_obj_person_e8e1a3d1 to elem_obj_person_f27aba90",
+    "eye_flow_description": "Eye flows from elem_obj_person_11dc88cb to elem_obj_person_f27aba90",
     "negative_space_ratio": 0.0,
     "text_safe_areas": [],
     "visual_clutter_score": 0.4,
@@ -377,7 +377,7 @@
     "hierarchy_basis": "size_face_text_position_scoring"
   },
   "composition": {
-    "rule_of_thirds_score": 0.6472881265585848,
+    "rule_of_thirds_score": 0.647439317060613,
     "subject_placement": "right-third",
     "cropping_quality": 0.8,
     "balance": 0.8685103061935886,
@@ -393,11 +393,11 @@
   },
   "psychology": {
     "ctr_potential_score": 0.85,
-    "curiosity_gap_score": 0.78,
+    "curiosity_gap_score": 0.75,
     "drivers": [
       {
         "driver": "curiosity",
-        "strength": 0.78,
+        "strength": 0.75,
         "confidence": 0.85,
         "supporting_evidence": "Headline/visual composition creates an unresolved question",
         "potential_improvement": "Tighten copy and increase focal subject contrast",
@@ -413,7 +413,7 @@
         "supporting_evidence": "Thumbnail contains 5 grounded elements telling the narrative",
         "potential_improvement": "Eliminate non-essential background clutter",
         "associated_element_ids": [
-          "elem_obj_person_e8e1a3d1",
+          "elem_obj_person_11dc88cb",
           "elem_obj_person_f27aba90"
         ]
       }
@@ -430,7 +430,7 @@
         "confidence": 0.85,
         "evidence": "Low focal strength score (0.04); visual attention is split",
         "affected_element_ids": [
-          "elem_obj_person_e8e1a3d1",
+          "elem_obj_person_11dc88cb",
           "elem_obj_person_f27aba90"
         ],
         "recommended_correction": "Enlarge primary hero subject and increase local contrast against background"
@@ -481,8 +481,8 @@
         "depth_priority": 6,
         "relationships": [
           "elem_bg_plate_00",
-          "elem_obj_person_e8e1a3d1",
-          "elem_obj_person_e8e1a3d1",
+          "elem_obj_person_11dc88cb",
+          "elem_obj_person_11dc88cb",
           "elem_obj_person_f27aba90"
         ],
         "preservation_requirement": "preserve_if_possible",
@@ -505,8 +505,8 @@
         "depth_priority": 7,
         "relationships": [
           "elem_bg_plate_00",
-          "elem_obj_person_e8e1a3d1",
-          "elem_obj_person_e8e1a3d1",
+          "elem_obj_person_11dc88cb",
+          "elem_obj_person_11dc88cb",
           "elem_obj_person_f27aba90",
           "elem_text_ocr_text_ee1cb2cd"
         ],
@@ -521,16 +521,16 @@
         "image_path": null,
         "mask_path": null,
         "bounding_region": {
-          "x_min": 0.5083493232727051,
-          "y_min": 0.004598405626085069,
-          "x_max": 0.9874322891235352,
-          "y_max": 0.9751436869303386
+          "x_min": 0.508262825012207,
+          "y_min": 0.004575771755642361,
+          "x_max": 0.9874631881713867,
+          "y_max": 0.9750248379177517
         },
         "polygon": [],
         "depth_priority": 8,
         "relationships": [
           "elem_bg_plate_00",
-          "elem_obj_person_e8e1a3d1",
+          "elem_obj_person_11dc88cb",
           "elem_text_ocr_text_8dc21bca",
           "elem_text_ocr_text_ee1cb2cd"
         ],
@@ -539,16 +539,16 @@
         "source_provenance": "yolo_grounding_dino"
       },
       {
-        "layer_id": "layer_elem_obj_person_e8e1a3d1",
+        "layer_id": "layer_elem_obj_person_11dc88cb",
         "category": "primary_subject",
-        "element_ref_id": "elem_obj_person_e8e1a3d1",
+        "element_ref_id": "elem_obj_person_11dc88cb",
         "image_path": null,
         "mask_path": null,
         "bounding_region": {
-          "x_min": 0.006478691101074218,
-          "y_min": 0.004897477891710069,
-          "x_max": 0.9714803695678711,
-          "y_max": 0.98458251953125
+          "x_min": 0.006578254699707031,
+          "y_min": 0.004985894097222222,
+          "x_max": 0.9716215133666992,
+          "y_max": 0.9846089680989584
         },
         "polygon": [],
         "depth_priority": 9,
@@ -571,7 +571,7 @@
     "creative_direction": "Redesign thumbnail for video by preserving creator identity (3 elements), replacing background clutter (1 elements), and focusing visual hierarchy.",
     "story_analysis": "Thumbnail leverages 2 active click drivers with estimated CTR potential 0.85",
     "elements_to_keep": [
-      "elem_obj_person_e8e1a3d1",
+      "elem_obj_person_11dc88cb",
       "elem_text_ocr_text_8dc21bca",
       "elem_text_ocr_text_ee1cb2cd"
     ],
@@ -582,9 +582,9 @@
       "elem_bg_plate_00"
     ],
     "elements_to_emphasize": [
-      "elem_obj_person_e8e1a3d1"
+      "elem_obj_person_11dc88cb"
     ],
-    "composition_strategy": "Dominant subject 'elem_obj_person_e8e1a3d1' with clean high-contrast backdrop",
+    "composition_strategy": "Dominant subject 'elem_obj_person_11dc88cb' with clean high-contrast backdrop",
     "redesign_aggressiveness": "moderate",
     "expected_ctr_improvement": "+52.0% estimated CTR potential gain"
   },
@@ -593,7 +593,7 @@
       {
         "action_id": "act_01_preserve_hero",
         "action": "keep",
-        "target_element_id": "elem_obj_person_e8e1a3d1",
+        "target_element_id": "elem_obj_person_11dc88cb",
         "reason": "Preserve creator face identity 'Person (2)' as main emotional hook",
         "priority": 1,
         "confidence": 0.95,
@@ -686,7 +686,7 @@
   },
   "legacy_reasoning": {
     "ctr_potential_score": 0.85,
-    "curiosity_gap_score": 0.78,
+    "curiosity_gap_score": 0.75,
     "emotional_impact": "High",
     "visual_storytelling_notes": "The thumbnail effectively communicates the main topic of building a V-taper at home with a clear and bold text overlay. The warm color palette and composition elements contribute to a visually appealing and inviting thumbnail.",
     "content_mismatch_detected": false,
@@ -708,9 +708,9 @@
       "Bold text for clarity",
       "Warm color palette for visual appeal"
     ],
-    "duration_seconds": 13.063991800001531
+    "duration_seconds": 17.046218799994676
   },
   "status": "success",
   "error_message": null,
-  "analyzed_at": "2026-08-06T17:29:21.413509+00:00"
+  "analyzed_at": "2026-08-08T07:25:48.276080+00:00"
 }

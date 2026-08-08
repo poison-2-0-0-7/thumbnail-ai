@@ -145,6 +145,19 @@ class RendererV2Adapter(BaseRendererAdapter):
     def __init__(self) -> None:
         super().__init__(target_renderer_id="RendererV2")
 
+    def render(
+        self,
+        composition: SpatialComposition,
+        plan: ExecutionPlan,
+        output_path: Optional[str] = None,
+        context_overrides: Optional[Dict[str, Any]] = None,
+    ) -> Any:
+        """Translate SpatialComposition + ExecutionPlan and render final thumbnail end-to-end via RendererV2Pipeline."""
+        from renderer_v2.pipeline import RendererV2Pipeline
+
+        pipeline = RendererV2Pipeline()
+        return pipeline.render(composition, plan, output_path=output_path, context_overrides=context_overrides)
+
     def translate(
         self,
         composition: SpatialComposition,

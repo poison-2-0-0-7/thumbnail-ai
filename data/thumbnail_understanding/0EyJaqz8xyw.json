@@ -10,15 +10,15 @@
         "label": "Car (1)",
         "semantic_description": "Detected car with confidence 0.68",
         "bbox": {
-          "x_min": 0.37150576114654543,
-          "y_min": 0.3047981262207031,
-          "x_max": 0.8448280334472656,
-          "y_max": 0.8275466918945312
+          "x_min": 0.37153987884521483,
+          "y_min": 0.3047924465603299,
+          "x_max": 0.8448003768920899,
+          "y_max": 0.8275396558973525
         },
         "polygon": [],
         "mask_path": null,
         "cutout_path": null,
-        "confidence": 0.6764846444129944,
+        "confidence": 0.6761677265167236,
         "importance_rank": 1,
         "role": "primary",
         "preserve_score": 0.4,
@@ -50,15 +50,15 @@
         "label": "Car (4)",
         "semantic_description": "Detected car with confidence 0.41",
         "bbox": {
-          "x_min": 0.021368408203125,
-          "y_min": 0.3009261237250434,
-          "x_max": 0.433651065826416,
-          "y_max": 0.6254153781467013
+          "x_min": 0.021376657485961913,
+          "y_min": 0.3009355968899197,
+          "x_max": 0.43360204696655275,
+          "y_max": 0.6253708733452691
         },
         "polygon": [],
         "mask_path": null,
         "cutout_path": null,
-        "confidence": 0.40862783789634705,
+        "confidence": 0.4100190997123718,
         "importance_rank": 2,
         "role": "secondary",
         "preserve_score": 0.4,
@@ -90,15 +90,15 @@
         "label": "Car (2)",
         "semantic_description": "Detected car with confidence 0.61",
         "bbox": {
-          "x_min": 0.6303674697875976,
-          "y_min": 0.031081951989067925,
-          "x_max": 0.695126724243164,
-          "y_max": 0.11534174813164605
+          "x_min": 0.630376148223877,
+          "y_min": 0.031079689661661785,
+          "x_max": 0.6951323509216308,
+          "y_max": 0.11535377502441406
         },
         "polygon": [],
         "mask_path": null,
         "cutout_path": null,
-        "confidence": 0.6144219636917114,
+        "confidence": 0.6148378849029541,
         "importance_rank": 3,
         "role": "secondary",
         "preserve_score": 0.4,
@@ -128,17 +128,17 @@
         "element_type": "prop",
         "category": "car",
         "label": "Car (3)",
-        "semantic_description": "Detected car with confidence 0.53",
+        "semantic_description": "Detected car with confidence 0.54",
         "bbox": {
-          "x_min": 0.5614737033843994,
-          "y_min": 0.038015789455837674,
-          "x_max": 0.6200233936309815,
-          "y_max": 0.12691574096679686
+          "x_min": 0.5614681243896484,
+          "y_min": 0.038011360168457034,
+          "x_max": 0.620023536682129,
+          "y_max": 0.126911989847819
         },
         "polygon": [],
         "mask_path": null,
         "cutout_path": null,
-        "confidence": 0.5344311594963074,
+        "confidence": 0.535427451133728,
         "importance_rank": 4,
         "role": "secondary",
         "preserve_score": 0.4,
@@ -312,7 +312,7 @@
     ],
     "attention_competition_score": 0.61,
     "eye_flow_description": "Eye flows from elem_obj_car_805db846 to elem_obj_car_2306ab55",
-    "negative_space_ratio": 0.6081285026674859,
+    "negative_space_ratio": 0.6082010543806428,
     "text_safe_areas": [],
     "visual_clutter_score": 0.4,
     "subject_separation_score": 0.6,
@@ -321,12 +321,12 @@
     "hierarchy_basis": "size_face_text_position_scoring"
   },
   "composition": {
-    "rule_of_thirds_score": 0.7674375883448985,
+    "rule_of_thirds_score": 0.7674298492520651,
     "subject_placement": "center",
     "cropping_quality": 0.8,
     "balance": 0.9345886847149576,
     "symmetry_asymmetry": "symmetric",
-    "negative_space": 0.6081285026674859,
+    "negative_space": 0.6082010543806428,
     "depth_layers_count": 5,
     "camera_perspective": "medium_shot",
     "subject_background_separation": 0.6,
@@ -390,10 +390,10 @@
         "image_path": null,
         "mask_path": null,
         "bounding_region": {
-          "x_min": 0.5614737033843994,
-          "y_min": 0.038015789455837674,
-          "x_max": 0.6200233936309815,
-          "y_max": 0.12691574096679686
+          "x_min": 0.5614681243896484,
+          "y_min": 0.038011360168457034,
+          "x_max": 0.620023536682129,
+          "y_max": 0.126911989847819
         },
         "polygon": [],
         "depth_priority": 6,
@@ -411,10 +411,10 @@
         "image_path": null,
         "mask_path": null,
         "bounding_region": {
-          "x_min": 0.6303674697875976,
-          "y_min": 0.031081951989067925,
-          "x_max": 0.695126724243164,
-          "y_max": 0.11534174813164605
+          "x_min": 0.630376148223877,
+          "y_min": 0.031079689661661785,
+          "x_max": 0.6951323509216308,
+          "y_max": 0.11535377502441406
         },
         "polygon": [],
         "depth_priority": 7,
@@ -433,10 +433,10 @@
         "image_path": null,
         "mask_path": null,
         "bounding_region": {
-          "x_min": 0.021368408203125,
-          "y_min": 0.3009261237250434,
-          "x_max": 0.433651065826416,
-          "y_max": 0.6254153781467013
+          "x_min": 0.021376657485961913,
+          "y_min": 0.3009355968899197,
+          "x_max": 0.43360204696655275,
+          "y_max": 0.6253708733452691
         },
         "polygon": [],
         "depth_priority": 8,
@@ -456,10 +456,10 @@
         "image_path": null,
         "mask_path": null,
         "bounding_region": {
-          "x_min": 0.37150576114654543,
-          "y_min": 0.3047981262207031,
-          "x_max": 0.8448280334472656,
-          "y_max": 0.8275466918945312
+          "x_min": 0.37153987884521483,
+          "y_min": 0.3047924465603299,
+          "x_max": 0.8448003768920899,
+          "y_max": 0.8275396558973525
         },
         "polygon": [],
         "depth_priority": 9,
@@ -561,30 +561,28 @@
     "ctr_potential_score": 0.75,
     "curiosity_gap_score": 0.65,
     "emotional_impact": "Moderate",
-    "visual_storytelling_notes": "The thumbnail effectively captures the essence of the video with multiple car objects and a warm color palette, suggesting a collision scenario. The composition is balanced and symmetrical, which can help in drawing attention to the central subject.",
+    "visual_storytelling_notes": "The thumbnail effectively captures the central element of the video, which is the car accident. The composition and color palette contribute to a neutral yet engaging visual that aligns with the content.",
     "content_mismatch_detected": false,
     "mismatch_explanation": null,
     "strengths": [
-      "Clear visual representation of the car collision",
-      "Warm color palette that adds visual appeal",
-      "Balanced and symmetrical composition"
+      "Clear representation of the car accident",
+      "Good use of composition and color harmony"
     ],
     "weaknesses": [
-      "Lack of text or labels to provide context",
-      "Limited use of negative space to emphasize the collision"
+      "Lack of text or human elements to add more context",
+      "Limited emotional engagement through visual elements"
     ],
     "redesign_recommendations": [
-      "Add subtle text or labels to highlight the collision event",
-      "Utilize negative space more effectively to draw attention to the central subject"
+      "Incorporate a human element to add emotional depth",
+      "Add text or symbols to highlight the accident or the neighbor's apology"
     ],
     "elements_to_preserve": [
-      "Warm color palette",
-      "Balanced composition",
-      "Multiple car objects"
+      "Car as the central subject",
+      "Warm color palette for a friendly tone"
     ],
-    "duration_seconds": 11.29574689999572
+    "duration_seconds": 13.493331599995145
   },
   "status": "success",
   "error_message": null,
-  "analyzed_at": "2026-08-06T17:27:52.778375+00:00"
+  "analyzed_at": "2026-08-08T07:24:19.760342+00:00"
 }

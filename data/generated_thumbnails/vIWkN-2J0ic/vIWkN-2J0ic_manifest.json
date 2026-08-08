@@ -11,8 +11,8 @@
   },
   "workflow_version": "workflow_v1",
   "workflow_hash": "c78d2c80c559a796524647e2f6275e96e17e553ea1e21ccbe5803c71b5b2d4c1",
-  "prompt_package_hash": "e2035b048f0648f961443b980a5427e3417db61d48c5fff924fae6b1532270a3",
-  "generation_hash": "fa7c768fb8ad4dba46d9237fdc6e5adf25faf804605e52c6e44d3d57bbb70f11",
+  "prompt_package_hash": "8c577fa089338028344016fec75e4cd7b59f0a2540ab1e7b8b6cf195cd2c954e",
+  "generation_hash": "fc68b78a66889f01a77b782d6ea8bbe5dbf9ac1a6e73d0173e7f74a7694b282c",
   "profile_name": "PROFILE_STANDARD_EDIT",
   "checkpoint_hash": null,
   "lora_hashes": [],
@@ -24,7 +24,7 @@
   "candidate_scores": [
     {
       "candidate_index": 0,
-      "overall_score": 0.751,
+      "overall_score": 0.7435,
       "identity_similarity": 1.0,
       "hard_gate_passed": true,
       "rank": 1,
@@ -34,17 +34,17 @@
   "selected_candidate_index": 0,
   "retry_count": 0,
   "stage_durations_seconds": {
-    "comfyui_generate": 0.15334440000151517,
-    "identity_preservation": 0.003697300002386328,
-    "staged_region_edits": 6.999980541877449e-7,
-    "masked_composite": 0.08881209999526618,
-    "typography": 0.054727599999750964,
-    "harmonization": 0.09675579999748152,
-    "face_restoration": 0.07265349999943282,
-    "background_composition": 0.06067559999792138,
-    "upscale": 0.21400759999960428,
-    "quality_assurance": 0.1972533999942243
+    "comfyui_generate": 56.90213839999342,
+    "identity_preservation": 0.01011859999562148,
+    "staged_region_edits": 0.00014069999451749027,
+    "masked_composite": 0.15813530000741594,
+    "typography": 0.09786590001021978,
+    "harmonization": 0.1123348000110127,
+    "face_restoration": 0.07501549999869894,
+    "background_composition": 0.05315629999677185,
+    "upscale": 0.21358619999955408,
+    "quality_assurance": 1.0600207000097726
   },
-  "duration_seconds": 1.2789598000017577,
-  "generated_at": "2026-08-06T17:36:59.645350+00:00"
+  "duration_seconds": 59.04228310000326,
+  "generated_at": "2026-08-08T07:34:28.352336+00:00"
 }

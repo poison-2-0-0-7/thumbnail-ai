@@ -1,10 +1,10 @@
 {
   "metadata": {
     "video_id": "O0Y-oLarao4",
-    "created_at": "2026-08-06T17:29:21.804062+00:00",
+    "created_at": "2026-08-08T07:25:48.550766+00:00",
     "vre_source_hash": "c7b650037eebe2b1a62c0c0a7f24ce2c1cbec13ac4b2be04a243dbe35aa9fff0",
-    "redesign_spec_hash": "fa489b33a2d9b483f602720d4ab97d2879e8b30792d5badd0a922f9b7057cd29",
-    "prompt_package_hash": "cae994b5cd02f736e4b25c70c56516e0e79ac4aea320fbcc5e1ec9565d955254",
+    "redesign_spec_hash": "cde38766276c54944597b44c93483905a9e5b18471d01607a9d466e641883da3",
+    "prompt_package_hash": "a7eca13dfb9db96e1a61b9ea661f2d3b557d75d6413b01803348de5158bc5dd3",
     "engine_version": "1.0.0"
   },
   "statistics": {

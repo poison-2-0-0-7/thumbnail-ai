@@ -27,7 +27,7 @@
     "rationale": "No existing OCR text was detected; no text is requested."
   },
   "layout_direction": {
-    "target_negative_space_ratio": 0.8258163412646354,
+    "target_negative_space_ratio": 0.8258182990644658,
     "target_clutter_score": 0.4,
     "focal_zone": {
       "x_min": 0.23319263458251954,
@@ -63,6 +63,6 @@
   "source_content_mismatch_detected": false,
   "status": "success",
   "error_message": null,
-  "duration_seconds": 0.00008289999823318794,
-  "generated_at": "2026-08-06T17:19:12.988709+00:00"
+  "duration_seconds": 0.002467800004524179,
+  "generated_at": "2026-08-08T07:19:40.639143+00:00"
 }

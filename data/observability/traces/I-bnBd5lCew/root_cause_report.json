@@ -16,7 +16,7 @@
         "denoise=1.0"
       ],
       "related_artifacts": [],
-      "evaluation_timestamp": "2026-08-06T17:18:54.944812+00:00",
+      "evaluation_timestamp": "2026-08-08T07:19:15.457354+00:00",
       "rule_version": "1.0.0"
     },
     {
@@ -34,7 +34,7 @@
         "edit_mask_paths_attached=0"
       ],
       "related_artifacts": [],
-      "evaluation_timestamp": "2026-08-06T17:18:54.944861+00:00",
+      "evaluation_timestamp": "2026-08-08T07:19:15.457634+00:00",
       "rule_version": "1.0.0"
     },
     {
@@ -53,7 +53,7 @@
         "denoise=1.0"
       ],
       "related_artifacts": [],
-      "evaluation_timestamp": "2026-08-06T17:18:54.944877+00:00",
+      "evaluation_timestamp": "2026-08-08T07:19:15.457764+00:00",
       "rule_version": "1.0.0"
     }
   ],
@@ -64,10 +64,10 @@
   "top_root_causes": [
     "Decision Engine requested background preservation/keep, but txt2img full-denoise pass regenerated the entire image."
   ],
-  "generated_from_trace_hash": "5a03134cd4dbc6065f08d12223e6ec7bd4e0d067ef0c7ac8f0ef58776bc8cdfe",
+  "generated_from_trace_hash": "5cf1117b751da1413661a04a03566092c8c0f3a5781f8165cd3f56dd1138e1f2",
   "engine_version": "1.0.0",
   "status": "partial",
-  "generated_at": "2026-08-06T17:18:54.944992+00:00",
+  "generated_at": "2026-08-08T07:19:15.458045+00:00",
   "evidence_summary": {
     "total_findings": 3,
     "total_evidence_items": 0,

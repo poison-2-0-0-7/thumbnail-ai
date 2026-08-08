@@ -27,7 +27,7 @@
     "rationale": "No existing OCR text was detected; no text is requested."
   },
   "layout_direction": {
-    "target_negative_space_ratio": 0.46950218970194546,
+    "target_negative_space_ratio": 0.46948644614276036,
     "target_clutter_score": 0.7,
     "focal_zone": {
       "x_min": 0.383146858215332,
@@ -72,12 +72,12 @@
   "elements_to_preserve": [
     "elem_face_person_face_5bdfd412"
   ],
-  "overall_rationale": "ctr_potential_score=0.78; curiosity_gap_score=0.65; content_mismatch_detected=False; rules applied: clutter_reduction, crop_tighter.",
-  "source_ctr_potential_score": 0.78,
-  "source_curiosity_gap_score": 0.65,
+  "overall_rationale": "ctr_potential_score=0.75; curiosity_gap_score=0.68; content_mismatch_detected=False; rules applied: clutter_reduction, crop_tighter.",
+  "source_ctr_potential_score": 0.75,
+  "source_curiosity_gap_score": 0.68,
   "source_content_mismatch_detected": false,
   "status": "success",
   "error_message": null,
-  "duration_seconds": 0.00009129999671131372,
-  "generated_at": "2026-08-06T17:22:56.595502+00:00"
+  "duration_seconds": 0.0019629000016720966,
+  "generated_at": "2026-08-08T07:21:30.395640+00:00"
 }

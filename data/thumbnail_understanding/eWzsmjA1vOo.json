@@ -58,7 +58,7 @@
         "polygon": [],
         "mask_path": null,
         "cutout_path": null,
-        "confidence": 0.9998833768532555,
+        "confidence": 0.9939252671896877,
         "importance_rank": 2,
         "role": "primary",
         "preserve_score": 0.8,
@@ -98,7 +98,7 @@
         "polygon": [],
         "mask_path": null,
         "cutout_path": null,
-        "confidence": 0.9999923106091465,
+        "confidence": 0.9999917266042349,
         "importance_rank": 3,
         "role": "secondary",
         "preserve_score": 0.8,
@@ -170,15 +170,15 @@
         "label": "Person (2)",
         "semantic_description": "Detected person with confidence 0.82",
         "bbox": {
-          "x_min": 0.5757347106933594,
-          "y_min": 0.4752271016438802,
-          "x_max": 0.7634212493896484,
-          "y_max": 0.8345921834309896
+          "x_min": 0.5757360458374023,
+          "y_min": 0.47522735595703125,
+          "x_max": 0.7634252548217774,
+          "y_max": 0.8347791035970052
         },
         "polygon": [],
         "mask_path": null,
         "cutout_path": null,
-        "confidence": 0.8210695385932922,
+        "confidence": 0.8211698532104492,
         "importance_rank": 5,
         "role": "supporting",
         "preserve_score": 0.7,
@@ -210,15 +210,15 @@
         "label": "Person (3)",
         "semantic_description": "Detected person with confidence 0.80",
         "bbox": {
-          "x_min": 0.49212446212768557,
-          "y_min": 0.41730836232503254,
-          "x_max": 0.5979865074157715,
-          "y_max": 0.7202603022257487
+          "x_min": 0.4921272277832031,
+          "y_min": 0.41730400721232097,
+          "x_max": 0.5979700088500977,
+          "y_max": 0.7202590942382813
         },
         "polygon": [],
         "mask_path": null,
         "cutout_path": null,
-        "confidence": 0.7991113066673279,
+        "confidence": 0.7993282675743103,
         "importance_rank": 6,
         "role": "supporting",
         "preserve_score": 0.7,
@@ -250,15 +250,15 @@
         "label": "Person (1)",
         "semantic_description": "Detected person with confidence 0.88",
         "bbox": {
-          "x_min": 0.29287014007568357,
-          "y_min": 0.4576671600341797,
-          "x_max": 0.4427327156066895,
-          "y_max": 0.6850485483805339
+          "x_min": 0.2928727149963379,
+          "y_min": 0.4576719284057617,
+          "x_max": 0.4427322864532471,
+          "y_max": 0.6850652694702148
         },
         "polygon": [],
         "mask_path": null,
         "cutout_path": null,
-        "confidence": 0.8787516355514526,
+        "confidence": 0.8787623047828674,
         "importance_rank": 7,
         "role": "supporting",
         "preserve_score": 0.7,
@@ -338,7 +338,7 @@
         "polygon": [],
         "mask_path": null,
         "cutout_path": null,
-        "confidence": 0.9999980728858172,
+        "confidence": 0.9999980040603199,
         "importance_rank": 9,
         "role": "supporting",
         "preserve_score": 0.8,
@@ -410,15 +410,15 @@
         "label": "Person (4)",
         "semantic_description": "Detected person with confidence 0.78",
         "bbox": {
-          "x_min": 0.13310714960098266,
-          "y_min": 0.41365690231323243,
-          "x_max": 0.3387599468231201,
-          "y_max": 0.6867561340332031
+          "x_min": 0.13310647010803223,
+          "y_min": 0.4136607805887858,
+          "x_max": 0.33876357078552244,
+          "y_max": 0.6867532094319662
         },
         "polygon": [],
         "mask_path": null,
         "cutout_path": null,
-        "confidence": 0.7838873863220215,
+        "confidence": 0.7841163873672485,
         "importance_rank": 11,
         "role": "supporting",
         "preserve_score": 0.7,
@@ -490,15 +490,15 @@
         "label": "Refrigerator (5)",
         "semantic_description": "Detected refrigerator with confidence 0.62",
         "bbox": {
-          "x_min": 0.7562658309936523,
-          "y_min": 0.373149840037028,
-          "x_max": 0.9069355010986329,
-          "y_max": 0.8630704243977865
+          "x_min": 0.7562806606292725,
+          "y_min": 0.3731487274169922,
+          "x_max": 0.9069303512573242,
+          "y_max": 0.8630983988444011
         },
         "polygon": [],
         "mask_path": null,
         "cutout_path": null,
-        "confidence": 0.6206591129302979,
+        "confidence": 0.6201728582382202,
         "importance_rank": 13,
         "role": "supporting",
         "preserve_score": 0.4,
@@ -530,15 +530,15 @@
         "label": "Bowl (6)",
         "semantic_description": "Detected bowl with confidence 0.47",
         "bbox": {
-          "x_min": 0.2643681526184082,
-          "y_min": 0.6706551233927409,
-          "x_max": 0.425169849395752,
-          "y_max": 0.869901466369629
+          "x_min": 0.26436853408813477,
+          "y_min": 0.6706562042236328,
+          "x_max": 0.4251700401306152,
+          "y_max": 0.8699038187662761
         },
         "polygon": [],
         "mask_path": null,
         "cutout_path": null,
-        "confidence": 0.4667713940143585,
+        "confidence": 0.4675513505935669,
         "importance_rank": 14,
         "role": "supporting",
         "preserve_score": 0.4,
@@ -570,15 +570,15 @@
         "label": "Bowl (7)",
         "semantic_description": "Detected bowl with confidence 0.42",
         "bbox": {
-          "x_min": 0.0002364814281463623,
-          "y_min": 0.6627306620279948,
-          "x_max": 0.06797125339508056,
-          "y_max": 0.8723225911458333
+          "x_min": 0.0002363443374633789,
+          "y_min": 0.6627379099527995,
+          "x_max": 0.06797133684158325,
+          "y_max": 0.872320048014323
         },
         "polygon": [],
         "mask_path": null,
         "cutout_path": null,
-        "confidence": 0.4168189465999603,
+        "confidence": 0.4163305163383484,
         "importance_rank": 15,
         "role": "supporting",
         "preserve_score": 0.4,
@@ -1675,7 +1675,7 @@
     ],
     "attention_competition_score": 0.98,
     "eye_flow_description": "Eye flows from elem_face_person_face_c942cf4b to elem_text_ocr_text_8b393d55",
-    "negative_space_ratio": 0.589932849335793,
+    "negative_space_ratio": 0.5899073301320811,
     "text_safe_areas": [],
     "visual_clutter_score": 1.0,
     "subject_separation_score": 0.0,
@@ -1689,7 +1689,7 @@
     "cropping_quality": 0.8,
     "balance": 0.8407626545870297,
     "symmetry_asymmetry": "symmetric",
-    "negative_space": 0.589932849335793,
+    "negative_space": 0.5899073301320811,
     "depth_layers_count": 16,
     "camera_perspective": "medium_shot",
     "subject_background_separation": 0.0,
@@ -1738,7 +1738,7 @@
       }
     ],
     "content_mismatch_detected": false,
-    "mismatch_explanation": "No content mismatch detected.",
+    "mismatch_explanation": "No content mismatch detected between the visual elements and the overall scene.",
     "overall_psychology_summary": "Thumbnail leverages 3 active click drivers with estimated CTR potential 0.75"
   },
   "weaknesses": {
@@ -1874,10 +1874,10 @@
         "image_path": null,
         "mask_path": null,
         "bounding_region": {
-          "x_min": 0.13310714960098266,
-          "y_min": 0.41365690231323243,
-          "x_max": 0.3387599468231201,
-          "y_max": 0.6867561340332031
+          "x_min": 0.13310647010803223,
+          "y_min": 0.4136607805887858,
+          "x_max": 0.33876357078552244,
+          "y_max": 0.6867532094319662
         },
         "polygon": [],
         "depth_priority": 1,
@@ -1924,10 +1924,10 @@
         "image_path": null,
         "mask_path": null,
         "bounding_region": {
-          "x_min": 0.7562658309936523,
-          "y_min": 0.373149840037028,
-          "x_max": 0.9069355010986329,
-          "y_max": 0.8630704243977865
+          "x_min": 0.7562806606292725,
+          "y_min": 0.3731487274169922,
+          "x_max": 0.9069303512573242,
+          "y_max": 0.8630983988444011
         },
         "polygon": [],
         "depth_priority": 1,
@@ -1947,10 +1947,10 @@
         "image_path": null,
         "mask_path": null,
         "bounding_region": {
-          "x_min": 0.2643681526184082,
-          "y_min": 0.6706551233927409,
-          "x_max": 0.425169849395752,
-          "y_max": 0.869901466369629
+          "x_min": 0.26436853408813477,
+          "y_min": 0.6706562042236328,
+          "x_max": 0.4251700401306152,
+          "y_max": 0.8699038187662761
         },
         "polygon": [],
         "depth_priority": 1,
@@ -1969,10 +1969,10 @@
         "image_path": null,
         "mask_path": null,
         "bounding_region": {
-          "x_min": 0.0002364814281463623,
-          "y_min": 0.6627306620279948,
-          "x_max": 0.06797125339508056,
-          "y_max": 0.8723225911458333
+          "x_min": 0.0002363443374633789,
+          "y_min": 0.6627379099527995,
+          "x_max": 0.06797133684158325,
+          "y_max": 0.872320048014323
         },
         "polygon": [],
         "depth_priority": 1,
@@ -2019,10 +2019,10 @@
         "image_path": null,
         "mask_path": null,
         "bounding_region": {
-          "x_min": 0.29287014007568357,
-          "y_min": 0.4576671600341797,
-          "x_max": 0.4427327156066895,
-          "y_max": 0.6850485483805339
+          "x_min": 0.2928727149963379,
+          "y_min": 0.4576719284057617,
+          "x_max": 0.4427322864532471,
+          "y_max": 0.6850652694702148
         },
         "polygon": [],
         "depth_priority": 3,
@@ -2048,10 +2048,10 @@
         "image_path": null,
         "mask_path": null,
         "bounding_region": {
-          "x_min": 0.49212446212768557,
-          "y_min": 0.41730836232503254,
-          "x_max": 0.5979865074157715,
-          "y_max": 0.7202603022257487
+          "x_min": 0.4921272277832031,
+          "y_min": 0.41730400721232097,
+          "x_max": 0.5979700088500977,
+          "y_max": 0.7202590942382813
         },
         "polygon": [],
         "depth_priority": 4,
@@ -2078,10 +2078,10 @@
         "image_path": null,
         "mask_path": null,
         "bounding_region": {
-          "x_min": 0.5757347106933594,
-          "y_min": 0.4752271016438802,
-          "x_max": 0.7634212493896484,
-          "y_max": 0.8345921834309896
+          "x_min": 0.5757360458374023,
+          "y_min": 0.47522735595703125,
+          "x_max": 0.7634252548217774,
+          "y_max": 0.8347791035970052
         },
         "polygon": [],
         "depth_priority": 5,
@@ -2349,33 +2349,32 @@
     "ctr_potential_score": 0.75,
     "curiosity_gap_score": 0.68,
     "emotional_impact": "High",
-    "visual_storytelling_notes": "The image shows a group of people with happy expressions, suggesting a positive and engaging scene. The composition is balanced with a focus on the left-third, which may draw attention effectively.",
+    "visual_storytelling_notes": "The composition shows a group of people with varied emotional expressions, suggesting a dynamic scene. The use of warm colors and the rule of thirds contributes to a balanced and engaging visual.",
     "content_mismatch_detected": false,
-    "mismatch_explanation": "No content mismatch detected.",
+    "mismatch_explanation": "No content mismatch detected between the visual elements and the overall scene.",
     "strengths": [
-      "High emotional impact",
-      "Balanced composition",
-      "Clear subject placement",
-      "Warm color palette"
+      "Warm color palette",
+      "Rule of thirds composition",
+      "Dynamic emotional expressions",
+      "Balanced visual elements"
     ],
     "weaknesses": [
       "Cluttered elements may reduce visual clarity",
-      "Limited visual hierarchy",
-      "Potential for improved symmetry"
+      "Low visual hierarchy score suggests potential for better focus"
     ],
     "redesign_recommendations": [
       "Simplify the background to reduce clutter",
-      "Enhance visual hierarchy through better arrangement",
-      "Adjust symmetry for more dynamic composition"
+      "Enhance visual hierarchy by emphasizing key subjects",
+      "Use cooler tones to balance the warm palette for more contrast"
     ],
     "elements_to_preserve": [
+      "Dynamic emotional expressions",
       "Warm color palette",
-      "Positive emotional tone",
-      "Subject placement in the left-third"
+      "Rule of thirds composition"
     ],
-    "duration_seconds": 17.32376099999965
+    "duration_seconds": 25.034651000009035
   },
   "status": "success",
   "error_message": null,
-  "analyzed_at": "2026-08-06T17:14:47.440563+00:00"
+  "analyzed_at": "2026-08-08T07:16:14.146022+00:00"
 }

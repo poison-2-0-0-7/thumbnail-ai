@@ -2,7 +2,7 @@
   "video_id": "O0Y-oLarao4",
   "profile_name": "PROFILE_STANDARD_EDIT",
   "workflow_version": "workflow_v1",
-  "workflow_hash": "05e63fd581f35aa3df39aafee7919c68e70f421ea0c17a051194cdf754b69d63",
+  "workflow_hash": "9ae156a4fd5380909f55679e3e768f6e378a67ca90f4693c2a18a95340541a9f",
   "conditioning_asset_hashes": {},
   "model_versions": {
     "checkpoint": "juggernautXL.safetensors",
@@ -10,7 +10,7 @@
   },
   "num_candidates_requested": 1,
   "num_candidates_completed": 1,
-  "total_duration_seconds": 77.2325592000052,
+  "total_duration_seconds": 65.34588670000085,
   "parallel_generation_used": false,
   "retry_summary": {
     "identity_retries": 0

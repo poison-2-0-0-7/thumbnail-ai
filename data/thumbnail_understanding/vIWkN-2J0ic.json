@@ -10,15 +10,15 @@
         "label": "Person (2)",
         "semantic_description": "Detected person with confidence 0.72",
         "bbox": {
-          "x_min": 0.16789913177490234,
-          "y_min": 0.1298577626546224,
-          "x_max": 0.9285837173461914,
-          "y_max": 0.8676483154296875
+          "x_min": 0.16771361827850342,
+          "y_min": 0.12985509236653645,
+          "x_max": 0.9286051750183105,
+          "y_max": 0.8676467895507812
         },
         "polygon": [],
         "mask_path": null,
         "cutout_path": null,
-        "confidence": 0.7209619879722595,
+        "confidence": 0.7204761505126953,
         "importance_rank": 1,
         "role": "hero",
         "preserve_score": 0.7,
@@ -90,15 +90,15 @@
         "label": "Person (1)",
         "semantic_description": "Detected person with confidence 0.73",
         "bbox": {
-          "x_min": 0.8300619125366211,
-          "y_min": 0.1757595698038737,
-          "x_max": 0.9990739822387695,
-          "y_max": 0.8670166651407878
+          "x_min": 0.8300647735595703,
+          "y_min": 0.17583471934000652,
+          "x_max": 0.9990749359130859,
+          "y_max": 0.8670298258463541
         },
         "polygon": [],
         "mask_path": null,
         "cutout_path": null,
-        "confidence": 0.7251635789871216,
+        "confidence": 0.7252935767173767,
         "importance_rank": 3,
         "role": "secondary",
         "preserve_score": 0.7,
@@ -246,7 +246,7 @@
     ],
     "attention_competition_score": 0.72,
     "eye_flow_description": "Eye flows from elem_obj_person_82491c2b to elem_face_person_face_b3b55488",
-    "negative_space_ratio": 0.265568025141256,
+    "negative_space_ratio": 0.2654262482077381,
     "text_safe_areas": [],
     "visual_clutter_score": 0.3,
     "subject_separation_score": 0.7,
@@ -260,7 +260,7 @@
     "cropping_quality": 0.8,
     "balance": 0.870666734976536,
     "symmetry_asymmetry": "symmetric",
-    "negative_space": 0.265568025141256,
+    "negative_space": 0.2654262482077381,
     "depth_layers_count": 4,
     "camera_perspective": "medium_shot",
     "subject_background_separation": 0.7,
@@ -336,10 +336,10 @@
         "image_path": null,
         "mask_path": null,
         "bounding_region": {
-          "x_min": 0.8300619125366211,
-          "y_min": 0.1757595698038737,
-          "x_max": 0.9990739822387695,
-          "y_max": 0.8670166651407878
+          "x_min": 0.8300647735595703,
+          "y_min": 0.17583471934000652,
+          "x_max": 0.9990749359130859,
+          "y_max": 0.8670298258463541
         },
         "polygon": [],
         "depth_priority": 7,
@@ -380,10 +380,10 @@
         "image_path": null,
         "mask_path": null,
         "bounding_region": {
-          "x_min": 0.16789913177490234,
-          "y_min": 0.1298577626546224,
-          "x_max": 0.9285837173461914,
-          "y_max": 0.8676483154296875
+          "x_min": 0.16771361827850342,
+          "y_min": 0.12985509236653645,
+          "x_max": 0.9286051750183105,
+          "y_max": 0.8676467895507812
         },
         "polygon": [],
         "depth_priority": 9,
@@ -462,29 +462,29 @@
     "ctr_potential_score": 0.85,
     "curiosity_gap_score": 0.78,
     "emotional_impact": "high",
-    "visual_storytelling_notes": "The thumbnail effectively captures the essence of the video by showcasing a person in a dynamic pose, conveying strength and transformation. The warm color palette and high contrast enhance the visual appeal and align with the content's focus on calisthenics and physique development.",
+    "visual_storytelling_notes": "The thumbnail effectively captures the essence of the video by showcasing a person in a dynamic pose, which aligns with the content about calisthenics and transformation. The warm color palette and high contrast contribute to a visually engaging thumbnail.",
     "content_mismatch_detected": false,
     "mismatch_explanation": null,
     "strengths": [
       "Dynamic pose of the person",
       "Warm color palette",
-      "High contrast for visual appeal"
+      "High contrast"
     ],
     "weaknesses": [
-      "Limited text to convey key message",
-      "Symmetry could be improved for more balance"
+      "Limited text visibility",
+      "Symmetry could be improved"
     ],
     "redesign_recommendations": [
-      "Add text overlay with key message like 'Get Jacked with Calisthenics'",
-      "Adjust symmetry for better visual balance"
+      "Enhance text visibility for better engagement",
+      "Adjust symmetry to create more visual interest"
     ],
     "elements_to_preserve": [
       "Dynamic pose of the person",
       "Warm color palette"
     ],
-    "duration_seconds": 15.847057199993287
+    "duration_seconds": 16.58276219999243
   },
   "status": "success",
   "error_message": null,
-  "analyzed_at": "2026-08-06T17:36:03.833795+00:00"
+  "analyzed_at": "2026-08-08T07:30:18.350623+00:00"
 }

@@ -50,15 +50,15 @@
         "label": "Person (2)",
         "semantic_description": "Detected person with confidence 0.82",
         "bbox": {
-          "x_min": 0.14062907695770263,
-          "y_min": 0.1289745330810547,
-          "x_max": 0.3617335081100464,
-          "y_max": 0.8353808720906576
+          "x_min": 0.14063191413879395,
+          "y_min": 0.12897402445475262,
+          "x_max": 0.36172213554382326,
+          "y_max": 0.8354607899983724
         },
         "polygon": [],
         "mask_path": null,
         "cutout_path": null,
-        "confidence": 0.8194953203201294,
+        "confidence": 0.8193281888961792,
         "importance_rank": 2,
         "role": "primary",
         "preserve_score": 0.7,
@@ -84,21 +84,21 @@
         "is_creator": false
       },
       {
-        "element_id": "elem_obj_person_5183570b",
+        "element_id": "elem_obj_person_36f45480",
         "element_type": "person",
         "category": "person",
         "label": "Person (1)",
         "semantic_description": "Detected person with confidence 0.83",
         "bbox": {
-          "x_min": 0.2075489044189453,
-          "y_min": 0.46929073333740234,
-          "x_max": 0.46452674865722654,
-          "y_max": 0.8697790145874024
+          "x_min": 0.20749998092651367,
+          "y_min": 0.4692883809407552,
+          "x_max": 0.4645235061645508,
+          "y_max": 0.8697701772054036
         },
         "polygon": [],
         "mask_path": null,
         "cutout_path": null,
-        "confidence": 0.8345038294792175,
+        "confidence": 0.8344079256057739,
         "importance_rank": 3,
         "role": "secondary",
         "preserve_score": 0.7,
@@ -130,15 +130,15 @@
         "label": "Person (5)",
         "semantic_description": "Detected person with confidence 0.65",
         "bbox": {
-          "x_min": 0.4812164306640625,
-          "y_min": 0.29365692138671873,
-          "x_max": 0.6281452178955078,
-          "y_max": 0.7869116465250651
+          "x_min": 0.48122167587280273,
+          "y_min": 0.29366811116536456,
+          "x_max": 0.628151798248291,
+          "y_max": 0.7869775136311848
         },
         "polygon": [],
         "mask_path": null,
         "cutout_path": null,
-        "confidence": 0.653374969959259,
+        "confidence": 0.6532565951347351,
         "importance_rank": 4,
         "role": "secondary",
         "preserve_score": 0.7,
@@ -170,15 +170,15 @@
         "label": "Person (4)",
         "semantic_description": "Detected person with confidence 0.73",
         "bbox": {
-          "x_min": 0.6092600345611572,
-          "y_min": 0.3379190444946289,
-          "x_max": 0.7617166996002197,
-          "y_max": 0.837641716003418
+          "x_min": 0.6093000888824462,
+          "y_min": 0.33791770935058596,
+          "x_max": 0.7617112636566162,
+          "y_max": 0.8376225789388021
         },
         "polygon": [],
         "mask_path": null,
         "cutout_path": null,
-        "confidence": 0.7258555889129639,
+        "confidence": 0.7258380651473999,
         "importance_rank": 5,
         "role": "supporting",
         "preserve_score": 0.7,
@@ -210,15 +210,15 @@
         "label": "Person (6)",
         "semantic_description": "Detected person with confidence 0.61",
         "bbox": {
-          "x_min": 0.35137786865234377,
-          "y_min": 0.26779244740804037,
-          "x_max": 0.491014289855957,
-          "y_max": 0.6063219706217448
+          "x_min": 0.3513848304748535,
+          "y_min": 0.26778990427652993,
+          "x_max": 0.49101648330688474,
+          "y_max": 0.6063573837280274
         },
         "polygon": [],
         "mask_path": null,
         "cutout_path": null,
-        "confidence": 0.6055954694747925,
+        "confidence": 0.6057220697402954,
         "importance_rank": 6,
         "role": "supporting",
         "preserve_score": 0.7,
@@ -250,15 +250,15 @@
         "label": "Person (3)",
         "semantic_description": "Detected person with confidence 0.79",
         "bbox": {
-          "x_min": 0.4409742832183838,
-          "y_min": 0.6109374364217123,
-          "x_max": 0.6169416904449463,
-          "y_max": 0.8742120742797852
+          "x_min": 0.44097723960876467,
+          "y_min": 0.610934829711914,
+          "x_max": 0.6169637203216553,
+          "y_max": 0.8742061614990234
         },
         "polygon": [],
         "mask_path": null,
         "cutout_path": null,
-        "confidence": 0.7875213623046875,
+        "confidence": 0.7871705889701843,
         "importance_rank": 7,
         "role": "supporting",
         "preserve_score": 0.7,
@@ -542,7 +542,7 @@
         "provenance": "deterministic_spatial_engine"
       },
       {
-        "subject_element_id": "elem_obj_person_5183570b",
+        "subject_element_id": "elem_obj_person_36f45480",
         "relation": "in_front_of",
         "object_element_id": "elem_bg_plate_00",
         "confidence": 1.0,
@@ -632,7 +632,7 @@
       {
         "subject_element_id": "elem_face_person_face_5bdfd412",
         "relation": "inside",
-        "object_element_id": "elem_obj_person_5183570b",
+        "object_element_id": "elem_obj_person_36f45480",
         "confidence": 1.0,
         "spatial_direction": "contained",
         "provenance": "deterministic_spatial_engine"
@@ -640,7 +640,7 @@
       {
         "subject_element_id": "elem_face_person_face_5bdfd412",
         "relation": "above",
-        "object_element_id": "elem_obj_person_5183570b",
+        "object_element_id": "elem_obj_person_36f45480",
         "confidence": 0.95,
         "spatial_direction": "above",
         "provenance": "deterministic_spatial_engine"
@@ -720,7 +720,7 @@
       {
         "subject_element_id": "elem_obj_person_dfdba8aa",
         "relation": "above",
-        "object_element_id": "elem_obj_person_5183570b",
+        "object_element_id": "elem_obj_person_36f45480",
         "confidence": 0.95,
         "spatial_direction": "above",
         "provenance": "deterministic_spatial_engine"
@@ -806,7 +806,7 @@
         "provenance": "deterministic_spatial_engine"
       },
       {
-        "subject_element_id": "elem_obj_person_5183570b",
+        "subject_element_id": "elem_obj_person_36f45480",
         "relation": "left_of",
         "object_element_id": "elem_obj_person_0fab7b99",
         "confidence": 0.95,
@@ -814,7 +814,7 @@
         "provenance": "deterministic_spatial_engine"
       },
       {
-        "subject_element_id": "elem_obj_person_5183570b",
+        "subject_element_id": "elem_obj_person_36f45480",
         "relation": "left_of",
         "object_element_id": "elem_obj_person_c89cdc2d",
         "confidence": 0.95,
@@ -822,7 +822,7 @@
         "provenance": "deterministic_spatial_engine"
       },
       {
-        "subject_element_id": "elem_obj_person_5183570b",
+        "subject_element_id": "elem_obj_person_36f45480",
         "relation": "below",
         "object_element_id": "elem_obj_person_142d30ee",
         "confidence": 0.95,
@@ -830,7 +830,7 @@
         "provenance": "deterministic_spatial_engine"
       },
       {
-        "subject_element_id": "elem_obj_person_5183570b",
+        "subject_element_id": "elem_obj_person_36f45480",
         "relation": "left_of",
         "object_element_id": "elem_obj_person_f087886f",
         "confidence": 0.95,
@@ -838,7 +838,7 @@
         "provenance": "deterministic_spatial_engine"
       },
       {
-        "subject_element_id": "elem_obj_person_5183570b",
+        "subject_element_id": "elem_obj_person_36f45480",
         "relation": "below",
         "object_element_id": "elem_face_person_face_aa2eb6b5",
         "confidence": 0.95,
@@ -846,7 +846,7 @@
         "provenance": "deterministic_spatial_engine"
       },
       {
-        "subject_element_id": "elem_obj_person_5183570b",
+        "subject_element_id": "elem_obj_person_36f45480",
         "relation": "below",
         "object_element_id": "elem_face_person_face_e1e33d85",
         "confidence": 0.95,
@@ -854,7 +854,7 @@
         "provenance": "deterministic_spatial_engine"
       },
       {
-        "subject_element_id": "elem_obj_person_5183570b",
+        "subject_element_id": "elem_obj_person_36f45480",
         "relation": "left_of",
         "object_element_id": "elem_face_person_face_03380f91",
         "confidence": 0.95,
@@ -862,7 +862,7 @@
         "provenance": "deterministic_spatial_engine"
       },
       {
-        "subject_element_id": "elem_obj_person_5183570b",
+        "subject_element_id": "elem_obj_person_36f45480",
         "relation": "left_of",
         "object_element_id": "elem_face_person_face_85ca1623",
         "confidence": 0.95,
@@ -870,7 +870,7 @@
         "provenance": "deterministic_spatial_engine"
       },
       {
-        "subject_element_id": "elem_obj_person_5183570b",
+        "subject_element_id": "elem_obj_person_36f45480",
         "relation": "below",
         "object_element_id": "elem_face_person_face_f02967e5",
         "confidence": 0.95,
@@ -1212,7 +1212,7 @@
       "elem_obj_person_dfdba8aa"
     ],
     "secondary_subject_ids": [
-      "elem_obj_person_5183570b",
+      "elem_obj_person_36f45480",
       "elem_obj_person_0fab7b99"
     ]
   },
@@ -1220,7 +1220,7 @@
     "reading_order": [
       "elem_face_person_face_5bdfd412",
       "elem_obj_person_dfdba8aa",
-      "elem_obj_person_5183570b",
+      "elem_obj_person_36f45480",
       "elem_obj_person_0fab7b99",
       "elem_obj_person_c89cdc2d",
       "elem_obj_person_142d30ee",
@@ -1240,7 +1240,7 @@
     ],
     "attention_competition_score": 0.98,
     "eye_flow_description": "Eye flows from elem_face_person_face_5bdfd412 to elem_obj_person_dfdba8aa",
-    "negative_space_ratio": 0.46950218970194546,
+    "negative_space_ratio": 0.46948644614276036,
     "text_safe_areas": [],
     "visual_clutter_score": 1.0,
     "subject_separation_score": 0.0,
@@ -1254,7 +1254,7 @@
     "cropping_quality": 0.8,
     "balance": 0.8464900323397259,
     "symmetry_asymmetry": "symmetric",
-    "negative_space": 0.46950218970194546,
+    "negative_space": 0.46948644614276036,
     "depth_layers_count": 13,
     "camera_perspective": "medium_shot",
     "subject_background_separation": 0.0,
@@ -1264,8 +1264,8 @@
     "actionable_findings": []
   },
   "psychology": {
-    "ctr_potential_score": 0.78,
-    "curiosity_gap_score": 0.65,
+    "ctr_potential_score": 0.75,
+    "curiosity_gap_score": 0.68,
     "drivers": [
       {
         "driver": "emotion",
@@ -1279,7 +1279,7 @@
       },
       {
         "driver": "curiosity",
-        "strength": 0.65,
+        "strength": 0.68,
         "confidence": 0.85,
         "supporting_evidence": "Headline/visual composition creates an unresolved question",
         "potential_improvement": "Tighten copy and increase focal subject contrast",
@@ -1298,8 +1298,8 @@
       }
     ],
     "content_mismatch_detected": false,
-    "mismatch_explanation": "No content mismatch detected. The elements align well with the visual storytelling and emotional impact.",
-    "overall_psychology_summary": "Thumbnail leverages 3 active click drivers with estimated CTR potential 0.78"
+    "mismatch_explanation": "No content mismatch detected. The elements align well with the overall theme of a happy and engaging scene.",
+    "overall_psychology_summary": "Thumbnail leverages 3 active click drivers with estimated CTR potential 0.75"
   },
   "weaknesses": {
     "findings": [
@@ -1498,10 +1498,10 @@
         "image_path": null,
         "mask_path": null,
         "bounding_region": {
-          "x_min": 0.4409742832183838,
-          "y_min": 0.6109374364217123,
-          "x_max": 0.6169416904449463,
-          "y_max": 0.8742120742797852
+          "x_min": 0.44097723960876467,
+          "y_min": 0.610934829711914,
+          "x_max": 0.6169637203216553,
+          "y_max": 0.8742061614990234
         },
         "polygon": [],
         "depth_priority": 3,
@@ -1524,10 +1524,10 @@
         "image_path": null,
         "mask_path": null,
         "bounding_region": {
-          "x_min": 0.35137786865234377,
-          "y_min": 0.26779244740804037,
-          "x_max": 0.491014289855957,
-          "y_max": 0.6063219706217448
+          "x_min": 0.3513848304748535,
+          "y_min": 0.26778990427652993,
+          "x_max": 0.49101648330688474,
+          "y_max": 0.6063573837280274
         },
         "polygon": [],
         "depth_priority": 4,
@@ -1551,10 +1551,10 @@
         "image_path": null,
         "mask_path": null,
         "bounding_region": {
-          "x_min": 0.6092600345611572,
-          "y_min": 0.3379190444946289,
-          "x_max": 0.7617166996002197,
-          "y_max": 0.837641716003418
+          "x_min": 0.6093000888824462,
+          "y_min": 0.33791770935058596,
+          "x_max": 0.7617112636566162,
+          "y_max": 0.8376225789388021
         },
         "polygon": [],
         "depth_priority": 5,
@@ -1579,10 +1579,10 @@
         "image_path": null,
         "mask_path": null,
         "bounding_region": {
-          "x_min": 0.4812164306640625,
-          "y_min": 0.29365692138671873,
-          "x_max": 0.6281452178955078,
-          "y_max": 0.7869116465250651
+          "x_min": 0.48122167587280273,
+          "y_min": 0.29366811116536456,
+          "x_max": 0.628151798248291,
+          "y_max": 0.7869775136311848
         },
         "polygon": [],
         "depth_priority": 6,
@@ -1602,16 +1602,16 @@
         "source_provenance": "yolo_grounding_dino"
       },
       {
-        "layer_id": "layer_elem_obj_person_5183570b",
+        "layer_id": "layer_elem_obj_person_36f45480",
         "category": "secondary_subject",
-        "element_ref_id": "elem_obj_person_5183570b",
+        "element_ref_id": "elem_obj_person_36f45480",
         "image_path": null,
         "mask_path": null,
         "bounding_region": {
-          "x_min": 0.2075489044189453,
-          "y_min": 0.46929073333740234,
-          "x_max": 0.46452674865722654,
-          "y_max": 0.8697790145874024
+          "x_min": 0.20749998092651367,
+          "y_min": 0.4692883809407552,
+          "x_max": 0.4645235061645508,
+          "y_max": 0.8697701772054036
         },
         "polygon": [],
         "depth_priority": 7,
@@ -1638,16 +1638,16 @@
         "image_path": null,
         "mask_path": null,
         "bounding_region": {
-          "x_min": 0.14062907695770263,
-          "y_min": 0.1289745330810547,
-          "x_max": 0.3617335081100464,
-          "y_max": 0.8353808720906576
+          "x_min": 0.14063191413879395,
+          "y_min": 0.12897402445475262,
+          "x_max": 0.36172213554382326,
+          "y_max": 0.8354607899983724
         },
         "polygon": [],
         "depth_priority": 8,
         "relationships": [
           "elem_bg_plate_00",
-          "elem_obj_person_5183570b",
+          "elem_obj_person_36f45480",
           "elem_obj_person_0fab7b99",
           "elem_obj_person_c89cdc2d",
           "elem_obj_person_142d30ee",
@@ -1679,8 +1679,8 @@
         "relationships": [
           "elem_bg_plate_00",
           "elem_obj_person_dfdba8aa",
-          "elem_obj_person_5183570b",
-          "elem_obj_person_5183570b",
+          "elem_obj_person_36f45480",
+          "elem_obj_person_36f45480",
           "elem_obj_person_0fab7b99",
           "elem_obj_person_c89cdc2d",
           "elem_obj_person_142d30ee",
@@ -1702,7 +1702,7 @@
   },
   "director_plan": {
     "creative_direction": "Redesign thumbnail for video by preserving creator identity (1 elements), replacing background clutter (1 elements), and focusing visual hierarchy.",
-    "story_analysis": "Thumbnail leverages 3 active click drivers with estimated CTR potential 0.78",
+    "story_analysis": "Thumbnail leverages 3 active click drivers with estimated CTR potential 0.75",
     "elements_to_keep": [
       "elem_face_person_face_5bdfd412"
     ],
@@ -1800,12 +1800,12 @@
     "primary_goal": "Maximize thumbnail CTR through hero preservation and visual hierarchy optimization"
   },
   "legacy_reasoning": {
-    "ctr_potential_score": 0.78,
-    "curiosity_gap_score": 0.65,
+    "ctr_potential_score": 0.75,
+    "curiosity_gap_score": 0.68,
     "emotional_impact": "high",
     "visual_storytelling_notes": "The composition shows a group of people with happy expressions, suggesting a positive and engaging scene. The symmetry and balance scores are high, indicating a well-structured visual layout.",
     "content_mismatch_detected": false,
-    "mismatch_explanation": "No content mismatch detected. The elements align well with the visual storytelling and emotional impact.",
+    "mismatch_explanation": "No content mismatch detected. The elements align well with the overall theme of a happy and engaging scene.",
     "strengths": [
       "High emotional impact",
       "Good symmetry and balance",
@@ -1814,21 +1814,22 @@
     ],
     "weaknesses": [
       "Clutter score is high, which may reduce visual clarity",
-      "Negative space ratio is moderate, could be optimized for more focus"
+      "Negative space ratio is moderate, could be optimized for better focus"
     ],
     "redesign_recommendations": [
-      "Simplify the layout to reduce clutter",
-      "Increase negative space to focus on the main subject",
-      "Enhance visual hierarchy for better engagement"
+      "Simplify the background to reduce clutter",
+      "Enhance negative space to focus attention on the main subject",
+      "Maintain the positive expressions and symmetry for emotional impact"
     ],
     "elements_to_preserve": [
-      "Positive expressions",
-      "Symmetry and balance",
-      "High emotional impact"
+      "Happy expressions",
+      "Symmetry",
+      "Balance",
+      "Positive emotional tone"
     ],
-    "duration_seconds": 15.351193299997249
+    "duration_seconds": 21.20574380000471
   },
   "status": "success",
   "error_message": null,
-  "analyzed_at": "2026-08-06T17:22:56.584236+00:00"
+  "analyzed_at": "2026-08-08T07:21:30.367983+00:00"
 }

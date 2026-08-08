@@ -14,7 +14,7 @@
   "warm_or_cool": "neutral",
   "color_harmony_score": 0.5977659796764365,
   "subject_placement": "center",
-  "negative_space_ratio": 0.46950218970194546,
+  "negative_space_ratio": 0.46948644614276036,
   "balance_score": 0.8464900323397259,
   "symmetry_score": 0.8033809065818787,
   "face_scale_ratio": 0.029133446381484494,
@@ -23,5 +23,5 @@
   "object_classes_present": [
     "person"
   ],
-  "extracted_at": "2026-08-06T17:22:56.501780+00:00"
+  "extracted_at": "2026-08-08T07:21:30.079446+00:00"
 }

@@ -50,15 +50,15 @@
         "label": "Person (2)",
         "semantic_description": "Detected person with confidence 0.66",
         "bbox": {
-          "x_min": 0.1801312208175659,
-          "y_min": 0.2312916119893392,
-          "x_max": 0.27661406993865967,
-          "y_max": 0.46765292485555016
+          "x_min": 0.18013170957565308,
+          "y_min": 0.231294314066569,
+          "x_max": 0.2766111373901367,
+          "y_max": 0.4676724116007487
         },
         "polygon": [],
         "mask_path": null,
         "cutout_path": null,
-        "confidence": 0.6593812108039856,
+        "confidence": 0.6591125130653381,
         "importance_rank": 2,
         "role": "primary",
         "preserve_score": 0.7,
@@ -90,15 +90,15 @@
         "label": "Person (3)",
         "semantic_description": "Detected person with confidence 0.58",
         "bbox": {
-          "x_min": 0.5393744468688965,
-          "y_min": 0.1282475471496582,
-          "x_max": 0.5770426750183105,
-          "y_max": 0.2294527053833008
+          "x_min": 0.5393767356872559,
+          "y_min": 0.12824567953745525,
+          "x_max": 0.5770430564880371,
+          "y_max": 0.2294562021891276
         },
         "polygon": [],
         "mask_path": null,
         "cutout_path": null,
-        "confidence": 0.5766200423240662,
+        "confidence": 0.5759844779968262,
         "importance_rank": 3,
         "role": "secondary",
         "preserve_score": 0.7,
@@ -130,15 +130,15 @@
         "label": "Motorcycle (1)",
         "semantic_description": "Detected motorcycle with confidence 0.71",
         "bbox": {
-          "x_min": 0.07993061542510986,
-          "y_min": 0.3880989710489909,
-          "x_max": 0.38181684017181394,
-          "y_max": 0.8703264236450196
+          "x_min": 0.07993206977844239,
+          "y_min": 0.38810532887776694,
+          "x_max": 0.3818161964416504,
+          "y_max": 0.8703269322713216
         },
         "polygon": [],
         "mask_path": null,
         "cutout_path": null,
-        "confidence": 0.7125656604766846,
+        "confidence": 0.7132179141044617,
         "importance_rank": 4,
         "role": "secondary",
         "preserve_score": 0.4,
@@ -328,7 +328,7 @@
     ],
     "attention_competition_score": 0.8,
     "eye_flow_description": "Eye flows from elem_face_person_face_23ac64cf to elem_obj_person_d2deb755",
-    "negative_space_ratio": 0.8258163412646354,
+    "negative_space_ratio": 0.8258182990644658,
     "text_safe_areas": [],
     "visual_clutter_score": 0.4,
     "subject_separation_score": 0.6,
@@ -342,7 +342,7 @@
     "cropping_quality": 0.8,
     "balance": 0.9909580865430703,
     "symmetry_asymmetry": "symmetric",
-    "negative_space": 0.8258163412646354,
+    "negative_space": 0.8258182990644658,
     "depth_layers_count": 5,
     "camera_perspective": "medium_shot",
     "subject_background_separation": 0.6,
@@ -438,10 +438,10 @@
         "image_path": null,
         "mask_path": null,
         "bounding_region": {
-          "x_min": 0.07993061542510986,
-          "y_min": 0.3880989710489909,
-          "x_max": 0.38181684017181394,
-          "y_max": 0.8703264236450196
+          "x_min": 0.07993206977844239,
+          "y_min": 0.38810532887776694,
+          "x_max": 0.3818161964416504,
+          "y_max": 0.8703269322713216
         },
         "polygon": [],
         "depth_priority": 6,
@@ -459,10 +459,10 @@
         "image_path": null,
         "mask_path": null,
         "bounding_region": {
-          "x_min": 0.5393744468688965,
-          "y_min": 0.1282475471496582,
-          "x_max": 0.5770426750183105,
-          "y_max": 0.2294527053833008
+          "x_min": 0.5393767356872559,
+          "y_min": 0.12824567953745525,
+          "x_max": 0.5770430564880371,
+          "y_max": 0.2294562021891276
         },
         "polygon": [],
         "depth_priority": 7,
@@ -481,10 +481,10 @@
         "image_path": null,
         "mask_path": null,
         "bounding_region": {
-          "x_min": 0.1801312208175659,
-          "y_min": 0.2312916119893392,
-          "x_max": 0.27661406993865967,
-          "y_max": 0.46765292485555016
+          "x_min": 0.18013170957565308,
+          "y_min": 0.231294314066569,
+          "x_max": 0.2766111373901367,
+          "y_max": 0.4676724116007487
         },
         "polygon": [],
         "depth_priority": 8,
@@ -611,30 +611,30 @@
     "ctr_potential_score": 0.75,
     "curiosity_gap_score": 0.65,
     "emotional_impact": "positive",
-    "visual_storytelling_notes": "The thumbnail effectively captures a happy person interacting with a motorcycle, suggesting an engaging and possibly informative content about bike licenses in Nepal. The composition and color balance contribute to a visually appealing and balanced image.",
+    "visual_storytelling_notes": "The thumbnail effectively captures a happy person interacting with a motorcycle, suggesting an engaging and possibly informative content about bike licenses in Nepal. The composition and color palette contribute to a neutral and balanced visual appeal.",
     "content_mismatch_detected": false,
     "mismatch_explanation": null,
     "strengths": [
-      "Clear and positive emotional expression",
-      "Good composition and balance",
-      "Neutral color palette that is visually appealing"
+      "Clear subject placement",
+      "Positive emotional impact",
+      "Balanced composition"
     ],
     "weaknesses": [
-      "Limited text coverage which may reduce click-through rate",
-      "Low visual hierarchy score indicating potential for better visual emphasis"
+      "Limited text coverage",
+      "Low visual hierarchy score"
     ],
     "redesign_recommendations": [
-      "Consider adding subtle text elements to enhance clarity and engagement",
-      "Enhance visual hierarchy to guide the viewer's attention more effectively"
+      "Enhance visual hierarchy with clearer focal points",
+      "Incorporate subtle text for additional context"
     ],
     "elements_to_preserve": [
       "Happy facial expression",
-      "Motorcycle and person interaction",
-      "Balanced composition and color harmony"
+      "Motorcycle subject",
+      "Neutral color palette"
     ],
-    "duration_seconds": 12.259456400002819
+    "duration_seconds": 19.312235100005637
   },
   "status": "success",
   "error_message": null,
-  "analyzed_at": "2026-08-06T17:19:12.979637+00:00"
+  "analyzed_at": "2026-08-08T07:19:40.623644+00:00"
 }

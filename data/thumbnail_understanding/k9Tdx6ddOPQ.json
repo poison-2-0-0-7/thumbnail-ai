@@ -4,21 +4,21 @@
   "scene_graph": {
     "elements": [
       {
-        "element_id": "elem_obj_person_2855edcd",
+        "element_id": "elem_obj_person_85e635e9",
         "element_type": "person",
         "category": "person",
         "label": "Person (1)",
         "semantic_description": "Detected person with confidence 0.79",
         "bbox": {
-          "x_min": 0.28669004440307616,
-          "y_min": 0.004550425211588541,
-          "x_max": 0.8750402450561523,
-          "y_max": 0.9849939134385851
+          "x_min": 0.28657891750335696,
+          "y_min": 0.004481421576605903,
+          "x_max": 0.8750394821166992,
+          "y_max": 0.9849561055501302
         },
         "polygon": [],
         "mask_path": null,
         "cutout_path": null,
-        "confidence": 0.7884335517883301,
+        "confidence": 0.7889636158943176,
         "importance_rank": 1,
         "role": "hero",
         "preserve_score": 0.7,
@@ -98,7 +98,7 @@
         "polygon": [],
         "mask_path": null,
         "cutout_path": null,
-        "confidence": 0.4943980430809201,
+        "confidence": 0.5385651027181383,
         "importance_rank": 3,
         "role": "secondary",
         "preserve_score": 0.8,
@@ -166,7 +166,7 @@
     ],
     "relationships": [
       {
-        "subject_element_id": "elem_obj_person_2855edcd",
+        "subject_element_id": "elem_obj_person_85e635e9",
         "relation": "in_front_of",
         "object_element_id": "elem_bg_plate_00",
         "confidence": 1.0,
@@ -192,13 +192,13 @@
       {
         "subject_element_id": "elem_face_person_face_96204573",
         "relation": "inside",
-        "object_element_id": "elem_obj_person_2855edcd",
+        "object_element_id": "elem_obj_person_85e635e9",
         "confidence": 1.0,
         "spatial_direction": "contained",
         "provenance": "deterministic_spatial_engine"
       },
       {
-        "subject_element_id": "elem_obj_person_2855edcd",
+        "subject_element_id": "elem_obj_person_85e635e9",
         "relation": "below",
         "object_element_id": "elem_face_person_face_96204573",
         "confidence": 0.95,
@@ -208,7 +208,7 @@
       {
         "subject_element_id": "elem_text_ocr_text_90a4eea6",
         "relation": "inside",
-        "object_element_id": "elem_obj_person_2855edcd",
+        "object_element_id": "elem_obj_person_85e635e9",
         "confidence": 1.0,
         "spatial_direction": "contained",
         "provenance": "deterministic_spatial_engine"
@@ -216,13 +216,13 @@
       {
         "subject_element_id": "elem_text_ocr_text_90a4eea6",
         "relation": "text_relative_to",
-        "object_element_id": "elem_obj_person_2855edcd",
+        "object_element_id": "elem_obj_person_85e635e9",
         "confidence": 0.9,
         "spatial_direction": "overlapping",
         "provenance": "text_spatial_engine"
       },
       {
-        "subject_element_id": "elem_obj_person_2855edcd",
+        "subject_element_id": "elem_obj_person_85e635e9",
         "relation": "above",
         "object_element_id": "elem_text_ocr_text_90a4eea6",
         "confidence": 0.95,
@@ -238,9 +238,9 @@
         "provenance": "deterministic_spatial_engine"
       }
     ],
-    "hero_element_id": "elem_obj_person_2855edcd",
+    "hero_element_id": "elem_obj_person_85e635e9",
     "primary_subject_ids": [
-      "elem_obj_person_2855edcd",
+      "elem_obj_person_85e635e9",
       "elem_face_person_face_96204573"
     ],
     "secondary_subject_ids": [
@@ -249,20 +249,20 @@
   },
   "hierarchy": {
     "reading_order": [
-      "elem_obj_person_2855edcd",
+      "elem_obj_person_85e635e9",
       "elem_face_person_face_96204573",
       "elem_text_ocr_text_90a4eea6"
     ],
-    "first_attention_target": "elem_obj_person_2855edcd",
+    "first_attention_target": "elem_obj_person_85e635e9",
     "second_attention_target": "elem_face_person_face_96204573",
-    "dominant_subject_id": "elem_obj_person_2855edcd",
+    "dominant_subject_id": "elem_obj_person_85e635e9",
     "visual_anchors": [
-      "elem_obj_person_2855edcd",
+      "elem_obj_person_85e635e9",
       "elem_face_person_face_96204573"
     ],
     "attention_competition_score": 0.73,
-    "eye_flow_description": "Eye flows from elem_obj_person_2855edcd to elem_face_person_face_96204573",
-    "negative_space_ratio": 0.3418226809636944,
+    "eye_flow_description": "Eye flows from elem_obj_person_85e635e9 to elem_face_person_face_96204573",
+    "negative_space_ratio": 0.34169611787090115,
     "text_safe_areas": [],
     "visual_clutter_score": 0.3,
     "subject_separation_score": 0.7,
@@ -276,7 +276,7 @@
     "cropping_quality": 0.8,
     "balance": 0.9894688548068907,
     "symmetry_asymmetry": "symmetric",
-    "negative_space": 0.3418226809636944,
+    "negative_space": 0.34169611787090115,
     "depth_layers_count": 4,
     "camera_perspective": "medium_shot",
     "subject_background_separation": 0.7,
@@ -306,7 +306,7 @@
         "supporting_evidence": "Thumbnail contains 4 grounded elements telling the narrative",
         "potential_improvement": "Eliminate non-essential background clutter",
         "associated_element_ids": [
-          "elem_obj_person_2855edcd",
+          "elem_obj_person_85e635e9",
           "elem_face_person_face_96204573"
         ]
       }
@@ -323,7 +323,7 @@
         "confidence": 0.85,
         "evidence": "Low focal strength score (0.27); visual attention is split",
         "affected_element_ids": [
-          "elem_obj_person_2855edcd",
+          "elem_obj_person_85e635e9",
           "elem_face_person_face_96204573"
         ],
         "recommended_correction": "Enlarge primary hero subject and increase local contrast against background"
@@ -363,8 +363,8 @@
         "depth_priority": 7,
         "relationships": [
           "elem_bg_plate_00",
-          "elem_obj_person_2855edcd",
-          "elem_obj_person_2855edcd"
+          "elem_obj_person_85e635e9",
+          "elem_obj_person_85e635e9"
         ],
         "preservation_requirement": "preserve_if_possible",
         "editability": "editable",
@@ -386,7 +386,7 @@
         "depth_priority": 8,
         "relationships": [
           "elem_bg_plate_00",
-          "elem_obj_person_2855edcd",
+          "elem_obj_person_85e635e9",
           "elem_text_ocr_text_90a4eea6"
         ],
         "preservation_requirement": "must_preserve",
@@ -394,16 +394,16 @@
         "source_provenance": "insightface_multi"
       },
       {
-        "layer_id": "layer_elem_obj_person_2855edcd",
+        "layer_id": "layer_elem_obj_person_85e635e9",
         "category": "primary_subject",
-        "element_ref_id": "elem_obj_person_2855edcd",
+        "element_ref_id": "elem_obj_person_85e635e9",
         "image_path": null,
         "mask_path": null,
         "bounding_region": {
-          "x_min": 0.28669004440307616,
-          "y_min": 0.004550425211588541,
-          "x_max": 0.8750402450561523,
-          "y_max": 0.9849939134385851
+          "x_min": 0.28657891750335696,
+          "y_min": 0.004481421576605903,
+          "x_max": 0.8750394821166992,
+          "y_max": 0.9849561055501302
         },
         "polygon": [],
         "depth_priority": 9,
@@ -425,7 +425,7 @@
     "creative_direction": "Redesign thumbnail for video by preserving creator identity (2 elements), replacing background clutter (0 elements), and focusing visual hierarchy.",
     "story_analysis": "Thumbnail leverages 2 active click drivers with estimated CTR potential 0.75",
     "elements_to_keep": [
-      "elem_obj_person_2855edcd",
+      "elem_obj_person_85e635e9",
       "elem_text_ocr_text_90a4eea6"
     ],
     "elements_to_change": [],
@@ -433,9 +433,9 @@
       "elem_bg_plate_00"
     ],
     "elements_to_emphasize": [
-      "elem_obj_person_2855edcd"
+      "elem_obj_person_85e635e9"
     ],
-    "composition_strategy": "Dominant subject 'elem_obj_person_2855edcd' with clean high-contrast backdrop",
+    "composition_strategy": "Dominant subject 'elem_obj_person_85e635e9' with clean high-contrast backdrop",
     "redesign_aggressiveness": "moderate",
     "expected_ctr_improvement": "+13.0% estimated CTR potential gain"
   },
@@ -444,7 +444,7 @@
       {
         "action_id": "act_01_preserve_hero",
         "action": "keep",
-        "target_element_id": "elem_obj_person_2855edcd",
+        "target_element_id": "elem_obj_person_85e635e9",
         "reason": "Preserve creator face identity 'Person (1)' as main emotional hook",
         "priority": 1,
         "confidence": 0.95,
@@ -483,30 +483,30 @@
     "ctr_potential_score": 0.75,
     "curiosity_gap_score": 0.65,
     "emotional_impact": "positive",
-    "visual_storytelling_notes": "The thumbnail effectively captures a happy emotion and a centered subject, which can attract viewers looking for positive content. The warm color palette adds a friendly feel.",
+    "visual_storytelling_notes": "The thumbnail effectively captures a joyful moment with a centered face showing happiness, which can attract viewers looking for uplifting content. The warm color palette enhances the positive emotion.",
     "content_mismatch_detected": false,
     "mismatch_explanation": null,
     "strengths": [
-      "Happy emotion detected",
+      "Clear and positive emotion",
       "Warm color palette",
-      "Centered subject placement"
+      "Good balance and symmetry"
     ],
     "weaknesses": [
-      "Low text coverage ratio",
-      "Limited visual hierarchy"
+      "Limited text coverage",
+      "Subject is centered which may not be optimal for all viewers"
     ],
     "redesign_recommendations": [
-      "Increase text coverage for better engagement",
-      "Enhance visual hierarchy to guide attention"
+      "Consider adding more text for context",
+      "Experiment with off-center placement for dynamic composition"
     ],
     "elements_to_preserve": [
-      "Happy emotion",
       "Warm color palette",
-      "Centered subject placement"
+      "Happy facial expression",
+      "Symmetrical composition"
     ],
-    "duration_seconds": 53.18348530000367
+    "duration_seconds": 16.47771730000386
   },
   "status": "success",
   "error_message": null,
-  "analyzed_at": "2026-08-06T17:38:01.729938+00:00"
+  "analyzed_at": "2026-08-08T07:34:53.480044+00:00"
 }
